@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: eureka
+  server:
+     port: 8761          # 指定该实例的端口
+  eureka:
+    client:
+      registerWithEureka: true  #false:不作为一个客户端注册到注册中心
+      fetchRegistry: false      #为true时，可以启动，但报异常：Cannot execute request on any known server
+      serviceUrl:
+        defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+    instance:
+     hostname: localhost    # 指定该Eureka实例的主机名

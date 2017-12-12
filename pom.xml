@@ -6,7 +6,7 @@
 	<groupId>com.cupdata</groupId>
 	<artifactId>service-integration-platform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
 	<name>service-integration-platform</name>
 	<description>Service Integration Platform</description>
@@ -18,12 +18,19 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
+	<modules>
+		<module>eureka-service</module>
+	</modules>
+
+	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
+		<spring-cloud.version>Dalston.SR4</spring-cloud.version>
 	</properties>
 
+	<!-- 必须的依赖-->
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -37,13 +44,41 @@
 		</dependency>
 	</dependencies>
 
+	<!-- 可选的依赖-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+
+	<!-- 配置全局maven私服-->
+    <repositories>
+        <repository>
+			<id>cupdmaven</id>
+			<name>maven-public</name>
+            <url>http://10.193.17.10:8081/repository/maven-public/</url>
+        </repository>
+    </repositories>
+    <!-- 不用在mirror里面配置-->
+
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
 			</plugin>
-		</plugins>
+        </plugins>
+
 	</build>
 
 
