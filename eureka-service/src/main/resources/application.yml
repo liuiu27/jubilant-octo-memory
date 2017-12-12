@@ -1,13 +1,13 @@
 spring:
   application:
-    name: eureka
+    name: eureka-service
 server:
-   port: 8761         # Ö¸¶¨¸ÃÊµÀıµÄ¶Ë¿Ú
+   port: 8761         # æŒ‡å®šè¯¥å®ä¾‹çš„ç«¯å£
 eureka:
   client:
-    registerWithEureka: true  #false:²»×÷ÎªÒ»¸ö¿Í»§¶Ë×¢²áµ½×¢²áÖĞĞÄ
-    fetchRegistry: false      #ÎªtrueÊ±£¬¿ÉÒÔÆô¶¯£¬µ«±¨Òì³££ºCannot execute request on any known server
+    registerWithEureka: true  #false:ä¸ä½œä¸ºä¸€ä¸ªå®¢æˆ·ç«¯æ³¨å†Œåˆ°æ³¨å†Œä¸­å¿ƒ
+    fetchRegistry: false      #ä¸ºtrueæ—¶ï¼Œå¯ä»¥å¯åŠ¨ï¼Œä½†æŠ¥å¼‚å¸¸ï¼šCannot execute request on any known server
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
   instance:
-   hostname: localhost    # Ö¸¶¨¸ÃEurekaÊµÀıµÄÖ÷»úÃû
+   hostname: localhost    # æŒ‡å®šè¯¥Eurekaå®ä¾‹çš„ä¸»æœºå
