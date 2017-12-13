@@ -21,6 +21,8 @@
 	<modules>
 		<module>eureka-service</module>
 		<module>api-gateway</module>
+		<module>comm-api</module>
+		<module>serviceA</module>
 	</modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->
@@ -29,6 +31,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
 		<spring-cloud.version>Dalston.SR4</spring-cloud.version>
+		<commons-lang3.version>3.6</commons-lang3.version>
+		<spring-web.version>4.3.13.RELEASE</spring-web.version>
 	</properties>
 
 	<!-- 必须的依赖-->
@@ -36,6 +40,33 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 
 		<dependency>
