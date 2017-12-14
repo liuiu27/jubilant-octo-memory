@@ -1,4 +1,4 @@
-package com.cupdata.commapi;
+package com.cupdata.commapi.apiinterface;
 
 /**
  * @Auth: LinYong
