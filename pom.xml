@@ -22,7 +22,7 @@
 		<module>eureka-service</module>
 		<module>api-gateway</module>
 		<module>comm-api</module>
-		<module>serviceA</module>
+		<module>order-service</module>
 	</modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->
@@ -33,6 +33,8 @@
 		<spring-cloud.version>Dalston.SR4</spring-cloud.version>
 		<commons-lang3.version>3.6</commons-lang3.version>
 		<spring-web.version>4.3.13.RELEASE</spring-web.version>
+		<mybatis.version>1.3.0</mybatis.version>
+		<druid.version>1.1.3</druid.version>
 	</properties>
 
 	<!-- 必须的依赖-->
@@ -42,17 +44,17 @@
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 
+		<!-- 支持 @ConfigurationProperties 注解 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -74,6 +76,9 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+
 	</dependencies>
 
 	<!-- 可选的依赖-->
@@ -90,15 +95,7 @@
 	</dependencyManagement>
 	
 
-	<!-- 配置全局maven私服-->
-    <repositories>
-        <repository>
-			<id>cupdmaven</id>
-			<name>maven-public</name>
-            <url>http://10.193.17.10:8081/repository/maven-public/</url>
-        </repository>
-    </repositories>
-    <!-- 不用在mirror里面配置-->
+
 
 	<build>
 		<plugins>

@@ -1,4 +1,4 @@
-package com.cupdate.servicea;
+package com.cupdate.order;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,9 +6,9 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class ServiceaApplication {
+public class OrderServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ServiceaApplication.class, args);
+		SpringApplication.run(OrderServiceApplication.class, args);
 	}
 }

@@ -1,4 +1,4 @@
-package com.cupdate.servicea.rpc;
+package com.cupdate.order.rpc;
 
 
 import com.cupdata.commapi.ServiceB;

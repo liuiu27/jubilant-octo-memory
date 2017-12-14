@@ -1,4 +1,4 @@
-package com.cupdate.servicea.rest;
+package com.cupdate.order.rest;
 
 import com.cupdata.commapi.ServiceA;
 import org.springframework.web.bind.annotation.RestController;
