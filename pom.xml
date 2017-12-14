@@ -77,8 +77,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
-
 	</dependencies>
 
 	<!-- 可选的依赖-->
@@ -93,9 +91,16 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
 
-
+	<!-- 配置全局maven私服-->
+	<repositories>
+		<repository>
+			<id>cupdmaven</id>
+			<name>maven-public</name>
+			<url>http://10.193.17.10:8081/repository/maven-public/</url>
+		</repository>
+	</repositories>
+	<!-- 不用在mirror里面配置-->
 
 	<build>
 		<plugins>
