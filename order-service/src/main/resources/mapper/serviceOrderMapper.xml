@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cupdate.order.dao.ServiceOrderDao">
+
+    <resultMap id="BaseResultMap" type="com.cupdate.order.domain.ServiceOrder">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR"/>
+        <result column="ORG_NO" property="orgNo" jdbcType="VARCHAR"/>
+        <result column="BANK_ORDER_NO" property="bankOrderNo" jdbcType="VARCHAR"/>
+        <result column="SUPPLY_ORDER_NO" property="supplyOrderNo" jdbcType="VARCHAR"/>
+        <result column="SUPPLY_NO" property="supplyNo" jdbcType="VARCHAR"/>
+        <result column="PRODUCT_NO" property="productNo" jdbcType="VARCHAR"/>
+        <result column="SETTLE_DATE" property="settleDate" jdbcType="DATE"/>
+        <result column="ORDER_STATUS" property="orderStatus" jdbcType="CHAR"/>
+        <result column="SUB_ORDER_NO" property="subOrderNo" jdbcType="VARCHAR"/>
+        <result column="ORG_COST_PRICE" property="orgCostPrice" jdbcType="DOUBLE"/>
+        <result column="SUPPLYER_COST_PRICE" property="supplyerCostPrice" jdbcType="DOUBLE"/>
+        <result column="ORDER_TYPE" property="orderType" jdbcType="CHAR"/>
+        <result column="ORDER_DESC" property="orderDesc" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
+        <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>
+    </resultMap>
+    
+    
+    <sql id="Base_Column_List">
+	ORDER_NO,
+	BANK_CODE,
+	ORG_NO,
+	BANK_ORDER_NO,
+	SUPPLY_ORDER_NO,
+	SUPPLY_NO,
+	PRODUCT_NO,
+	SETTLE_DATE,
+	ORDER_STATUS,
+	SUB_ORDER_NO,
+	ORG_COST_PRICE,
+	SUPPLYER_COST_PRICE,
+	ORDER_TYPE,
+	ORDER_DESC,
+	CREATE_DATE,
+	UPDATE_DATE
+    </sql>
+    
+    
+    <select id="findServiceOrderById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from SERVICE_ORDER
+        where ID = #{id}
+    </select>
+    
+     <select id="findServiceOrder" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> Base_Column_List from SERVICE_ORDER
+        where 1=1
+        <if test=" id != null and id != ''">
+				and ID = #{id}
+		</if>
+		 <if test=" orderNo != null and orderNo != ''">
+				and ORDER_NO = #{orderNo}
+		</if>
+		 <if test=" bankCode != null and bankCode != ''">
+				and BANK_CODE = #{bankCode}
+		</if>
+		 <if test=" orgNo != null and orgNo != ''">
+				and ORG_NO = #{orgNo}
+		</if>
+		 <if test=" bankOrderNo != null and bankOrderNo != ''">
+				and BANK_ORDER_NO = #{bankOrderNo}
+		</if>
+		 <if test=" supplyOrderNo != null and supplyOrderNo != ''">
+				and SUPPLY_ORDER_NO = #{supplyOrderNo}
+		</if>
+		 <if test=" supplyNo != null and supplyNo != ''">
+				and SUPPLY_NO = #{supplyNo}
+		</if>
+		 <if test=" productNo != null and productNo != ''">
+				and PRODUCT_NO = #{productNo}
+		</if>
+		 <if test=" settleDate != null and settleDate != ''">
+				and SETTLE_DATE = #{settleDate}
+		</if>
+		 <if test=" orderStatus != null and orderStatus != ''">
+				and ORDER_STATUS = #{orderStatus}
+		</if>
+		 <if test=" subOrderNo != null and subOrderNo != ''">
+				and SUB_ORDER_NO = #{subOrderNo}
+		</if>		
+    </select>
+
+    
+    <!--<delete id="deleteServiceOrder" parameterType="com.cupd.pojo.ServiceOrder">
+    	delete from SERVICE_ORDER where ID = #{Id}    
+    </delete>
+    
+--></mapper>
