@@ -1,15 +1,15 @@
-package com.cupdate.order.rest;
+package com.cupdata.order.rest;
 
-import com.cupdata.commapi.ServiceA;
-import com.cupdate.order.biz.OrderBiz;
-import com.cupdate.order.domain.ServiceOrder;
+
+import com.cupdata.commapi.apiinterface.OrderService;
+import com.cupdata.order.biz.OrderBiz;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
 
 @RestController
-public class Controller implements ServiceA {
+public class Controller implements OrderService {
 
 
     @Resource
