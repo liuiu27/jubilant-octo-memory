@@ -18,9 +18,7 @@ public class Controller implements ServiceA {
 
     @Override
     public String hello() {
+        return "hello spring cloud";
 
-        ServiceOrder sa =new ServiceOrder();
-        sa.setId(13);
-        return  orderBiz.findServiceOrder(sa).get(0).toString();
     }
 }
