@@ -9,10 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>order-service</artifactId>
+    <artifactId>product-service</artifactId>
 
     <dependencies>
-
         <dependency>
             <groupId>com.cupdata</groupId>
             <artifactId>comm-api</artifactId>
@@ -71,12 +70,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.cupdata</groupId>
-            <artifactId>product-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
 
     </dependencies>
-
 </project>
