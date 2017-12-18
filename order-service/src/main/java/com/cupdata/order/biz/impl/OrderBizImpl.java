@@ -4,7 +4,7 @@ import com.cupdata.commons.biz.impl.BaseBizImpl;
 import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.order.biz.OrderBiz;
 import com.cupdata.order.dao.ServiceOrderDao;
-import com.cupdata.order.domain.ServiceOrder;
+import com.cupdata.order.entity.ServiceOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

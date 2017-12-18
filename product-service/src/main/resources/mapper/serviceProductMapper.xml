@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cupdate.product.dao.ServiceProductDao">
 
-    <resultMap id="BaseResultMap" type="com.cupdata.product.domain.ServiceProduct">
+    <resultMap id="BaseResultMap" type="com.cupdata.product.entity.ServiceProduct">
         <result column="ID" property="id" jdbcType="INTEGER"/>
 		<result column="PRODUCT_TYPE" property="productType" jdbcType="VARCHAR"/>
 		<result column="SUPPLIER_NO" property="supplierNo" jdbcType="VARCHAR"/>

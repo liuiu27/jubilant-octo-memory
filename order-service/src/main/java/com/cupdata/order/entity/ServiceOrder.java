@@ -1,4 +1,4 @@
-package com.cupdata.order.domain;
+package com.cupdata.order.entity;
 
 import com.cupdata.commons.model.BaseModel;
 

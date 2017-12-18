@@ -1,4 +1,4 @@
-package com.cupdata.product.domain;
+package com.cupdata.product.entity;
 
 import com.cupdata.commons.model.BaseModel;
 
