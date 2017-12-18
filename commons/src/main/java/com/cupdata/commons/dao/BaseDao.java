@@ -1,6 +1,6 @@
-package com.cupdata.commapi.dao;
+package com.cupdata.commons.dao;
 
-import com.cupdata.commapi.model.BaseModel;
+import com.cupdata.commons.model.BaseModel;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,9 +1,6 @@
 package com.cupdata.order.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import com.cupdata.commapi.model.BaseModel;
+import com.cupdata.commons.model.BaseModel;
 
 /**
  *服务产品主订单表

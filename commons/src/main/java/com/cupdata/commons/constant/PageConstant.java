@@ -1,4 +1,4 @@
-package com.cupdata.commapi.constant;
+package com.cupdata.commons.constant;
 
 public class PageConstant {
 

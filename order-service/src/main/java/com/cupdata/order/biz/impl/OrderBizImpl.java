@@ -1,7 +1,7 @@
 package com.cupdata.order.biz.impl;
 
-import com.cupdata.commapi.biz.impl.BaseBizImpl;
-import com.cupdata.commapi.dao.BaseDao;
+import com.cupdata.commons.biz.impl.BaseBizImpl;
+import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.order.biz.OrderBiz;
 import com.cupdata.order.dao.ServiceOrderDao;
 import com.cupdata.order.domain.ServiceOrder;

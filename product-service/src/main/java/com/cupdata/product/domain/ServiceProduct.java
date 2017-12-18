@@ -1,6 +1,6 @@
 package com.cupdata.product.domain;
 
-import com.cupdata.commapi.model.BaseModel;
+import com.cupdata.commons.model.BaseModel;
 
 /**
  * @Auth: LinYong

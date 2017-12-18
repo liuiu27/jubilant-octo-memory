@@ -15,7 +15,7 @@
 
         <dependency>
             <groupId>com.cupdata</groupId>
-            <artifactId>comm-api</artifactId>
+            <artifactId>commons</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -70,11 +70,6 @@
                     <artifactId>tomcat-jdbc</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.cupdata</groupId>
-            <artifactId>product-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

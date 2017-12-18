@@ -1,4 +1,4 @@
-package com.cupdata.commapi.model;
+package com.cupdata.commons.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

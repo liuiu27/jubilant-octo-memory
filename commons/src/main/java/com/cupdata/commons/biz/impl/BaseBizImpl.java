@@ -1,11 +1,11 @@
-package com.cupdata.commapi.biz.impl;
+package com.cupdata.commons.biz.impl;
 
-import com.cupdata.commapi.biz.BaseBiz;
-import com.cupdata.commapi.constant.PageConstant;
-import com.cupdata.commapi.dao.BaseDao;
-import com.cupdata.commapi.model.BaseModel;
-import com.cupdata.commapi.page.Page;
-import com.cupdata.commapi.page.Result;
+import com.cupdata.commons.biz.BaseBiz;
+import com.cupdata.commons.constant.PageConstant;
+import com.cupdata.commons.dao.BaseDao;
+import com.cupdata.commons.model.BaseModel;
+import com.cupdata.commons.page.Page;
+import com.cupdata.commons.page.Result;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 

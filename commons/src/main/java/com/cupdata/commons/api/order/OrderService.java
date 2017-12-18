@@ -1,4 +1,4 @@
-package com.cupdata.commapi.apiinterface;
+package com.cupdata.commons.api.order;
 
 import org.springframework.web.bind.annotation.GetMapping;
 

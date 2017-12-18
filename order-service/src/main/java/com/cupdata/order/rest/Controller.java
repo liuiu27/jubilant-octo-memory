@@ -1,7 +1,7 @@
 package com.cupdata.order.rest;
 
 
-import com.cupdata.commapi.apiinterface.OrderService;
+import com.cupdata.commons.api.order.OrderService;
 import com.cupdata.order.biz.OrderBiz;
 import org.springframework.web.bind.annotation.RestController;
 

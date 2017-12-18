@@ -1,7 +1,7 @@
 package com.cupdata.order.rpc;
 
 
-import com.cupdata.commapi.apiinterface.ProductService;
+import com.cupdata.commons.api.order.ProductService;
 import org.springframework.cloud.netflix.feign.FeignClient;
 
 @FeignClient("product-service")

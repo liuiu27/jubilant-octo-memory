@@ -1,7 +1,7 @@
-package com.cupdata.commapi.biz;
+package com.cupdata.commons.biz;
 
-import com.cupdata.commapi.model.BaseModel;
-import com.cupdata.commapi.page.Result;
+import com.cupdata.commons.model.BaseModel;
+import com.cupdata.commons.page.Result;
 
 import java.io.Serializable;
 import java.util.List;

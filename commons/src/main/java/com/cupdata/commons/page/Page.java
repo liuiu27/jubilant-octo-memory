@@ -1,6 +1,6 @@
-package com.cupdata.commapi.page;
+package com.cupdata.commons.page;
 
-import com.cupdata.commapi.constant.PageConstant;
+import com.cupdata.commons.constant.PageConstant;
 
 /**
  * 

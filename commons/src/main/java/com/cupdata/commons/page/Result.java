@@ -1,4 +1,4 @@
-package com.cupdata.commapi.page;
+package com.cupdata.commons.page;
 
 import java.util.List;
 
