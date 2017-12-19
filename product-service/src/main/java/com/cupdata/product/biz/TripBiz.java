@@ -15,9 +15,8 @@ public class TripBiz {
 
     public void doGet(String url) {
 
-
-        String ret= restTemplate.getForObject(url+"?a=[a]&b=[b]",String.class,"1",2);
-
+        //发送请求
+        //String ret= restTemplate.getForObject(url+"?a=[a]&b=[b]",String.class,"1",2);
 
     }
 }
