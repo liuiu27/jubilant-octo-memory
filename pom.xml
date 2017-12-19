@@ -11,6 +11,7 @@
 	<name>service-integration-platform</name>
 	<description>Service Integration Platform</description>
 
+	<!-- 引入spring boot的依赖 -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -42,6 +43,7 @@
 
 	<!-- 必须的依赖-->
 	<dependencies>
+		<!-- Spring Boot的核心启动器，包含了自动配置、日志和YAML -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
@@ -80,7 +82,7 @@
 
 	</dependencies>
 
-	<!-- 可选的依赖-->
+	<!-- 引入spring cloud的依赖-->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -111,6 +113,7 @@
 	</repositories>
 	<!-- 不用在mirror里面配置-->
 
+	<!-- maven插件 -->
 	<build>
 		<plugins>
 			<plugin>
@@ -121,8 +124,5 @@
 				</configuration>
 			</plugin>
         </plugins>
-
 	</build>
-
-
 </project>
