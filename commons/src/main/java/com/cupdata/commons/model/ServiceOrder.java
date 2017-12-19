@@ -1,6 +1,4 @@
-package com.cupdata.order.entity;
-
-import com.cupdata.commons.model.BaseModel;
+package com.cupdata.commons.model;
 
 /**
  *服务产品主订单表

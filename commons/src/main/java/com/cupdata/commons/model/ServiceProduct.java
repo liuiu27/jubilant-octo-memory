@@ -1,6 +1,4 @@
-package com.cupdata.product.entity;
-
-import com.cupdata.commons.model.BaseModel;
+package com.cupdata.commons.model;
 
 /**
  * @Auth: LinYong

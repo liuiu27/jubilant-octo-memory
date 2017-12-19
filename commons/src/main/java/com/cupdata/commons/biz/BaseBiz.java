@@ -1,76 +1,144 @@
 package com.cupdata.commons.biz;
 
+
+import com.cupdata.commons.constant.PageConstant;
+import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.commons.model.BaseModel;
+import com.cupdata.commons.page.Page;
 import com.cupdata.commons.page.Result;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @Auth: LinYong
- * @Description:
- * @Date: 19:42 2017/12/14
+ * 
+* @ClassName: BaseServiceImpl 
+* @Description: 基础service实现类
+* @author LinYong 
+* @date 2017年3月20日 下午9:11:02 
+* 
+* @param <T>
  */
-public interface BaseBiz<T extends BaseModel> {
-    /**
-     * 增加
-     * @param t
-     */
-    public T insert(T t);
+public abstract class BaseBiz<T extends BaseModel> {
+	/**
+	 * 获取mapper的抽象方法。
+	 * 继承该类的子类必须实现该方法
+	 * @return
+	 */
+	public abstract BaseDao<T> getBaseDao();
 
-    /**
-     * 删除
-     * @param id
-     * @return
-     */
-    public Integer delete(Serializable id);
+	@Transactional(rollbackFor=Exception.class)
+	public T insert(T t) {
+		getBaseDao().insert(t);
+		return t;
+	}
 
-    /**
-     * 批量删除
-     * @param list
-     * @return
-     */
-    public Integer deleteBatch(List<T> list);
+	@Transactional(rollbackFor=Exception.class)
+	public Integer delete(Serializable id) {
+		return getBaseDao().delete(id);
+	}
 
-    /**
-     * 更新
-     * @param t
-     */
-    public Integer update(T t);
+	@Transactional(rollbackFor=Exception.class)
+	public Integer deleteBatch(List<T> list) {
+		return getBaseDao().deleteBatch(list);
+	}
 
-    /**
-     * 根据id查询
-     * @param id
-     * @return
-     */
-    public T select(Serializable id);
+	@Transactional(rollbackFor=Exception.class)
+	public Integer update(T t) {
+		return getBaseDao().update(t);
+	}
 
-    /**
-     * 不分页条件查询
-     * @param paramMap
-     * @return
-     */
-    public List selectAll(Map<String, Object> paramMap);
+	@Transactional(propagation= Propagation.NOT_SUPPORTED,readOnly=true)
+	public T select(Serializable id) {
+		return getBaseDao().select(id);
+	}
+	
+	@Transactional(propagation=Propagation.NOT_SUPPORTED,readOnly=true)
+	public T selectSingle(Map<String, Object> paramMap) {
+		return getBaseDao().selectSingle(paramMap);
+	}
 
-    /**
-     * 查询结果为单个对象
-     * @param paramMap
-     * @return
-     */
-    public T selectSingle(Map<String, Object> paramMap);
+	@Transactional(propagation=Propagation.NOT_SUPPORTED,readOnly=true)
+	public List selectAll(Map<String, Object> paramMap) {
+		return getBaseDao().selectAll(paramMap);
+	}
 
-    /**
-     * 分页条件查询
-     * @param paramMap
-     * @return
-     */
-    public Result selectPage(Map<String, Object> paramMap);
+	@Transactional(propagation=Propagation.NOT_SUPPORTED,readOnly=true)
+	public Result selectPage(Map<String, Object> paramMap) {
+		if(null == paramMap){
+			paramMap = new HashMap<String, Object>();
+		}
+		
+		convertParamMap(paramMap);
 
-    /**
-     * 获取记录数量
-     * @param parameter
-     * @return
-     */
-    public Integer getRows(Map<String,Object> parameter);
+		Integer currentPage = (Integer) paramMap.get(PageConstant.CURRENT_PAGE);
+		if(null == currentPage){
+			currentPage = 1;
+		}
+		Integer pageSize = (Integer) paramMap.get(PageConstant.PAGE_SIZE);
+		if(null == pageSize){
+			pageSize = PageConstant.DEFAULT_PAGE_SIZE;
+		}
+
+		//分页查询返回结果
+		Result result = new Result();
+		
+		//分页page信息
+		Page page = new Page();
+		Integer rowCounts = getBaseDao().getRows(paramMap);//总记录数
+		page.setPage(currentPage, rowCounts, PageConstant.DEFAULT_PAGE_SIZE);//设置page
+		result.setPage(page);
+
+		paramMap.put(PageConstant.OFFSET, (currentPage - 1) * pageSize);//
+		paramMap.put(PageConstant.PAGE_SIZE, pageSize);//每页记录大小
+		
+		result.setContent(getBaseDao().selectPage(paramMap));
+		return result;
+	}
+
+	@Transactional(propagation=Propagation.NOT_SUPPORTED,readOnly=true)
+	public Integer getRows(Map<String, Object> paramMap) {
+		return getBaseDao().getRows(paramMap);
+	}
+	
+	/**
+	 * 转换查询参数
+	 * @param paramMap
+	 */
+	private void convertParamMap(Map<String, Object> paramMap){
+		for(Iterator<Map.Entry<String, Object>> it = paramMap.entrySet().iterator();it.hasNext();){
+			Map.Entry<String, Object> entry = it.next();
+			Object value = entry.getValue();
+			if(value instanceof String && "".equals(((String)value).trim())){
+				it.remove();
+			}
+		}		
+		
+		Object _offset = paramMap.get(PageConstant.OFFSET);
+		Object _currentPage = paramMap.get(PageConstant.CURRENT_PAGE);
+		Object _pageSize = paramMap.get(PageConstant.PAGE_SIZE);
+		
+		Integer offset = PageConstant.DEFAULT_OFFSET;
+		Integer currentPage = PageConstant.DEFAULT_CURRENT_PAGE;
+		Integer pageSize = PageConstant.DEFAULT_PAGE_SIZE;
+		
+		if(_currentPage instanceof Integer){
+			currentPage = (Integer) _currentPage;
+		}else if(_currentPage instanceof String && ((String)_currentPage).matches("[0-9]*")){
+			currentPage = Integer.parseInt((String) _currentPage);
+		}
+		paramMap.put(PageConstant.CURRENT_PAGE, currentPage);
+		
+		if(_pageSize instanceof Integer){
+			pageSize = (Integer) _pageSize;
+		}else if(_pageSize instanceof String && ((String)_pageSize).matches("[0-9]*")){
+			pageSize = Integer.parseInt((String) _pageSize);
+		}
+		paramMap.put(PageConstant.PAGE_SIZE, pageSize);
+	}
 }
