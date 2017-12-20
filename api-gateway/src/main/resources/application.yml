@@ -16,8 +16,11 @@ eureka:
 
 # zuul 网关配置
 zuul:
-  prefix: /api
+  #prefix: /api
   routes:
-    order-service:                                                          # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
-      path: /order/**                                            # 想要映射到的路径
-      service-id: order-service                                         # Eureka中的serviceId
+    trvok-service:                  # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
+      path: /trvok/**               # 想要映射到的路径
+      service-id: trvok-service     # Eureka中的serviceId
+    voucher-service:
+      path: /voucher/**
+      service-id: voucher-service
