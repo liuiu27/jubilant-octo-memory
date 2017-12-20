@@ -32,7 +32,7 @@ public class HttpUtil {
 
 	/**
 	 * get请求方法 编码方式为utf-8 
-	 * 
+	 * 1
 	 * 
 	 * @param url
 	 *            请求uel地址
