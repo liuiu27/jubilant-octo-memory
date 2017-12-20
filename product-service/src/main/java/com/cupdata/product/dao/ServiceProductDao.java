@@ -1,7 +1,8 @@
 package com.cupdata.product.dao;
 
 import com.cupdata.commons.dao.BaseDao;
-import com.cupdata.product.entity.ServiceProduct;
+import com.cupdata.commons.model.ServiceProduct;
+
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
