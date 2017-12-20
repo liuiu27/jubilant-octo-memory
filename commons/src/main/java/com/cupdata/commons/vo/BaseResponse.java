@@ -1,6 +1,7 @@
 package com.cupdata.commons.vo;
 
 
+import com.cupdata.commons.constant.ResponseCodeMsg;
 import lombok.Data;
 /**
  * @Auth: LinYong
@@ -16,9 +17,14 @@ public class BaseResponse<T extends BaseData> {
 
     private T data;
 
-    BaseResponse(T data){
-        responseCode = "000000";
-        responseMsg = "success";
+    public BaseResponse(){
+        responseCode = ResponseCodeMsg.SUCCESS.getCode();
+        responseMsg = ResponseCodeMsg.SUCCESS.getMsg();
+    }
+
+    public BaseResponse(T data){
+        responseCode = ResponseCodeMsg.SUCCESS.getCode();
+        responseMsg = ResponseCodeMsg.SUCCESS.getMsg();
         this.data = data;
     }
 
