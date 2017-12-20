@@ -2,7 +2,7 @@ package com.cupdata.apigateway.filters.pre;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.apigateway.feign.OrgFeignClient;
-import com.cupdata.commons.RSAUtils;
+import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
