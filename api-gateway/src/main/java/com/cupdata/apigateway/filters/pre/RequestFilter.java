@@ -1,4 +1,4 @@
-package com.cupdata.apigateway.filter;
+package com.cupdata.apigateway.filters.pre;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;

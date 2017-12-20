@@ -44,7 +44,7 @@ public class PreRequestFilter extends ZuulFilter {
     String sign = request.getParameter("sign");//请求参数签名
 
     //Step2：解密参数密文
-    BaseResponse<OrgInfVo>  = ;
+//    BaseResponse<OrgInfVo>  = ;
     String dataPlain ="";
 
     //Step3：验证签名
