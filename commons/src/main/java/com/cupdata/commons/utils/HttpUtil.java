@@ -31,7 +31,7 @@ public class HttpUtil {
 	private static myHostnameVerifier HNV = new myHostnameVerifier();
 
 	/**
-	 * get请求方法 编码方式为utf-8
+	 * get请求方法 编码方式为utf-8 
 	 * 
 	 * @param url
 	 *            请求uel地址
