@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 
 /**
  * md5加解密工具类
- * 
  * @author Hou Xin
  * 
  */
