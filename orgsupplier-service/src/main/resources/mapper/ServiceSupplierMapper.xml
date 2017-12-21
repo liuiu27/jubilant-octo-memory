@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cupdata.orgsupplier.dao.ServiceSupplierDao">
+
+    <resultMap id="BaseResultMap" type="com.cupdata.commons.model.ServiceSupplier">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+		<result column="SUPPLIER_NO" property="supplierNo" jdbcType="VARCHAR"/>
+		<result column="SUPPLIER_NAME" property="supplierName" jdbcType="VARCHAR"/>
+		<result column="SUPPLIER_DESC" property="supplierDesc" jdbcType="VARCHAR"/>
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+		<result column="CONTACTS" property="contacts" jdbcType="VARCHAR"/>
+		<result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR"/>
+		<result column="SUPPLIER_TYPE" property="supplierType" jdbcType="VARCHAR"/>
+		<result column="CREATE_BY" property="createDate" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
+		<result column="UPDATE_BY" property="updateDate" jdbcType="VARCHAR"/>
+        <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+	ID,
+	SUPPLIER_NO,
+	SUPPLIER_NAME,
+	SUPPLIER_DESC,
+	ADDRESS,
+	CONTACTS,
+	MOBILE_NO,
+	SUPPLIER_TYPE,
+	CREATE_BY,
+	CREATE_DATE,
+	UPDATE_BY,
+	UPDATE_DATE
+    </sql>
+    
+    <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from SERVICE_SUPPLIER
+        where ID = #{id}
+    </select>
+    
+     <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> Base_Column_List from SERVICE_SUPPLIER
+        where 1=1
+        <if test=" id != null and id != ''">
+			 and ID = #{id}
+		</if>
+		 <if test=" supplierNo != null and supplierNo != ''">
+			 and SUPPLIER_NO = #{supplierNo}
+		 </if>
+		 <if test=" supplierName != null and supplierName != ''">
+			 and SUPPLIER_NAME = #{supplierName}
+		 </if>
+		 <if test=" supplierDesc != null and supplierDesc != ''">
+			 and SUPPLIER_DESC = #{supplierDesc}
+		 </if>
+		 <if test=" address != null and address != ''">
+			 and ADDRESS = #{address}
+		 </if>
+		 <if test=" contacts != null and contacts != ''">
+			 and CONTACTS = #{contacts}
+		 </if>
+		 <if test=" mobileNo != null and mobileNo != ''">
+			 and MOBILE_NO = #{mobileNo}
+		 </if>
+		 <if test=" supplierType != null and supplierType != ''">
+			 and SUPPLIER_TYPE = #{supplierType}
+		 </if>
+    </select>
+
+</mapper>

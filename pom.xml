@@ -28,6 +28,7 @@
 		<module>trvok-service</module>
         <module>orgsupplier-service</module>
         <module>voucher-service</module>
+        <module>recharge-service</module>
     </modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->
