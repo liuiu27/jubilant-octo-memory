@@ -12,6 +12,12 @@ import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.utils.MD5Util;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.trvok.TrovkActivatReq;
+import com.cupdata.commons.vo.trvok.TrovkActivatRes;
+import com.cupdata.commons.vo.trvok.TrovkCodeReq;
+import com.cupdata.commons.vo.trvok.TrovkCodeRes;
+import com.cupdata.commons.vo.trvok.TrovkDisableReq;
+import com.cupdata.commons.vo.trvok.TrovkDisableRes;
 import com.cupdata.commons.vo.trvok.TrvokAirportReq;
 import com.cupdata.commons.vo.trvok.TrvokAirportRes;
 import com.cupdata.commons.vo.trvok.TrvokAirportRes.LoungeDetail;
@@ -25,6 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class TripService {
     
+	
+	//TODO  以下部分变量需要从数据库中查询获取
     private static String KONGGANG_AREA_SIGN_KEY = "AS-DF-KA-11-07-D1";//获取空港区域秘钥
  	private static String KONGGANG_REQUST_URL = "http://apitest.airportcip.com:89/";//空港请求区域信息URL
  	private static String KONGGANG_IMG_URL = "http://api.airportcip.com:8180/upload/"; //图片路径
@@ -37,7 +45,7 @@ public class TripService {
 	 * @return
 	 */
 	public BaseResponse<TrvokAreaRes> getTrvokArea(TrvokAreaReq trvokAreaReq){
-		log.info("begin execut getArea.......param : type is " + trvokAreaReq.getAreaType());
+		log.info("begin execut getTrvokArea.......param : type is " + trvokAreaReq.getAreaType());
 		BaseResponse<TrvokAreaRes> baseResponse = new BaseResponse<TrvokAreaRes>();
 		try {
 			String params = "random=" + TripUtil.getRandom() + "&type=" + trvokAreaReq.getAreaType();
@@ -46,7 +54,6 @@ public class TripService {
 			"report.svc/SearchAreaInfo?" + params + "&sign=" + sign;//空港请求区域信息URL
 			log.info("request url is " + requstUrl);
 			//GET请求空港获取区域接口 
-//			String resStr = restTemplate.getForObject(requstUrl, String.class);
 			String resStr = HttpUtil.doGet(requstUrl);
 			log.info("response information is " + resStr);
 			JSONObject resJson = JSONObject.parseObject(resStr);
@@ -64,13 +71,13 @@ public class TripService {
 				 baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
 				 return baseResponse;
 			}else{
+				log.error("request konggang getTrvokArea error is " + resJson.getString("description"));
 				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
 				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
-				log.error("request konggang getArea error is " + resJson.getString("description"));
 				return baseResponse;
 			}
 		}catch(Exception e){
-			log.error("request konggang getArea error is " + e.getMessage());
+			log.error("request konggang getTrvokArea error is " + e.getMessage());
 			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
 			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 			return baseResponse;
@@ -82,9 +89,10 @@ public class TripService {
 	 * @param airportId  type
 	 * @return
 	 */
-	public static TrvokAirportRes getTrvokAirportInfo(TrvokAirportReq trvokAirportReq){
-		log.info("begin execut getAirportInfo.......param ： type is" 
+	public BaseResponse<TrvokAirportRes> getTrvokAirportInfo(TrvokAirportReq trvokAirportReq){
+		log.info("begin execut getTrvokAirportInfo.......param ： type is" 
 				+ trvokAirportReq.getAreaType() + "airportId is " + trvokAirportReq.getAirportId());
+		BaseResponse<TrvokAirportRes> baseResponse = new BaseResponse<TrvokAirportRes>();
 		try {
 			String params = "random=" + TripUtil.getRandom() + "&type=" + trvokAirportReq.getAreaType()
 			+ "&airport_id=" + trvokAirportReq.getAirportId();
@@ -130,15 +138,22 @@ public class TripService {
 				   }
 				 }
 				 airportInfoRes.setAirportInfo(LoungeDetailList);
-				 return airportInfoRes;
+				 baseResponse.setData(airportInfoRes);
+				 baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
+				 baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
+				 return baseResponse;
 			}else{
-				log.error("request konggang getAirportInfo error is " + resJson.getString("description"));
+				log.error("request konggang getTrvokAirportInfo error is " + resJson.getString("description"));
+				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
+				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+				return baseResponse;
 			}
 		}catch(Exception e){
-			log.error("request konggang getAirportInfo error is " + e.getMessage());
-			return null;	
+			log.error("request konggang getTrvokAirportInfo error is " + e.getMessage());
+			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
+			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+			return baseResponse;	
 		}
-		return null;	
 	}
 	
 	/**
@@ -146,12 +161,13 @@ public class TripService {
 	 * @param  商户网站唯一订单号 outTradeNo  产品标识符 sku
 	 * @return
 	 */
-	public static String getTrvokVerifyCode(String outTradeNo, String sku){
+	public BaseResponse<TrovkCodeRes> getTrvokVerifyCode(TrovkCodeReq trovkCodeReq){
 		log.info("begin execut getVerifyCode.......param ： outTradeNo  is" 
-				+ outTradeNo + "sku is " + sku);
+				+ trovkCodeReq.getOutTradeNo() + "sku is " + trovkCodeReq.getSku());
+		BaseResponse<TrovkCodeRes> baseResponse =  new BaseResponse<TrovkCodeRes>();
 		try {
-			String params = "out_trade_no=" + outTradeNo + "&partner=" + //KONGGANG_PARTNER 获取空港签约合作方身份ID
-					KONGGANG_PARTNER + "&sku=" + sku;
+			String params = "out_trade_no=" + trovkCodeReq.getOutTradeNo() + "&partner=" + //KONGGANG_PARTNER 获取空港签约合作方身份ID
+					KONGGANG_PARTNER + "&sku=" + trovkCodeReq.getSku();
 			String sign = MD5Util.md5Encode(params + KONGGANG_WCF_SIGN_KEY);//KONGGANG_WCF_SIGN_KEY 获取空港WCF密钥
 			String requstUrl = KONGGANG_REQUST_URL + 
 			"API/YinLian/YinLianPD.svc/add?" + params + "&sign=" + sign;//空港请求机票详情URL
@@ -161,15 +177,24 @@ public class TripService {
 			log.info("response information is " + resStr);
 			JSONObject resJson = JSONObject.parseObject(resStr);
 			if("00".equals(resJson.getString("code"))){//result为0，则获取data机票详情
-				 return resJson.getString("verify_code");
+				 TrovkCodeRes trovkCodeRes = new TrovkCodeRes();
+				 trovkCodeRes.setVerifyCode( resJson.getString("verify_code"));
+				 baseResponse.setData(trovkCodeRes);
+				 baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
+				 baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
+				 return baseResponse;
 			}else{
 				log.error("request konggang getVerifyCode error is " + resJson.getString("info"));
+				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
+				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+				return baseResponse;
 			}
 		}catch(Exception e){
 			log.error("request konggang getVerifyCode error is " + e.getMessage());
-			return "";
+			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
+			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+			return baseResponse;	
 		}	
-		return "";
 	}
 	
 	/**
@@ -177,11 +202,13 @@ public class TripService {
 	 * @param verifyCode
 	 * @return
 	 */
-	public static boolean activationTrvokCode(String verifyCode,String expire){
-		log.info("begin execut activationCode.......param ： verifyCode  is" + verifyCode + ", expire is " + expire);
+	public BaseResponse<TrovkActivatRes> activationTrvokCode(TrovkActivatReq activatCodeReq){
+		log.info("begin execut activationCode.......param ： verifyCode  is" + activatCodeReq.getVerifyCode() + ", expire is " + activatCodeReq.getExpire());
+		BaseResponse<TrovkActivatRes> baseResponse = new BaseResponse<TrovkActivatRes>();
+		TrovkActivatRes activatCodeRes = new TrovkActivatRes();
 		try {
 			String params = "partner=" + KONGGANG_PARTNER + //KONGGANG_PARTNER 获取空港签约合作方身份ID
-			"&verify_code=" + verifyCode + "&expire=" + expire;
+			"&verify_code=" + activatCodeReq.getVerifyCode() + "&expire=" + activatCodeReq.getExpire();
 			String sign =  MD5Util.md5Encode(params + KONGGANG_WCF_SIGN_KEY);//获取空港WCF密钥
 			String requstUrl = KONGGANG_REQUST_URL + 
 			"API/YinLian/YinLianPD.svc/confirm?" + params + "&sign=" + sign;//空港请求机票详情URL
@@ -191,15 +218,25 @@ public class TripService {
 			log.info("response information is " + resStr);
 			JSONObject resJson = JSONObject.parseObject(resStr);
 			if("00".equals(resJson.getString("code"))){//result为0，则获取data机票详情
-				 return true;
+				activatCodeRes.setResult(true);
+				baseResponse.setData(activatCodeRes);
+				baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
+				baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
+				return baseResponse;			
 			}else{
 				log.error("request konggang activationCode error is " + resJson.getString("info"));
+				activatCodeRes.setResult(false);
+				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
+				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+				return baseResponse;		
 			}
 		}catch(Exception e){
 			log.error("request konggang activationCode error is " + e.getMessage());
-			return false;
+			activatCodeRes.setResult(false);
+			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
+			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+			return baseResponse;	
 		}	
-		return false;
 	}
 	
 	
@@ -208,11 +245,13 @@ public class TripService {
 	 * @param verifyCode
 	 * @return
 	 */
-	public static boolean disableCode(String verifyCode){
-		log.info("begin execut disableCode.......param ： verifyCode  is" + verifyCode);
+	public BaseResponse<TrovkDisableRes> disableCode(TrovkDisableReq trovkDisableReq){
+		log.info("begin execut disableCode.......param ： verifyCode  is" + trovkDisableReq.getVerifyCode());
+		TrovkDisableRes trovkDisableRes = new TrovkDisableRes();
+		BaseResponse<TrovkDisableRes> baseResponse = new BaseResponse<TrovkDisableRes>();
 		try {
 			String params = "partner=" + KONGGANG_PARTNER + //KONGGANG_PARTNER 获取空港签约合作方身份ID
-			"&verify_code=" + verifyCode;
+			"&verify_code=" + trovkDisableReq.getVerifyCode();
 			String sign = MD5Util.md5Encode(params + KONGGANG_WCF_SIGN_KEY);//获取空港WCF密钥
 			String requstUrl = KONGGANG_REQUST_URL + 
 			"API/YinLian/YinLianPD.svc/enableDis?" + params + "&sign=" + sign;//空港请求机票详情URL
@@ -222,15 +261,25 @@ public class TripService {
 			log.info("response information is " + resStr);
 			JSONObject resJson = JSONObject.parseObject(resStr);
 			if("00".equals(resJson.getString("code"))){//result为0，则获取data机票详情
-				 return true;
+				trovkDisableRes.setResult(true);
+				baseResponse.setData(trovkDisableRes);
+				baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
+				baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
+				return baseResponse;
 			}else{
 				log.error("request konggang disableCode error is " + resJson.getString("info"));
+				trovkDisableRes.setResult(false);
+				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
+				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+				return baseResponse;
 			}
 		}catch(Exception e){
 			log.error("request konggang disableCode error is " + e.getMessage());
-			return false;
+			trovkDisableRes.setResult(false);
+			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
+			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+			return baseResponse;
 		}	
-		return false;
 	}
 	
 //	public static void main(String[] args) {
