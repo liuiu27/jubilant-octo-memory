@@ -2,7 +2,6 @@ package com.cupdata.apigateway;
 
 import com.cupdata.apigateway.filters.post.ResponseFilter;
 import com.cupdata.apigateway.filters.pre.PreRequestFilter;
-import com.cupdata.apigateway.filters.pre.RequestFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
@@ -21,12 +20,8 @@ public class ApiGatewayApplication {
 		return new PreRequestFilter();
 	}
 
+	@Bean
 	public ResponseFilter responseFilter(){
 		return new ResponseFilter();
-	}
-
-	@Bean
-	public RequestFilter requestFilter(){
-		return new RequestFilter();
 	}
 }

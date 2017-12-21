@@ -14,10 +14,9 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class OrderBiz extends BaseBiz<ServiceOrder> {
+public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
     @Autowired
     private ServiceOrderDao orderDao;
-
 
     @Override
     public BaseDao<ServiceOrder> getBaseDao() {

@@ -48,7 +48,7 @@ public class VoucherFallbackProvider implements ZuulFallbackProvider {
       @Override
       public InputStream getBody() throws IOException {
         // 响应体
-        return new ByteArrayInputStream("用户微服务不可用，请稍后再试。".getBytes());
+        return new ByteArrayInputStream("券码微服务不可用，请稍后再试。".getBytes());
       }
 
       @Override

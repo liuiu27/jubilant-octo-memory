@@ -22,6 +22,11 @@ public enum ResponseCodeMsg {
     ILLEGAL_SIGN("100003", "签名不正确"),
 
     /**
+     * 999999 - 查询机构信息失败
+     */
+    ILLEGAL_PARTNER("999999" ,"合作机构信息获取失败"),
+
+    /**
      * EEEEEE - 失败
      */
     FAIL("EEEEEE", "失败");

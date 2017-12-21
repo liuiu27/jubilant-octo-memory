@@ -2,6 +2,7 @@ package com.cupdata.apigateway.filters.pre;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.apigateway.feign.OrgFeignClient;
+import com.cupdata.apigateway.util.GatewayUtils;
 import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.vo.BaseResponse;
@@ -51,11 +52,12 @@ public class PreRequestFilter extends ZuulFilter {
     String org = request.getParameter("org"); //机构编号
     String data = request.getParameter("data"); //请求参数密文
     String sign = request.getParameter("sign");//请求参数签名
+    LOGGER.info("机构编号" + org + "，请求密文" + data + "，签名" + sign);
 
-    String dataPlain = null;//请求参数明文
     //Step2：解密参数密文
+    String dataPlain = null;//请求参数明文
     BaseResponse<OrgInfVo> orgResponse = orgFeignClient.findOrgByNo(org);
-    if (ResponseCodeMsg.SUCCESS.getCode().equals(orgResponse.getResponseCode())){
+    if (ResponseCodeMsg.SUCCESS.getCode().equals(orgResponse.getResponseCode()) && null != orgResponse.getData()){
       OrgInfVo orgInfVo = orgResponse.getData();
       String sipPriKeyStr = orgInfVo.getOrgInf().getSipPriKey();//平台私钥字符串
       String orgPubKeyStr = orgInfVo.getOrgInf().getOrgPubKey();//机构公钥字符串
@@ -65,16 +67,14 @@ public class PreRequestFilter extends ZuulFilter {
 
         dataPlain = RSAUtils.decrypt(data, sipPriKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
       }catch (Exception e){
-        LOGGER.error("合作商户密文解密失败！");
+        LOGGER.error("机构请求报文的密文解密失败！");
         ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
         ctx.setResponseStatusCode(401);// 返回错误码
-
-        BaseResponse responseVo = new BaseResponse();
-
-        ctx.setResponseBody(JSONObject.toJSONString(responseVo));// 返回错误内容
+        ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgPubKeyStr, sipPriKeyStr, ResponseCodeMsg.ENCRYPTED_DATA_ERROR)));// 返回错误内容
         return null;
       }
 
+      //Step3：验证签名
       try {
         PublicKey orgPubKey = RSAUtils.getPublicKeyFromString(orgPubKeyStr);//机构公钥
 
@@ -83,14 +83,19 @@ public class PreRequestFilter extends ZuulFilter {
           throw new Exception(ResponseCodeMsg.ILLEGAL_SIGN.getMsg());
         }
       }catch (Exception e){
-
+        LOGGER.error("机构请求报文验签失败！");
+        ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
+        ctx.setResponseStatusCode(401);// 返回错误码
+        ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgPubKeyStr, sipPriKeyStr, ResponseCodeMsg.ILLEGAL_SIGN)));// 返回错误内容
+        return null;
       }
     }else {
-
+      LOGGER.error("获取机构：" + org + "信息失败！");
+      ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
+      ctx.setResponseStatusCode(401);// 返回错误码
+      ctx.setResponseBody(ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());// 返回错误内容
+      return null;
     }
-
-
-    //Step3：验证签名
 
     //Step4：重置解密之后的请求参数
     final byte[] reqBodyBytes = dataPlain.getBytes();

@@ -2,7 +2,7 @@ package com.cupdata.product.controller;
 
 import com.cupdata.commons.api.product.IProductController;
 import com.cupdata.commons.model.ServiceProduct;
-import com.cupdata.product.biz.ProductBiz;
+import com.cupdata.product.biz.ServiceProductBiz;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +21,7 @@ public class ProductController implements IProductController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
     @Resource
-    private ProductBiz productBiz;
+    private ServiceProductBiz productBiz;
 
     @Override
     public ServiceProduct findProductById(@PathVariable("id") Long id) {

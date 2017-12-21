@@ -11,16 +11,6 @@ import org.springframework.web.client.RestTemplate;
 @EnableEurekaClient
 public class OrderServiceApplication {
 
-	/**
-	 * @LoadBalanced，整合ribbon，使其具备负载均衡的能力
-	 * @return
-	 */
-	@Bean
-	@LoadBalanced
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(OrderServiceApplication.class, args);
 	}
