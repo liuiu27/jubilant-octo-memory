@@ -4,19 +4,20 @@ package com.cupdata.trvok.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.utils.MD5Util;
+import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.trvok.TrvokAirportReq;
 import com.cupdata.commons.vo.trvok.TrvokAirportRes;
 import com.cupdata.commons.vo.trvok.TrvokAirportRes.LoungeDetail;
 import com.cupdata.commons.vo.trvok.TrvokAreaReq;
 import com.cupdata.commons.vo.trvok.TrvokAreaRes;
+import com.cupdata.commons.vo.trvok.TrvokAreaRes.AirportSummary;
 import com.cupdata.trvok.utils.TripUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +36,9 @@ public class TripService {
 	 * @param type
 	 * @return
 	 */
-	public List<TrvokAreaRes> getTrvokArea(TrvokAreaReq trvokAreaReq){
+	public BaseResponse<TrvokAreaRes> getTrvokArea(TrvokAreaReq trvokAreaReq){
 		log.info("begin execut getArea.......param : type is " + trvokAreaReq.getAreaType());
+		BaseResponse<TrvokAreaRes> baseResponse = new BaseResponse<TrvokAreaRes>();
 		try {
 			String params = "random=" + TripUtil.getRandom() + "&type=" + trvokAreaReq.getAreaType();
 			String sign = MD5Util.md5Encode(params + KONGGANG_AREA_SIGN_KEY);//获取空港区域秘钥
@@ -54,16 +56,25 @@ public class TripService {
 				 data = data.replaceAll("\"AirportId\"","\"airportId\"");
 				 data = data.replaceAll("\"AirportName\"","\"airportName\"");
 				 data = data.replaceAll("\"Code\"","\"code\"");
-				 List<TrvokAreaRes> list = JSONObject.parseArray(data, TrvokAreaRes.class);  
-				 return list;
+				 TrvokAreaRes trvokAreaRes = new TrvokAreaRes();
+				 List<AirportSummary> list = JSONObject.parseArray(data, AirportSummary.class);  
+				 trvokAreaRes.setAirportList(list);
+				 baseResponse.setData(trvokAreaRes);
+				 baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
+				 baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
+				 return baseResponse;
 			}else{
+				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
+				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				log.error("request konggang getArea error is " + resJson.getString("description"));
+				return baseResponse;
 			}
 		}catch(Exception e){
 			log.error("request konggang getArea error is " + e.getMessage());
-			return null;
+			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
+			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+			return baseResponse;
 		}
-		return null;
 	}
 	
 	/**
