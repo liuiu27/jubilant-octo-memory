@@ -34,7 +34,7 @@
     </select>
     
      <select id="selectAll" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> Base_Column_List from ORG_PRODUCT_RELA
+        select <include refid="Base_Column_List"/> from ORG_PRODUCT_RELA
         where 1=1
 		<if test=" id != null and id != ''">
 			 and ID = #{id}

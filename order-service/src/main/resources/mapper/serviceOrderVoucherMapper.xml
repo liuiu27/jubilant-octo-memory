@@ -33,6 +33,12 @@
 	UPDATE_DATE
     </sql>
 
+	<!-- 增加记录 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.cupdata.commons.model.ServiceOrderVoucher">
+		insert into SERVICE_ORDER_VOUCHER (ORDER_ID, PRODUCT_NO, VOUCHER_CODE, VOUCHER_PASSWORD, QR_CODE_URL, START_DATE, END_DATE)
+		values(#{orderId},#{productNo},#{voucherCode},#{voucherPassword},#{qrCodeUrl},#{startDate},#{endDate})
+	</insert>
+
     <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -41,7 +47,7 @@
     </select>
     
      <select id="selectAll" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> Base_Column_List from SERVICE_ORDER_VOUCHER
+        select <include refid="Base_Column_List"/> from SERVICE_ORDER_VOUCHER
         where 1=1
         <if test=" id != null and id != ''">
 				and ID = #{id}

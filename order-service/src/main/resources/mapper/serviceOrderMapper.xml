@@ -13,7 +13,7 @@
 		<result column="SUPPLIER_PRICE" property="supplierPrice" jdbcType="BIGINT"/>
 		<result column="SETTLE_DATE" property="settleDate" jdbcType="VARCHAR"/>
 		<result column="ORDER_STATUS" property="orderStatus" jdbcType="CHAR"/>
-		<result column="ORDER_TYPE" property="orderType" jdbcType="CHAR"/>
+		<result column="ORDER_TYPE" property="orderType" jdbcType="VARCHAR"/>
 		<result column="ORDER_DESC" property="orderDesc" jdbcType="VARCHAR"/>
 		<result column="ORDER_FAIL_DESC" property="orderFailDesc" jdbcType="VARCHAR"/>
 		<result column="IS_NOTIFY" property="isNotify" jdbcType="CHAR"/>
@@ -24,9 +24,9 @@
 		<result column="UPDATE_BY" property="updateDate" jdbcType="VARCHAR"/>
         <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>
     </resultMap>
-    
-    
-    <sql id="Base_Column_List">
+
+
+	<sql id="Base_Column_List">
 	ID,
 	ORDER_NO,
 	ORG_NO,
@@ -48,17 +48,26 @@
 	UPDATE_BY,
 	UPDATE_DATE
     </sql>
-    
-    
+
+	<!-- 增加记录 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.cupdata.commons.model.ServiceOrder">
+		insert into SERVICE_ORDER (ORDER_NO, ORG_NO, SUPPLIER_NO, ORG_ORDER_NO, SUPPLIER_ORDER_NO, ORG_PRICE, SUPPLIER_PRICE,
+		SETTLE_DATE, ORDER_STATUS, ORDER_TYPE, ORDER_DESC, ORDER_FAIL_DESC, IS_NOTIFY, NOTIFY_URL, NODE_NAME)
+		values(#{orderNo},#{orgNo},#{supplierNo},#{orgOrderNo},#{supplierOrderNo},#{orgPrice},#{supplierPrice},
+		#{settleDate},#{orderStatus},#{orderType},#{orderDesc},#{orderFailDesc},#{isNotify},#{notifyUrl},#{nodeName})
+	</insert>
+
+	<!-- 根据ID查询 -->
     <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from SERVICE_ORDER
         where ID = #{id}
     </select>
-    
+
+	<!-- 根据条件查询所有记录 -->
      <select id="selectAll" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> Base_Column_List from SERVICE_ORDER
+        select <include refid="Base_Column_List"/> from SERVICE_ORDER
         where 1=1
         <if test=" id != null and id != ''">
 				and ID = #{id}

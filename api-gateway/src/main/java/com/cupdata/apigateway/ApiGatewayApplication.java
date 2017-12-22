@@ -4,11 +4,16 @@ import com.cupdata.apigateway.filters.post.ResponseFilter;
 import com.cupdata.apigateway.filters.pre.PreRequestFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
 
 @EnableZuulProxy
 @SpringBootApplication
+@EnableFeignClients
+@EnableEurekaClient
 public class ApiGatewayApplication {
 
 	public static void main(String[] args) {

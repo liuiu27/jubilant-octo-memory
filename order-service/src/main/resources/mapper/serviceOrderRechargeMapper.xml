@@ -37,6 +37,14 @@
 	UPDATE_DATE
     </sql>
 
+	<!-- 增加记录 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.cupdata.commons.model.ServiceOrderRecharge">
+		insert into SERVICE_ORDER_RECHARGE (ORDER_ID, PRODUCT_NO, ACCOUNT_NUMBER, OPEN_DURATION, RECHARGE_AMT,
+		RECHARGE_TRAFFIC, RECHARGE_NUMBER, GAME_REGION, GAME_SERVER)
+		values(#{orderId},#{productNo},#{accountNumber},#{openDuration},#{rechargeAmt},
+		#{rechargeTraffic},#{rechargeNumber},#{gameRegion},#{gameServer})
+	</insert>
+
     <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -45,7 +53,7 @@
     </select>
     
      <select id="selectAll" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> Base_Column_List from SERVICE_ORDER
+        select <include refid="Base_Column_List"/> from SERVICE_ORDER_RECHARGE
         where 1=1
         <if test=" id != null and id != ''">
 				and ID = #{id}

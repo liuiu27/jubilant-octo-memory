@@ -52,7 +52,7 @@
     </select>
     
      <select id="selectAll" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> Base_Column_List from SERVICE_PRODUCT
+        select <include refid="Base_Column_List"/> from SERVICE_PRODUCT
         where 1=1
         <if test=" id != null and id != ''">
 			 and ID = #{id}

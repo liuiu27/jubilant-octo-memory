@@ -12,7 +12,7 @@ public class ServiceOrderVoucher extends BaseModel{
     /**
      * 主订单id
      */
-    private String orderId;
+    private Long orderId;
 
     /**
      *

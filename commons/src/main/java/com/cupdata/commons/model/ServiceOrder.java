@@ -55,7 +55,7 @@ public class ServiceOrder extends BaseModel{
 	 *订单类型
 	 * 与服务产品类型相同
 	 */
-	private Character orderType;
+	private String orderType;
 
 	/**
 	 *订单描述
@@ -155,11 +155,11 @@ public class ServiceOrder extends BaseModel{
 		this.orderStatus = orderStatus;
 	}
 
-	public Character getOrderType() {
+	public String getOrderType() {
 		return orderType;
 	}
 
-	public void setOrderType(Character orderType) {
+	public void setOrderType(String orderType) {
 		this.orderType = orderType;
 	}
 
