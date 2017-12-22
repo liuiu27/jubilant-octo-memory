@@ -20,7 +20,12 @@ public enum ResponseCodeMsg {
      * 100003 - 签名不正确
      */
     ILLEGAL_SIGN("100003", "签名不正确"),
-
+    
+    /**
+     * 100004 - 获取信息失败
+     */
+	FAILED_TO_GET("100004" ,"获取信息失败"),
+	
     /**
      * 999994 - 订单创建失败
      */
@@ -45,12 +50,17 @@ public enum ResponseCodeMsg {
      * 999999 - 查询机构信息失败
      */
     ILLEGAL_PARTNER("999999" ,"合作机构信息获取失败"),
-
+    
+    /**
+     * 900000 - 系统故障
+     */
+    SYSTEM_ERROR("900000","系统故障"),
+    
     /**
      * EEEEEE - 失败
      */
     FAIL("EEEEEE", "失败");
-
+	
     /**
      * 响应码
      */
