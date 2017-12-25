@@ -43,4 +43,9 @@ public class ServiceSupplier extends BaseModel{
      * 供应商类型
      */
     private String supplierType;
+
+    /**
+     *供应商标识
+     */
+    private String supplierFlag;
 }

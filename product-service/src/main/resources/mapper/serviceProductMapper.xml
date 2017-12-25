@@ -16,6 +16,7 @@
 		<result column="RECHARGE_NUMBER" property="rechargeNumber" jdbcType="BIGINT"/>
 		<result column="SUPPLIER_PARAM" property="supplierParam" jdbcType="VARCHAR"/>
 		<result column="CONFIG_ID" property="configId" jdbcType="VARCHAR"/>
+		<result column="SUPPLIER_FLAG" property="supplierFlag" jdbcType="VARCHAR"/>
 		<result column="CREATE_BY" property="createDate" jdbcType="VARCHAR"/>
         <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
 		<result column="UPDATE_BY" property="updateDate" jdbcType="VARCHAR"/>
@@ -37,6 +38,7 @@
 	RECHARGE_NUMBER,
 	SUPPLIER_PARAM,
 	CONFIG_ID,
+	SUPPLIER_FLAG,
 	CREATE_BY,
 	CREATE_DATE,
 	UPDATE_BY,
@@ -92,6 +94,9 @@
 		 </if>
 		 <if test=" configId != null and configId != ''">
 			 and CONFIG_ID = #{configId}
+		 </if>
+		 <if test=" supplierFlag != null and supplierFlag != ''">
+			 and SUPPLIER_FLAG = #{supplierFlag}
 		 </if>
     </select>
 

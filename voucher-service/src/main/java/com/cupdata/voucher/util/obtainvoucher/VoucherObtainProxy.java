@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @Auth: LinYong
- * @Description:
+ * @Description: 获取券码代理类
  * @Date: 14:15 2017/12/22
  */
 public class VoucherObtainProxy {
@@ -31,11 +31,11 @@ public class VoucherObtainProxy {
     }
 
     public void execute(ServiceOrder order, ServiceOrderVoucher voucherOrder){
-        if(null != order){
-            log.info("由花积分支付网关通知公众号支付结果，执行订单编号：" + order.getOrderNo() + "后续处理逻辑。");
+        if(null != order && null != voucherOrder){
+            log.info("服务整合平台券码服务中，执行获取供应商券码，主订单编号：" + order.getOrderNo());
             obtainVoucherUtil.execute(order, voucherOrder);
         }else{
-            log.info("由花积分支付网关通知公众号支付结果，订单记录为空，忽略后续逻辑。");
+            log.info("服务整合平台券码服务中，订单记录或者券码订单记录为空，忽略后续逻辑");
         }
     }
 }

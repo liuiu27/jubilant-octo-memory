@@ -11,6 +11,7 @@
 		<result column="CONTACTS" property="contacts" jdbcType="VARCHAR"/>
 		<result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR"/>
 		<result column="SUPPLIER_TYPE" property="supplierType" jdbcType="VARCHAR"/>
+		<result column="SUPPLIER_FLAG" property="supplierFlag" jdbcType="VARCHAR"/>
 		<result column="CREATE_BY" property="createDate" jdbcType="VARCHAR"/>
         <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
 		<result column="UPDATE_BY" property="updateDate" jdbcType="VARCHAR"/>
@@ -26,6 +27,7 @@
 	CONTACTS,
 	MOBILE_NO,
 	SUPPLIER_TYPE,
+	SUPPLIER_FLAG,
 	CREATE_BY,
 	CREATE_DATE,
 	UPDATE_BY,
@@ -65,6 +67,9 @@
 		 </if>
 		 <if test=" supplierType != null and supplierType != ''">
 			 and SUPPLIER_TYPE = #{supplierType}
+		 </if>
+		 <if test=" supplierFlag != null and supplierFlag != ''">
+			 and SUPPLIER_FLAG = #{supplierFlag}
 		 </if>
     </select>
 

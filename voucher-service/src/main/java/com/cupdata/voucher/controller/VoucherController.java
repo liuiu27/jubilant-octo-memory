@@ -11,6 +11,7 @@ import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
 import com.cupdata.voucher.feign.OrderFeignClient;
 import com.cupdata.voucher.feign.ProductFeignClient;
+import com.cupdata.voucher.util.obtainvoucher.VoucherObtainProxy;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -74,10 +75,10 @@ public class VoucherController implements IVoucherController{
             return res;
         }
 
-        //调用不同供应商的接口，获取券码
+        //调用不同供应商的接口，获取券码并更新保存主订单/券码订单）
+        VoucherObtainProxy proxy = new VoucherObtainProxy(voucherOrderRes.getData().getOrder(), voucherOrderRes.getData().getVoucherOrder());
+        proxy.execute(voucherOrderRes.getData().getOrder(), voucherOrderRes.getData().getVoucherOrder());
 
-
-        //根据接口返回的数据，更新券码订单以及主订单
 
         return null;
     }

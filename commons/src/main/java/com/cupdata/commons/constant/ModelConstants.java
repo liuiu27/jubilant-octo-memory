@@ -85,4 +85,9 @@ public class ModelConstants {
      * 通知状态-通知中
      */
     public static Character NOTIFY_STATUS_ING = '3';
+
+    /**
+     * 服务供应商标识-TRVOK：空港易行
+     */
+    public static String SUPPLIER_FLAG_TRVOK = "TRVOK";
 }

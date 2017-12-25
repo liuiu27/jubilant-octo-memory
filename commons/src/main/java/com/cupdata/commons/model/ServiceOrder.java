@@ -83,6 +83,11 @@ public class ServiceOrder extends BaseModel{
 	 */
 	private String nodeName;
 
+	/**
+	 *服务供应商标识
+	 */
+	private String supplierFlag;
+
 	public String getOrgNo() {
 		return orgNo;
 	}
@@ -201,5 +206,13 @@ public class ServiceOrder extends BaseModel{
 
 	public void setNodeName(String nodeName) {
 		this.nodeName = nodeName;
+	}
+
+	public String getSupplierFlag() {
+		return supplierFlag;
+	}
+
+	public void setSupplierFlag(String supplierFlag) {
+		this.supplierFlag = supplierFlag;
 	}
 }

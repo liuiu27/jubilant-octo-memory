@@ -72,6 +72,11 @@ public class ServiceProduct extends BaseModel {
      */
     private String configId;
 
+    /**
+     *服务供应商标识
+     */
+    private String supplierFlag;
+
     public String getProductType() {
         return productType;
     }
@@ -166,5 +171,13 @@ public class ServiceProduct extends BaseModel {
 
     public void setConfigId(String configId) {
         this.configId = configId;
+    }
+
+    public String getSupplierFlag() {
+        return supplierFlag;
+    }
+
+    public void setSupplierFlag(String supplierFlag) {
+        this.supplierFlag = supplierFlag;
     }
 }
