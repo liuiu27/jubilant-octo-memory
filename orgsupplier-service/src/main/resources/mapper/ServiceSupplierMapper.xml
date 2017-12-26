@@ -12,9 +12,9 @@
 		<result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR"/>
 		<result column="SUPPLIER_TYPE" property="supplierType" jdbcType="VARCHAR"/>
 		<result column="SUPPLIER_FLAG" property="supplierFlag" jdbcType="VARCHAR"/>
-		<result column="CREATE_BY" property="createDate" jdbcType="VARCHAR"/>
+		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
         <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
-		<result column="UPDATE_BY" property="updateDate" jdbcType="VARCHAR"/>
+		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
         <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>
     </resultMap>
     

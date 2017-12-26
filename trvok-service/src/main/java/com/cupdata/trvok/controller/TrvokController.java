@@ -2,6 +2,7 @@ package com.cupdata.trvok.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.cupdata.commons.api.trvok.ITrvokController;
 import com.cupdata.commons.vo.BaseResponse;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * @Date: 19:13 2017/12/19
  */
 @Slf4j
+@RestController
 public class TrvokController implements ITrvokController{
 	@Autowired TripService  tripService;
 	

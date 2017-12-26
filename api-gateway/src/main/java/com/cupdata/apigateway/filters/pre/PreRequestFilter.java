@@ -1,25 +1,27 @@
 package com.cupdata.apigateway.filters.pre;
 
+import java.io.IOException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.apigateway.feign.OrgFeignClient;
 import com.cupdata.apigateway.util.GatewayUtils;
-import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.HttpServletRequestWrapper;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 
 public class PreRequestFilter extends ZuulFilter {
   private static final Logger LOGGER = LoggerFactory.getLogger(PreRequestFilter.class);
@@ -57,11 +59,11 @@ public class PreRequestFilter extends ZuulFilter {
     //Step2：解密参数密文
     String dataPlain = null;//请求参数明文
     BaseResponse<OrgInfVo> orgResponse = orgFeignClient.findOrgByNo(org);
-    if (ResponseCodeMsg.SUCCESS.getCode().equals(orgResponse.getResponseCode()) && null != orgResponse.getData()){
+     if (ResponseCodeMsg.SUCCESS.getCode().equals(orgResponse.getResponseCode()) && null != orgResponse.getData()){
       OrgInfVo orgInfVo = orgResponse.getData();
       String sipPriKeyStr = orgInfVo.getOrgInf().getSipPriKey();//平台私钥字符串
       String orgPubKeyStr = orgInfVo.getOrgInf().getOrgPubKey();//机构公钥字符串
-
+    		   
       try {
         PrivateKey sipPriKey = RSAUtils.getPrivateKeyFromString(sipPriKeyStr);//平台私钥
 

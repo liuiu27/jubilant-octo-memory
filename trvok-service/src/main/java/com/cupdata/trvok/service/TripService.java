@@ -281,6 +281,13 @@ public class TripService {
 			return baseResponse;
 		}	
 	}
+	public <T> BaseResponse<?> success(BaseResponse<?> baseResponse,Class <T> clazz){
+		baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
+		baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
+		return baseResponse;
+	}
+	
+	
 	
 //	public static void main(String[] args) {
 //		TripBiz tb = new TripBiz();

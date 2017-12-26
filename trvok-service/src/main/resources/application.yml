@@ -1,6 +1,6 @@
 spring:
   application:
-    name: product-service
+    name: trvok-service
 
 server:
    port: 8020         # 指定该实例的端口
