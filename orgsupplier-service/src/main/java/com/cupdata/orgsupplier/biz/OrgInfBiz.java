@@ -1,12 +1,15 @@
 package com.cupdata.orgsupplier.biz;
 
-import com.cupdata.commons.biz.BaseBiz;
-import com.cupdata.commons.dao.BaseDao;
-import com.cupdata.commons.model.OrgInf;
-import com.cupdata.commons.model.ServiceOrder;
-import com.cupdata.orgsupplier.dao.OrgInfDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.cupdata.commons.biz.BaseBiz;
+import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.dao.BaseDao;
+import com.cupdata.commons.model.OrgInf;
+import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
+import com.cupdata.orgsupplier.dao.OrgInfDao;
 
 /**
  * @Auth: LinYong
@@ -24,5 +27,18 @@ public class OrgInfBiz extends BaseBiz<OrgInf> {
     public BaseDao<OrgInf> getBaseDao() {
         return orgInfDao;
     }
+    
+	public BaseResponse<OrgInfVo> findOrgByNo(String orgNo) {
+		BaseResponse<OrgInfVo> BaseResponse =  new BaseResponse<OrgInfVo>();
+    	OrgInf orgInf = orgInfDao.findOrgByNo(orgNo);
+    	OrgInfVo orgInfVo = new OrgInfVo();
+    	orgInfVo.setOrgInf(orgInf);
+    	if(null != orgInfVo) {
+    		BaseResponse.setData(orgInfVo);
+    		BaseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
+    		BaseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
+    	}
+		return BaseResponse;
+	}
 
 }
