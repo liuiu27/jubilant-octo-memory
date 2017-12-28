@@ -16,4 +16,9 @@ public class TrovkCodeReq extends BaseRequest{
 	 * 产品标识符
 	 */
 	private String sku;
+	
+	/**
+	 * 有效期 YYYY-MM-DD
+	 */
+	private String expire;
 }

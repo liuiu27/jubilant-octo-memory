@@ -13,9 +13,4 @@ public class TrvokServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TrvokServiceApplication.class, args);
 	}
-
-	@Bean
-	public RestTemplate restTemplate(){
-		return new RestTemplate();
-	}
 }

@@ -157,7 +157,7 @@ public class TripService {
 	}
 	
 	/**
-	 *  根据   产品标识符   和   银行订单号   获取券码
+	 *  根据   产品标识符   和   银行订单号   获取券码  激活券码
 	 * @param  商户网站唯一订单号 outTradeNo  产品标识符 sku
 	 * @return
 	 */
@@ -177,12 +177,28 @@ public class TripService {
 			log.info("response information is " + resStr);
 			JSONObject resJson = JSONObject.parseObject(resStr);
 			if("00".equals(resJson.getString("code"))){//result为0，则获取data机票详情
-				 TrovkCodeRes trovkCodeRes = new TrovkCodeRes();
-				 trovkCodeRes.setVerifyCode( resJson.getString("verify_code"));
-				 baseResponse.setData(trovkCodeRes);
-				 baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
-				 baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
-				 return baseResponse;
+				TrovkCodeRes trovkCodeRes = new TrovkCodeRes();
+				trovkCodeRes.setVerifyCode(resJson.getString("verify_code"));
+				baseResponse.setData(trovkCodeRes);
+				params = "partner=" + KONGGANG_PARTNER + // KONGGANG_PARTNER 获取空港签约合作方身份ID
+						"&verify_code=" + trovkCodeRes.getVerifyCode() + "&expire=" + trovkCodeReq.getExpire();
+				sign = MD5Util.md5Encode(params + KONGGANG_WCF_SIGN_KEY);// 获取空港WCF密钥
+				requstUrl = KONGGANG_REQUST_URL + "API/YinLian/YinLianPD.svc/confirm?" + params + "&sign=" + sign;// 空港请求机票详情URL
+				log.info("request url is " + requstUrl);
+				// GET请求获取空港服务券码
+				resStr = HttpUtil.doGet(requstUrl);
+				log.info("response information is " + resStr);
+				resJson = JSONObject.parseObject(resStr);
+				if ("00".equals(resJson.getString("code"))) {// result为0，则获取data机票详情
+					baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
+					baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
+					return baseResponse;
+				} else {
+					log.error("request konggang activationCode error is " + resJson.getString("info"));
+					baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
+					baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+					return baseResponse;
+				}
 			}else{
 				log.error("request konggang getVerifyCode error is " + resJson.getString("info"));
 				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());

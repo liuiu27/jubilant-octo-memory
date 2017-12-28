@@ -51,7 +51,7 @@ public class TrvokController implements ITrvokController{
 	}
 	
 	/**
-	 * 空港获取券码
+	 * 空港获取券码  激活券码
 	 */
 	@Override
 	public BaseResponse<TrovkCodeRes> getTrvokVerifyCode(TrovkCodeReq trovkCodeReq) {
