@@ -3,10 +3,12 @@ package com.cupdata.voucher.controller;
 import com.cupdata.commons.api.voucher.IVoucherController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.vo.BaseData;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
+import com.cupdata.commons.vo.voucher.DisableVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
 import com.cupdata.voucher.feign.OrderFeignClient;
@@ -82,5 +84,21 @@ public class VoucherController implements IVoucherController{
 
         return null;
     }
+
+	@Override
+	public BaseResponse<BaseData> disableVoucher(String org, DisableVoucherReq disableVoucherReq,
+			HttpServletRequest request, HttpServletResponse response) {
+		  //响应信息
+        BaseResponse<BaseData> res = new BaseResponse();//默认为成功
+        
+        //判断请求参数是否合法- 订单编号 券码 是否为空
+		if(null == disableVoucherReq || StringUtils.isBlank(disableVoucherReq.getOrgOrderNo()) || StringUtils.isBlank(disableVoucherReq.getVoucherCode())) {
+			 res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+	         res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+	         return res;
+		}
+		//TODO 调用不同供应商的接口，禁用券码
+		return null;
+	}
 
 }

@@ -1,8 +1,11 @@
 package com.cupdata.commons.api.voucher;
 
+import com.cupdata.commons.vo.BaseData;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
+import com.cupdata.commons.vo.voucher.DisableVoucherReq;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,4 +23,8 @@ public interface IVoucherController {
      */
     @PostMapping("/voucher")
     public BaseResponse<GetVoucherRes> createByProductNo(@RequestParam(required=true) String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response);
+    
+    @PostMapping("/disableVoucher")
+    public BaseResponse<BaseData> disableVoucher(@RequestParam(required=true) String org, @RequestBody DisableVoucherReq disableVoucherReq, HttpServletRequest request, HttpServletResponse response);
+    
 }

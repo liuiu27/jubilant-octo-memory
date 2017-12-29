@@ -67,8 +67,6 @@ public class TripService {
 				 List<AirportSummary> list = JSONObject.parseArray(data, AirportSummary.class);  
 				 trvokAreaRes.setAirportList(list);
 				 baseResponse.setData(trvokAreaRes);
-				 baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
-				 baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
 				 return baseResponse;
 			}else{
 				log.error("request konggang getTrvokArea error is " + resJson.getString("description"));
@@ -139,8 +137,6 @@ public class TripService {
 				 }
 				 airportInfoRes.setAirportInfo(LoungeDetailList);
 				 baseResponse.setData(airportInfoRes);
-				 baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
-				 baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
 				 return baseResponse;
 			}else{
 				log.error("request konggang getTrvokAirportInfo error is " + resJson.getString("description"));
@@ -190,8 +186,6 @@ public class TripService {
 				log.info("response information is " + resStr);
 				resJson = JSONObject.parseObject(resStr);
 				if ("00".equals(resJson.getString("code"))) {// result为0，则获取data机票详情
-					baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
-					baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
 					return baseResponse;
 				} else {
 					log.error("request konggang activationCode error is " + resJson.getString("info"));
@@ -236,8 +230,6 @@ public class TripService {
 			if("00".equals(resJson.getString("code"))){//result为0，则获取data机票详情
 				activatCodeRes.setResult(true);
 				baseResponse.setData(activatCodeRes);
-				baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
-				baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
 				return baseResponse;			
 			}else{
 				log.error("request konggang activationCode error is " + resJson.getString("info"));
@@ -279,8 +271,6 @@ public class TripService {
 			if("00".equals(resJson.getString("code"))){//result为0，则获取data机票详情
 				trovkDisableRes.setResult(true);
 				baseResponse.setData(trovkDisableRes);
-				baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
-				baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
 				return baseResponse;
 			}else{
 				log.error("request konggang disableCode error is " + resJson.getString("info"));
