@@ -23,7 +23,7 @@
 	UPDATE_DATE
     </sql>
 
-	<select id = "getSysConfig" resultType="java.lang.String" parameterType="java.lang.String">
+	<select id = "getConfig" resultType="java.lang.String" parameterType="java.lang.String">
 		select PARA_VALUE from sys_config 
 		where
 			BANK_CODE = #{bankCode}	
