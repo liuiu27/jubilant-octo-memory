@@ -670,6 +670,21 @@ public class CommonUtils {
 		Collections.sort(list, multiSort);
 	}
 	
+	
+	/**
+	 * 判断字符串是否为null 或者 trim后为"";
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static boolean isTrimEmpty(String str) {
+		if (str == null || "".equals(str.trim())) {
+			return true;
+		}
+		return false;
+	}
+	
+	
 	public static void main(String[] args) throws Exception {
 //		System.out.println(getRandomNum(6));
 		

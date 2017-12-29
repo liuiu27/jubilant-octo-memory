@@ -1,10 +1,8 @@
 package com.cupdata.orgsupplier.controller;
 
-import com.cupdata.commons.api.orgsupplier.ISupplierController;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.cupdata.commons.api.orgsupplier.ISupplierController;
 
 /**
  * @Auth: LinYong
