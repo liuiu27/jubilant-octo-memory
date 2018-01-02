@@ -129,7 +129,7 @@ public class PreRequestFilter extends ZuulFilter {
 				return reqBodyBytes.length;
 			}
 		});
-
+        ctx.getZuulRequestHeaders().put("content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
 		return null;
 	}
 }
