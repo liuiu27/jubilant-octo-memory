@@ -62,7 +62,7 @@ public class TripService {
 				 //字段名称转换
 				 data = data.replaceAll("\"AirportId\"","\"airportId\"");
 				 data = data.replaceAll("\"AirportName\"","\"airportName\"");
-				 data = data.replaceAll("\"Code\"","\"code\"");
+				 data = data.replaceAll("\"Code\"","\"airportCode\"");
 				 TrvokAreaRes trvokAreaRes = new TrvokAreaRes();
 				 List<AirportSummary> list = JSONObject.parseArray(data, AirportSummary.class);  
 				 trvokAreaRes.setAirportList(list);
