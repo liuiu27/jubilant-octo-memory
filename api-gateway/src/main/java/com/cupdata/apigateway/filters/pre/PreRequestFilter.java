@@ -6,6 +6,7 @@ import java.security.PublicKey;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,9 @@ import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import com.netflix.zuul.http.HttpServletRequestWrapper;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
+import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.http.MediaType;
 
 public class PreRequestFilter extends ZuulFilter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PreRequestFilter.class);
@@ -33,7 +35,7 @@ public class PreRequestFilter extends ZuulFilter {
 
 	@Override
 	public String filterType() {
-		return "pre";
+		return FilterConstants.PRE_TYPE;
 	}
 
 	@Override
@@ -107,6 +109,11 @@ public class PreRequestFilter extends ZuulFilter {
 		// Step4：重置解密之后的请求参数
 		final byte[] reqBodyBytes = dataPlain.getBytes();
 		ctx.setRequest(new HttpServletRequestWrapper(request) {
+
+			@Override
+			public String getContentType() {
+				return MediaType.APPLICATION_JSON_UTF8_VALUE;
+			}
 			@Override
 			public ServletInputStream getInputStream() throws IOException {
 				return new ServletInputStreamWrapper(reqBodyBytes);
