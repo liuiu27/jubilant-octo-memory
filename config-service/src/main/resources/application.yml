@@ -9,7 +9,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 
 server:
-   port: 8050         # 指定该实例的端口
+   port: 8060         # 指定该实例的端口
 eureka:
   client:
     registerWithEureka: true  #false:不作为一个客户端注册到注册中心
@@ -24,4 +24,4 @@ eureka:
 #mybatis相关配置
 mybatis:
     type-aliases-package: com.cupdata.commons.model
-    mapper-locations: classpath:mapper/*.xml   
+    mapper-locations: classpath:mapper/*.xml

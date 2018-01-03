@@ -1,5 +1,6 @@
 package com.cupdata.config.biz;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,13 @@ public class ConfigBiz extends BaseBiz<SysConfig> {
 	}
 	
 	public String getConfig(String bankCode, String paraName) {
+		if(StringUtils.isBlank(paraName)){
+			log.error("getConfig paraName is null");
+			return null;
+		}
+		if(StringUtils.isBlank(bankCode)) {
+			bankCode = "CUPD";
+		}
 		String paraValue = configDao.getConfig(bankCode,paraName);
 		if(!CommonUtils.isTrimEmpty(paraValue)) {
 			return paraValue;

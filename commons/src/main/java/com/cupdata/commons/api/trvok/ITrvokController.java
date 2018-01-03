@@ -16,8 +16,6 @@ import com.cupdata.commons.vo.trvok.TrvokAirportRes;
 import com.cupdata.commons.vo.trvok.TrvokAreaReq;
 import com.cupdata.commons.vo.trvok.TrvokAreaRes;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * @Auth: LinYong
  * @Description:空港易行服务请求接口
@@ -27,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/trvok")
 public interface ITrvokController {
 	
-    @PostMapping("/getTrvokArea")
+	@PostMapping("/getTrvokArea")
     public BaseResponse<TrvokAreaRes> getTrvokArea(@RequestBody TrvokAreaReq areaReq);
     
     @PostMapping("/getTrvokAirportInfo")
