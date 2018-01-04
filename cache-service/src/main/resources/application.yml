@@ -1,6 +1,6 @@
 spring:
   application:
-    name: config-service
+    name: cache-service
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
@@ -9,7 +9,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
 
 server:
-   port: 8060         # 指定该实例的端口
+   port: 8070         # 指定该实例的端口
 eureka:
   client:
     registerWithEureka: true  #false:不作为一个客户端注册到注册中心

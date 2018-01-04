@@ -30,6 +30,7 @@
         <module>voucher-service</module>
         <module>recharge-service</module>
         <module>config-service</module>
+        <module>cache-service</module>
     </modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->

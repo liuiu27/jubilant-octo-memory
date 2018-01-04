@@ -1,4 +1,4 @@
-package com.cupdata.config.dao;
+package com.cupdata.cache.dao;
 
 import java.util.List;
 
