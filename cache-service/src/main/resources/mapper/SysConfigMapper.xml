@@ -36,14 +36,11 @@
 		from sys_config
 	</select> 
 	
-	<select id="selectAll" resultMap="BaseResultMap" >
+	
+	<select id="selectAll" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from sys_config
 	</select> 
-	
-	
-	
-	
 	
 </mapper>

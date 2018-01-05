@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cupdata.cache.dao.BankInfDao">
+
+    <resultMap id="BaseResultMap" type="com.cupdata.commons.model.BankInf">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+		<result column="BANK_CODE" property="bankCode" jdbcType="VARCHAR"/>
+		<result column="BANK_NAME" property="bankName" jdbcType="VARCHAR"/>
+		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
+		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+	ID,
+	BANK_CODE,
+	BANK_NAME,
+	CREATE_BY,
+	CREATE_DATE,
+	UPDATE_BY,
+	UPDATE_DATE
+    </sql>
+    
+    <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from BANK_INF
+        where ID = #{id}
+    </select>
+    
+     <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from BANK_INF
+        where 1=1
+        <if test=" id != null and id != ''">
+			 and ID = #{id}
+		</if>
+		 <if test=" bankCode != null and bankCode != ''">
+			 and BANK_CODE = #{bankCode}
+		 </if>
+		 <if test=" bankName != null and bankName != ''">
+			 and BANK_NAME = #{bankName}
+		 </if>
+    </select>
+
+</mapper>

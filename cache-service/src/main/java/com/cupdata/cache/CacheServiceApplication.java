@@ -2,12 +2,13 @@ package com.cupdata.cache;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
-
-public class ConfigServiceApplication {
+@EnableEurekaClient
+public class CacheServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ConfigServiceApplication.class, args);
+		SpringApplication.run(CacheServiceApplication.class, args);
 	}
 }

@@ -2,15 +2,18 @@ package com.cupdata.cache.cacheUtils;
 
 import java.util.List;
 
-import javax.servlet.ServletContext;
-
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.cupdata.cache.biz.BankInfBiz;
 import com.cupdata.cache.biz.ConfigBiz;
+import com.cupdata.cache.biz.OrgInfBiz;
+import com.cupdata.cache.biz.ServiceSupplierBiz;
 import com.cupdata.cache.utils.SpringUtil;
+import com.cupdata.commons.model.BankInf;
+import com.cupdata.commons.model.OrgInf;
+import com.cupdata.commons.model.ServiceSupplier;
 import com.cupdata.commons.model.SysConfig;
 
 
@@ -35,6 +38,12 @@ public class CacheManager {
 	private static Long REFRESH_TIME_LIMIT = 20 * 1000L;
 	
 	private static ConfigBiz configBiz = (ConfigBiz) SpringUtil.getBean("configBiz");
+	
+	private static BankInfBiz bankInfBiz = (BankInfBiz) SpringUtil.getBean("bankInfBiz");
+	
+	private static OrgInfBiz orgInfBiz = (OrgInfBiz) SpringUtil.getBean("orgInfBiz");
+	
+	private static ServiceSupplierBiz serviceSupplierBiz = (ServiceSupplierBiz) SpringUtil.getBean("serviceSupplierBiz");
 	
 //	/**
 //	 * 构造缓存
@@ -113,12 +122,14 @@ public class CacheManager {
 	public static void refreshAllCache() {
 		if (CACHE != null) {
 			//缓存系统配置参数
-			log.info("缓存所有系统配置参数....");
+			log.info("缓存所有系统配置参数...");
 			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SYS_CONFIG,configBiz.selectAll(null));
-			log.info("缓存所有银行数据信息");
-			
-			
-			
+			log.info("缓存所有银行数据信息...");
+			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_BANKINF,bankInfBiz.selectAll(null));
+			log.info("缓存所有机构数据信息...");
+			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_ORGINF,orgInfBiz.selectAll(null));
+			log.info("缓存所有供应商数据信息...");
+			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SUPPLIER,serviceSupplierBiz.selectAll(null));
 		} else {
 			log.info("CACHE为空！");
 			return;
@@ -139,20 +150,78 @@ public class CacheManager {
 	 * 获取系统配置信息
 	 * @return
 	 */
-	public static String getSysConfig(String bankCode, String paraNameEn) {
+	public static String getSysConfig(String bankCode, String paraName) {
+		if(StringUtils.isBlank(paraName)) {
+			log.error("paraName is null");
+			return null;
+		}
 		List<SysConfig> list = (List<SysConfig>) getCache(CacheConstants.CACHE_TYPE_SYS_CONFIG);
-		String outString = null;
 		if (CollectionUtils.isNotEmpty(list)) {
+			if (StringUtils.isBlank(bankCode)) {
+				bankCode = "CUPD";
+			}
 			for (SysConfig config : list) {
-				if (bankCode.equals(config.getBankCode())) {
-					outString = config.getParaValue();
+				if (bankCode.equals(config.getBankCode()) && paraName.equals(config.getParaNameEn())) {
+					return config.getParaValue();
 				}
 			}
 		}
 		return null;
 	}
 	
+	/**
+	 * 获取 银行 信息
+	 * @return
+	 */
+	public static BankInf getBankInf(String bankCode) {
+		List<BankInf> list = (List<BankInf>) getCache(CacheConstants.CACHE_TYPE_BANKINF);
+		if (CollectionUtils.isNotEmpty(list)) {
+			if (StringUtils.isNotBlank(bankCode)) {
+				for (BankInf bankInf : list) {
+					if (bankCode.equals(bankInf.getBankCode())) {
+						return bankInf;
+					}
+				}
+			}
+		}
+		return null;
+	}
 	
+	/**
+	 * 获取 机构 信息
+	 * @return
+	 */
+	public static OrgInf getOrgInf(String orgNo) {
+		List<OrgInf> list = (List<OrgInf>) getCache(CacheConstants.CACHE_TYPE_ORGINF);
+		if (CollectionUtils.isNotEmpty(list)) {
+			if (StringUtils.isNotBlank(orgNo)) {
+				for (OrgInf orgInf : list) {
+					if (orgNo.equals(orgInf.getOrgNo())) {
+						return orgInf;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 获取 供应商  信息
+	 * @return
+	 */
+	public static ServiceSupplier getSupplier(String supplierNo) {
+		List<ServiceSupplier> list = (List<ServiceSupplier>) getCache(CacheConstants.CACHE_TYPE_SUPPLIER);
+		if (CollectionUtils.isNotEmpty(list)) {
+			if (StringUtils.isNotBlank(supplierNo)) {
+				for (ServiceSupplier serviceSupplier : list) {
+					if (supplierNo.equals(serviceSupplier.getSupplierNo())) {
+						return serviceSupplier;
+					}
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * 获取ConfigBiz
