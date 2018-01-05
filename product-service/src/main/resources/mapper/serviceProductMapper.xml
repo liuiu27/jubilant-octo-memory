@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cupdata.product.dao.ServiceProductDao">
 
-    <resultMap id="BaseResultMap" type="com.cupdata.commons.model.ServiceProduct">
-        <result column="ID" property="id" jdbcType="INTEGER"/>
+	<resultMap id="BaseResultMap" type="com.cupdata.commons.model.ServiceProduct">
+		<result column="ID" property="id" jdbcType="INTEGER"/>
 		<result column="PRODUCT_TYPE" property="productType" jdbcType="VARCHAR"/>
 		<result column="SUPPLIER_NO" property="supplierNo" jdbcType="VARCHAR"/>
 		<result column="PRODUCT_NO" property="productNo" jdbcType="VARCHAR"/>
@@ -16,88 +16,84 @@
 		<result column="RECHARGE_NUMBER" property="rechargeNumber" jdbcType="BIGINT"/>
 		<result column="SUPPLIER_PARAM" property="supplierParam" jdbcType="VARCHAR"/>
 		<result column="CONFIG_ID" property="configId" jdbcType="VARCHAR"/>
-		<result column="SUPPLIER_FLAG" property="supplierFlag" jdbcType="VARCHAR"/>
 		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
-        <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
+		<result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
 		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
-        <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>>
-    </resultMap>
-    
-    
-    <sql id="Base_Column_List">
-	ID,
-	PRODUCT_TYPE,
-	SUPPLIER_NO,
-	PRODUCT_NO,
-	PRODUCT_NAME,
-	PRODUCT_DESC,
-	SUPPLIER_PRICE,
-	RECHARGE_DURATION,
-	RECHARGE_AMT,
-	RECHARGE_TRAFFIC,
-	RECHARGE_NUMBER,
-	SUPPLIER_PARAM,
-	CONFIG_ID,
-	SUPPLIER_FLAG,
-	CREATE_BY,
-	CREATE_DATE,
-	UPDATE_BY,
-	UPDATE_DATE
-    </sql>
-    
-    
-    <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-        select
-        <include refid="Base_Column_List"/>
-        from SERVICE_PRODUCT
-        where ID = #{id}
-    </select>
-    
-     <select id="selectAll" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> from SERVICE_PRODUCT
-        where 1=1
-        <if test=" id != null and id != ''">
-			 and ID = #{id}
+		<result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		ID,
+		PRODUCT_TYPE,
+		SUPPLIER_NO,
+		PRODUCT_NO,
+		PRODUCT_NAME,
+		PRODUCT_DESC,
+		SUPPLIER_PRICE,
+		RECHARGE_DURATION,
+		RECHARGE_AMT,
+		RECHARGE_TRAFFIC,
+		RECHARGE_NUMBER,
+		SUPPLIER_PARAM,
+		CONFIG_ID,
+		CREATE_BY,
+		CREATE_DATE,
+		UPDATE_BY,
+		UPDATE_DATE
+	</sql>
+
+
+	<select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List"/>
+		from SERVICE_PRODUCT
+		where ID = #{id}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> from SERVICE_PRODUCT
+		where 1=1
+		<if test=" id != null and id != ''">
+			and ID = #{id}
 		</if>
-		 <if test=" productType != null and productType != ''">
-			 and PRODUCT_TYPE = #{productType}
+		<if test=" productType != null and productType != ''">
+			and PRODUCT_TYPE = #{productType}
 		</if>
-		 <if test=" supplierNo != null and supplierNo != ''">
-			 and SUPPLIER_NO = #{supplierNo}
-		 </if>
-		 <if test=" productNo != null and productNo != ''">
-			 and PRODUCT_NO = #{productNo}
-		 </if>
-		 <if test=" productName != null and productName != ''">
-			 and PRODUCT_NAME LIKE concat('%',#{productName},'%')
-		 </if>
-		 <if test=" productDesc != null and productDesc != ''">
-			 and PRODUCT_DESC LIKE concat('%',#{productDesc},'%')
-		 </if>
-		 <if test=" supplierPrice != null and supplierPrice != ''">
-			 and SUPPLIER_PRICE = #{supplierPrice}
-		 </if>
-		 <if test=" rechargeDuration != null and rechargeDuration != ''">
-			 and RECHARGE_DURATION = #{rechargeDuration}
-		 </if>
-		 <if test=" rechargeAmt != null and rechargeAmt != ''">
-			 and RECHARGE_AMT = #{rechargeAmt}
-		 </if>
-		 <if test=" rechargeTraffic != null and rechargeTraffic != ''">
-			 and RECHARGE_TRAFFIC = #{rechargeTraffic}
-		 </if>
-		 <if test=" rechargeNumber != null and rechargeNumber != ''">
-			 and RECHARGE_NUMBER = #{rechargeNumber}
-		 </if>
-		 <if test=" supplierParam != null and supplierParam != ''">
-			 and SUPPLIER_PARAM = #{supplierParam}
-		 </if>
-		 <if test=" configId != null and configId != ''">
-			 and CONFIG_ID = #{configId}
-		 </if>
-		 <if test=" supplierFlag != null and supplierFlag != ''">
-			 and SUPPLIER_FLAG = #{supplierFlag}
-		 </if>
-    </select>
+		<if test=" supplierNo != null and supplierNo != ''">
+			and SUPPLIER_NO = #{supplierNo}
+		</if>
+		<if test=" productNo != null and productNo != ''">
+			and PRODUCT_NO = #{productNo}
+		</if>
+		<if test=" productName != null and productName != ''">
+			and PRODUCT_NAME LIKE concat('%',#{productName},'%')
+		</if>
+		<if test=" productDesc != null and productDesc != ''">
+			and PRODUCT_DESC LIKE concat('%',#{productDesc},'%')
+		</if>
+		<if test=" supplierPrice != null and supplierPrice != ''">
+			and SUPPLIER_PRICE = #{supplierPrice}
+		</if>
+		<if test=" rechargeDuration != null and rechargeDuration != ''">
+			and RECHARGE_DURATION = #{rechargeDuration}
+		</if>
+		<if test=" rechargeAmt != null and rechargeAmt != ''">
+			and RECHARGE_AMT = #{rechargeAmt}
+		</if>
+		<if test=" rechargeTraffic != null and rechargeTraffic != ''">
+			and RECHARGE_TRAFFIC = #{rechargeTraffic}
+		</if>
+		<if test=" rechargeNumber != null and rechargeNumber != ''">
+			and RECHARGE_NUMBER = #{rechargeNumber}
+		</if>
+		<if test=" supplierParam != null and supplierParam != ''">
+			and SUPPLIER_PARAM = #{supplierParam}
+		</if>
+		<if test=" configId != null and configId != ''">
+			and CONFIG_ID = #{configId}
+		</if>
+
+	</select>
 
 </mapper>

@@ -48,4 +48,9 @@ public class ServiceProductConfig extends BaseModel{
      *
      */
     private String rsaSipPriKey;
+
+    /**
+     * 服务模块名称
+     */
+    private String serviceApplicationPath;
 }

@@ -10,6 +10,6 @@ import com.cupdata.commons.api.orgsupplier.ISupplierController;
  * @Date: 13:56 2017/12/20
  */
 @RestController
-public class OrgSupplierController implements ISupplierController {
+public class SupplierController implements ISupplierController {
 
 }

@@ -3,11 +3,13 @@ package com.cupdata.apigateway.filters.pre;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Date;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import com.cupdata.commons.utils.DateTimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 
 public class PreRequestFilter extends ZuulFilter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PreRequestFilter.class);
@@ -97,6 +100,30 @@ public class PreRequestFilter extends ZuulFilter {
 				ctx.setResponseStatusCode(401);// 返回错误码
 				ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgPubKeyStr,
 						sipPriKeyStr, ResponseCodeMsg.ILLEGAL_SIGN)));// 返回错误内容
+				return null;
+			}
+
+			//Step4：校验时间戳
+			try {
+				JSONObject jsonObj = JSONObject.parseObject(dataPlain);
+				String timestampStr = String.valueOf(jsonObj.get("timestamp"));//获取时间戳
+				Date timestamp = DateTimeUtil.getDateByString(timestampStr.substring(0, 17), "yyyyMMddHHmmssSSS");
+				//时间戳超时
+				if (!DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -60 * 1000L, 120 * 1000L)){
+					LOGGER.info("请求报文，时间戳超时");
+					ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
+					ctx.setResponseStatusCode(401);// 返回错误码
+					ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgPubKeyStr,
+							sipPriKeyStr, ResponseCodeMsg.TIMESTAMP_TIMEOUT)));// 返回错误内容
+					return null;
+				}
+			}catch (Exception e){
+				LOGGER.error("", e);
+				LOGGER.error("机构请求报文验签失败！");
+				ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
+				ctx.setResponseStatusCode(401);// 返回错误码
+				ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgPubKeyStr,
+						sipPriKeyStr, ResponseCodeMsg.TIMESTAMP_ERROR)));// 返回错误内容
 				return null;
 			}
 		} else {

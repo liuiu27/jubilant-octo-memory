@@ -5,7 +5,7 @@ import lombok.Data;
 
 /**
  * @Auth: LinYong
- * @Description:
+ * @Description: 获取券码响应数据
  * @Date: 14:41 2017/12/19
  */
 

@@ -25,6 +25,4 @@ public class DisableVoucherReq extends BaseRequest {
      * 禁用描述
      */
     private String disableDesc;
-    
-  
 }

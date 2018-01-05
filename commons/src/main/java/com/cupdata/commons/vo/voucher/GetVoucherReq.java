@@ -22,6 +22,12 @@ public class GetVoucherReq extends BaseRequest {
     private String productNo;
 
     /**
+     * 券码有效期（仅针对特定券码商品）
+     * 格式为yyyyMMdd
+     */
+    private String expire;
+
+    /**
      * 手机号码
      */
     private String mobileNo;
