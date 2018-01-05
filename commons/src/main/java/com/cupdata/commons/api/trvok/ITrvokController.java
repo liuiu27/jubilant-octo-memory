@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.cupdata.commons.api.voucher.IVoucherApi;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.trvok.TrovkActivatReq;
 import com.cupdata.commons.vo.trvok.TrovkActivatRes;
@@ -23,7 +24,7 @@ import com.cupdata.commons.vo.trvok.TrvokAreaRes;
  */
 
 @RequestMapping("/trvok")
-public interface ITrvokController {
+public interface ITrvokController extends IVoucherApi{
 	
 	@PostMapping("/getTrvokArea")
     public BaseResponse<TrvokAreaRes> getTrvokArea(@RequestBody TrvokAreaReq areaReq);
