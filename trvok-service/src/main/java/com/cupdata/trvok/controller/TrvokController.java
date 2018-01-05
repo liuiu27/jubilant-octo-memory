@@ -6,9 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
-import com.cupdata.commons.api.order.IOrderController;
-import com.cupdata.commons.api.product.IProductController;
 import com.cupdata.commons.api.trvok.ITrvokController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.vo.BaseResponse;
@@ -30,6 +29,8 @@ import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
 import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
 import com.cupdata.commons.vo.voucher.WriteOffVoucherRes;
+import com.cupdata.trvok.feign.OrderFeignClient;
+import com.cupdata.trvok.feign.ProductFeignClient;
 import com.cupdata.trvok.service.TripService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,11 +44,17 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class TrvokController implements ITrvokController{
 	
-	@Autowired TripService  tripService;
+	@Autowired 
+	private TripService tripService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 	
-	@Autowired IProductController productController;
+	@Autowired 
+	private OrderFeignClient orderFeignClient;
 	
-	@Autowired IOrderController orderController;
+	@Autowired 
+	private ProductFeignClient productFeignClient;
 	/**
 	 * 获取空港区域信息
 	 */
@@ -102,7 +109,6 @@ public class TrvokController implements ITrvokController{
 	/**
 	 * 创建订单   空港获取券码  激活券码
 	 */
-	
 	@Override
 	public BaseResponse<GetVoucherRes> getVoucher(String org, GetVoucherReq voucherReq, HttpServletRequest request,
 			HttpServletResponse response) {
@@ -111,7 +117,7 @@ public class TrvokController implements ITrvokController{
 		BaseResponse<GetVoucherRes> res = new BaseResponse<>();
 		try {
 			//获取供应商产品
-			productInfo = productController.findByProductNo(voucherReq.getProductNo());
+			productInfo = productFeignClient.findByProductNo(voucherReq.getProductNo());
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())) {
 				res.setResponseCode(productInfo.getResponseCode());
 				res.setResponseMsg(productInfo.getResponseMsg());
@@ -119,7 +125,7 @@ public class TrvokController implements ITrvokController{
 			}
 			String sku = productInfo.getData().getProduct().getSupplierParam();
 			//创建券码订单
-	        BaseResponse<VoucherOrderVo> voucherOrderRes = orderController.createVoucherOrder(org, voucherReq.getOrgOrderNo(), voucherReq.getOrderDesc(), voucherReq.getProductNo());
+	        BaseResponse<VoucherOrderVo> voucherOrderRes = orderFeignClient.createVoucherOrder(org, voucherReq.getOrgOrderNo(), voucherReq.getOrderDesc(), voucherReq.getProductNo());
 	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode()) || null == voucherOrderRes.getData() || null == voucherOrderRes.getData().getOrder() || null == voucherOrderRes.getData().getVoucherOrder()){
 	            res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
 	            res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
