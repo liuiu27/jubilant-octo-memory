@@ -1,7 +1,6 @@
 package com.cupdata.commons.vo.product;
 
 import com.cupdata.commons.model.ServiceProduct;
-import com.cupdata.commons.model.ServiceProductConfig;
 import com.cupdata.commons.vo.BaseData;
 import lombok.Data;
 
@@ -16,9 +15,4 @@ public class ProductInfVo extends BaseData{
      *
      */
     private ServiceProduct product;
-
-    /**
-     *
-     */
-    private ServiceProductConfig productConfig;
 }

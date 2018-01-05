@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.cupdata.commons.utils.DateTimeUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 
 public class PreRequestFilter extends ZuulFilter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(PreRequestFilter.class);
@@ -156,7 +156,11 @@ public class PreRequestFilter extends ZuulFilter {
 				return reqBodyBytes.length;
 			}
 		});
-        ctx.getZuulRequestHeaders().put("content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
+		if (StringUtils.isNotBlank(org)){
+			ctx.addZuulRequestHeader("org", org);
+		}
+
+		ctx.getZuulRequestHeaders().put("content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
 		return null;
 	}
 }

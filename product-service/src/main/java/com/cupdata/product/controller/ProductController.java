@@ -3,7 +3,6 @@ package com.cupdata.product.controller;
 import com.cupdata.commons.api.product.IProductController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.model.ServiceProduct;
-import com.cupdata.commons.model.ServiceProductConfig;
 import com.cupdata.commons.model.OrgProductRela;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.OrgProductRelVo;

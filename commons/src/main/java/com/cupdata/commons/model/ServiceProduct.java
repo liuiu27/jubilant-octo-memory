@@ -71,7 +71,7 @@ public class ServiceProduct extends BaseModel {
     private String supplierParam;
 
     /**
-     *服务产品配置ID
+     * 服务应用路径
      */
-    private String configId;
+    private String serviceApplicationPath;
 }

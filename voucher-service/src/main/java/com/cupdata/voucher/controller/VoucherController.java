@@ -13,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.http.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,7 +38,7 @@ public class VoucherController implements IVoucherController{
     private RestTemplate restTemplate;
 
     @Override
-    public BaseResponse<GetVoucherRes> getVoucher(String org, GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponse<GetVoucherRes> getVoucher(String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
         //响应信息
         BaseResponse<GetVoucherRes> res = new BaseResponse();//默认为成功
 
@@ -72,7 +74,7 @@ public class VoucherController implements IVoucherController{
 
         //Step5：根据券码商品配置信息中的服务名称，调用不同的微服务获取券码
         //http://trvok-service/trvok/trvok/getVoucher
-        String url = "http://" + productInfRes.getData().getProductConfig().getServiceApplicationPath() + "/getVoucher";
+        String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/getVoucher";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);

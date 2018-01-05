@@ -15,13 +15,12 @@
 		<result column="RECHARGE_TRAFFIC" property="rechargeTraffic" jdbcType="BIGINT"/>
 		<result column="RECHARGE_NUMBER" property="rechargeNumber" jdbcType="BIGINT"/>
 		<result column="SUPPLIER_PARAM" property="supplierParam" jdbcType="VARCHAR"/>
-		<result column="CONFIG_ID" property="configId" jdbcType="VARCHAR"/>
+		<result column="SERVICE_APPLICATION_PATH" property="serviceApplicationPath" jdbcType="VARCHAR"/>
 		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
 		<result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
 		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
 		<result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>
 	</resultMap>
-
 
 	<sql id="Base_Column_List">
 		ID,
@@ -36,7 +35,7 @@
 		RECHARGE_TRAFFIC,
 		RECHARGE_NUMBER,
 		SUPPLIER_PARAM,
-		CONFIG_ID,
+		SERVICE_APPLICATION_PATH,
 		CREATE_BY,
 		CREATE_DATE,
 		UPDATE_BY,
@@ -90,8 +89,8 @@
 		<if test=" supplierParam != null and supplierParam != ''">
 			and SUPPLIER_PARAM = #{supplierParam}
 		</if>
-		<if test=" configId != null and configId != ''">
-			and CONFIG_ID = #{configId}
+		<if test=" serviceApplicationPath != null and serviceApplicationPath != ''">
+			and SERVICE_APPLICATION_PATH = #{serviceApplicationPath}
 		</if>
 
 	</select>

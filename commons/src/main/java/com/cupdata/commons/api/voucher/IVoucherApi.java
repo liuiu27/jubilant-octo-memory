@@ -25,7 +25,7 @@ public interface IVoucherApi {
      * @return
      */
     @PostMapping("/getVoucher")
-    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response);
+    public BaseResponse<GetVoucherRes> getVoucher(String org, GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * 禁用券码接口方法

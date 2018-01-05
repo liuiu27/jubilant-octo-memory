@@ -9,6 +9,7 @@ import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,11 +74,13 @@ public class ResponseFilter extends ZuulFilter {
             //遍历data json对象
             String dataStr = String.valueOf(jsonObj.get("data"));
             JSONObject dataJsonObj = JSONObject.parseObject(dataStr);//原始json对象中data的json对象
-            Set<String> keySet = dataJsonObj.keySet();
-            Iterator<String> it = keySet.iterator();
-            while (it.hasNext()) {
-                String key = it.next();
-                resultJsonObj.put(key, dataJsonObj.get(key));
+            if (null != dataJsonObj){
+                Set<String> keySet = dataJsonObj.keySet();
+                Iterator<String> it = keySet.iterator();
+                while (it.hasNext()) {
+                    String key = it.next();
+                    resultJsonObj.put(key, dataJsonObj.get(key));
+                }
             }
 
             //响应的明文数据
