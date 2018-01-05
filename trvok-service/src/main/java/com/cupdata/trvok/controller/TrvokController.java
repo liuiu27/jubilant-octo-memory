@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.cupdata.commons.api.trvok.ITrvokController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -45,6 +46,9 @@ public class TrvokController implements ITrvokController{
 	
 	@Autowired 
 	private TripService tripService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 	
 	@Autowired 
 	private OrderFeignClient orderFeignClient;
