@@ -952,7 +952,7 @@ public class RSAUtils {
 		String pubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
 		PublicKey uppPubKey = RSAUtils.getPublicKeyFromString(pubKeyStr);
 //		String reqStr = "{\"loginFlag\":\"1\",\"mobileNo\":\"15857128524\",\"timestamp\":\"20170928135227836RE3I3YN0\"}";
-		String reqStr = "{\"areaType\":\"1\"}";
+		String reqStr = "{\"areaType\":\"1\",\"timestamp\":\"20170928135227836RE3I3YN0\"}";
 		String reqData = RSAUtils.encrypt(reqStr, uppPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
 		reqData = URLEncoder.encode(reqData);
 		System.out.println(reqData);
