@@ -174,9 +174,10 @@ public class CacheManager {
 	 * @return
 	 */
 	public static BankInf getBankInf(String bankCode) {
-		List<BankInf> list = (List<BankInf>) getCache(CacheConstants.CACHE_TYPE_BANKINF);
-		if (CollectionUtils.isNotEmpty(list)) {
-			if (StringUtils.isNotBlank(bankCode)) {
+		if (StringUtils.isNotBlank(bankCode)) {
+			List<BankInf> list = (List<BankInf>) getCache(CacheConstants.CACHE_TYPE_BANKINF);
+			if (CollectionUtils.isNotEmpty(list)) {
+
 				for (BankInf bankInf : list) {
 					if (bankCode.equals(bankInf.getBankCode())) {
 						return bankInf;
@@ -184,6 +185,7 @@ public class CacheManager {
 				}
 			}
 		}
+		log.error("bankCode is null");
 		return null;
 	}
 	
@@ -192,9 +194,9 @@ public class CacheManager {
 	 * @return
 	 */
 	public static OrgInf getOrgInf(String orgNo) {
-		List<OrgInf> list = (List<OrgInf>) getCache(CacheConstants.CACHE_TYPE_ORGINF);
-		if (CollectionUtils.isNotEmpty(list)) {
-			if (StringUtils.isNotBlank(orgNo)) {
+		if (StringUtils.isNotBlank(orgNo)) {
+			List<OrgInf> list = (List<OrgInf>) getCache(CacheConstants.CACHE_TYPE_ORGINF);
+			if (CollectionUtils.isNotEmpty(list)) {
 				for (OrgInf orgInf : list) {
 					if (orgNo.equals(orgInf.getOrgNo())) {
 						return orgInf;
@@ -202,17 +204,19 @@ public class CacheManager {
 				}
 			}
 		}
+		log.error("orgNo is null");
 		return null;
 	}
-	
+
 	/**
 	 * 获取 供应商  信息
 	 * @return
 	 */
 	public static ServiceSupplier getSupplier(String supplierNo) {
-		List<ServiceSupplier> list = (List<ServiceSupplier>) getCache(CacheConstants.CACHE_TYPE_SUPPLIER);
-		if (CollectionUtils.isNotEmpty(list)) {
-			if (StringUtils.isNotBlank(supplierNo)) {
+		if (StringUtils.isNotBlank(supplierNo)) {
+			List<ServiceSupplier> list = (List<ServiceSupplier>) getCache(CacheConstants.CACHE_TYPE_SUPPLIER);
+			if (CollectionUtils.isNotEmpty(list)) {
+
 				for (ServiceSupplier serviceSupplier : list) {
 					if (supplierNo.equals(serviceSupplier.getSupplierNo())) {
 						return serviceSupplier;
@@ -220,6 +224,7 @@ public class CacheManager {
 				}
 			}
 		}
+		log.error("supplierNo is null");
 		return null;
 	}
 

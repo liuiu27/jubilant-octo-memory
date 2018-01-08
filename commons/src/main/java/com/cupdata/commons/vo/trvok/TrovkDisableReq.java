@@ -1,11 +1,9 @@
 package com.cupdata.commons.vo.trvok;
 
-import com.cupdata.commons.vo.BaseRequest;
-
 import lombok.Data;
 
 @Data
-public class TrovkDisableReq extends BaseRequest{
+public class TrovkDisableReq extends TrvokBaseVo{
 	/**
 	 * 券码
 	 */

@@ -31,14 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class TripService {
     
-	
-	//TODO  以下部分变量需要从数据库中查询获取
-    private static String KONGGANG_AREA_SIGN_KEY = "AS-DF-KA-11-07-D1";//获取空港区域秘钥
- 	private static String KONGGANG_REQUST_URL = "http://apitest.airportcip.com:89/";//空港请求区域信息URL
- 	private static String KONGGANG_IMG_URL = "http://api.airportcip.com:8180/upload/"; //图片路径
- 	private static String KONGGANG_PARTNER = "1993";	//合作方ID
- 	private static String KONGGANG_WCF_SIGN_KEY = "A4-DF-A0-11-07-D5";//WC秘钥
-    
+
 	/**
 	 * 获取空港区域信息
 	 * @param type
@@ -49,8 +42,8 @@ public class TripService {
 		BaseResponse<TrvokAreaRes> baseResponse = new BaseResponse<TrvokAreaRes>();
 		try {
 			String params = "random=" + TripUtil.getRandom() + "&type=" + trvokAreaReq.getAreaType();
-			String sign = MD5Util.md5Encode(params + KONGGANG_AREA_SIGN_KEY);//获取空港区域秘钥
-			String requstUrl = KONGGANG_REQUST_URL + 
+			String sign = MD5Util.md5Encode(params + trvokAreaReq.getAreaSignKey());//获取空港区域秘钥
+			String requstUrl = trvokAreaReq.getRequstUrl() + 
 			"report.svc/SearchAreaInfo?" + params + "&sign=" + sign;//空港请求区域信息URL
 			log.info("request url is " + requstUrl);
 			//GET请求空港获取区域接口 
@@ -94,8 +87,8 @@ public class TripService {
 		try {
 			String params = "random=" + TripUtil.getRandom() + "&type=" + trvokAirportReq.getAreaType()
 			+ "&airport_id=" + trvokAirportReq.getAirportId();
-			String sign = MD5Util.md5Encode(params + KONGGANG_AREA_SIGN_KEY);//KONGGANG_AREA_SIGN_KEY 获取空港区域秘钥
-			String requstUrl = KONGGANG_REQUST_URL + 
+			String sign = MD5Util.md5Encode(params + trvokAirportReq.getAreaSignKey());//KONGGANG_AREA_SIGN_KEY 获取空港区域秘钥
+			String requstUrl = trvokAirportReq.getRequstUrl() + 
 			"report.svc/SearchAreaInfoById?" + params + "&sign=" + sign;//空港请求机票详情URL
 			log.info("request url is " + requstUrl);
 			//GET请求空港获取机票详情接口 
@@ -105,7 +98,7 @@ public class TripService {
 			if("0".equals(resJson.getString("result"))){//result为0，则获取data机票详情
 				 TrvokAirportRes airportInfoRes = new TrvokAirportRes();
 				 List<LoungeDetail> LoungeDetailList = new ArrayList<LoungeDetail>(); 
-				 String imgSrc = KONGGANG_IMG_URL;
+				 String imgSrc = trvokAirportReq.getImgUrl();
 				 resStr = resJson.getString("data");
 				 JSONArray json = JSONArray.parseArray(resStr);
 				 if(json.size()>0){
@@ -163,9 +156,9 @@ public class TripService {
 		BaseResponse<TrovkCodeRes> baseResponse =  new BaseResponse<TrovkCodeRes>();
 		try {
 			String params = "out_trade_no=" + trovkCodeReq.getOutTradeNo() + "&partner=" + //KONGGANG_PARTNER 获取空港签约合作方身份ID
-					KONGGANG_PARTNER + "&sku=" + trovkCodeReq.getSku();
-			String sign = MD5Util.md5Encode(params + KONGGANG_WCF_SIGN_KEY);//KONGGANG_WCF_SIGN_KEY 获取空港WCF密钥
-			String requstUrl = KONGGANG_REQUST_URL + 
+					trovkCodeReq.getPartner() + "&sku=" + trovkCodeReq.getSku();
+			String sign = MD5Util.md5Encode(params + trovkCodeReq.getWcfSignKey());//KONGGANG_WCF_SIGN_KEY 获取空港WCF密钥
+			String requstUrl = trovkCodeReq.getRequstUrl() + 
 			"API/YinLian/YinLianPD.svc/add?" + params + "&sign=" + sign;//空港请求机票详情URL
 			log.info("request url is " + requstUrl);
 			//GET请求获取空港服务券码
@@ -176,10 +169,10 @@ public class TripService {
 				TrovkCodeRes trovkCodeRes = new TrovkCodeRes();
 				trovkCodeRes.setVerifyCode(resJson.getString("verify_code"));
 				baseResponse.setData(trovkCodeRes);
-				params = "partner=" + KONGGANG_PARTNER + // KONGGANG_PARTNER 获取空港签约合作方身份ID
+				params = "partner=" + trovkCodeReq.getPartner() + // KONGGANG_PARTNER 获取空港签约合作方身份ID
 						"&verify_code=" + trovkCodeRes.getVerifyCode() + "&expire=" + trovkCodeReq.getExpire();
-				sign = MD5Util.md5Encode(params + KONGGANG_WCF_SIGN_KEY);// 获取空港WCF密钥
-				requstUrl = KONGGANG_REQUST_URL + "API/YinLian/YinLianPD.svc/confirm?" + params + "&sign=" + sign;// 空港请求机票详情URL
+				sign = MD5Util.md5Encode(params + trovkCodeReq.getWcfSignKey());// 获取空港WCF密钥
+				requstUrl = trovkCodeReq.getRequstUrl() + "API/YinLian/YinLianPD.svc/confirm?" + params + "&sign=" + sign;// 空港请求机票详情URL
 				log.info("request url is " + requstUrl);
 				// GET请求获取空港服务券码
 				resStr = HttpUtil.doGet(requstUrl);
@@ -217,10 +210,10 @@ public class TripService {
 		BaseResponse<TrovkActivatRes> baseResponse = new BaseResponse<TrovkActivatRes>();
 		TrovkActivatRes activatCodeRes = new TrovkActivatRes();
 		try {
-			String params = "partner=" + KONGGANG_PARTNER + //KONGGANG_PARTNER 获取空港签约合作方身份ID
+			String params = "partner=" + activatCodeReq.getPartner() + //KONGGANG_PARTNER 获取空港签约合作方身份ID
 			"&verify_code=" + activatCodeReq.getVerifyCode() + "&expire=" + activatCodeReq.getExpire();
-			String sign =  MD5Util.md5Encode(params + KONGGANG_WCF_SIGN_KEY);//获取空港WCF密钥
-			String requstUrl = KONGGANG_REQUST_URL + 
+			String sign =  MD5Util.md5Encode(params + activatCodeReq.getWcfSignKey());//获取空港WCF密钥
+			String requstUrl = activatCodeReq.getRequstUrl() + 
 			"API/YinLian/YinLianPD.svc/confirm?" + params + "&sign=" + sign;//空港请求机票详情URL
 			log.info("request url is " + requstUrl);
 			//GET请求获取空港服务券码
@@ -258,10 +251,10 @@ public class TripService {
 		TrovkDisableRes trovkDisableRes = new TrovkDisableRes();
 		BaseResponse<TrovkDisableRes> baseResponse = new BaseResponse<TrovkDisableRes>();
 		try {
-			String params = "partner=" + KONGGANG_PARTNER + //KONGGANG_PARTNER 获取空港签约合作方身份ID
+			String params = "partner=" + trovkDisableReq.getPartner() + //KONGGANG_PARTNER 获取空港签约合作方身份ID
 			"&verify_code=" + trovkDisableReq.getVerifyCode();
-			String sign = MD5Util.md5Encode(params + KONGGANG_WCF_SIGN_KEY);//获取空港WCF密钥
-			String requstUrl = KONGGANG_REQUST_URL + 
+			String sign = MD5Util.md5Encode(params + trovkDisableReq.getWcfSignKey());//获取空港WCF密钥
+			String requstUrl = trovkDisableReq.getRequstUrl() + 
 			"API/YinLian/YinLianPD.svc/enableDis?" + params + "&sign=" + sign;//空港请求机票详情URL
 			log.info("request url is " + requstUrl);
 			//GET请求获取空港服务券码

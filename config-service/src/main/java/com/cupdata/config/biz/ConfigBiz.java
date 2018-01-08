@@ -25,23 +25,23 @@ public class ConfigBiz extends BaseBiz<SysConfig> {
 		return configDao;
 	}
 	
-	public String getConfig(String bankCode, String paraName) {
-		if(StringUtils.isBlank(paraName)){
-			log.error("getConfig paraName is null");
-			return null;
-		}
-		if(StringUtils.isBlank(bankCode)) {
-			bankCode = "CUPD";
-		}
-		String paraValue = configDao.getConfig(bankCode,paraName);
-		if(!CommonUtils.isTrimEmpty(paraValue)) {
-			return paraValue;
-		}
-		log.error("getConfig result is null");
-		return null;
-	}
-	
-	public List<SysConfig> queryAllConfig(){
-		return configDao.queryAllConfig();
-	}
+//	public String getConfig(String bankCode, String paraName) {
+//		if(StringUtils.isBlank(paraName)){
+//			log.error("getConfig paraName is null");
+//			return null;
+//		}
+//		if(StringUtils.isBlank(bankCode)) {
+//			bankCode = "CUPD";
+//		}
+//		String paraValue = configDao.getConfig(bankCode,paraName);
+//		if(!CommonUtils.isTrimEmpty(paraValue)) {
+//			return paraValue;
+//		}
+//		log.error("getConfig result is null");
+//		return null;
+//	}
+//	
+//	public List<SysConfig> queryAllConfig(){
+//		return configDao.queryAllConfig();
+//	}
 } 

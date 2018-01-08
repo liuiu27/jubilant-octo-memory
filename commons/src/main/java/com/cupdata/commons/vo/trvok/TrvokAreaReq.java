@@ -1,6 +1,5 @@
 package com.cupdata.commons.vo.trvok;
 
-import com.cupdata.commons.vo.BaseRequest;
 import lombok.Data;
 
 /**
@@ -10,7 +9,7 @@ import lombok.Data;
  */
 
 @Data
-public class TrvokAreaReq extends BaseRequest{
+public class TrvokAreaReq extends TrvokBaseVo{
     /**
      * 区域类型
      * 1：APP全套；2：APP休息室；3：APP通道；4：APP国内全套；

@@ -1,5 +1,7 @@
 package com.cupdata.commons.api.cache;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -8,17 +10,17 @@ import com.cupdata.commons.model.OrgInf;
 import com.cupdata.commons.model.ServiceSupplier;
 
 @RequestMapping("/cache")
-public interface ICacheController {
+public interface ICacheController{
 	
-	@PostMapping("getSysConfig") 
-	public String getSysConfig(String bankCode, String paraName);
+	@GetMapping("/getSysConfig/{bankCode}/{paraName}")
+	public String getSysConfig(@PathVariable("bankCode") String bankCode, @PathVariable("paraName") String paraName);
 	
-	@PostMapping("getBankInf")
-	public BankInf getBankInf(String bankCode);
+	@GetMapping("/getBankInf/{bankCode}")
+	public BankInf getBankInf(@PathVariable("bankCode") String bankCode);
 	
-	@PostMapping("getOrgInf")
-	public OrgInf getOrgInf(String orgNo);
+	@GetMapping("/getOrgInf/{orgNo}")
+	public OrgInf getOrgInf(@PathVariable("orgNo") String orgNo);
 	
-	@PostMapping("getSupplier")
-	public ServiceSupplier getSupplier(String supplierNo);
+	@GetMapping("/getSupplier/{supplierNo}")
+	public ServiceSupplier getSupplier(@PathVariable("supplierNo") String supplierNo);
 }

@@ -6,12 +6,12 @@ spring:
     name: orgsupplier-service
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
-    #username: resdb
-    #password: resdb
-    url: jdbc:mysql://127.0.0.1:3306/sip?useUnicode=true&characterEncoding=UTF-8
-    username: root
-    password: linyongw
+    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+    username: resdb
+    password: resdb
+#    url: jdbc:mysql://127.0.0.1:3306/sip?useUnicode=true&characterEncoding=UTF-8
+#    username: root
+#    password: linyongw
     type: com.alibaba.druid.pool.DruidDataSource
 
 eureka:

@@ -29,6 +29,6 @@ public interface IOrderController {
      * @return
      */
     @GetMapping("/getVoucherOrder/{orgNo}/{orgOrderNo}")
-    public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(@PathVariable String orgNo, @PathVariable String orgOrderNo);
+    public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(@PathVariable("orgNo") String orgNo, @PathVariable("orgOrderNo") String orgOrderNo);
 
 }

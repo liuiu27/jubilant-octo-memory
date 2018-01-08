@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cupdata.commons.api.config.IConfigController;
 import com.cupdata.config.biz.ConfigBiz;
+import com.cupdata.config.feign.CacheFeignClient;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,10 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class ConfigController implements IConfigController{
 	
-	@Autowired ConfigBiz configBiz;
+	@Autowired 
+	private ConfigBiz configBiz;
+	
+	@Autowired 
+	private CacheFeignClient cacheFeignClient;
+	
 	@PostMapping("getConfig")
 	public String getConfig(String bankCode,String paraName) {
 		log.info("ConfigController getConfig is begin params bankNo  is " + bankCode + "paraName is" + paraName);
-		return configBiz.getConfig(bankCode,paraName);
+		return cacheFeignClient.getSysConfig(bankCode,paraName);
 	}
 }
