@@ -1,6 +1,8 @@
 package com.cupdata.config.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,8 +27,7 @@ public class ConfigController implements IConfigController{
 	@Autowired 
 	private CacheFeignClient cacheFeignClient;
 	
-	@PostMapping("getConfig")
-	public String getConfig(String bankCode,String paraName) {
+	public String getConfig(@PathVariable("bankCode") String bankCode, @PathVariable("paraName") String paraName) {
 		log.info("ConfigController getConfig is begin params bankNo  is " + bankCode + "paraName is" + paraName);
 		return cacheFeignClient.getSysConfig(bankCode,paraName);
 	}

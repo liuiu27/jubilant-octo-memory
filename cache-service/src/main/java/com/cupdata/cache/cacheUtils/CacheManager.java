@@ -177,7 +177,6 @@ public class CacheManager {
 		if (StringUtils.isNotBlank(bankCode)) {
 			List<BankInf> list = (List<BankInf>) getCache(CacheConstants.CACHE_TYPE_BANKINF);
 			if (CollectionUtils.isNotEmpty(list)) {
-
 				for (BankInf bankInf : list) {
 					if (bankCode.equals(bankInf.getBankCode())) {
 						return bankInf;

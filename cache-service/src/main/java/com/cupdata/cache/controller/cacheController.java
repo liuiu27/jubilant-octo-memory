@@ -1,5 +1,6 @@
 package com.cupdata.cache.controller;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cupdata.cache.cacheUtils.CacheManager;
@@ -20,7 +21,7 @@ public class cacheController implements ICacheController{
 	 * @param paraNameEn
 	 * @return
 	 */
-	public String getSysConfig(String bankCode,String paraName) {
+	public String getSysConfig(@PathVariable("bankCode") String bankCode, @PathVariable("paraName") String paraName) {
 		log.info("cacheController getSysConfig is begin ... bankCode is" + bankCode + "paraName is" + paraName) ;
 		return CacheManager.getSysConfig(bankCode, paraName);
 	}
