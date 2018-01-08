@@ -19,7 +19,6 @@
 		<result column="IS_NOTIFY" property="isNotify" jdbcType="CHAR"/>
 		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR"/>
 		<result column="NODE_NAME" property="nodeName" jdbcType="VARCHAR"/>
-		<result column="SUPPLIER_FLAG" property="supplierFlag" jdbcType="VARCHAR"/>
 		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
         <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
 		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
@@ -44,7 +43,6 @@
 	IS_NOTIFY,
 	NOTIFY_URL,
 	NODE_NAME,
-	SUPPLIER_FLAG,
 	CREATE_BY,
 	CREATE_DATE,
 	UPDATE_BY,
@@ -53,10 +51,12 @@
 
 	<!-- 增加记录 -->
 	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.cupdata.commons.model.ServiceOrder">
-		insert into SERVICE_ORDER (ORDER_NO, ORG_NO, SUPPLIER_NO, ORG_ORDER_NO, SUPPLIER_ORDER_NO, ORG_PRICE, SUPPLIER_PRICE,
-		SETTLE_DATE, ORDER_STATUS, ORDER_TYPE, ORDER_DESC, ORDER_FAIL_DESC, IS_NOTIFY, NOTIFY_URL, NODE_NAME, SUPPLIER_FLAG)
-		values(#{orderNo},#{orgNo},#{supplierNo},#{orgOrderNo},#{supplierOrderNo},#{orgPrice},#{supplierPrice},
-		#{settleDate},#{orderStatus},#{orderType},#{orderDesc},#{orderFailDesc},#{isNotify},#{notifyUrl},#{nodeName},#{supplierFlag})
+	insert into SERVICE_ORDER (ORDER_NO, ORG_NO, SUPPLIER_NO, ORG_ORDER_NO,
+	SUPPLIER_ORDER_NO, ORG_PRICE, SUPPLIER_PRICE,
+	SETTLE_DATE, ORDER_STATUS, ORDER_TYPE, ORDER_DESC, ORDER_FAIL_DESC, IS_NOTIFY,
+	NOTIFY_URL, NODE_NAME)
+	values(#{orderNo},#{orgNo},#{supplierNo},#{orgOrderNo},#{supplierOrderNo},#{orgPrice},#{supplierPrice},
+	#{settleDate},#{orderStatus},#{orderType},#{orderDesc},#{orderFailDesc},#{isNotify},#{notifyUrl},#{nodeName})
 	</insert>
 
 	<!-- 根据ID查询 -->
@@ -104,9 +104,6 @@
 		 <if test=" subOrderNo != null and subOrderNo != ''">
 				and SUB_ORDER_NO = #{subOrderNo}
 		</if>
-		 <if test=" supplierFlag != null and supplierFlag != ''">
-			 and SUPPLIER_FLAG = #{supplierFlag}
-		 </if>
 	 </select>
 
 </mapper>

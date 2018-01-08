@@ -31,7 +31,7 @@ public class cacheController implements ICacheController{
 	 * @param bankCode
 	 * @return
 	 */
-	public BankInf getBankInf(String bankCode) {
+	public BankInf getBankInf(@PathVariable("bankCode") String bankCode) {
 		log.info("cacheController getBankInf is begin ... bankCode is" + bankCode) ;
 		return CacheManager.getBankInf(bankCode);
 	}
@@ -41,7 +41,7 @@ public class cacheController implements ICacheController{
 	 * @param orgNo
 	 * @return
 	 */
-	public OrgInf getOrgInf(String orgNo) {
+	public OrgInf getOrgInf(@PathVariable("orgNo") String orgNo) {
 		log.info("cacheController getOrgInf is begin ... orgNo is" + orgNo) ;
 		return CacheManager.getOrgInf(orgNo);
 	}
@@ -51,7 +51,7 @@ public class cacheController implements ICacheController{
 	 * @param supplierNo
 	 * @return
 	 */
-	public ServiceSupplier getSupplier(String supplierNo) {
+	public ServiceSupplier getSupplier(@PathVariable("supplierNo") String supplierNo) {
 		log.info("cacheController getOrgInf is begin ... supplierNo is" + supplierNo) ;
 		return CacheManager.getSupplier(supplierNo);
 	}

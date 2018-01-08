@@ -57,14 +57,17 @@ public class OrderController implements IOrderController {
             return voucherOrderRes;
         }
 
-        ServiceOrder order = orderBiz.select(voucherOrder.getOrderId());
+        ServiceOrder order = orderBiz.select(Integer.parseInt(voucherOrder.getOrderId().toString()));
         if (null == order){
             voucherOrderRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
             voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
             return voucherOrderRes;
         }
-        voucherOrderRes.getData().setVoucherOrder(voucherOrder);
-        voucherOrderRes.getData().setOrder(order);
+        
+        VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
+        voucherOrderVo.setOrder(order);
+        voucherOrderVo.setVoucherOrder(voucherOrder);
+        voucherOrderRes.setData(voucherOrderVo);
 
         return voucherOrderRes;
     }

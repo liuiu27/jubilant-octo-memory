@@ -154,6 +154,10 @@ public class TrvokController implements ITrvokController{
 			//TODO  负载均衡发送信息
 			//创建券码订单
 			CreateVoucherOrderVo createVoucherOrderVo = new CreateVoucherOrderVo();
+			createVoucherOrderVo.setOrderDesc(voucherReq.getOrderDesc());
+			createVoucherOrderVo.setOrgNo(org);
+			createVoucherOrderVo.setOrgOrderNo(voucherReq.getOrgOrderNo());
+			createVoucherOrderVo.setProductNo(voucherReq.getProductNo());
 	        BaseResponse<VoucherOrderVo> voucherOrderRes = orderFeignClient.createVoucherOrder(createVoucherOrderVo);
 	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode()) || null == voucherOrderRes.getData() || null == voucherOrderRes.getData().getOrder() || null == voucherOrderRes.getData().getVoucherOrder()){
 	            res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
