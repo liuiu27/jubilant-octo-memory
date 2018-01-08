@@ -1,24 +1,26 @@
 package com.cupdata.voucher.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.cupdata.commons.api.voucher.IVoucherController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.voucher.*;
-import com.cupdata.voucher.feign.OrderFeignClient;
+import com.cupdata.voucher.feign.OrgFeignClient;
 import com.cupdata.voucher.feign.ProductFeignClient;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -35,10 +37,13 @@ public class VoucherController implements IVoucherController{
     private ProductFeignClient productFeignClient;
 
     @Autowired
+    private OrgFeignClient orgFeignClient;
+
+    @Autowired
     private RestTemplate restTemplate;
 
     @Override
-    public BaseResponse<GetVoucherRes> getVoucher(String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
         //响应信息
         BaseResponse<GetVoucherRes> res = new BaseResponse();//默认为成功
 
@@ -74,17 +79,19 @@ public class VoucherController implements IVoucherController{
 
         //Step5：根据券码商品配置信息中的服务名称，调用不同的微服务获取券码
         //http://trvok-service/trvok/trvok/getVoucher
-        String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/getVoucher";
+        String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/getVoucher?org=" + org;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<GetVoucherReq> entity = new HttpEntity<GetVoucherReq>(voucherReq, headers);
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("org", org);
-
-        ResponseEntity<BaseResponse> responseEntity = restTemplate.postForEntity(url, entity, BaseResponse.class, params);
+/*        ResponseEntity<BaseResponse> responseEntity = restTemplate.postForEntity(url, entity, BaseResponse.class);
         BaseResponse<GetVoucherRes> getVoucherResult = responseEntity.getBody();
+        return getVoucherResult;*/
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
+        String jsonStr = responseEntity.getBody();
+        BaseResponse<GetVoucherRes> getVoucherResult = JSONObject.parseObject(jsonStr,  new TypeReference<BaseResponse<GetVoucherRes>>(){});
         return getVoucherResult;
     }
 
@@ -166,4 +173,9 @@ public class VoucherController implements IVoucherController{
 		return null;
 	}*/
 
+    @GetMapping("/product/{productNo}")
+    public  BaseResponse<ProductInfVo> getProduct(@PathVariable String productNo){
+        BaseResponse<OrgInfVo> orgInfVoBaseResponse = orgFeignClient.findOrgByNo("2018010200000001");
+        return productFeignClient.findByProductNo(productNo);
+    }
 }

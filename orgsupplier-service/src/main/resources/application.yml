@@ -1,25 +1,28 @@
+server:
+   port: 8030         # 指定该实例的端口
+
 spring:
   application:
     name: orgsupplier-service
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
-    username: resdb
-    password: resdb
+    #url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+    #username: resdb
+    #password: resdb
+    url: jdbc:mysql://127.0.0.1:3306/sip?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: linyongw
     type: com.alibaba.druid.pool.DruidDataSource
 
-server:
-   port: 8030         # 指定该实例的端口
 eureka:
   client:
-    registerWithEureka: true  #false:不作为一个客户端注册到注册中心
-    fetchRegistry: false      #为true时，可以启动，但报异常：Cannot execute request on any known server
     serviceUrl:
-      defaultZone: http://user:password123@${eureka.instance.hostname}:8761/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
   instance:
-   hostname: localhost    # 指定该Eureka实例的主机名
-   lease-expiration-duration-in-seconds: 6
-   lease-renewal-interval-in-seconds: 2
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 6
+    lease-renewal-interval-in-seconds: 2
 
 #mybatis相关配置
 mybatis:

@@ -20,6 +20,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.cupdata</groupId>
+            <artifactId>commons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <exclusions>
@@ -53,12 +59,14 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
         <!--Druid-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.version}</version>
         </dependency>
+
         <!--mybatis-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
@@ -79,6 +87,7 @@
     </dependencies>
 
     <build>
+        <finalName>cache-service</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

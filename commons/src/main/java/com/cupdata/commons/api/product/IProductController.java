@@ -1,12 +1,11 @@
 package com.cupdata.commons.api.product;
 
-import com.cupdata.commons.model.OrgProductRela;
-import com.cupdata.commons.model.ServiceProduct;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @Auth: LinYong
@@ -19,7 +18,7 @@ public interface IProductController {
      * @param productNo 服务产品编号
      * @return
      */
-    @GetMapping("/product/{productNo}")
+    @RequestMapping(method = RequestMethod.GET, value = "/product/{productNo}")
     public BaseResponse<ProductInfVo> findByProductNo(@PathVariable("productNo") String productNo);
 
     /**
@@ -28,6 +27,6 @@ public interface IProductController {
      * @param productNo 服务产品编号
      * @return
      */
-    @GetMapping("/org-product-real/{orgNo}/{productNo}")
+    @RequestMapping(method = RequestMethod.GET, value = "/org-product-real/{orgNo}/{productNo}")
     public BaseResponse<OrgProductRelVo> findRel( @PathVariable("orgNo") String orgNo, @PathVariable("productNo") String productNo);
 }

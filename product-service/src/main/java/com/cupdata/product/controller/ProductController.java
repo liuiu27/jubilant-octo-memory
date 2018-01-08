@@ -9,7 +9,6 @@ import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.product.biz.OrgProductRelaBiz;
 import com.cupdata.product.biz.ServiceProductBiz;
-import com.cupdata.product.biz.ServiceProductConfigBiz;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,9 +30,6 @@ public class ProductController implements IProductController {
     private ServiceProductBiz productBiz;
 
     @Resource
-    private ServiceProductConfigBiz productConfigBiz;
-
-    @Resource
     private OrgProductRelaBiz orgProductRelaBiz;
 
     @Override
@@ -46,15 +42,8 @@ public class ProductController implements IProductController {
             return productRes;
         }
 
-        //查询商品配置信息
-        ServiceProductConfig productConfig = null;
-        if (null != product.getConfigId()){
-            productConfig = productConfigBiz.select(product.getConfigId());
-        }
-
         ProductInfVo productInfVo = new ProductInfVo();
         productInfVo.setProduct(product);//商品信息
-        productInfVo.setProductConfig(productConfig);//商品配置信息
         productRes.setData(productInfVo);
 
         return productRes;

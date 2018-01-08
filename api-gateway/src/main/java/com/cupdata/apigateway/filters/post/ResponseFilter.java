@@ -63,7 +63,7 @@ public class ResponseFilter extends ZuulFilter {
 
             InputStream stream = ctx.getResponseDataStream();
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
-            LOGGER.info("响应信息为" + body);
+            LOGGER.info("响应信息明文为" + body);
 
             JSONObject jsonObj = JSONObject.parseObject(body);//原始json对象
 
@@ -134,8 +134,12 @@ public class ResponseFilter extends ZuulFilter {
                 return null;
             }
 
+            String resData = URLEncoder.encode(encryptedResponseData, "utf-8");
+            String resSign = URLEncoder.encode(responseDataSign, "utf-8");
+            LOGGER.info("响应数据密文为data=" + resData + "&sign=" + resSign);
+
             //生成新的body数据
-            ctx.setResponseBody("data=" + URLEncoder.encode(encryptedResponseData, "utf-8") + "&sign=" + URLEncoder.encode(responseDataSign, "utf-8"));
+            ctx.setResponseBody("data=" + resData + "&sign=" + resSign);
 
             //修改响应的
             HttpServletResponse response = ctx.getResponse();

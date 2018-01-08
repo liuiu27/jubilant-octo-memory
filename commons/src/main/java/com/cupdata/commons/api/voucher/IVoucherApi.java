@@ -36,7 +36,7 @@ public interface IVoucherApi {
      * @return
      */
     @PostMapping("/disableVoucher")
-    public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value="org", required=true) String org, @RequestBody DisableVoucherReq disableVoucherReq, HttpServletRequest request, HttpServletResponse response);
+    public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq, HttpServletRequest request, HttpServletResponse response);
 
     /**
      * 核销券码接口方法
@@ -47,5 +47,5 @@ public interface IVoucherApi {
      * @return
      */
     @PostMapping("/writeOffVoucher")
-    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value="sup", required=true) String sup, @RequestBody WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response);
+    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response);
 }

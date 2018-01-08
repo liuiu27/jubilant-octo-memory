@@ -42,7 +42,6 @@
 		UPDATE_DATE
 	</sql>
 
-
 	<select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		<include refid="Base_Column_List"/>
@@ -51,6 +50,51 @@
 	</select>
 
 	<select id="selectAll" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> from SERVICE_PRODUCT
+		where 1=1
+		<if test=" id != null and id != ''">
+			and ID = #{id}
+		</if>
+		<if test=" productType != null and productType != ''">
+			and PRODUCT_TYPE = #{productType}
+		</if>
+		<if test=" supplierNo != null and supplierNo != ''">
+			and SUPPLIER_NO = #{supplierNo}
+		</if>
+		<if test=" productNo != null and productNo != ''">
+			and PRODUCT_NO = #{productNo}
+		</if>
+		<if test=" productName != null and productName != ''">
+			and PRODUCT_NAME LIKE concat('%',#{productName},'%')
+		</if>
+		<if test=" productDesc != null and productDesc != ''">
+			and PRODUCT_DESC LIKE concat('%',#{productDesc},'%')
+		</if>
+		<if test=" supplierPrice != null and supplierPrice != ''">
+			and SUPPLIER_PRICE = #{supplierPrice}
+		</if>
+		<if test=" rechargeDuration != null and rechargeDuration != ''">
+			and RECHARGE_DURATION = #{rechargeDuration}
+		</if>
+		<if test=" rechargeAmt != null and rechargeAmt != ''">
+			and RECHARGE_AMT = #{rechargeAmt}
+		</if>
+		<if test=" rechargeTraffic != null and rechargeTraffic != ''">
+			and RECHARGE_TRAFFIC = #{rechargeTraffic}
+		</if>
+		<if test=" rechargeNumber != null and rechargeNumber != ''">
+			and RECHARGE_NUMBER = #{rechargeNumber}
+		</if>
+		<if test=" supplierParam != null and supplierParam != ''">
+			and SUPPLIER_PARAM = #{supplierParam}
+		</if>
+		<if test=" serviceApplicationPath != null and serviceApplicationPath != ''">
+			and SERVICE_APPLICATION_PATH = #{serviceApplicationPath}
+		</if>
+
+	</select>
+
+	<select id="selectSingle" resultMap="BaseResultMap" parameterType="map">
 		select <include refid="Base_Column_List"/> from SERVICE_PRODUCT
 		where 1=1
 		<if test=" id != null and id != ''">

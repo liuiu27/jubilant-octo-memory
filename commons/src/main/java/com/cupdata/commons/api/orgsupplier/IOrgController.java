@@ -2,8 +2,9 @@ package com.cupdata.commons.api.orgsupplier;
 
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @Auth: LinYong
@@ -15,7 +16,7 @@ public interface IOrgController {
      * 根据机构编号，查询机构信息
      * @return
      */
-    @GetMapping("/org/{orgNo}")
+    @RequestMapping(method = RequestMethod.GET, value = "/org/{orgNo}")
     public BaseResponse<OrgInfVo> findOrgByNo(@PathVariable("orgNo") String orgNo);
 
 }

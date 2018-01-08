@@ -4,6 +4,8 @@ import com.cupdata.commons.api.lakala.ILakalaController;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.voucher.*;
 import org.apache.log4j.Logger;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,19 +21,23 @@ public class LakalaController implements ILakalaController{
     Logger LOGGER = Logger.getLogger(LakalaController.class);
 
     @Override
-    public BaseResponse<GetVoucherRes> getVoucher(String org, GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
         LOGGER.info(org);
         LOGGER.info(voucherReq.getProductNo());
+
+        GetVoucherRes lakalaVoucher = new GetVoucherRes();
+        lakalaVoucher.setOrderNo("DADAD32321DADD");
+        BaseResponse<GetVoucherRes> lakalaVoucherRes = new BaseResponse<GetVoucherRes>(lakalaVoucher);
+        return lakalaVoucherRes;
+    }
+
+    @Override
+    public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value="org", required=true) String org, @RequestBody DisableVoucherReq disableVoucherReq, HttpServletRequest request, HttpServletResponse response) {
         return null;
     }
 
     @Override
-    public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq, HttpServletRequest request, HttpServletResponse response) {
-        return null;
-    }
-
-    @Override
-    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value="sup", required=true) String sup, @RequestBody WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response) {
         return null;
     }
 }

@@ -3,14 +3,15 @@ package com.cupdata.apigateway.filters.pre;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Date;
+import java.util.*;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import com.cupdata.apigateway.feign.ProductFeignClient;
 import com.cupdata.commons.utils.DateTimeUtil;
-import org.apache.commons.lang3.StringUtils;
+import com.cupdata.commons.vo.product.ProductInfVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
-import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.http.MediaType;
 
 public class PreRequestFilter extends ZuulFilter {
@@ -34,11 +34,14 @@ public class PreRequestFilter extends ZuulFilter {
 	@Autowired
 	private OrgFeignClient orgFeignClient;
 
+	@Autowired
+	private ProductFeignClient productFeignClient;
+
 	private String dataPlain = null;// 请求参数明文
 
 	@Override
 	public String filterType() {
-		return FilterConstants.PRE_TYPE;
+		return "pre";
 	}
 
 	@Override
@@ -156,9 +159,15 @@ public class PreRequestFilter extends ZuulFilter {
 				return reqBodyBytes.length;
 			}
 		});
-		if (StringUtils.isNotBlank(org)){
-			ctx.addZuulRequestHeader("org", org);
+
+		Map<String, List<String>> pa = ctx.getRequestQueryParams();
+		if (null == pa){
+			pa = new HashMap<>();
 		}
+		List<String> p = new ArrayList<>();
+		p.add(org);
+		pa.put("org", p);
+		ctx.setRequestQueryParams(pa);
 
 		ctx.getZuulRequestHeaders().put("content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
 		return null;

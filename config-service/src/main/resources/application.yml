@@ -10,16 +10,16 @@ spring:
 
 server:
    port: 8060         # 指定该实例的端口
+
 eureka:
   client:
-    registerWithEureka: true  #false:不作为一个客户端注册到注册中心
-    fetchRegistry: false      #为true时，可以启动，但报异常：Cannot execute request on any known server
     serviceUrl:
-      defaultZone: http://user:password123@${eureka.instance.hostname}:8761/eureka/
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
   instance:
-   hostname: localhost    # 指定该Eureka实例的主机名
-   lease-expiration-duration-in-seconds: 6
-   lease-renewal-interval-in-seconds: 2
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 6
+    lease-renewal-interval-in-seconds: 2
 
 #mybatis相关配置
 mybatis:

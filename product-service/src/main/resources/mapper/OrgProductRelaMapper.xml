@@ -50,4 +50,21 @@
 		 </if>
     </select>
 
+	<select id="selectSingle" resultMap="BaseResultMap" parameterType="map">
+		select <include refid="Base_Column_List"/> from ORG_PRODUCT_RELA
+		where 1=1
+		<if test=" id != null and id != ''">
+			and ID = #{id}
+		</if>
+		<if test=" orgNo != null and orgNo != ''">
+			and ORG_NO = #{orgNo}
+		</if>
+		<if test=" productNo != null and productNo != ''">
+			and PRODUCT_NO = #{productNo}
+		</if>
+		<if test=" orgPrice != null and orgPrice != ''">
+			and ORG_PRICE = #{orgPrice}
+		</if>
+	</select>
+
 </mapper>

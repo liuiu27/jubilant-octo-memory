@@ -48,7 +48,6 @@ public class OrderUtils {
         }
         order.setNotifyUrl(null);
         order.setNodeName(CommonUtils.getServerFlag());
-        order.setSupplierFlag(product.getSupplierFlag());
         return order;
     }
 
