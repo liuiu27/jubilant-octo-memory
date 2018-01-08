@@ -3,8 +3,6 @@ package com.cupdata.commons.api.voucher;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.voucher.*;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +17,7 @@ public interface IVoucherApi {
     /**
      * 获取券码接口方法
      * @param org 机构编号
-     * @param voucherReq 获取券码请求参数
+     * @param voucherReq 获取券码请求参数（实现方法中需要添加@RequestBody注解获取参数）
      * @param request
      * @param response
      * @return
@@ -30,7 +28,7 @@ public interface IVoucherApi {
     /**
      * 禁用券码接口方法
      * @param org 机构编号
-     * @param disableVoucherReq 禁用券码请求参数
+     * @param disableVoucherReq 禁用券码请求参数（实现方法中需要添加@RequestBody注解获取参数）
      * @param request
      * @param response
      * @return
@@ -41,7 +39,7 @@ public interface IVoucherApi {
     /**
      * 核销券码接口方法
      * @param sup 商户编号
-     * @param writeOffVoucherReq 核销券码请求参数
+     * @param writeOffVoucherReq 核销券码请求参数（实现方法中需要添加@RequestBody注解获取参数）
      * @param request
      * @param response
      * @return

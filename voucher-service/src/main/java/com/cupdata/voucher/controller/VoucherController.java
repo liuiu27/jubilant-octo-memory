@@ -23,8 +23,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Auth: LinYong
@@ -85,10 +83,6 @@ public class VoucherController implements IVoucherController{
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<GetVoucherReq> entity = new HttpEntity<GetVoucherReq>(voucherReq, headers);
 
-/*        ResponseEntity<BaseResponse> responseEntity = restTemplate.postForEntity(url, entity, BaseResponse.class);
-        BaseResponse<GetVoucherRes> getVoucherResult = responseEntity.getBody();
-        return getVoucherResult;*/
-
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
         String jsonStr = responseEntity.getBody();
         BaseResponse<GetVoucherRes> getVoucherResult = JSONObject.parseObject(jsonStr,  new TypeReference<BaseResponse<GetVoucherRes>>(){});
@@ -96,12 +90,19 @@ public class VoucherController implements IVoucherController{
     }
 
     @Override
-    public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value="org", required=true) String org, @RequestBody DisableVoucherReq disableVoucherReq, HttpServletRequest request, HttpServletResponse response) {
+        //Step1：查询券码订单
+
+
+        //Step2：
+
+        //Step3：
         return null;
     }
 
     @Override
-    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value="sup", required=true) String sup, @RequestBody WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response) {
+
         return null;
     }
 
@@ -172,10 +173,4 @@ public class VoucherController implements IVoucherController{
 		//TODO 调用不同供应商的接口，禁用券码
 		return null;
 	}*/
-
-    @GetMapping("/product/{productNo}")
-    public  BaseResponse<ProductInfVo> getProduct(@PathVariable String productNo){
-        BaseResponse<OrgInfVo> orgInfVoBaseResponse = orgFeignClient.findOrgByNo("2018010200000001");
-        return productFeignClient.findByProductNo(productNo);
-    }
 }
