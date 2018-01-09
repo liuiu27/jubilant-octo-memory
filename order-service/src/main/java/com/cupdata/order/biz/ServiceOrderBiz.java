@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cupdata.commons.biz.BaseBiz;
+import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.commons.model.OrgProductRela;
 import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.model.ServiceOrderVoucher;
 import com.cupdata.commons.model.ServiceProduct;
+import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.order.dao.ServiceOrderDao;
 import com.cupdata.order.dao.ServiceOrderVoucherDao;
 import com.cupdata.order.util.OrderUtils;
@@ -48,4 +51,33 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
 
         return voucherOrder;
     }
+
+	public void updateVoucherOrder(VoucherOrderVo voucherOrderVo) {
+		//修改订单表状态
+		orderDao.update(voucherOrderVo.getOrder());
+		
+		//修改券码表 券码号
+		orderVoucherDao.update(voucherOrderVo.getVoucherOrder());
+	}
+
+	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
+		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
+		VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
+    	ServiceOrder order = orderDao.selectOrderByOrgNoAndOrgOrderNo(orgNo,orgOrderNo);
+    	if(null == order) {
+    		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+			return res;
+    	}
+    	ServiceOrderVoucher voucherOrder =  orderVoucherDao.selectByOrderId(order.getId());
+    	if(null == voucherOrder) {
+    		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+			return res;
+    	}
+    	voucherOrderVo.setOrder(order);
+    	voucherOrderVo.setVoucherOrder(voucherOrder);
+    	res.setData(voucherOrderVo);
+    	return res;
+	}
 }

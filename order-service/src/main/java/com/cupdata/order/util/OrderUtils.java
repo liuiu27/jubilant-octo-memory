@@ -61,6 +61,8 @@ public class OrderUtils {
         ServiceOrderVoucher voucherOrder = new ServiceOrderVoucher();
         voucherOrder.setOrderId(order.getId());
         voucherOrder.setProductNo(productNo);
+        voucherOrder.setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED);
+        voucherOrder.setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
         return voucherOrder;
     }
 

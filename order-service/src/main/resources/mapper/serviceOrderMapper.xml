@@ -54,11 +54,34 @@
 	insert into SERVICE_ORDER (ORDER_NO, ORG_NO, SUPPLIER_NO, ORG_ORDER_NO,
 	SUPPLIER_ORDER_NO, ORG_PRICE, SUPPLIER_PRICE,
 	SETTLE_DATE, ORDER_STATUS, ORDER_TYPE, ORDER_DESC, ORDER_FAIL_DESC, IS_NOTIFY,
-	NOTIFY_URL, NODE_NAME)
+	NOTIFY_URL, NODE_NAME,CREATE_BY,CREATE_DATE)
 	values(#{orderNo},#{orgNo},#{supplierNo},#{orgOrderNo},#{supplierOrderNo},#{orgPrice},#{supplierPrice},
-	#{settleDate},#{orderStatus},#{orderType},#{orderDesc},#{orderFailDesc},#{isNotify},#{notifyUrl},#{nodeName})
+	#{settleDate},#{orderStatus},#{orderType},#{orderDesc},#{orderFailDesc},#{isNotify},#{notifyUrl},#{nodeName},#{createBy},NOW())
 	</insert>
-
+	
+	<update id="update" parameterType="com.cupdata.commons.model.ServiceOrder">
+	UPDATE 
+	  service_order
+	SET
+	  ORG_NO = #{orgNo},
+	  SUPPLIER_NO = #{supplierNo},
+	  ORG_ORDER_NO = #{orgOrderNo},
+	  SUPPLIER_ORDER_NO = #{supplierOrderNo},
+	  ORG_PRICE = #{orgPrice},
+	  SUPPLIER_PRICE = #{supplierPrice},
+	  SETTLE_DATE = #{settleDate},
+	  ORDER_STATUS = #{orderStatus},
+	  ORDER_TYPE = #{orderType},
+	  ORDER_DESC = #{orderDesc},
+	  ORDER_FAIL_DESC = #{orderFailDesc},
+	  IS_NOTIFY = #{isNotify},
+	  NOTIFY_URL = #{notifyUrl},
+	  NODE_NAME = #{nodeName},
+	  UPDATE_BY = #{updateBy},
+	  UPDATE_DATE = NOW()
+	WHERE ORDER_NO = #{orderNo};
+	</update>
+	
 	<!-- 根据ID查询 -->
     <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -66,7 +89,15 @@
         from SERVICE_ORDER
         where ID = #{id}
     </select>
-
+	
+	<select id="selectOrderByOrgNoAndOrgOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		 select
+        <include refid="Base_Column_List"/>
+        from SERVICE_ORDER
+        where ORG_NO = #{orgNo}
+        AND ORG_ORDER_NO = #{orgOrderNo} limit 1
+	</select>
+	
 	<!-- 根据条件查询所有记录 -->
      <select id="selectAll" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from SERVICE_ORDER

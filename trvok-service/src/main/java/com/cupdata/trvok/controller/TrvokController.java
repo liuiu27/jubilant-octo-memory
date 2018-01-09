@@ -7,15 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.cupdata.commons.api.trvok.ITrvokController;
+import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
-import com.cupdata.commons.vo.trvok.TrovkActivatReq;
-import com.cupdata.commons.vo.trvok.TrovkActivatRes;
 import com.cupdata.commons.vo.trvok.TrovkCodeReq;
 import com.cupdata.commons.vo.trvok.TrovkCodeRes;
 import com.cupdata.commons.vo.trvok.TrovkDisableReq;
@@ -93,44 +92,6 @@ public class TrvokController implements ITrvokController{
 		return baseResponse;
 	}
 	
-	/**
-	 * 空港获取券码  激活券码
-	 */
-	@Override
-	public BaseResponse<TrovkCodeRes> getTrvokVerifyCode(TrovkCodeReq trovkCodeReq) {
-		log.info("TrvokController getTrvokVerifyCode begin.............param outTradeNo is " + trovkCodeReq.getOutTradeNo() + " Sku is " + trovkCodeReq.getSku());
-		trovkCodeReq.setPartner(configFeignClient.getConfig("CUPD", TRVOK_PARTNER));
-		trovkCodeReq.setWcfSignKey(configFeignClient.getConfig("CUPD", TRVOK_WCF_SIGN_KEY));
-		trovkCodeReq.setRequstUrl(configFeignClient.getConfig("CUPD", TRVOK_REQUST_URL));
-		BaseResponse<TrovkCodeRes> baseResponse = tripService.getTrvokVerifyCode(trovkCodeReq);
-		return baseResponse;
-	}
-	
-	/**
-	 * 空港激活券码
-	 */
-	@Override
-	public BaseResponse<TrovkActivatRes> activationTrvokCode(TrovkActivatReq trovkActivatReq) {
-		log.info("TrvokController activationTrvokCode begin.............param verifyCode is " + trovkActivatReq.getVerifyCode() + " expire is " + trovkActivatReq.getExpire());
-		trovkActivatReq.setPartner(configFeignClient.getConfig("CUPD", TRVOK_PARTNER));
-		trovkActivatReq.setWcfSignKey(configFeignClient.getConfig("CUPD", TRVOK_WCF_SIGN_KEY));
-		trovkActivatReq.setRequstUrl(configFeignClient.getConfig("CUPD", TRVOK_REQUST_URL));
-		BaseResponse<TrovkActivatRes> baseResponse = tripService.activationTrvokCode(trovkActivatReq);
-		return baseResponse;
-	}
-	
-	/**
-	 * 空港禁用券码
-	 */
-	@Override
-	public BaseResponse<TrovkDisableRes> disableCode(TrovkDisableReq trovkDisableReq) {
-		log.info("TrvokController disableCode begin.............param verifyCode is " + trovkDisableReq.getVerifyCode());
-		trovkDisableReq.setPartner(configFeignClient.getConfig("CUPD", TRVOK_PARTNER));
-		trovkDisableReq.setWcfSignKey(configFeignClient.getConfig("CUPD", TRVOK_WCF_SIGN_KEY));
-		trovkDisableReq.setRequstUrl(configFeignClient.getConfig("CUPD", TRVOK_REQUST_URL));
-		BaseResponse<TrovkDisableRes> baseResponse = tripService.disableCode(trovkDisableReq);
-		return baseResponse;
-	}
 	
 
 	/**
@@ -179,8 +140,20 @@ public class TrvokController implements ITrvokController{
 				res.setResponseMsg(baseResponse.getResponseMsg());
 				return res;
 			}
-			//TODO  修改订单状态 保存券码
 			
+			//修改订单状态 保存券码
+			voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
+			voucherOrderRes.getData().getVoucherOrder().setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED);
+			voucherOrderRes.getData().getVoucherOrder().setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
+			voucherOrderRes.getData().getVoucherOrder().setVoucherCode(baseResponse.getData().getVerifyCode());
+			voucherOrderRes.getData().getVoucherOrder().setStartDate(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMdd"));
+			voucherOrderRes.getData().getVoucherOrder().setEndDate(voucherReq.getExpire());
+			voucherOrderRes = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
+	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode()) || null == voucherOrderRes.getData() || null == voucherOrderRes.getData().getOrder() || null == voucherOrderRes.getData().getVoucherOrder()){
+	            res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
+	            res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
+	            return res;
+	        } 
 			//响应参数
 			GetVoucherRes voucherRes = new GetVoucherRes();
 			voucherRes.setExpire(voucherReq.getExpire());
@@ -198,13 +171,30 @@ public class TrvokController implements ITrvokController{
 	}
 
 	@Override
-	public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq,
+	public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value="org", required=true) String org, @RequestBody DisableVoucherReq disableVoucherReq,
 			HttpServletRequest request, HttpServletResponse response) {
 		log.info("TrvokController disableVoucher begin.............");
-		
-		
-		
-		return null;
+		BaseResponse<DisableVoucherRes> res = new BaseResponse<>();
+		try {
+			//调用空港接口禁用券码
+			TrovkDisableReq trovkDisableReq = new TrovkDisableReq();
+			trovkDisableReq.setPartner(configFeignClient.getConfig("CUPD", TRVOK_PARTNER));
+			trovkDisableReq.setWcfSignKey(configFeignClient.getConfig("CUPD", TRVOK_WCF_SIGN_KEY));
+			trovkDisableReq.setRequstUrl(configFeignClient.getConfig("CUPD", TRVOK_REQUST_URL));
+			trovkDisableReq.setVerifyCode(disableVoucherReq.getVoucherCode());
+			BaseResponse<TrovkDisableRes> baseResponse = tripService.disableCode(trovkDisableReq);
+			if(!ResponseCodeMsg.SUCCESS.getCode().equals(baseResponse.getResponseCode())) {
+				res.setResponseCode(baseResponse.getResponseCode());
+				res.setResponseMsg(baseResponse.getResponseMsg());
+				return res;
+			}
+			return res;
+		}catch(Exception e){
+			log.error("getVoucher error is" + e.getMessage());
+			res.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
+			res.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+			return res;
+		}
 	}
 
 	@Override
@@ -213,6 +203,6 @@ public class TrvokController implements ITrvokController{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	
 }

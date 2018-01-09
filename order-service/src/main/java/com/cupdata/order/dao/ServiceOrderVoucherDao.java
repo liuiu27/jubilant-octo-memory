@@ -7,5 +7,7 @@ import com.cupdata.commons.model.ServiceOrderVoucher;
 
 @Mapper
 public interface ServiceOrderVoucherDao extends BaseDao<ServiceOrderVoucher>{
-	 
+
+	ServiceOrderVoucher selectByOrderId(Long orderId);
+
 }

@@ -90,4 +90,24 @@ public class ModelConstants {
      * 服务供应商标识-TRVOK：空港易行
      */
     public static String SUPPLIER_FLAG_TRVOK = "TRVOK";
+    
+    /**
+     * 券码使用状态 ：未使用
+     */
+    public static Character VOUCHER_USE_STATUS_UNUSED = '0';
+    
+    /**
+     * 券码使用状态 ：已使用
+     */
+    public static Character VOUCHER_USE_STATUS_USE = '1';
+    
+    /**
+     * 券码有效状态 ： 有效
+     */
+    public static Character VOUCHER_STATUS_EFF = '0';
+    
+    /**
+     * 券码有效状态 ： 禁用
+     */
+    public static Character VOUCHER_STATUS_INVALID = '1';
 }

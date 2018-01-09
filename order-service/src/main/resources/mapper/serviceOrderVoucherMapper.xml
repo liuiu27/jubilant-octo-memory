@@ -9,6 +9,8 @@
         <result column="VOUCHER_CODE" property="voucherCode" jdbcType="VARCHAR"/>
         <result column="VOUCHER_PASSWORD" property="voucherPassword" jdbcType="VARCHAR"/>
         <result column="QR_CODE_URL" property="qrCodeUrl" jdbcType="VARCHAR"/>
+        <result column="USE_STATUS" property="useStatus" jdbcType="CHAR"/>
+        <result column="EFF_STATUS" property="effStatus" jdbcType="CHAR"/>
         <result column="START_DATE" property="startDate" jdbcType="VARCHAR"/>
         <result column="END_DATE" property="endDate" jdbcType="VARCHAR"/>
 		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
@@ -25,6 +27,8 @@
 	VOUCHER_CODE,
 	VOUCHER_PASSWORD,
 	QR_CODE_URL,
+	USE_STATUS,
+	EFF_STATUS,
 	START_DATE,
 	END_DATE,
 	CREATE_BY,
@@ -35,15 +39,41 @@
 
 	<!-- 增加记录 -->
 	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.cupdata.commons.model.ServiceOrderVoucher">
-		insert into SERVICE_ORDER_VOUCHER (ORDER_ID, PRODUCT_NO, VOUCHER_CODE, VOUCHER_PASSWORD, QR_CODE_URL, START_DATE, END_DATE)
-		values(#{orderId},#{productNo},#{voucherCode},#{voucherPassword},#{qrCodeUrl},#{startDate},#{endDate})
+		insert into SERVICE_ORDER_VOUCHER (ORDER_ID, PRODUCT_NO, VOUCHER_CODE, VOUCHER_PASSWORD, QR_CODE_URL, USE_STATUS, EFF_STATUS, START_DATE, END_DATE,CREATE_BY,CREATE_DATE)
+		values(#{orderId},#{productNo},#{voucherCode},#{voucherPassword},#{qrCodeUrl},#{useStatus},#{effStatus},#{startDate},#{endDate},#{createBy},now())
 	</insert>
-
-    <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	
+	
+	<update id ="update" parameterType="com.cupdata.commons.model.ServiceOrderVoucher">
+		UPDATE 
+			service_order_voucher 
+		SET
+		  ORDER_ID = #{orderId},
+		  PRODUCT_NO = #{productNo},
+		  VOUCHER_CODE = #{voucherCode},
+		  VOUCHER_PASSWORD = #{voucherPassword},
+		  QR_CODE_URL = #{qrCodeUrl},
+		  USE_STATUS = #{useStatus},
+		  EFF_STATUS = #{effStatus},
+		  START_DATE = #{startDate},
+ 		  END_DATE = #{endDate},
+		  UPDATE_BY = #{updateBy},
+		  UPDATE_DATE = NOW() 
+		WHERE ORDER_ID = #{orderId} ;
+	</update>
+		
+		<select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from SERVICE_ORDER_VOUCHER
-        where ID = #{id}
+        where ID = #{id} 
+    </select>
+	
+    <select id="selectByOrderId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SERVICE_ORDER_VOUCHER
+        where ORDER_ID = #{id} limit 1
     </select>
     
      <select id="selectAll" resultMap="BaseResultMap">
@@ -66,6 +96,12 @@
 		 </if>
 		 <if test=" qrCodeUrl != null and qrCodeUrl != ''">
 			 and QR_CODE_URL = #{qrCodeUrl}
+		 </if>
+		  <if test=" useStatus != null and useStatus != ''">
+			 and USE_STATUS = #{useStatus}
+		 </if>
+		  <if test=" effStatus != null and effStatus != ''">
+			 and EFF_STATUS = #{effStatus}
 		 </if>
 		 <if test=" startDate != null and startDate != ''">
 			 and START_DATE = #{startDate}

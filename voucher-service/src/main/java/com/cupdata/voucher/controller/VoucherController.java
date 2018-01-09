@@ -9,7 +9,9 @@ import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
+import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.commons.vo.voucher.*;
+import com.cupdata.voucher.feign.OrderFeignClient;
 import com.cupdata.voucher.feign.OrgFeignClient;
 import com.cupdata.voucher.feign.ProductFeignClient;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +41,9 @@ public class VoucherController implements IVoucherController{
 
     @Autowired
     private RestTemplate restTemplate;
+    
+    @Autowired 
+	private OrderFeignClient orderFeignClient;
 
     @Override
     public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
@@ -91,13 +96,82 @@ public class VoucherController implements IVoucherController{
 
     @Override
     public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value="org", required=true) String org, @RequestBody DisableVoucherReq disableVoucherReq, HttpServletRequest request, HttpServletResponse response) {
-        //Step1：查询券码订单
+    	BaseResponse<DisableVoucherRes> res = new BaseResponse<>();
+    	  //Step1：判断请求参数是否合法-机构订单编号是否为空、服务产品编号是否为空、禁用描述是否为空、券码号是否为空
+        if (null == disableVoucherReq || StringUtils.isBlank(disableVoucherReq.getOrgOrderNo()) || StringUtils.isBlank(disableVoucherReq.getProductNo()) || StringUtils.isBlank(disableVoucherReq.getDisableDesc())|| StringUtils.isBlank(disableVoucherReq.getVoucherCode())) {
+            res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+            res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+            return res;
+        }
+    	
+        //Step2：查询服务产品信息
+        BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(disableVoucherReq.getProductNo());
+        if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode()) || null == productInfRes.getData()){//如果查询失败
+            res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+            res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+            return res;
+        }
 
+        //Step3：判断服务产品是否为券码商品
+        if (!ModelConstants.PRODUCT_TYPE_VOUCHER.equals(productInfRes.getData().getProduct().getProductType())){
+            res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+            res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+            return res;
+        }
 
-        //Step2：
+        //Step4：查询服务产品与机构是否关联
+        BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org, disableVoucherReq.getProductNo());
+        if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode()) || null == orgProductRelRes.getData()){
+            res.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
+            res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
+            return res;
+        }
+        
+       // Step4  查询订单和券码
+		BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByOrgNoAndOrgOrderNo(org, disableVoucherReq.getOrgOrderNo());
+		if(!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
+			res.setResponseCode(voucherOrderVo.getResponseCode());
+			res.setResponseMsg(voucherOrderVo.getResponseMsg());
+			return res;
+		}
+		//Step5   验证券码号是否一致
+		if(!voucherOrderVo.getData().getVoucherOrder().getVoucherCode().equals(disableVoucherReq.getVoucherCode())) {
+			res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+			return res;
+		}
+		
+		//Step6：根据券码商品配置信息中的服务名称，调用不同的微服务禁用券码
+        //http://trvok-service/trvok/trvok/disableVoucher
+        String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/disableVoucher?org=" + org;
 
-        //Step3：
-        return null;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        HttpEntity<DisableVoucherReq> entity = new HttpEntity<DisableVoucherReq>(disableVoucherReq, headers);
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
+        String jsonStr = responseEntity.getBody();
+        BaseResponse<DisableVoucherRes> disableVoucherRes = JSONObject.parseObject(jsonStr,  new TypeReference<BaseResponse<DisableVoucherRes>>(){});
+        if(!ResponseCodeMsg.SUCCESS.getCode().equals(disableVoucherRes.getResponseCode())) {
+  			res.setResponseCode(disableVoucherRes.getResponseCode());
+  			res.setResponseMsg(disableVoucherRes.getResponseMsg());
+  			return res;
+  		}
+        //Step7  修改数据库券码状态为禁用
+  		voucherOrderVo = orderFeignClient.getVoucherOrderByOrgNoAndOrgOrderNo(org,disableVoucherReq.getOrgOrderNo());
+  		if(!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
+  			res.setResponseCode(voucherOrderVo.getResponseCode());
+  			res.setResponseMsg(voucherOrderVo.getResponseMsg());
+  			return res;
+  		}
+  		voucherOrderVo.getData().getVoucherOrder().setEffStatus(ModelConstants.VOUCHER_STATUS_INVALID);
+  		voucherOrderVo = orderFeignClient.updateVoucherOrder(voucherOrderVo.getData());
+        if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode()) || null == voucherOrderVo.getData() || null == voucherOrderVo.getData().getOrder() || null == voucherOrderVo.getData().getVoucherOrder()){
+            res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
+            res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
+            return res;
+        } 
+        return disableVoucherRes;
     }
 
     @Override

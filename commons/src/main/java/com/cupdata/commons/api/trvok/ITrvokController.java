@@ -32,13 +32,4 @@ public interface ITrvokController extends IVoucherApi{
     @PostMapping("/getTrvokAirportInfo")
     public BaseResponse<TrvokAirportRes> getTrvokAirportInfo(@RequestBody TrvokAirportReq trvokAirportReq);
 
-    @PostMapping("/getTrvokVerifyCode")
-    public BaseResponse<TrovkCodeRes> getTrvokVerifyCode(@RequestBody TrovkCodeReq trovkCodeReq);
-
-    @PostMapping("/activationTrvokCode")
-    public BaseResponse<TrovkActivatRes> activationTrvokCode(@RequestBody TrovkActivatReq trovkActivatReq);
-    
-    @PostMapping("/disableCode")
-    public BaseResponse<TrovkDisableRes> disableCode(@RequestBody TrovkDisableReq trovkDisableReq);
-
 }

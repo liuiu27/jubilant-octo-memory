@@ -1,12 +1,13 @@
 package com.cupdata.commons.api.order;
 
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.product.VoucherOrderVo;
-import com.cupdata.commons.vo.voucher.CreateVoucherOrderVo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.product.VoucherOrderVo;
+import com.cupdata.commons.vo.voucher.CreateVoucherOrderVo;
 
 /**
  * @Auth: LinYong
@@ -21,6 +22,10 @@ public interface IOrderController {
      */
     @PostMapping("/createVoucherOrder")
     public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody CreateVoucherOrderVo createVoucherOrderVo);
+    
+    
+    @PostMapping("/updateVoucherOrder")
+    public BaseResponse<VoucherOrderVo> updateVoucherOrder(@RequestBody VoucherOrderVo voucherOrderVo);
 
     /**
      * 根据机构号以及机构订单号，查询券码订单

@@ -1,5 +1,15 @@
 package com.cupdata.order.controller;
 
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.cupdata.commons.api.order.IOrderController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.model.ServiceOrder;
@@ -11,14 +21,6 @@ import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.commons.vo.voucher.CreateVoucherOrderVo;
 import com.cupdata.order.biz.ServiceOrderBiz;
 import com.cupdata.order.feign.ProductFeignClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
 
 @RestController
 public class OrderController implements IOrderController {
@@ -56,7 +58,6 @@ public class OrderController implements IOrderController {
             voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
             return voucherOrderRes;
         }
-
         ServiceOrder order = orderBiz.select(Integer.parseInt(voucherOrder.getOrderId().toString()));
         if (null == order){
             voucherOrderRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
@@ -74,7 +75,26 @@ public class OrderController implements IOrderController {
 
     @Override
     public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(@PathVariable String orgNo, @PathVariable String orgOrderNo) {
-
-        return null;
+    	BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
+    	if(StringUtils.isBlank(orgNo)||StringUtils.isBlank(orgOrderNo)) {
+    		res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+			return res;
+    	}
+    	res = orderBiz.getVoucherOrderByOrgNoAndOrgOrderNo(orgNo,orgOrderNo);
+        return res;
     }
+
+	@Override
+	public BaseResponse<VoucherOrderVo> updateVoucherOrder(@RequestBody VoucherOrderVo voucherOrderVo) {
+		BaseResponse<VoucherOrderVo> res = new BaseResponse();
+		if(null == voucherOrderVo.getVoucherOrder() || null == voucherOrderVo.getOrder()){
+			res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+			return res;
+		}
+		orderBiz.updateVoucherOrder(voucherOrderVo);
+		res.setData(voucherOrderVo);
+		return res;
+	}
 }

@@ -70,12 +70,17 @@ public enum ResponseCodeMsg {
      * 999997 - 必填参数为空
      */
     ILLEGAL_ARGUMENT("999997", "必填参数为空"),
-
+    
+    /**
+     * 查询结果为空
+     */
+    RESULT_QUERY_EMPTY("999998","查询结果为空"),
+    
     /**
      * 999999 - 查询机构信息失败
      */
     ILLEGAL_PARTNER("999999" ,"合作机构信息获取失败"),
-
+    
     /**
      * EEEEEE - 失败
      */
