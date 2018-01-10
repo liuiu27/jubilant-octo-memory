@@ -4,6 +4,9 @@ import com.cupdata.commons.api.orgsupplier.IOrgController;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import feign.hystrix.FallbackFactory;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -31,6 +34,12 @@ class OrgFeignClientFallbackFactory implements FallbackFactory<OrgFeignClient> {
 
                 return null;
             }
+
+			@Override
+			public List<OrgInfVo> selectAll() {
+				OrgFeignClientFallbackFactory.LOGGER.error("调用查询机构服务出现问题", throwable);
+				return null;
+			}
         };
     }
 }

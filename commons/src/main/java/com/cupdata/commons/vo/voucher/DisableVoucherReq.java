@@ -17,11 +17,6 @@ public class DisableVoucherReq extends BaseRequest {
     private String orgOrderNo;
     
     /**
-     * 服务产品编号
-     */
-    private String productNo;
-    
-    /**
      * 券码
      */
     private String voucherCode;

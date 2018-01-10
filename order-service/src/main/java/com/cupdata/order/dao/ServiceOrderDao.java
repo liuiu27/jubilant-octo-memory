@@ -9,6 +9,4 @@ import com.cupdata.commons.model.ServiceOrder;
 @Mapper
 public interface ServiceOrderDao extends BaseDao<ServiceOrder>{
 
-	ServiceOrder selectOrderByOrgNoAndOrgOrderNo(@Param("orgNo")String orgNo, @Param("orgOrderNo")String orgOrderNo);
-	 
 }

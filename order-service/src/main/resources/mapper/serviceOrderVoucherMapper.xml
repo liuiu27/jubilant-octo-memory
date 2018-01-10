@@ -69,11 +69,42 @@
         where ID = #{id} 
     </select>
 	
-    <select id="selectByOrderId" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from SERVICE_ORDER_VOUCHER
-        where ORDER_ID = #{id} limit 1
+    <select id="selectSingle" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from SERVICE_ORDER_VOUCHER
+		where 1=1
+		<if test=" id != null and id != ''">
+			and ID = #{id}
+		</if>
+		<if test=" orderId != null and orderId != ''">
+			and ORDER_ID = #{orderId}
+		</if>
+		<if test=" productNo != null and productNo != ''">
+			and PRODUCT_NO = #{productNo}
+		</if>
+		<if test=" voucherCode != null and voucherCode != ''">
+			and VOUCHER_CODE = #{voucherCode}
+		</if>
+		<if test=" voucherPassword != null and voucherPassword != ''">
+			and VOUCHER_PASSWORD = #{voucherPassword}
+		</if>
+		<if test=" qrCodeUrl != null and qrCodeUrl != ''">
+			and QR_CODE_URL = #{qrCodeUrl}
+		</if>
+		<if test=" useStatus != null and useStatus != ''">
+			and USE_STATUS = #{useStatus}
+		</if>
+		<if test=" effStatus != null and effStatus != ''">
+			and EFF_STATUS = #{effStatus}
+		</if>
+		<if test=" startDate != null and startDate != ''">
+			and START_DATE = #{startDate}
+		</if>
+		<if test=" endDate != null and endDate != ''">
+			and END_DATE = #{endDate}
+		</if>
+		limit 1
     </select>
     
      <select id="selectAll" resultMap="BaseResultMap">

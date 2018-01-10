@@ -90,14 +90,47 @@
         where ID = #{id}
     </select>
 	
-	<select id="selectOrderByOrgNoAndOrgOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
-		 select
-        <include refid="Base_Column_List"/>
-        from SERVICE_ORDER
-        where ORG_NO = #{orgNo}
-        AND ORG_ORDER_NO = #{orgOrderNo} limit 1
-	</select>
-	
+	<select id="selectSingle" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from SERVICE_ORDER
+		where 1=1
+		<if test=" id != null and id != ''">
+			and ID = #{id}
+		</if>
+		<if test=" orderNo != null and orderNo != ''">
+			and ORDER_NO = #{orderNo}
+		</if>
+		<if test=" bankCode != null and bankCode != ''">
+			and BANK_CODE = #{bankCode}
+		</if>
+		<if test=" orgNo != null and orgNo != ''">
+			and ORG_NO = #{orgNo}
+		</if>
+		<if test=" bankOrderNo != null and bankOrderNo != ''">
+			and BANK_ORDER_NO = #{bankOrderNo}
+		</if>
+		<if test=" supplyOrderNo != null and supplyOrderNo != ''">
+			and SUPPLY_ORDER_NO = #{supplyOrderNo}
+		</if>
+		<if test=" supplyNo != null and supplyNo != ''">
+			and SUPPLY_NO = #{supplyNo}
+		</if>
+		<if test=" productNo != null and productNo != ''">
+			and PRODUCT_NO = #{productNo}
+		</if>
+		<if test=" settleDate != null and settleDate != ''">
+			and SETTLE_DATE = #{settleDate}
+		</if>
+		<if test=" orderStatus != null and orderStatus != ''">
+			and ORDER_STATUS = #{orderStatus}
+		</if>
+		<if test=" subOrderNo != null and subOrderNo != ''">
+			and SUB_ORDER_NO = #{subOrderNo}
+		</if>
+		limit 1
+		</select>
+		
 	<!-- 根据条件查询所有记录 -->
      <select id="selectAll" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from SERVICE_ORDER

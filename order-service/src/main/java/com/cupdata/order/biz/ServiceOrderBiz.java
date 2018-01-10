@@ -1,5 +1,8 @@
 package com.cupdata.order.biz;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,13 +66,18 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
 	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
 		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
 		VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
-    	ServiceOrder order = orderDao.selectOrderByOrgNoAndOrgOrderNo(orgNo,orgOrderNo);
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("orgNo", orgNo);
+		paramMap.put("orgOrderNo", orgOrderNo);
+    	ServiceOrder order = orderDao.selectSingle(paramMap);
     	if(null == order) {
     		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
 			return res;
     	}
-    	ServiceOrderVoucher voucherOrder =  orderVoucherDao.selectByOrderId(order.getId());
+    	paramMap.clear();
+    	paramMap.put("orderId", order.getId());
+    	ServiceOrderVoucher voucherOrder =  orderVoucherDao.selectSingle(paramMap);
     	if(null == voucherOrder) {
     		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());

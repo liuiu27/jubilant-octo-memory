@@ -15,5 +15,5 @@ public class BankInfVo extends BaseData{
     /**
      *
      */
-    private BankInf orgInf;
+    private BankInf bankInf;
 }
