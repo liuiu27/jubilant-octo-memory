@@ -2,14 +2,15 @@ package com.cupdata.cache.cacheUtils;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.cupdata.cache.biz.BankInfBiz;
-import com.cupdata.cache.biz.ConfigBiz;
-import com.cupdata.cache.biz.OrgInfBiz;
-import com.cupdata.cache.biz.ServiceSupplierBiz;
+import com.cupdata.cache.fegin.ConfigFeignClient;
 import com.cupdata.cache.utils.SpringUtil;
 import com.cupdata.commons.model.BankInf;
 import com.cupdata.commons.model.OrgInf;
@@ -25,6 +26,7 @@ import com.cupdata.commons.model.SysConfig;
  * @date 2016年9月5日 下午8:07:27
  * 
  */
+@Component
 public class CacheManager {
 	/**
 	 * 日志
@@ -33,25 +35,20 @@ public class CacheManager {
 
 	private static Cache CACHE = CacheContainer.getInstance();
 	
-	private static Long refreshMillis = System.currentTimeMillis();
-
-	private static Long REFRESH_TIME_LIMIT = 20 * 1000L;
+//    @Autowired
+//	private ConfigFeignClient configFeignClient;
+    
+    
+//    private ConfigFeignClient configFeignClient =   SpringUtil.getBean(ConfigFeignClient.class);
+  
+/*    @PostConstruct 
+    public void init() {
+    	
+    }*/
 	
-	private static ConfigBiz configBiz = (ConfigBiz) SpringUtil.getBean("configBiz");
 	
-	private static BankInfBiz bankInfBiz = (BankInfBiz) SpringUtil.getBean("bankInfBiz");
+//	private static ConfigBiz configBiz = (ConfigBiz) SpringUtil.getBean("configBiz");
 	
-	private static OrgInfBiz orgInfBiz = (OrgInfBiz) SpringUtil.getBean("orgInfBiz");
-	
-	private static ServiceSupplierBiz serviceSupplierBiz = (ServiceSupplierBiz) SpringUtil.getBean("serviceSupplierBiz");
-	
-//	/**
-//	 * 构造缓存
-//	 */
-//	private CacheManager() {
-//		super();
-//		CACHE = CacheContainer.getInstance();
-//	}
 
 	/**
 	 * 添加缓存
@@ -119,17 +116,19 @@ public class CacheManager {
 	/**
 	 * 刷新全部缓存
 	 */
-	public static void refreshAllCache() {
+	public void refreshAllCache() {
+		
 		if (CACHE != null) {
 			//缓存系统配置参数
 			log.info("缓存所有系统配置参数...");
-			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SYS_CONFIG,configBiz.selectAll(null));
+			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SYS_CONFIG, SpringUtil.getBean(ConfigFeignClient.class).selectAll());
+			
 			log.info("缓存所有银行数据信息...");
-			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_BANKINF,bankInfBiz.selectAll(null));
-			log.info("缓存所有机构数据信息...");
-			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_ORGINF,orgInfBiz.selectAll(null));
-			log.info("缓存所有供应商数据信息...");
-			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SUPPLIER,serviceSupplierBiz.selectAll(null));
+//			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_BANKINF,bankFeignClient.selectAll());
+//			log.info("缓存所有机构数据信息...");
+//			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_ORGINF,orgFeignClient.selectAll());
+//			log.info("缓存所有供应商数据信息...");
+//			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SUPPLIER,supplierFeignClient.selectAll());
 		} else {
 			log.info("CACHE为空！");
 			return;
@@ -226,23 +225,4 @@ public class CacheManager {
 		log.error("supplierNo is null");
 		return null;
 	}
-
-	/**
-	 * 获取ConfigBiz
-	 * @return
-	 */
-//	private static ConfigBiz getConfigService() {
-//		
-//	}
-	
-//	public static void main(String[] args) {
-//		Map<String, Long> map = new HashMap<String, Long>();
-//		Long start = System.currentTimeMillis();
-//		for (int i = 0; i < 1000000; i ++)
-//		{
-//			map.put("test" + i,  1000L);
-//		}
-//		System.out.println(System.currentTimeMillis() - start);
-//		configBiz.queryAllConfig();
-//	}
 }

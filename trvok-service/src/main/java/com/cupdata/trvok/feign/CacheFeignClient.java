@@ -1,4 +1,4 @@
-package com.cupdata.config.feign;
+package com.cupdata.trvok.feign;
 
 
 import org.springframework.cloud.netflix.feign.FeignClient;

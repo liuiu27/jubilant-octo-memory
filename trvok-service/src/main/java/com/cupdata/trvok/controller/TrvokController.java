@@ -30,7 +30,7 @@ import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
 import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
 import com.cupdata.commons.vo.voucher.WriteOffVoucherRes;
-import com.cupdata.trvok.feign.ConfigFeignClient;
+import com.cupdata.trvok.feign.CacheFeignClient;
 import com.cupdata.trvok.feign.OrderFeignClient;
 import com.cupdata.trvok.feign.ProductFeignClient;
 import com.cupdata.trvok.service.TripService;
@@ -59,7 +59,7 @@ public class TrvokController implements ITrvokController{
 	private ProductFeignClient productFeignClient;
 	
 	@Autowired
-	private ConfigFeignClient configFeignClient;
+	private CacheFeignClient cacheFeignClient;
 	
     private static String TRVOK_AREA_SIGN_KEY = "TRVOK_AREA_SIGN_KEY";//获取空港区域秘钥
  	private static String TRVOK_REQUST_URL = "TRVOK_REQUST_URL";//空港请求区域信息URL
@@ -73,8 +73,8 @@ public class TrvokController implements ITrvokController{
     @Override
     public BaseResponse<TrvokAreaRes> getTrvokArea(@RequestBody TrvokAreaReq areaReq) {
     	log.info("TrvokController getTrvokArea begin.............param areaType is " + areaReq.getAreaType());
-    	areaReq.setAreaSignKey(configFeignClient.getConfig("CUPD", TRVOK_AREA_SIGN_KEY));
-    	areaReq.setRequstUrl(configFeignClient.getConfig("CUPD", TRVOK_REQUST_URL));
+    	areaReq.setAreaSignKey(cacheFeignClient.getSysConfig("CUPD", TRVOK_AREA_SIGN_KEY));
+    	areaReq.setRequstUrl(cacheFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL));
     	BaseResponse<TrvokAreaRes>  baseResponse = tripService.getTrvokArea(areaReq);
         return baseResponse;
     }
@@ -85,9 +85,9 @@ public class TrvokController implements ITrvokController{
 	@Override
 	public BaseResponse<TrvokAirportRes> getTrvokAirportInfo(@RequestBody TrvokAirportReq trvokAirportReq) {
 		log.info("TrvokController getTrvokAirportInfo begin.............param areaType is " + trvokAirportReq.getAreaType() + " airportId is " + trvokAirportReq.getAirportId());
-		trvokAirportReq.setAreaSignKey(configFeignClient.getConfig("CUPD", TRVOK_AREA_SIGN_KEY));
-		trvokAirportReq.setRequstUrl(configFeignClient.getConfig("CUPD", TRVOK_REQUST_URL));
-		trvokAirportReq.setImgUrl(configFeignClient.getConfig("CUPD", TRVOK_IMG_URL));
+		trvokAirportReq.setAreaSignKey(cacheFeignClient.getSysConfig("CUPD", TRVOK_AREA_SIGN_KEY));
+		trvokAirportReq.setRequstUrl(cacheFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL));
+		trvokAirportReq.setImgUrl(cacheFeignClient.getSysConfig("CUPD", TRVOK_IMG_URL));
 		BaseResponse<TrvokAirportRes> baseResponse = tripService.getTrvokAirportInfo(trvokAirportReq);
 		return baseResponse;
 	}
@@ -130,9 +130,9 @@ public class TrvokController implements ITrvokController{
 			trovkCodeReq.setExpire(voucherReq.getExpire());
 			trovkCodeReq.setOutTradeNo(voucherOrderRes.getData().getOrder().getOrderNo());
 			//从缓存中获取秘钥及请求URL
-			trovkCodeReq.setPartner(configFeignClient.getConfig("CUPD", TRVOK_PARTNER));
-			trovkCodeReq.setWcfSignKey(configFeignClient.getConfig("CUPD", TRVOK_WCF_SIGN_KEY));
-			trovkCodeReq.setRequstUrl(configFeignClient.getConfig("CUPD", TRVOK_REQUST_URL));
+			trovkCodeReq.setPartner(cacheFeignClient.getSysConfig("CUPD", TRVOK_PARTNER));
+			trovkCodeReq.setWcfSignKey(cacheFeignClient.getSysConfig("CUPD", TRVOK_WCF_SIGN_KEY));
+			trovkCodeReq.setRequstUrl(cacheFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL));
 			// 获取券码
 			BaseResponse<TrovkCodeRes> baseResponse = tripService.getTrvokVerifyCode(trovkCodeReq);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(baseResponse.getResponseCode())) {
@@ -178,9 +178,9 @@ public class TrvokController implements ITrvokController{
 		try {
 			//调用空港接口禁用券码
 			TrovkDisableReq trovkDisableReq = new TrovkDisableReq();
-			trovkDisableReq.setPartner(configFeignClient.getConfig("CUPD", TRVOK_PARTNER));
-			trovkDisableReq.setWcfSignKey(configFeignClient.getConfig("CUPD", TRVOK_WCF_SIGN_KEY));
-			trovkDisableReq.setRequstUrl(configFeignClient.getConfig("CUPD", TRVOK_REQUST_URL));
+			trovkDisableReq.setPartner(cacheFeignClient.getSysConfig("CUPD", TRVOK_PARTNER));
+			trovkDisableReq.setWcfSignKey(cacheFeignClient.getSysConfig("CUPD", TRVOK_WCF_SIGN_KEY));
+			trovkDisableReq.setRequstUrl(cacheFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL));
 			trovkDisableReq.setVerifyCode(disableVoucherReq.getVoucherCode());
 			BaseResponse<TrovkDisableRes> baseResponse = tripService.disableCode(trovkDisableReq);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(baseResponse.getResponseCode())) {

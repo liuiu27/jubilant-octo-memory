@@ -28,7 +28,8 @@ public class CashierSchedule {
 	@Scheduled(cron = "0 0/10 * * * ?")
 	public void scheduleRefreshAllCache(){
 		log.info("--每十分钟刷新系统缓存...开始--");
-		CacheManager.refreshAllCache();
+		CacheManager cacheManager = new CacheManager();
+		cacheManager.refreshAllCache();
 		log.info("--每十分钟刷新系统缓存....结束--");
 	}
 }

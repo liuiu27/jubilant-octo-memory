@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-public class cacheController implements ICacheController{
+public class CacheController implements ICacheController{
 	
 	/**
 	 * 获取系统配置
