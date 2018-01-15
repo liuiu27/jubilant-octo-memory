@@ -34,8 +34,7 @@
 //	public void init(){
 //		//刷新缓存
 //		log.info("项目启动，刷新全部缓存....");
-//		CacheManager cacheManager = new CacheManager();
-//		cacheManager.refreshAllCache();
+//		CacheManager.refreshAllCache();
 //	}
 //}
 //

@@ -1,5 +1,7 @@
 package com.cupdata.commons.model;
 
+import java.util.Date;
+
 import lombok.Data;
 
 /**
@@ -33,6 +35,26 @@ public class ServiceOrderVoucher extends BaseModel{
      * 此字段用于保存卡号的二维码链接
      */
     private String qrCodeUrl;
+    
+    /**
+     * 使用者姓名
+     */
+    private String userName;
+    
+    /**
+     * 使用者电话
+     */
+    private String userMobileNo;
+    
+    /**
+     * 使用时间 yyyyMMddHHmmss
+     */
+    private Date useTime;
+    
+    /**
+     * 使用地点
+     */
+    private String  userPalce;
     
     /**
      * 0:未使用 1:已使用

@@ -24,8 +24,7 @@ public class CacheServiceApplication implements ApplicationListener<ContextRefre
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		log.info("初始化启动监听器......");
-		CacheManager cacheManage = event.getApplicationContext().getBean(CacheManager.class);
-		cacheManage.refreshAllCache();
+		CacheManager.refreshAllCache();
 //		this.init();
 	}
 

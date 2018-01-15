@@ -128,7 +128,25 @@ public class DateTimeUtil {
 		sDate = formatter.format(dt);
 		return sDate;
 	}
-
+	
+	/**
+	 * 字符串格式转化为日期格式(通用格式)
+	 * @param dt
+	 * @param frormat
+	 * @return
+	 */
+	public static Date stringToDate(String dt,String frormat) {
+		Date dd = null;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(frormat);
+		try {
+			dd = simpleDateFormat.parse(dt.trim());
+		} catch (Exception e) {
+			dd = null;
+		}
+		return dd;
+	}
+	
+	
 	/**
 	 * 得到指定日期的月份,格式：yyyy-mm-dd
 	 * 

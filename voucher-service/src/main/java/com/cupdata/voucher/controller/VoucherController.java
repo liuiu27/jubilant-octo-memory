@@ -19,7 +19,10 @@ import com.alibaba.fastjson.TypeReference;
 import com.cupdata.commons.api.voucher.IVoucherController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.constant.TimeConstants;
+import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.notify.OrderNotifyWait;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
@@ -29,6 +32,7 @@ import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
 import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
 import com.cupdata.commons.vo.voucher.WriteOffVoucherRes;
+import com.cupdata.voucher.feign.NotifyFeignClient;
 import com.cupdata.voucher.feign.OrderFeignClient;
 import com.cupdata.voucher.feign.OrgFeignClient;
 import com.cupdata.voucher.feign.ProductFeignClient;
@@ -51,6 +55,9 @@ public class VoucherController implements IVoucherController{
     
     @Autowired 
 	private OrderFeignClient orderFeignClient;
+    
+    @Autowired
+    private NotifyFeignClient notifyFeignClient;
 
     @Override
     public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
@@ -142,7 +149,6 @@ public class VoucherController implements IVoucherController{
             res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
             return res;
         }
-        
      
 		//Step6   验证券码号是否一致
 		if(!voucherOrderVo.getData().getVoucherOrder().getVoucherCode().equals(disableVoucherReq.getVoucherCode())) {
@@ -186,8 +192,56 @@ public class VoucherController implements IVoucherController{
 
     @Override
     public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value="sup", required=true) String sup, @RequestBody WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response) {
-
-        return null;
+    	BaseResponse<WriteOffVoucherRes> res = new BaseResponse<>();
+    	//判断参数是否合法   
+    	if(StringUtils.isBlank(writeOffVoucherReq.getVoucherCode())) {
+    		  res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+              res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+              return res;
+    	}
+    	//根据 券码号    供应商标识       供应商订单号       查询订单和 券码表    
+    	BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByVoucher(sup,writeOffVoucherReq.getVoucherCode(),writeOffVoucherReq.getSupplierOrderNo());
+    	if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode()) || null == voucherOrderVo.getData() || null == voucherOrderVo.getData().getOrder() || null == voucherOrderVo.getData().getVoucherOrder()){
+             res.setResponseCode(voucherOrderVo.getResponseCode());
+             res.setResponseMsg(voucherOrderVo.getResponseMsg());
+             return res;
+        }
+    	//判断是否需要通知  不需要直接返回成功
+    	if(ModelConstants.IS_NOTIFY_NO.equals(voucherOrderVo.getData().getOrder().getIsNotify())) {
+    		res.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
+            res.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
+            return res;
+    	}
+    	//判断是否存在券码号
+    	if(!writeOffVoucherReq.getVoucherCode().equals(voucherOrderVo.getData().getVoucherOrder().getVoucherCode())) {
+    		 res.setResponseCode(ResponseCodeMsg.FAIL.getCode());
+             res.setResponseMsg(ResponseCodeMsg.FAIL.getMsg());
+             return res;
+    	}
+    	//判斷URL是否为空
+    	if(StringUtils.isBlank(voucherOrderVo.getData().getOrder().getNotifyUrl())) {
+    		res.setResponseCode(ResponseCodeMsg.FAIL.getCode());
+    		res.setResponseMsg(ResponseCodeMsg.FAIL.getCode());
+    		return res;
+    	}
+    	//异步通知
+    	OrderNotifyWait orderNotifyWait =  new OrderNotifyWait();
+    	orderNotifyWait.setNotifyUrl(voucherOrderVo.getData().getOrder().getNotifyUrl());
+    	orderNotifyWait.setOrderNo(voucherOrderVo.getData().getOrder().getOrderNo());
+    	//调用通知接口
+    	notifyFeignClient.notifyToOrg(orderNotifyWait);
+    	//数据库  修改券码 
+    	voucherOrderVo.getData().getVoucherOrder().setUserName(writeOffVoucherReq.getUserName());
+    	voucherOrderVo.getData().getVoucherOrder().setUserMobileNo(writeOffVoucherReq.getUserMobileNo());
+    	voucherOrderVo.getData().getVoucherOrder().setUseTime(DateTimeUtil.stringToDate(writeOffVoucherReq.getUseTime(),TimeConstants.DATE_PATTERN_2));
+    	voucherOrderVo.getData().getVoucherOrder().setUserPalce(writeOffVoucherReq.getUsePlace());
+    	voucherOrderVo = orderFeignClient.updateVoucherOrder(voucherOrderVo.getData());
+    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode()) || null == voucherOrderVo.getData()) {
+    		res.setResponseCode(voucherOrderVo.getResponseCode());
+    		res.setResponseMsg(voucherOrderVo.getResponseMsg());
+    		return res;
+    	}
+        return res;
     }
 
 /*    @Override

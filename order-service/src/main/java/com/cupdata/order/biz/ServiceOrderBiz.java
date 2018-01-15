@@ -88,4 +88,29 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
     	res.setData(voucherOrderVo);
     	return res;
 	}
+
+	public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(String sup,String supplierOrderNo,String voucher) {
+		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
+		VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("voucher", voucher);
+		ServiceOrderVoucher voucherOrder =  orderVoucherDao.selectSingle(paramMap);
+		if(null == voucherOrder) {
+    		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+			return res;
+    	}
+		paramMap.clear();
+		paramMap.put("id", voucherOrder.getOrderId());
+    	ServiceOrder order = orderDao.selectSingle(paramMap);
+    	if(null == order) {
+    		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+			return res;
+    	}
+    	voucherOrderVo.setOrder(order);
+    	voucherOrderVo.setVoucherOrder(voucherOrder);
+    	res.setData(voucherOrderVo);
+    	return res;
+	}
 }

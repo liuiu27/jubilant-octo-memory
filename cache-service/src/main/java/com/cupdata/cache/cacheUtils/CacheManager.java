@@ -2,15 +2,12 @@ package com.cupdata.cache.cacheUtils;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.cupdata.cache.fegin.ConfigFeignClient;
+import com.cupdata.cache.biz.ConfigBiz;
 import com.cupdata.cache.utils.SpringUtil;
 import com.cupdata.commons.model.BankInf;
 import com.cupdata.commons.model.OrgInf;
@@ -26,7 +23,6 @@ import com.cupdata.commons.model.SysConfig;
  * @date 2016年9月5日 下午8:07:27
  * 
  */
-@Component
 public class CacheManager {
 	/**
 	 * 日志
@@ -34,7 +30,7 @@ public class CacheManager {
 	protected static Logger log = Logger.getLogger(CacheManager.class);
 
 	private static Cache CACHE = CacheContainer.getInstance();
-	
+
 //    @Autowired
 //	private ConfigFeignClient configFeignClient;
     
@@ -46,8 +42,7 @@ public class CacheManager {
     	
     }*/
 	
-	
-//	private static ConfigBiz configBiz = (ConfigBiz) SpringUtil.getBean("configBiz");
+	private static ConfigBiz configBiz = (ConfigBiz) SpringUtil.getBean(ConfigBiz.class);
 	
 
 	/**
@@ -116,14 +111,12 @@ public class CacheManager {
 	/**
 	 * 刷新全部缓存
 	 */
-	public void refreshAllCache() {
-		
+	public static void refreshAllCache() {
 		if (CACHE != null) {
 			//缓存系统配置参数
 			log.info("缓存所有系统配置参数...");
-			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SYS_CONFIG, SpringUtil.getBean(ConfigFeignClient.class).selectAll());
-			
-			log.info("缓存所有银行数据信息...");
+			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SYS_CONFIG,configBiz.selectAll(null));
+//			log.info("缓存所有银行数据信息...");
 //			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_BANKINF,bankFeignClient.selectAll());
 //			log.info("缓存所有机构数据信息...");
 //			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_ORGINF,orgFeignClient.selectAll());

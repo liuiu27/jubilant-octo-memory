@@ -7,6 +7,8 @@ import com.cupdata.commons.model.ServiceOrderVoucher;
 import com.cupdata.commons.model.ServiceProduct;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +44,11 @@ public class OrderUtils {
         order.setOrderDesc(orderDesc);
         order.setOrderFailDesc(null);
         if (ModelConstants.PRODUCT_TYPE_VOUCHER.equals(product.getProductType())){//如果是券码商品
-            order.setIsNotify(ModelConstants.IS_NOTIFY_NO);
+        	if(StringUtils.isBlank(order.getNotifyUrl())) {
+        		 order.setIsNotify(ModelConstants.IS_NOTIFY_NO);
+        	}else {
+        		order.setIsNotify(ModelConstants.IS_NOTIFY_YES);
+        	}
         } else if(ModelConstants.PRODUCT_TYPE_RECHARGE.equals(product.getProductType())){//如果是充值商品
             order.setIsNotify(ModelConstants.IS_NOTIFY_YES);
         }

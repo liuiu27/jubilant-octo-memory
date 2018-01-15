@@ -97,4 +97,16 @@ public class OrderController implements IOrderController {
 		res.setData(voucherOrderVo);
 		return res;
 	}
+
+	@Override
+	public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(String sup,String supplierOrderNo,String voucher) {
+		BaseResponse<VoucherOrderVo> res = new BaseResponse();
+		if(StringUtils.isBlank(voucher)){
+			res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+			return res;
+		}
+		res = orderBiz.getVoucherOrderByVoucher(sup,supplierOrderNo,voucher);
+		return res;
+	}
 }

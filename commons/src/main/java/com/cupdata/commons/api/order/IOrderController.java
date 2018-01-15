@@ -26,7 +26,7 @@ public interface IOrderController {
     
     @PostMapping("/updateVoucherOrder")
     public BaseResponse<VoucherOrderVo> updateVoucherOrder(@RequestBody VoucherOrderVo voucherOrderVo);
-
+    
     /**
      * 根据机构号以及机构订单号，查询券码订单
      * @param orgNo 机构编号
@@ -35,5 +35,9 @@ public interface IOrderController {
      */
     @GetMapping("/getVoucherOrder/{orgNo}/{orgOrderNo}")
     public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(@PathVariable("orgNo") String orgNo, @PathVariable("orgOrderNo") String orgOrderNo);
-
+    
+    @GetMapping("/getVoucherOrderByVoucher/{voucher}")
+    public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(@PathVariable("sup") String sup, @PathVariable("voucher") String voucher, @PathVariable("supplierOrderNo") String supplierOrderNo);
+    
+    
 }
