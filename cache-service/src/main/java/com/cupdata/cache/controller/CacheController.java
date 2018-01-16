@@ -18,7 +18,7 @@ public class CacheController implements ICacheController{
 	/**
 	 * 获取系统配置
 	 * @param bankCode
-	 * @param paraNameEn
+	 * @param paraName
 	 * @return
 	 */
 	public String getSysConfig(@PathVariable("bankCode") String bankCode, @PathVariable("paraName") String paraName) {

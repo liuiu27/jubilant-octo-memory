@@ -1,6 +1,8 @@
 package com.cupdata.cache.cacheUtils;
 
+import com.cupdata.cache.utils.SpringContext;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,14 +23,21 @@ public class CashierSchedule {
 	 */
 	protected Logger log = Logger.getLogger(this.getClass());
 //	@Resource
-	
+
+	@Autowired
+	private SpringContext springUtil;
+
+	@Autowired
+	private CacheManager cacheManager;
+
 	/**
 	 * 每十分钟刷新系统缓存
 	 */
 	@Scheduled(cron = "0 0/10 * * * ?")
 	public void scheduleRefreshAllCache(){
 		log.info("--每十分钟刷新系统缓存...开始--");
-		CacheManager.refreshAllCache();
+//		CacheManager cacheManager = springUtil.getBean(CacheManager.class);
+		cacheManager.refreshAllCache();
 		log.info("--每十分钟刷新系统缓存....结束--");
 	}
 }
