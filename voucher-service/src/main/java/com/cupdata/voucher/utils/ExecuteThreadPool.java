@@ -1,4 +1,4 @@
-package com.cupdata.notify.utils;
+package com.cupdata.voucher.utils;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -6,10 +6,11 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-
-import com.cupdata.commons.vo.notify.OrderNotifyWait;
-import com.cupdata.notify.biz.NotifyBiz;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 
@@ -29,14 +30,14 @@ public class ExecuteThreadPool {
 	private static int THREAD_POOL_NUM = 30;
 	
 	protected Logger logger =LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
-	private NotifyBiz notifyBiz;
+	private RestTemplate restTemplate;
 	
 	public ExecuteThreadPool() {
 		super();
 		init();
 	}
-
 	/**
 	 * 初始化线程池
 	 */
@@ -51,13 +52,14 @@ public class ExecuteThreadPool {
 	 * @param mainOrder 主订单
 	 * 
 	 */
-	public void addNotifyTaskToPool( final OrderNotifyWait orderNotifyWait) {
+	public void addNotifyTaskToPool( final String orderNo) {
 		EXECUTE_THREAD_POOL.execute(new Runnable() {
 			@Override
 			public void run() {
 				logger.info("Start executing threads...");
 				try{
-					notifyBiz.notifyToOrg(orderNotifyWait);
+					 String url = "http://notify-service/notify/notifyToOrg3Times/" + orderNo;
+		             restTemplate.getForEntity(url, String.class);
 				}catch (Exception e) {
 					logger.error(" executing threads error ..." , e);
 				}

@@ -4,10 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.biz.BaseBiz;
 import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.commons.vo.notify.OrderNotifyComplete;
 import com.cupdata.commons.vo.notify.OrderNotifyWait;
+import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.notify.dao.OrderNotifyCompleteDao;
 import com.cupdata.notify.dao.OrderNotifyWaitDao;
 import com.cupdata.notify.utils.NotifyUtil;
@@ -34,26 +36,21 @@ public class NotifyBiz extends BaseBiz<OrderNotifyWait> {
     	orderNotifyCompleteDao.insert(orderNotifyComplete);
     }
     
-	public void notifyToOrg(OrderNotifyWait orderNotifyWait) {
-		//查询是否有正在等待的通知
-		OrderNotifyWait orderNotifyWaitVo = orderNotifyWaitBiz.select(orderNotifyWait);
-		//为空则没有  向机构发送通知  不为空则等待任务调度器 通知
-		if(null == orderNotifyWaitVo) {
+	public void notifyToOrg3Times(VoucherOrderVo voucherOrderVo) {
 			String str ="";
-			//发送通知  先发送3次通知  
+			//发送通知  先发送3次通知 
 			for(int i=0;i<3;i++){
-				str = NotifyUtil.httpToOrg(orderNotifyWaitVo);
+				str = NotifyUtil.httpToOrg(voucherOrderVo);
 				if(!StringUtils.isBlank(str)) {
 					//通知成功    初始  OrderNotifyComplete 保存数据库
-					OrderNotifyComplete orderNotifyComplete = NotifyUtil.initOrderNotifyComplete(orderNotifyWait);
+					OrderNotifyComplete orderNotifyComplete = NotifyUtil.initOrderNotifyComplete(voucherOrderVo.getOrder().getOrderNo(),voucherOrderVo.getVoucherOrder().getQrCodeUrl());
 					orderNotifyCompleteDao.insert(orderNotifyComplete);
 					return;
 				}
 			}
 			//通知失败    初始  OrderNotifyWait 保存数据库
-			orderNotifyWait = NotifyUtil.initOrderNotifyWait(orderNotifyWait);
+			OrderNotifyWait orderNotifyWait = NotifyUtil.initOrderNotifyWait(voucherOrderVo.getOrder().getOrderNo(),voucherOrderVo.getVoucherOrder().getQrCodeUrl());
 			orderNotifyWaitBiz.insert(orderNotifyWait);
-		}
 	}
 
 }

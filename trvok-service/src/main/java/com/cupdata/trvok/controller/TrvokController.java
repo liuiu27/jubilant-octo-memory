@@ -198,9 +198,8 @@ public class TrvokController implements ITrvokController{
 	}
 
 	@Override
-	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq,
+	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup,WriteOffVoucherReq writeOffVoucherReq,
 			HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

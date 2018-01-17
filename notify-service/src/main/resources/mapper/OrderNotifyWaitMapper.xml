@@ -58,6 +58,28 @@
   ) 
     </insert>
     
+    <update id="update" parameterType="com.cupdata.commons.vo.notify.OrderNotifyWait">
+		UPDATE
+		order_notify_wait
+		SET
+		ORDER_NO = #{orderNo},
+		NOTIFY_URL = #{notifyUrl},
+		NEXT_NOTIFY_DATE = #{nextNotifyDate},
+		NOTIFY_TIMES = #{notifyTimes},
+		NOTIFY_STATUS = #{notifyStatus},
+		NODE_NAME = #{nodeName},
+		UPDATE_BY = #{createBy},
+		UPDATE_DATE = NOW()
+		WHERE ID = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.Integer">
+		DELETE
+		FROM
+		order_notify_wait
+		WHERE ID = #{id}
+    </delete>
+    
     <select id="select" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
