@@ -49,17 +49,18 @@ public class NotifySchedule {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("nodeName", nodeName);
 		//查询所有失败的通知
-        List<OrderNotifyWait> orderNotifyWaitList = notifyBiz.selectAll(paramMap);
+
+		List<OrderNotifyWait> orderNotifyWaitList = notifyBiz.selectAll(paramMap);
         if(null != orderNotifyWaitList && orderNotifyWaitList.size()>0){
-        	for (OrderNotifyWait orderNotifyWait : orderNotifyWaitList) {
+        	for (OrderNotifyWait orderNotifyWait : orderNotifyWaitList) { 
         		//判断通知次数是否>9
-        		if(orderNotifyWait.getNotifyTimes()>9) {
-        			//删除 orderNotifyWait 
-        			notifyBiz.delete(orderNotifyWait.getId());
+        		if(orderNotifyWait.getNotifyTimes() >= 9) {
         			//初始化  orderNotifyComplete 
         			OrderNotifyComplete orderNotifyComplete	= NotifyUtil.copyOrderNotifyComplete(orderNotifyWait,ModelConstants.NOTIFY_STATUS_FAIL);
         			//移动到  orderNotifyComplete
         			notifyBiz.orderNotifyCompleteInsert(orderNotifyComplete);
+        			//删除 orderNotifyWait 
+        			notifyBiz.delete(Integer.parseInt(orderNotifyWait.getId().toString()));
         		}else {
         			//发送通知
         			BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByOrderNo(orderNotifyWait.getOrderNo());
@@ -73,7 +74,7 @@ public class NotifySchedule {
         				//通知失败  通知失败次数 +1  下次通知时间修改
         				orderNotifyWait.setNotifyTimes(orderNotifyWait.getNotifyTimes()+1);
         				//通知时间修改
-        				orderNotifyWait.setNextNotifyDate(NotifyNextTime.GetNextTime(orderNotifyWait.getNotifyTimes(), orderNotifyWait.getCreateDate()));
+        				orderNotifyWait.setNextNotifyDate(NotifyNextTime.GetNextTime(orderNotifyWait.getNotifyTimes(), orderNotifyWait.getNextNotifyDate()));
         				notifyBiz.update(orderNotifyWait);
         			}else {
         				log.info("SUCCESS  notify url is " + orderNotifyWait.getNotifyUrl() + "notifyTimes is" + orderNotifyWait.getNotifyTimes());

@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.cupdata.commons.utils.DateTimeUtil;
 
 public class NotifyNextTime {
@@ -32,6 +30,6 @@ public class NotifyNextTime {
 			return null;
 		}
 		Integer minutes = map.get(notifyTimes);
-		return DateTimeUtil.addMinute(time, minutes);
+		return  DateTimeUtil.addMinute(time, minutes);
 	}
 }

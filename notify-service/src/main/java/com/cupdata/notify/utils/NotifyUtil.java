@@ -1,6 +1,7 @@
 package com.cupdata.notify.utils;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
@@ -39,7 +40,7 @@ public class NotifyUtil {
 		OrderNotifyWait orderNotifyWait = new OrderNotifyWait();
 		orderNotifyWait.setOrderNo(orderNo);
 		orderNotifyWait.setNotifyUrl(notifyUrl);
-		orderNotifyWait.setNextNotifyDate(new Date());//TODO 下次通知时间待定
+		orderNotifyWait.setNextNotifyDate(NotifyNextTime.GetNextTime(1,DateTimeUtil.getCurrentTime()));
 		orderNotifyWait.setNotifyTimes(1);
 		orderNotifyWait.setNotifyStatus(ModelConstants.NOTIFY_STATUS_FAIL);
 		orderNotifyWait.setNodeName("node");//TODO节点名称
@@ -57,7 +58,7 @@ public class NotifyUtil {
 		orderNotifyComplete.setCompleteDate(NotifyNextTime.GetNextTime(1,DateTimeUtil.getCurrentTime()));
 		orderNotifyComplete.setNotifyTimes(1);
 		orderNotifyComplete.setNotifyStatus(ModelConstants.NOTIFY_STATUS_SUCCESS);
-		orderNotifyComplete.setNodeName("nodeName");//TODO节点名称
+		orderNotifyComplete.setNodeName("node");//TODO节点名称
 		return orderNotifyComplete;
 	}
 	
@@ -71,7 +72,7 @@ public class NotifyUtil {
 		orderNotifyComplete.setOrderNo(orderNotifyWait.getOrderNo());
 		orderNotifyComplete.setNotifyUrl(orderNotifyWait.getNotifyUrl());
 		orderNotifyComplete.setCompleteDate(orderNotifyWait.getNextNotifyDate());
-		orderNotifyComplete.setNotifyTimes(orderNotifyWait.getNotifyTimes() + 1);
+		orderNotifyComplete.setNotifyTimes(orderNotifyWait.getNotifyTimes());
 		orderNotifyComplete.setNotifyStatus(notifyStatus);
 		orderNotifyComplete.setNodeName(orderNotifyWait.getNodeName());
 		return orderNotifyComplete;
