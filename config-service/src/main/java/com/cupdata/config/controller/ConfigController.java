@@ -2,6 +2,8 @@ package com.cupdata.config.controller;
 
 import java.util.List;
 
+import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.sysconfig.SysConfigListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,8 +26,10 @@ public class ConfigController implements IConfigController{
 	private ConfigBiz configBiz;
 
 	@Override
-	public List<SysConfig> selectAll() {
+	public BaseResponse<SysConfigListVo> selectAll() {
 		log.info("ConfigController selectAll is begin...");
-		return  configBiz.selectAll(null);
+		BaseResponse<SysConfigListVo> sysConfigListVoRes = new BaseResponse<>();
+		sysConfigListVoRes.getData().setSysConfigList(configBiz.selectAll(null));
+		return sysConfigListVoRes;
 	}
 }
