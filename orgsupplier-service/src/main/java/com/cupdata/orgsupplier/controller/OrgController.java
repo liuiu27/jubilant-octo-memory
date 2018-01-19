@@ -2,6 +2,7 @@ package com.cupdata.orgsupplier.controller;
 
 import java.util.List;
 
+import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,7 +31,9 @@ public class OrgController implements IOrgController {
     }
 
 	@Override
-	public List<OrgInfVo> selectAll() {
-		return orgInfBiz.selectAll(null);
+	public BaseResponse<OrgInfListVo> selectAll() {
+		BaseResponse<OrgInfListVo> orgInfListVoRes = new BaseResponse();
+		orgInfListVoRes.getData().setOrgInfList(orgInfBiz.selectAll(null));
+		return orgInfListVoRes;
 	}
 }

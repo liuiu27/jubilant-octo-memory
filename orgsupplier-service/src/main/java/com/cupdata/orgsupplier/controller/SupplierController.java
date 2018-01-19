@@ -2,6 +2,8 @@ package com.cupdata.orgsupplier.controller;
 
 import java.util.List;
 
+import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.orgsupplier.SupplierInfListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +23,9 @@ public class SupplierController implements ISupplierController {
 	private ServiceSupplierBiz ServiceSupplierBiz;
 	
 	@Override
-	public List<ServiceSupplier> selectAll() {
-		return ServiceSupplierBiz.selectAll(null);
+	public BaseResponse<SupplierInfListVo> selectAll() {
+		BaseResponse<SupplierInfListVo> supplierInfListVoRes = new BaseResponse<>();
+		supplierInfListVoRes.getData().setSuppliersInfList(ServiceSupplierBiz.selectAll(null));
+		return supplierInfListVoRes;
 	}
-
 }
