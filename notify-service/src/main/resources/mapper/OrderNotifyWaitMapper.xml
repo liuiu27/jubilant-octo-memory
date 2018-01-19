@@ -6,7 +6,7 @@
         <result column="ID" property="id" jdbcType="INTEGER"/>
 		<result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
 		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR"/>
-		<result column="NEXT_NOTIFY_DATE" property="nextNotifyDate" jdbcType="DATE"/>
+		<result column="NEXT_NOTIFY_DATE" property="nextNotifyDate" jdbcType="TIMESTAMP"/>
 		<result column="NOTIFY_TIMES" property="notifyTimes" jdbcType="INTEGER"/>
 		<result column="NOTIFY_STATUS" property="notifyStatus" jdbcType="CHAR"/>
 		<result column="NODE_NAME" property="nodeName" jdbcType="VARCHAR"/>
@@ -58,6 +58,28 @@
   ) 
     </insert>
     
+    <update id="update" parameterType="com.cupdata.commons.vo.notify.OrderNotifyWait">
+		UPDATE
+		order_notify_wait
+		SET
+		ORDER_NO = #{orderNo},
+		NOTIFY_URL = #{notifyUrl},
+		NEXT_NOTIFY_DATE = #{nextNotifyDate},
+		NOTIFY_TIMES = #{notifyTimes},
+		NOTIFY_STATUS = #{notifyStatus},
+		NODE_NAME = #{nodeName},
+		UPDATE_BY = #{createBy},
+		UPDATE_DATE = NOW()
+		WHERE ID = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.Integer">
+		DELETE
+		FROM
+		order_notify_wait
+		WHERE ID = #{id}
+    </delete>
+    
     <select id="select" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -100,7 +122,7 @@
     
      <select id="selectAll" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from order_notify_wait
-        where 1=1
+        where NEXT_NOTIFY_DATE &lt;=  NOW() 
         <if test=" id != null and id != ''">
 			 and ID = #{id}
 		</if>

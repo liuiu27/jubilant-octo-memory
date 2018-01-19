@@ -27,12 +27,12 @@ public class ModelConstants {
     public static String ORG_STATUS_VALID = "1";
 
     /**
-     * 商品类型-RECHARGE：充值产品
+     * 商品类型-RECHARGE：充值产品   R
      */
-    public static String PRODUCT_TYPE_RECHARGE = "RECHARGE";
+    public static String PRODUCT_TYPE_RECHARGE = "R";
 
     /**
-     * 商品类型-VOUCHER：券码产品
+     * 商品类型-VOUCHER：券码产品  V
      */
     public static String PRODUCT_TYPE_VOUCHER = "VOUCHER";
 

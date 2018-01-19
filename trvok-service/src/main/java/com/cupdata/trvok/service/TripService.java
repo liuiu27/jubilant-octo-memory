@@ -268,8 +268,8 @@ public class TripService {
 			}else{
 				log.error("request konggang disableCode error is " + resJson.getString("info"));
 				trovkDisableRes.setResult(false);
-				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
-				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+				baseResponse.setResponseCode(ResponseCodeMsg.VOUCHER_NOT_EXIST.getCode());
+				baseResponse.setResponseMsg(ResponseCodeMsg.VOUCHER_NOT_EXIST.getMsg());
 				return baseResponse;
 			}
 		}catch(Exception e){

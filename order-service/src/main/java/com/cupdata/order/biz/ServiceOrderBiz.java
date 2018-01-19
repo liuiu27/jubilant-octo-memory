@@ -89,11 +89,11 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
     	return res;
 	}
 
-	public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(String sup,String supplierOrderNo,String voucher) {
+	public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(String sup,String supplierOrderNo,String voucherCode) {
 		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
 		VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("voucher", voucher);
+		paramMap.put("voucherCode", voucherCode);
 		ServiceOrderVoucher voucherOrder =  orderVoucherDao.selectSingle(paramMap);
 		if(null == voucherOrder) {
     		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
@@ -104,6 +104,31 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
 		paramMap.put("id", voucherOrder.getOrderId());
     	ServiceOrder order = orderDao.selectSingle(paramMap);
     	if(null == order) {
+    		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+			return res;
+    	}
+    	voucherOrderVo.setOrder(order);
+    	voucherOrderVo.setVoucherOrder(voucherOrder);
+    	res.setData(voucherOrderVo);
+    	return res;
+	}
+
+	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrderNo(String orderNo) {
+		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
+		VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("orderNo", orderNo);
+    	ServiceOrder order = orderDao.selectSingle(paramMap);
+    	if(null == order) {
+    		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+			return res;
+    	}
+    	paramMap.clear();
+    	paramMap.put("orderId", order.getId());
+    	ServiceOrderVoucher voucherOrder =  orderVoucherDao.selectSingle(paramMap);
+    	if(null == voucherOrder) {
     		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
 			return res;

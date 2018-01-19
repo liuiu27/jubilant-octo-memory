@@ -107,8 +107,8 @@
 		<if test=" orgNo != null and orgNo != ''">
 			and ORG_NO = #{orgNo}
 		</if>
-		<if test=" bankOrderNo != null and bankOrderNo != ''">
-			and BANK_ORDER_NO = #{bankOrderNo}
+		<if test=" orgOrderNo != null and orgOrderNo != ''">
+			and ORG_ORDER_NO = #{orgOrderNo}
 		</if>
 		<if test=" supplyOrderNo != null and supplyOrderNo != ''">
 			and SUPPLY_ORDER_NO = #{supplyOrderNo}

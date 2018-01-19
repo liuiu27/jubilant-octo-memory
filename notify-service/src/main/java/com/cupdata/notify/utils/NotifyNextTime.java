@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.cupdata.commons.utils.DateTimeUtil;
 
 public class NotifyNextTime {
@@ -15,6 +13,9 @@ public class NotifyNextTime {
 	 * @return
 	 */
 	public static Date GetNextTime(Integer notifyTimes,Date time) {
+		if(null == notifyTimes || null == time) {
+			return null;
+		}
 		Map<Integer,Integer> map = new HashMap<Integer,Integer>();
 		map.put(1, 1);
 		map.put(2, 1);
@@ -25,10 +26,10 @@ public class NotifyNextTime {
 		map.put(7, 30);
 		map.put(8, 30);
 		map.put(9, 60);
-		Integer minutes = map.get(notifyTimes);
-		if(null == minutes || null == time) {
+		if(!map.containsKey(notifyTimes)) {
 			return null;
 		}
-		return DateTimeUtil.addMinute(time, minutes);
+		Integer minutes = map.get(notifyTimes);
+		return  DateTimeUtil.addMinute(time, minutes);
 	}
 }

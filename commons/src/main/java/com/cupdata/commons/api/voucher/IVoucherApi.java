@@ -45,5 +45,5 @@ public interface IVoucherApi {
      * @return
      */
     @PostMapping("/writeOffVoucher")
-    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response);
+    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup,WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response);
 }

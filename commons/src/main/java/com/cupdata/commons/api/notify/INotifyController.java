@@ -1,10 +1,9 @@
 package com.cupdata.commons.api.notify;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.cupdata.commons.vo.notify.OrderNotifyWait;
 
 /**
  * @Auth: liwei
@@ -13,7 +12,7 @@ import com.cupdata.commons.vo.notify.OrderNotifyWait;
  */
 @RequestMapping("/notify")
 public interface INotifyController{
-	    @PostMapping("/notifyToOrg")
-	    public void notifyToOrg(@RequestBody OrderNotifyWait orderNotifyWait);
+	    @GetMapping("/notifyToOrg3Times/{orderNo}")
+	    public void notifyToOrg3Times(@PathVariable("orderNo") String orderNo);
 	    
 }

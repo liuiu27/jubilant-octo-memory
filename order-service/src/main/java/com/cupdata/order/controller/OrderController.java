@@ -99,14 +99,26 @@ public class OrderController implements IOrderController {
 	}
 
 	@Override
-	public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(String sup,String supplierOrderNo,String voucher) {
+	public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(@PathVariable String sup,@PathVariable String supplierOrderNo,@PathVariable String voucherCode) {
 		BaseResponse<VoucherOrderVo> res = new BaseResponse();
-		if(StringUtils.isBlank(voucher)){
+		if(StringUtils.isBlank(voucherCode)||StringUtils.isBlank(sup)){
 			res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
 			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
 			return res;
 		}
-		res = orderBiz.getVoucherOrderByVoucher(sup,supplierOrderNo,voucher);
+		res = orderBiz.getVoucherOrderByVoucher(sup,supplierOrderNo,voucherCode);
 		return res;
+	}
+
+	@Override
+	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrderNo(@PathVariable String orderNo) {
+		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
+    	if(StringUtils.isBlank(orderNo)) {
+    		res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+			return res;
+    	}
+    	res = orderBiz.getVoucherOrderByOrderNo(orderNo);
+        return res;
 	}
 }
