@@ -7,6 +7,11 @@ import com.cupdata.cache.fegin.ConfigFeignClient;
 import com.cupdata.cache.fegin.OrgFeignClient;
 import com.cupdata.cache.fegin.SupplierFeignClient;
 import com.cupdata.cache.utils.SpringContext;
+import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.orgsupplier.BankInfListVo;
+import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
+import com.cupdata.commons.vo.orgsupplier.SupplierInfListVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -120,13 +125,28 @@ public class CacheManager {
 			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SYS_CONFIG, configFeignClient.selectAll());
 
 			log.info("缓存所有银行数据信息...");
-			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_BANKINF, bankFeignClient.selectAll());
+			BaseResponse<BankInfListVo> bankInfListVoRes =  bankFeignClient.selectAll();
+			if (ResponseCodeMsg.SUCCESS.getCode().equals(bankInfListVoRes.getResponseCode())){
+				CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_BANKINF, bankInfListVoRes.getData().getBankInfList());
+			}else {
+				log.error("调用orgsupplier-service获取银行列表出现错误，响应码为" + bankInfListVoRes.getResponseCode());
+			}
 
 			log.info("缓存所有机构数据信息...");
-			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_ORGINF, orgFeignClient.selectAll());
+			BaseResponse<OrgInfListVo> orgInfListVoRes =  orgFeignClient.selectAll();
+			if (ResponseCodeMsg.SUCCESS.getCode().equals(orgInfListVoRes.getResponseCode())){
+				CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_BANKINF, orgInfListVoRes.getData().getOrgInfList());
+			}else {
+				log.error("调用orgsupplier-service获取机构列表出现错误，响应码为" + orgInfListVoRes.getResponseCode());
+			}
 
 			log.info("缓存所有供应商数据信息...");
-			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SUPPLIER, supplierFeignClient.selectAll());
+			BaseResponse<SupplierInfListVo> supplierInfListVoRes =  supplierFeignClient.selectAll();
+			if (ResponseCodeMsg.SUCCESS.getCode().equals(supplierInfListVoRes.getResponseCode())){
+				CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_BANKINF, supplierInfListVoRes.getData().getSuppliersInfList());
+			}else {
+				log.error("调用orgsupplier-service获取供应商列表出现错误，响应码为" + supplierInfListVoRes.getResponseCode());
+			}
 		} else {
 			log.info("CACHE为空！");
 			return;
@@ -147,7 +167,7 @@ public class CacheManager {
 	 * 获取系统配置信息
 	 * @return
 	 */
-	public static String getSysConfig(String bankCode, String paraName) {
+	public static SysConfig getSysConfig(String bankCode, String paraName) {
 		if(StringUtils.isBlank(paraName)) {
 			log.error("paraName is null");
 			return null;
@@ -159,7 +179,7 @@ public class CacheManager {
 			}
 			for (SysConfig config : list) {
 				if (bankCode.equals(config.getBankCode()) && paraName.equals(config.getParaNameEn())) {
-					return config.getParaValue();
+					return config;
 				}
 			}
 		}

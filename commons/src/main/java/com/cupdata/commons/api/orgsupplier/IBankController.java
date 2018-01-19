@@ -2,6 +2,7 @@ package com.cupdata.commons.api.orgsupplier;
 
 import java.util.List;
 
+import com.cupdata.commons.vo.orgsupplier.BankInfListVo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +28,5 @@ public interface IBankController {
      * 查询所有银行信息
      */
     @GetMapping("/selectAll")
-    public List<BankInfVo> selectAll();
+    public BaseResponse<BankInfListVo> selectAll();
 }

@@ -2,6 +2,8 @@ package com.cupdata.commons.api.orgsupplier;
 
 import java.util.List;
 
+import com.cupdata.commons.vo.orgsupplier.BankInfListVo;
+import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,6 @@ public interface IOrgController {
 	 * @return
 	 */
     @GetMapping("/selectAll")
-    public List<OrgInfVo> selectAll();
+    public BaseResponse<OrgInfListVo> selectAll();
 
 }

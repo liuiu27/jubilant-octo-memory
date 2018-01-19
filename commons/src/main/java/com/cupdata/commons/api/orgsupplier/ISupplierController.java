@@ -2,6 +2,9 @@ package com.cupdata.commons.api.orgsupplier;
 
 import java.util.List;
 
+import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
+import com.cupdata.commons.vo.orgsupplier.SupplierInfListVo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -18,6 +21,6 @@ public interface ISupplierController {
      * 查询所有供应商信息
      */
     @GetMapping("/selectAll")
-    public List<ServiceSupplier> selectAll();
+    public BaseResponse<SupplierInfListVo> selectAll();
 
 }
