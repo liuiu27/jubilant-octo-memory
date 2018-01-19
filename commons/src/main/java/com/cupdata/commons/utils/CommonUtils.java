@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.beans.PropertyDescriptor;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -684,6 +686,16 @@ public class CommonUtils {
 		return false;
 	}
 	
+	public String getHostAddress() {
+		String ip = "";
+		try {
+			ip = InetAddress.getLocalHost().getHostAddress().toString();
+			log.info("ip:" + ip); 
+		} catch (UnknownHostException e) {
+			log.error("get IP error " + e.getMessage());
+		} 
+		return ip;
+	}
 	
 	public static void main(String[] args) throws Exception {
 //		System.out.println(getRandomNum(6));

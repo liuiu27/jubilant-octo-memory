@@ -196,9 +196,8 @@ public class TrvokController implements ITrvokController{
 			return res;
 		}
 	}
-
 	@Override
-	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup,WriteOffVoucherReq writeOffVoucherReq,
+	public BaseResponse<WriteOffVoucherRes> writeOffVoucher( String sup,WriteOffVoucherReq writeOffVoucherReq,
 			HttpServletRequest request, HttpServletResponse response) {
 		return null;
 	}

@@ -39,7 +39,7 @@ public class NotifySchedule {
 	@Autowired
 	private OrderFeignClient orderFeignClient;
 	/**
-	 * 每十分钟执行通知
+	 * 每分钟执行通知
 	 */
 	@Scheduled(cron = "0 0/1 * * * ?")
 	public void notifyToOrgTask(){
@@ -77,7 +77,7 @@ public class NotifySchedule {
         				orderNotifyWait.setNextNotifyDate(NotifyNextTime.GetNextTime(orderNotifyWait.getNotifyTimes(), orderNotifyWait.getNextNotifyDate()));
         				notifyBiz.update(orderNotifyWait);
         			}else {
-        				log.info("SUCCESS  notify url is " + orderNotifyWait.getNotifyUrl() + "notifyTimes is" + orderNotifyWait.getNotifyTimes());
+        				log.info("SUCCESS  notify url is " + orderNotifyWait.getNotifyUrl() + "notifyTimes is " + orderNotifyWait.getNotifyTimes());
         				 //通知成功  删除 wait表 
         				notifyBiz.delete(orderNotifyWait.getId());
         				//初始化  orderNotifyComplete 
