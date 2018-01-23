@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cupdata.commons.api.orgsupplier.IOrgController;
+import com.cupdata.commons.model.OrgInf;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.cupdata.orgsupplier.biz.OrgInfBiz;
@@ -33,7 +34,9 @@ public class OrgController implements IOrgController {
 	@Override
 	public BaseResponse<OrgInfListVo> selectAll() {
 		BaseResponse<OrgInfListVo> orgInfListVoRes = new BaseResponse();
-		orgInfListVoRes.getData().setOrgInfList(orgInfBiz.selectAll(null));
+		OrgInfListVo orgInfListVo = new OrgInfListVo();
+		orgInfListVo.setOrgInfList(orgInfBiz.selectAll(null));
+		orgInfListVoRes.setData(orgInfListVo);
 		return orgInfListVoRes;
 	}
 }

@@ -33,7 +33,7 @@ public class CashierSchedule {
 	/**
 	 * 每十分钟刷新系统缓存
 	 */
-	@Scheduled(cron = "0 0/10 * * * ?")
+	@Scheduled(cron = "0 0/1 * * * ?")
 	public void scheduleRefreshAllCache(){
 		log.info("--每十分钟刷新系统缓存...开始--");
 //		CacheManager cacheManager = springUtil.getBean(CacheManager.class);

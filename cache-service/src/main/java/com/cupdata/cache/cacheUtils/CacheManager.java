@@ -12,6 +12,8 @@ import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.BankInfListVo;
 import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
 import com.cupdata.commons.vo.orgsupplier.SupplierInfListVo;
+import com.cupdata.commons.vo.sysconfig.SysConfigListVo;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -122,7 +124,12 @@ public class CacheManager {
 	public void refreshAllCache() {
 		if (CACHE != null) {
 			log.info("缓存所有系统配置参数...");
-			CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SYS_CONFIG, configFeignClient.selectAll());
+			BaseResponse<SysConfigListVo> sysConfigListVoRes =  configFeignClient.selectAll();
+			if (ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigListVoRes.getResponseCode())){
+				CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_SYS_CONFIG, sysConfigListVoRes.getData().getSysConfigList());
+			}else {
+				log.error("调用config-service获取系统配置出现错误，响应码为" + sysConfigListVoRes.getResponseCode());
+			}
 
 			log.info("缓存所有银行数据信息...");
 			BaseResponse<BankInfListVo> bankInfListVoRes =  bankFeignClient.selectAll();
@@ -183,6 +190,7 @@ public class CacheManager {
 				}
 			}
 		}
+		log.error("getSysConfig result is null  bankCode is " + bankCode + "paraName is " + paraName);
 		return null;
 	}
 	
@@ -199,7 +207,9 @@ public class CacheManager {
 						return bankInf;
 					}
 				}
+				log.error("getBankInf result is null bankCode is " + bankCode);
 			}
+			
 		}
 		log.error("bankCode is null");
 		return null;
@@ -218,6 +228,7 @@ public class CacheManager {
 						return orgInf;
 					}
 				}
+				log.error("getOrgInf result is null orgNo is " + orgNo);
 			}
 		}
 		log.error("orgNo is null");
@@ -232,12 +243,12 @@ public class CacheManager {
 		if (StringUtils.isNotBlank(supplierNo)) {
 			List<ServiceSupplier> list = (List<ServiceSupplier>) getCache(CacheConstants.CACHE_TYPE_SUPPLIER);
 			if (CollectionUtils.isNotEmpty(list)) {
-
 				for (ServiceSupplier serviceSupplier : list) {
 					if (supplierNo.equals(serviceSupplier.getSupplierNo())) {
 						return serviceSupplier;
 					}
 				}
+				log.error("getSupplier result is null supplierNo is " + supplierNo);
 			}
 		}
 		log.error("supplierNo is null");

@@ -29,7 +29,7 @@ public class ModelConstants {
     /**
      * 商品类型-RECHARGE：充值产品   R
      */
-    public static String PRODUCT_TYPE_RECHARGE = "R";
+    public static String PRODUCT_TYPE_RECHARGE = "RECHARGE";
 
     /**
      * 商品类型-VOUCHER：券码产品  V

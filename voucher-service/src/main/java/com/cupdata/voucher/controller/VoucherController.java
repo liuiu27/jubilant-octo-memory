@@ -81,7 +81,7 @@ public class VoucherController implements IVoucherController{
         //Step2：查询服务产品信息
         BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(voucherReq.getProductNo());
         if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode()) || null == productInfRes.getData()){//如果查询失败
-            log.error("select product is null......  productNo is" + voucherReq.getProductNo() + " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+            log.error("procduct-service  findByProductNo result is null......  productNo is" + voucherReq.getProductNo() + " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
         	res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
             res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
             return res;
@@ -98,7 +98,7 @@ public class VoucherController implements IVoucherController{
         //Step4：查询服务产品与机构是否关联
         BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org, voucherReq.getProductNo());
         if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode()) || null == orgProductRelRes.getData()){
-            log.error("findRel result is null...org is" + org + "productNo is " + voucherReq.getProductNo() + " errorCode is " + ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
+            log.error("procduct-service findRel result is null...org is" + org + "productNo is " + voucherReq.getProductNo() + " errorCode is " + ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
         	res.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
             res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
             return res;
@@ -133,7 +133,7 @@ public class VoucherController implements IVoucherController{
         // Step2  查询订单和券码
   		BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByOrgNoAndOrgOrderNo(org, disableVoucherReq.getOrgOrderNo());
   		if(!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
-  			log.error("getVoucherOrderByOrgNoAndOrgOrderNo is  null  org is " + org + "orgOrderNo is " + disableVoucherReq.getOrgOrderNo() + "errorCode is " + voucherOrderVo.getResponseCode());
+  			log.error("order-service getVoucherOrderByOrgNoAndOrgOrderNo is  null  org is " + org + "orgOrderNo is " + disableVoucherReq.getOrgOrderNo() + "errorCode is " + voucherOrderVo.getResponseCode());
   			res.setResponseCode(voucherOrderVo.getResponseCode());
   			res.setResponseMsg(voucherOrderVo.getResponseMsg());
   			return res;
@@ -142,7 +142,7 @@ public class VoucherController implements IVoucherController{
         //Step3：查询服务产品信息
         BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(voucherOrderVo.getData().getVoucherOrder().getProductNo());
         if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode()) || null == productInfRes.getData()){//如果查询失败
-            log.error("findByProductNo is null productNo is " + voucherOrderVo.getData().getVoucherOrder().getProductNo() + "errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+            log.error("procduct-service findByProductNo is null productNo is " + voucherOrderVo.getData().getVoucherOrder().getProductNo() + "errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
         	res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
             res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
             return res;
@@ -159,7 +159,7 @@ public class VoucherController implements IVoucherController{
         //Step5：查询服务产品与机构是否关联
         BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org,voucherOrderVo.getData().getVoucherOrder().getProductNo());
         if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode()) || null == orgProductRelRes.getData()){
-            log.error("select org and product is null org is" + org + "org" + "productNo is " + org,voucherOrderVo.getData().getVoucherOrder().getProductNo() + "errorCode is" + ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
+            log.error("procduct-service select org and product is null org is" + org + "org" + "productNo is " + org,voucherOrderVo.getData().getVoucherOrder().getProductNo() + "errorCode is" + ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
         	res.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
             res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
             return res;
@@ -193,7 +193,7 @@ public class VoucherController implements IVoucherController{
         //Step8  修改数据库券码状态为禁用
   		voucherOrderVo = orderFeignClient.getVoucherOrderByOrgNoAndOrgOrderNo(org,disableVoucherReq.getOrgOrderNo());
   		if(!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
-  			log.error("getVoucherOrderByOrgNoAndOrgOrderNo is fail org is " + org + "orgOrderNo is " + disableVoucherReq.getOrgOrderNo() + "errorCode is " + voucherOrderVo.getResponseCode());
+  			log.error("order-service getVoucherOrderByOrgNoAndOrgOrderNo is fail org is " + org + "orgOrderNo is " + disableVoucherReq.getOrgOrderNo() + "errorCode is " + voucherOrderVo.getResponseCode());
   			res.setResponseCode(voucherOrderVo.getResponseCode());
   			res.setResponseMsg(voucherOrderVo.getResponseMsg());
   			return res;
@@ -201,7 +201,7 @@ public class VoucherController implements IVoucherController{
   		voucherOrderVo.getData().getVoucherOrder().setEffStatus(ModelConstants.VOUCHER_STATUS_INVALID);
   		voucherOrderVo = orderFeignClient.updateVoucherOrder(voucherOrderVo.getData());
         if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode()) || null == voucherOrderVo.getData() || null == voucherOrderVo.getData().getOrder() || null == voucherOrderVo.getData().getVoucherOrder()){
-        	log.error("updateVoucherOrder is fail! errorCode is " + ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
+        	log.error("order-service updateVoucherOrder is fail! errorCode is " + ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
         	res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
             res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
             return res;
@@ -222,7 +222,7 @@ public class VoucherController implements IVoucherController{
     	//Step2：根据 券码号    供应商标识       供应商订单号       查询订单和 券码表      //TODO 供应商订单编号  传空 报错     
     	BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByVoucher(sup,writeOffVoucherReq.getSupplierOrderNo(),writeOffVoucherReq.getVoucherCode());
     	if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode()) || null == voucherOrderVo.getData() || null == voucherOrderVo.getData().getOrder() || null == voucherOrderVo.getData().getVoucherOrder()){
-             log.error("getVoucherOrderByVoucher query result is null ! errorCode is " + voucherOrderVo.getResponseCode()); 
+             log.error("order-service getVoucherOrderByVoucher query result is null ! errorCode is " + voucherOrderVo.getResponseCode()); 
     		res.setResponseCode(voucherOrderVo.getResponseCode());
              res.setResponseMsg(voucherOrderVo.getResponseMsg());
              return res;
