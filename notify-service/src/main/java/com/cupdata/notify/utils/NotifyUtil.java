@@ -5,6 +5,7 @@ import java.sql.Date;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
+import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.vo.notify.NotifyToOrgVo;
@@ -43,7 +44,7 @@ public class NotifyUtil {
 		orderNotifyWait.setNextNotifyDate(NotifyNextTime.GetNextTime(1,DateTimeUtil.getCurrentTime()));
 		orderNotifyWait.setNotifyTimes(1);
 		orderNotifyWait.setNotifyStatus(ModelConstants.NOTIFY_STATUS_FAIL);
-		orderNotifyWait.setNodeName("node");//TODO节点名称
+		orderNotifyWait.setNodeName(getNodeName());
 		return orderNotifyWait;
 	}
 	
@@ -58,7 +59,7 @@ public class NotifyUtil {
 		orderNotifyComplete.setCompleteDate(NotifyNextTime.GetNextTime(1,DateTimeUtil.getCurrentTime()));
 		orderNotifyComplete.setNotifyTimes(1);
 		orderNotifyComplete.setNotifyStatus(ModelConstants.NOTIFY_STATUS_SUCCESS);
-		orderNotifyComplete.setNodeName("node");//TODO节点名称
+		orderNotifyComplete.setNodeName(getNodeName());
 		return orderNotifyComplete;
 	}
 	
@@ -77,4 +78,16 @@ public class NotifyUtil {
 		orderNotifyComplete.setNodeName(orderNotifyWait.getNodeName());
 		return orderNotifyComplete;
 	}
+	
+	/**
+	 * 获取nodeName IP 加 端口号
+	 * @return
+	 */
+	public static String getNodeName() {
+		String ip = CommonUtils.getHostAddress();
+		String port = ServerPort.getPort();
+		String NodeName = ip + ":" + port;
+		return NodeName;
+	}
+	
 }

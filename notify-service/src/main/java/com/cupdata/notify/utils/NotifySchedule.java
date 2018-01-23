@@ -49,7 +49,8 @@ public class NotifySchedule {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("nodeName", nodeName);
 		//查询所有失败的通知
-
+		System.out.println(ServerPort.getPort());
+		
 		List<OrderNotifyWait> orderNotifyWaitList = notifyBiz.selectAll(paramMap);
         if(null != orderNotifyWaitList && orderNotifyWaitList.size()>0){
         	for (OrderNotifyWait orderNotifyWait : orderNotifyWaitList) { 

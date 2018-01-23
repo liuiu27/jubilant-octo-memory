@@ -2,6 +2,7 @@ package com.cupdata.voucher.feign;
 
 import com.cupdata.commons.api.orgsupplier.IOrgController;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import feign.hystrix.FallbackFactory;
 
@@ -36,7 +37,7 @@ class OrgFeignClientFallbackFactory implements FallbackFactory<OrgFeignClient> {
             }
 
 			@Override
-			public List<OrgInfVo> selectAll() {
+			public BaseResponse<OrgInfListVo> selectAll() {
 				OrgFeignClientFallbackFactory.LOGGER.error("调用查询机构服务出现问题", throwable);
 				return null;
 			}

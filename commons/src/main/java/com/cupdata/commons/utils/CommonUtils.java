@@ -686,7 +686,7 @@ public class CommonUtils {
 		return false;
 	}
 	
-	public String getHostAddress() {
+	public static String getHostAddress() {
 		String ip = "";
 		try {
 			ip = InetAddress.getLocalHost().getHostAddress().toString();
@@ -743,23 +743,23 @@ public class CommonUtils {
 		boolean is = isAllNumberChar(cardNo);*/
 
 //		String body = "{\"responseCode\":\"000000\",\"responseMsg\":\"成功\",\"data\":{\"airportList\":[{\"airportId\":\"539\",\"airportName\":\"北海福成机场\",\"airportCode\":\"BHY\"},{\"airportId\":\"50\",\"airportName\":\"长春龙嘉国际机场\",\"airportCode\":\"CGQ\"},{\"airportId\":\"247\",\"airportName\":\"长沙黄花国际机场\",\"airportCode\":\"CSX\"},{\"airportId\":\"356\",\"airportName\":\"常州机场\",\"airportCode\":\"CZX\"},{\"airportId\":\"504\",\"airportName\":\"成都双流国际机场\",\"airportCode\":\"CTU\"},{\"airportId\":\"301\",\"airportName\":\"大理荒草坝机场\",\"airportCode\":\"DLU\"},{\"airportId\":\"54\",\"airportName\":\"大连周水子国际机场\",\"airportCode\":\"DLC\"},{\"airportId\":\"386\",\"airportName\":\"大同云冈机场\",\"airportCode\":\"DAT\"},{\"airportId\":\"311\",\"airportName\":\"德宏芒市机场\",\"airportCode\":\"LUM\"},{\"airportId\":\"68\",\"airportName\":\"鄂尔多斯伊金霍洛机场\",\"airportCode\":\"DSN\"},{\"airportId\":\"43\",\"airportName\":\"福州长乐国际机场\",\"airportCode\":\"FOC\"},{\"airportId\":\"32\",\"airportName\":\"桂林两江国际机场\",\"airportCode\":\"KWL\"},{\"airportId\":\"47\",\"airportName\":\"哈尔滨太平国际机场\",\"airportCode\":\"HRB\"},{\"airportId\":\"256\",\"airportName\":\"海口美兰国际机场\",\"airportCode\":\"HAK\"},{\"airportId\":\"65\",\"airportName\":\"杭州萧山国际机场\",\"airportCode\":\"HGH\"},{\"airportId\":\"49\",\"airportName\":\"合肥新桥国际机场\",\"airportCode\":\"HFE\"},{\"airportId\":\"55\",\"airportName\":\"呼和浩特白塔国际机场\",\"airportCode\":\"HET\"},{\"airportId\":\"450\",\"airportName\":\"黄山机场\",\"airportCode\":\"TXN\"},{\"airportId\":\"244\",\"airportName\":\"济南遥墙国际机场\",\"airportCode\":\"TNA\"},{\"airportId\":\"462\",\"airportName\":\"九寨黄龙机场\",\"airportCode\":\"JZH\"},{\"airportId\":\"64\",\"airportName\":\"昆明长水国际机场\",\"airportCode\":\"KMG\"},{\"airportId\":\"62\",\"airportName\":\"拉萨贡嘎机场\",\"airportCode\":\"LXA\"},{\"airportId\":\"396\",\"airportName\":\"兰州中川机场\",\"airportCode\":\"LHW\"},{\"airportId\":\"303\",\"airportName\":\"丽江三义机场\",\"airportCode\":\"LJG\"},{\"airportId\":\"526\",\"airportName\":\"连云港白塔埠机场\",\"airportCode\":\"LYG\"},{\"airportId\":\"458\",\"airportName\":\"柳州白莲机场\",\"airportCode\":\"LZH\"},{\"airportId\":\"381\",\"airportName\":\"牡丹江海浪机场\",\"airportCode\":\"MDG\"},{\"airportId\":\"51\",\"airportName\":\"南昌昌北国际机场\",\"airportCode\":\"KHN\"},{\"airportId\":\"26\",\"airportName\":\"南京禄口国际机场\",\"airportCode\":\"NKG\"},{\"airportId\":\"44\",\"airportName\":\"南宁吴圩国际机场\",\"airportCode\":\"NNG\"},{\"airportId\":\"66\",\"airportName\":\"宁波栎社国际机场\",\"airportCode\":\"NGB\"},{\"airportId\":\"57\",\"airportName\":\"青岛流亭国际机场\",\"airportCode\":\"TAO\"},{\"airportId\":\"69\",\"airportName\":\"泉州晋江国际机场\",\"airportCode\":\"JJN\"},{\"airportId\":\"53\",\"airportName\":\"沈阳桃仙国际机场\",\"airportCode\":\"SHE\"},{\"airportId\":\"264\",\"airportName\":\"石家庄正定机场\",\"airportCode\":\"SJW\"},{\"airportId\":\"1\",\"airportName\":\"首都机场\",\"airportCode\":\"PEK\"},{\"airportId\":\"58\",\"airportName\":\"太原武宿国际机场\",\"airportCode\":\"TYN\"},{\"airportId\":\"310\",\"airportName\":\"腾冲驼峰机场\",\"airportCode\":\"TCZ\"},{\"airportId\":\"42\",\"airportName\":\"天津滨海国际机场\",\"airportCode\":\"TSN\"},{\"airportId\":\"67\",\"airportName\":\"温州龙湾机场\",\"airportCode\":\"WNZ\"},{\"airportId\":\"392\",\"airportName\":\"乌海机场\",\"airportCode\":\"WUA\"},{\"airportId\":\"63\",\"airportName\":\"乌鲁木齐地窝堡国际机场\",\"airportCode\":\"URC\"},{\"airportId\":\"470\",\"airportName\":\"无锡苏南硕放国际机场\",\"airportCode\":\"WUX\"},{\"airportId\":\"48\",\"airportName\":\"武汉天河国际机场\",\"airportCode\":\"WUH\"},{\"airportId\":\"60\",\"airportName\":\"西安咸阳国际机场\",\"airportCode\":\"XIY\"},{\"airportId\":\"296\",\"airportName\":\"西宁曹家堡机场\",\"airportCode\":\"XNN\"},{\"airportId\":\"302\",\"airportName\":\"西双版纳嘎洒机场\",\"airportCode\":\"JHG\"},{\"airportId\":\"500\",\"airportName\":\"锡林浩特机场\",\"airportCode\":\"XIL\"},{\"airportId\":\"41\",\"airportName\":\"厦门高崎国际机场\",\"airportCode\":\"XMN\"},{\"airportId\":\"52\",\"airportName\":\"徐州观音机场\",\"airportCode\":\"XUZ\"},{\"airportId\":\"269\",\"airportName\":\"宜昌三峡机场\",\"airportCode\":\"YIH\"},{\"airportId\":\"56\",\"airportName\":\"银川河东机场\",\"airportCode\":\"INC\"},{\"airportId\":\"362\",\"airportName\":\"永州零陵机场\",\"airportCode\":\"LLF\"},{\"airportId\":\"46\",\"airportName\":\"郑州新郑国际机场\",\"airportCode\":\"CGO\"},{\"airportId\":\"61\",\"airportName\":\"重庆江北国际机场\",\"airportCode\":\"CKG\"}]}}";
-		String body = "{\"responseCode\":\"000000\",\"responseMsg\":\"SUCCESS\",\"data\":{\"orderNo\":\"31738173981\", \"orgOrderNo\":\"DHKJDHJ11313QQEQE\",\"productNo\":\"0281881\",\"mobileNo\":\"15857128524\",\"airportList\":[{\"airportId\":\"539\",\"airportName\":\"北海福成机场\",\"airportCode\":\"BHY\"},{\"airportId\":\"50\",\"airportName\":\"长春龙嘉国际机场\",\"airportCode\":\"CGQ\"}]}}";
-		com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(body);
-		com.alibaba.fastjson.JSONObject resultJsonObj = new com.alibaba.fastjson.JSONObject();
-		resultJsonObj.put("responseCode", jsonObj.get("responseCode"));
-		resultJsonObj.put("responseMsg", jsonObj.get("responseMsg"));
-
-		String data = String.valueOf(jsonObj.get("data"));
-		com.alibaba.fastjson.JSONObject dataJsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
-		Set<Map.Entry<String, Object>> dataSet = dataJsonObj.entrySet();
-		Set<String> keySet = dataJsonObj.keySet();
-		Iterator<String> it = keySet.iterator();
-		while (it.hasNext()) {
-			String key = it.next();
-			resultJsonObj.put(key, dataJsonObj.get(key));
-		}
-
-		System.out.print(resultJsonObj.toJSONString());
-
+//		String body = "{\"responseCode\":\"000000\",\"responseMsg\":\"SUCCESS\",\"data\":{\"orderNo\":\"31738173981\", \"orgOrderNo\":\"DHKJDHJ11313QQEQE\",\"productNo\":\"0281881\",\"mobileNo\":\"15857128524\",\"airportList\":[{\"airportId\":\"539\",\"airportName\":\"北海福成机场\",\"airportCode\":\"BHY\"},{\"airportId\":\"50\",\"airportName\":\"长春龙嘉国际机场\",\"airportCode\":\"CGQ\"}]}}";
+//		com.alibaba.fastjson.JSONObject jsonObj = com.alibaba.fastjson.JSONObject.parseObject(body);
+//		com.alibaba.fastjson.JSONObject resultJsonObj = new com.alibaba.fastjson.JSONObject();
+//		resultJsonObj.put("responseCode", jsonObj.get("responseCode"));
+//		resultJsonObj.put("responseMsg", jsonObj.get("responseMsg"));
+//
+//		String data = String.valueOf(jsonObj.get("data"));
+//		com.alibaba.fastjson.JSONObject dataJsonObj = com.alibaba.fastjson.JSONObject.parseObject(data);
+//		Set<Map.Entry<String, Object>> dataSet = dataJsonObj.entrySet();
+//		Set<String> keySet = dataJsonObj.keySet();
+//		Iterator<String> it = keySet.iterator();
+//		while (it.hasNext()) {
+//			String key = it.next();
+//			resultJsonObj.put(key, dataJsonObj.get(key));
+//		}
+//
+//		System.out.print(resultJsonObj.toJSONString());
+		getHostAddress();
 	}
 }
