@@ -5,7 +5,7 @@
 
 	<groupId>com.cupdata</groupId>
 	<artifactId>eureka-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>jar</packaging>
 
 	<name>eureka-service</name>
@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>com.cupdata</groupId>
 		<artifactId>service-integration-platform</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${revision}</version>
 	</parent>
 
 	<dependencies>
