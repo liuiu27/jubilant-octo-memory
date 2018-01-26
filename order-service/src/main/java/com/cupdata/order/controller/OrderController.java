@@ -24,71 +24,78 @@ import com.cupdata.order.feign.ProductFeignClient;
 
 @RestController
 public class OrderController implements IOrderController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
 
-    @Autowired
-    private ProductFeignClient productFeignClient;
+	@Autowired
+	private ProductFeignClient productFeignClient;
 
-    @Resource
-    private ServiceOrderBiz orderBiz;
+	@Resource
+	private ServiceOrderBiz orderBiz;
 
-    @Override
-    public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody  CreateVoucherOrderVo createVoucherOrderVo) {
-        BaseResponse<VoucherOrderVo> voucherOrderRes = new BaseResponse();
+	@Override
+	public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody CreateVoucherOrderVo createVoucherOrderVo) {
+		BaseResponse<VoucherOrderVo> voucherOrderRes = new BaseResponse();
 
-        //查询服务产品信息
-        BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(createVoucherOrderVo.getProductNo());
-        if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode()) || null == productInfRes.getData()){//如果查询失败
-            voucherOrderRes.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-            voucherOrderRes.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
-            return voucherOrderRes;
-        }
+		// 查询服务产品信息
+		BaseResponse<ProductInfVo> productInfRes = productFeignClient
+				.findByProductNo(createVoucherOrderVo.getProductNo());
+		if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
+				|| null == productInfRes.getData()) {// 如果查询失败
+			voucherOrderRes.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+			voucherOrderRes.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+			return voucherOrderRes;
+		}
 
-        //查询机构、商品关系记录
-        BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createVoucherOrderVo.getOrgNo(), createVoucherOrderVo.getProductNo());
-        if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode()) || null == orgProductRelRes.getData()){//如果查询失败
-            voucherOrderRes.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
-            voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
-            return voucherOrderRes;
-        }
+		// 查询机构、商品关系记录
+		BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createVoucherOrderVo.getOrgNo(),
+				createVoucherOrderVo.getProductNo());
+		if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
+				|| null == orgProductRelRes.getData()) {// 如果查询失败
+			voucherOrderRes.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
+			voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
+			return voucherOrderRes;
+		}
 
-        ServiceOrderVoucher voucherOrder = orderBiz.createVoucherOrder(createVoucherOrderVo.getOrgNo(), createVoucherOrderVo.getOrgOrderNo(), createVoucherOrderVo.getOrderDesc(), productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
-        if (null == voucherOrder){//创建券码订单失败
-            voucherOrderRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
-            voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
-            return voucherOrderRes;
-        }
-        ServiceOrder order = orderBiz.select(Integer.parseInt(voucherOrder.getOrderId().toString()));
-        if (null == order){
-            voucherOrderRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
-            voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
-            return voucherOrderRes;
-        }
-        
-        VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
-        voucherOrderVo.setOrder(order);
-        voucherOrderVo.setVoucherOrder(voucherOrder);
-        voucherOrderRes.setData(voucherOrderVo);
+		ServiceOrderVoucher voucherOrder = orderBiz.createVoucherOrder(createVoucherOrderVo.getOrgNo(),
+				createVoucherOrderVo.getOrgOrderNo(), createVoucherOrderVo.getOrderDesc(),
+				productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
+		if (null == voucherOrder) {// 创建券码订单失败
+			voucherOrderRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
+			voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
+			return voucherOrderRes;
+		}
+		ServiceOrder order = orderBiz.select(Integer.parseInt(voucherOrder.getOrderId().toString()));
+		if (null == order) {
+			voucherOrderRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
+			voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
+			return voucherOrderRes;
+		}
 
-        return voucherOrderRes;
-    }
+		VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
+		voucherOrderVo.setOrder(order);
+		voucherOrderVo.setVoucherOrder(voucherOrder);
+		voucherOrderRes.setData(voucherOrderVo);
 
-    @Override
-    public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(@PathVariable String orgNo, @PathVariable String orgOrderNo) {
-    	BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
-    	if(StringUtils.isBlank(orgNo)||StringUtils.isBlank(orgOrderNo)) {
-    		res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+		return voucherOrderRes;
+	}
+
+	@Override
+	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(@PathVariable String orgNo,
+			@PathVariable String orgOrderNo) {
+		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
+		if (StringUtils.isBlank(orgNo) || StringUtils.isBlank(orgOrderNo)) {
+			res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
 			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
 			return res;
-    	}
-    	res = orderBiz.getVoucherOrderByOrgNoAndOrgOrderNo(orgNo,orgOrderNo);
-        return res;
-    }
+		}
+		res = orderBiz.getVoucherOrderByOrgNoAndOrgOrderNo(orgNo, orgOrderNo);
+		return res;
+	}
 
 	@Override
 	public BaseResponse<VoucherOrderVo> updateVoucherOrder(@RequestBody VoucherOrderVo voucherOrderVo) {
 		BaseResponse<VoucherOrderVo> res = new BaseResponse();
-		if(null == voucherOrderVo.getVoucherOrder() || null == voucherOrderVo.getOrder()){
+		if (null == voucherOrderVo.getVoucherOrder() || null == voucherOrderVo.getOrder()) {
 			res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
 			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
 			return res;
@@ -99,26 +106,27 @@ public class OrderController implements IOrderController {
 	}
 
 	@Override
-	public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(@PathVariable String sup,@PathVariable String supplierOrderNo,@PathVariable String voucherCode) {
+	public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(@PathVariable String sup,
+			@PathVariable String supplierOrderNo, @PathVariable String voucherCode) {
 		BaseResponse<VoucherOrderVo> res = new BaseResponse();
-		if(StringUtils.isBlank(voucherCode)||StringUtils.isBlank(sup)){
+		if (StringUtils.isBlank(voucherCode) || StringUtils.isBlank(sup)) {
 			res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
 			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
 			return res;
 		}
-		res = orderBiz.getVoucherOrderByVoucher(sup,supplierOrderNo,voucherCode);
+		res = orderBiz.getVoucherOrderByVoucher(sup, supplierOrderNo, voucherCode);
 		return res;
 	}
 
 	@Override
 	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrderNo(@PathVariable String orderNo) {
 		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
-    	if(StringUtils.isBlank(orderNo)) {
-    		res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+		if (StringUtils.isBlank(orderNo)) {
+			res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
 			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
 			return res;
-    	}
-    	res = orderBiz.getVoucherOrderByOrderNo(orderNo);
-        return res;
+		}
+		res = orderBiz.getVoucherOrderByOrderNo(orderNo);
+		return res;
 	}
 }

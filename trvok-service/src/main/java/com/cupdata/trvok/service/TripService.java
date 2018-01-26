@@ -45,7 +45,6 @@ public class TripService {
 			String sign = MD5Util.md5Encode(params + trvokAreaReq.getAreaSignKey());//获取空港区域秘钥
 			String requstUrl = trvokAreaReq.getRequstUrl() + 
 			"report.svc/SearchAreaInfo?" + params + "&sign=" + sign;//空港请求区域信息URL
-			log.info("request url is " + requstUrl);
 			//GET请求空港获取区域接口 
 			String resStr = HttpUtil.doGet(requstUrl);
 			log.info("response information is " + resStr);
@@ -90,7 +89,6 @@ public class TripService {
 			String sign = MD5Util.md5Encode(params + trvokAirportReq.getAreaSignKey());//KONGGANG_AREA_SIGN_KEY 获取空港区域秘钥
 			String requstUrl = trvokAirportReq.getRequstUrl() + 
 			"report.svc/SearchAreaInfoById?" + params + "&sign=" + sign;//空港请求机票详情URL
-			log.info("request url is " + requstUrl);
 			//GET请求空港获取机票详情接口 
 			String resStr = HttpUtil.doGet(requstUrl);
 			log.info("response information is " + resStr);
@@ -130,19 +128,17 @@ public class TripService {
 				 }
 				 airportInfoRes.setAirportInfo(LoungeDetailList);
 				 baseResponse.setData(airportInfoRes);
-				 return baseResponse;
 			}else{
 				log.error("request konggang getTrvokAirportInfo error is " + resJson.getString("description"));
 				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
 				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
-				return baseResponse;
 			}
 		}catch(Exception e){
 			log.error("request konggang getTrvokAirportInfo error is " + e.getMessage());
 			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
 			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-			return baseResponse;	
 		}
+		return baseResponse;
 	}
 	
 	/**
@@ -184,20 +180,18 @@ public class TripService {
 					log.error("request konggang activationCode error is " + resJson.getString("info"));
 					baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
 					baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
-					return baseResponse;
 				}
 			}else{
 				log.error("request konggang getVerifyCode error is " + resJson.getString("info"));
 				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
 				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
-				return baseResponse;
 			}
 		}catch(Exception e){
 			log.error("request konggang getVerifyCode error is " + e.getMessage());
 			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
 			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-			return baseResponse;	
-		}	
+		}
+		return baseResponse;
 	}
 	
 	/**
@@ -223,21 +217,20 @@ public class TripService {
 			if("00".equals(resJson.getString("code"))){//result为0，则获取data机票详情
 				activatCodeRes.setResult(true);
 				baseResponse.setData(activatCodeRes);
-				return baseResponse;			
+							
 			}else{
 				log.error("request konggang activationCode error is " + resJson.getString("info"));
 				activatCodeRes.setResult(false);
 				baseResponse.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
 				baseResponse.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
-				return baseResponse;		
 			}
 		}catch(Exception e){
 			log.error("request konggang activationCode error is " + e.getMessage());
 			activatCodeRes.setResult(false);
 			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
 			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-			return baseResponse;	
-		}	
+		}
+		return baseResponse;
 	}
 	
 	
@@ -264,22 +257,21 @@ public class TripService {
 			if("00".equals(resJson.getString("code"))){//result为0，则获取data机票详情
 				trovkDisableRes.setResult(true);
 				baseResponse.setData(trovkDisableRes);
-				return baseResponse;
 			}else{
 				log.error("request konggang disableCode error is " + resJson.getString("info"));
 				trovkDisableRes.setResult(false);
 				baseResponse.setResponseCode(ResponseCodeMsg.VOUCHER_NOT_EXIST.getCode());
 				baseResponse.setResponseMsg(ResponseCodeMsg.VOUCHER_NOT_EXIST.getMsg());
-				return baseResponse;
 			}
 		}catch(Exception e){
 			log.error("request konggang disableCode error is " + e.getMessage());
 			trovkDisableRes.setResult(false);
 			baseResponse.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
 			baseResponse.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-			return baseResponse;
-		}	
+		}
+		return baseResponse;
 	}
+	
 	public <T> BaseResponse<?> success(BaseResponse<?> baseResponse,Class <T> clazz){
 		baseResponse.setResponseCode(ResponseCodeMsg.SUCCESS.getCode());
 		baseResponse.setResponseMsg(ResponseCodeMsg.SUCCESS.getMsg());
