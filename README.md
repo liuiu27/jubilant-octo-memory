@@ -1,12 +1,15 @@
 #资源整合平台
-* api-gateway 网关
-* comm-api 服务接口
-* eureka
-*
+* api-gateway 网关控制中心
+* commons.api 各个服务的接口
+- commons *项目依赖管理存在问题*
+* eureka 服务注册中心
+* config-repo 配置存放地址
+* documents 项目文档
+* script 项目可执行脚本
 * …………
 
 #需求描述
-
+资源整合平台
 
 
 #开发规范

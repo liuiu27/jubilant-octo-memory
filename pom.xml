@@ -5,7 +5,7 @@
 
 	<groupId>com.cupdata</groupId>
 	<artifactId>service-integration-platform</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
 
 	<name>service-integration-platform</name>
@@ -40,13 +40,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
+		<revision>0.0.1-SNAPSHOT</revision>
 		<spring-cloud.version>Dalston.SR4</spring-cloud.version>
 		<commons-lang3.version>3.6</commons-lang3.version>
 		<mybatis.version>1.3.0</mybatis.version>
 		<druid.version>1.1.3</druid.version>
 		<joda.version>2.9.9</joda.version>
 		<guava.version>18.0</guava.version>
-		<fastjson.version>1.2.38</fastjson.version>
+		<fastjson.version>1.2.45</fastjson.version>
 	</properties>
 
 	<!-- 必须的依赖-->
@@ -83,22 +84,30 @@
 			<version>${joda.version}</version>
 		</dependency>
 
-		<!--<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-		</dependency>-->
 
 	</dependencies>
 
-	<!-- 引入spring cloud的依赖-->
+	<!-- 项目可选依赖管理-->
 	<dependencyManagement>
 		<dependencies>
+			<!-- 引入spring cloud的依赖-->
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
 				<version>${spring-cloud.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${fastjson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cupdata</groupId>
+				<artifactId>commons</artifactId>
+				<version>${revision}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
