@@ -278,7 +278,7 @@ public class VoucherController implements IVoucherController {
 		voucherOrderVo.getData().getVoucherOrder().setUserName(writeOffVoucherReq.getUserName());
 		voucherOrderVo.getData().getVoucherOrder().setUserMobileNo(writeOffVoucherReq.getUserMobileNo());
 		voucherOrderVo.getData().getVoucherOrder().setUseTime(DateTimeUtil.stringToDate(writeOffVoucherReq.getUseTime(), TimeConstants.DATE_PATTERN_2));
-		voucherOrderVo.getData().getVoucherOrder().setUserPalce(writeOffVoucherReq.getUsePlace());
+		voucherOrderVo.getData().getVoucherOrder().setUsePalce(writeOffVoucherReq.getUsePlace());
 		voucherOrderVo.getData().getVoucherOrder().setUseStatus(ModelConstants.VOUCHER_USE_STATUS_USE);
 		voucherOrderVo = orderFeignClient.updateVoucherOrder(voucherOrderVo.getData());
 		if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())

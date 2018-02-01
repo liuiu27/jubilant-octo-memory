@@ -737,8 +737,21 @@ public class DateTimeUtil {
        return now;
     }
     
+    /***
+     * 获取当前时间十位时间戳
+     * @return
+     */
+    public static String getTenTimeStamp(){
+    	return String.valueOf(new Date().getTime()/1000); 
+    }
     
- 
+    /***
+     * 获取当前时间十三位时间戳
+     * @return
+     */
+    public static String getThirteenTimeStamp(){
+    	return String.valueOf(new Date().getTime()); 
+    }
     
     public static String getPreMonthDate()
     {
@@ -807,7 +820,9 @@ public class DateTimeUtil {
     	
 //    	System.out.println(new Date().getTime());
     	
-    	Date[] ds = getDaysOfWeek(null);
-    	System.out.println(beginOfDay(ds[0]) + "    " + beginOfDay(ds[1]));
+//    	Date[] ds = getDaysOfWeek(null);
+//    	System.out.println(beginOfDay(ds[0]) + "    " + beginOfDay(ds[1]));
+    	
+    	System.out.println(getTenTimeStamp());
 	}
 }

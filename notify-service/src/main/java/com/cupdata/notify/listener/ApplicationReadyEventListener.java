@@ -32,7 +32,7 @@ public class ApplicationReadyEventListener implements ApplicationListener<Applic
 		if (applicationReadyEvent.getApplicationContext().getParent() == null){
 			log.info("初始化启动监听器......");
 			ConfigurableApplicationContext configurableApplicationContext = applicationReadyEvent.getApplicationContext();
-			this.init(configurableApplicationContext);
+//			this.init(configurableApplicationContext);
 		}
 	}
 
@@ -41,8 +41,8 @@ public class ApplicationReadyEventListener implements ApplicationListener<Applic
 	 */
 	public void init(ApplicationContext applicationContext){
 		//刷新缓存
-		log.info("项目启动，执行通知任务....");
-		NotifySchedule notifySchedule = applicationContext.getBean(NotifySchedule.class);
-		notifySchedule.notifyToOrgTask();
+//		log.info("项目启动，执行通知任务....");
+//		NotifySchedule notifySchedule = applicationContext.getBean(NotifySchedule.class);
+//		notifySchedule.notifyToOrgTask();
 	}
 }

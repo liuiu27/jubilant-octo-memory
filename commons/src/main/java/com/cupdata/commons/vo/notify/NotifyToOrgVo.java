@@ -39,5 +39,5 @@ public class NotifyToOrgVo {
 	/**
 	 * 使用地点
 	 */
-	private String userPalce;
+	private String usePalce;
 }

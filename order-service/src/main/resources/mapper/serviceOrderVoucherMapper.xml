@@ -14,7 +14,7 @@
 		<result column="USER_MOBILE_NO" property="userMobileNo"
 			jdbcType="VARCHAR" />
 		<result column="USE_TIME" property="useTime" jdbcType="DATE" />
-		<result column="USER_PALCE" property="userPalce" jdbcType="VARCHAR" />
+		<result column="USE_PALCE" property="usePalce" jdbcType="VARCHAR" />
 		<result column="USE_STATUS" property="useStatus" jdbcType="CHAR" />
 		<result column="EFF_STATUS" property="effStatus" jdbcType="CHAR" />
 		<result column="START_DATE" property="startDate" jdbcType="VARCHAR" />
@@ -36,7 +36,7 @@
 		USER_NAME,
 		USER_MOBILE_NO,
 		USE_TIME,
-		USER_PALCE,
+		USE_PALCE,
 		USE_STATUS,
 		EFF_STATUS,
 		START_DATE,
@@ -52,9 +52,9 @@
 		parameterType="com.cupdata.commons.model.ServiceOrderVoucher">
 		insert into SERVICE_ORDER_VOUCHER (ORDER_ID, PRODUCT_NO,
 		VOUCHER_CODE, VOUCHER_PASSWORD, QR_CODE_URL,USER_NAME,
-		USER_MOBILE_NO,USE_TIME,USER_PALCE, USE_STATUS, EFF_STATUS, START_DATE, END_DATE,CREATE_BY,CREATE_DATE)
+		USER_MOBILE_NO,USE_TIME,USE_PALCE, USE_STATUS, EFF_STATUS, START_DATE, END_DATE,CREATE_BY,CREATE_DATE)
 		values(#{orderId},#{productNo},#{voucherCode},#{voucherPassword},#{qrCodeUrl},
-		#{userName}, #{userMobileNo}, #{useTime}, #{userPalce},
+		#{userName}, #{userMobileNo}, #{useTime}, #{usePalce},
 		#{useStatus},#{effStatus},#{startDate},#{endDate},#{createBy},now())
 	</insert>
 
@@ -71,7 +71,7 @@
 		USER_NAME = #{userName},
 		USER_MOBILE_NO = #{userMobileNo},
 		USE_TIME = #{useTime},
-		USER_PALCE = #{userPalce},
+		USE_PALCE = #{usePalce},
 		USE_STATUS = #{useStatus},
 		EFF_STATUS = #{effStatus},
 		START_DATE = #{startDate},
@@ -121,7 +121,7 @@
 			and USE_TIME = #{useTime}
 		</if>
 		<if test=" userPalce != null and userPalce != ''">
-			and USER_PALCE = #{userPalce}
+			and USE_PALCE = #{usePalce}
 		</if>
 		<if test=" useStatus != null and useStatus != ''">
 			and USE_STATUS = #{useStatus}
@@ -171,7 +171,7 @@
 			and USE_TIME = #{useTime}
 		</if>
 		<if test=" userPalce != null and userPalce != ''">
-			and USER_PALCE = #{userPalce}
+			and USE_PALCE = #{usePalce}
 		</if>
 		<if test=" useStatus != null and useStatus != ''">
 			and USE_STATUS = #{useStatus}

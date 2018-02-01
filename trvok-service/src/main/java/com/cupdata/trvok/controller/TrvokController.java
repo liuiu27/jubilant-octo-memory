@@ -157,7 +157,6 @@ public class TrvokController implements ITrvokController{
 				return res;
 			}
 			String sku = productInfo.getData().getProduct().getSupplierParam();
-			//TODO  负载均衡发送信息
 			//创建券码订单
 			CreateVoucherOrderVo createVoucherOrderVo = new CreateVoucherOrderVo();
 			createVoucherOrderVo.setOrderDesc(voucherReq.getOrderDesc());

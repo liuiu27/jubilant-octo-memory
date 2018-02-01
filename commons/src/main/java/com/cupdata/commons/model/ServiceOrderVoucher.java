@@ -54,7 +54,7 @@ public class ServiceOrderVoucher extends BaseModel{
     /**
      * 使用地点
      */
-    private String  userPalce;
+    private String  usePalce;
     
     /**
      * 0:未使用 1:已使用
