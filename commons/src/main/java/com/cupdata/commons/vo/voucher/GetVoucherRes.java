@@ -35,7 +35,11 @@ public class GetVoucherRes extends BaseData {
      * 二维码链接URL
      */
     private String qrCodeUrl;
-
+    
+    /**
+     *  券码生效期
+     */
+    private String takEffect;
     /**
      * 券码有效期
      * 时间格式：yyyyMMdd

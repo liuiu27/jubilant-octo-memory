@@ -228,6 +228,7 @@ public class TrvokController implements ITrvokController{
 			voucherRes.setOrderNo(org);
 			voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			voucherRes.setVoucherCode(baseResponse.getData().getVerifyCode());
+			voucherRes.setTakEffect(voucherOrderRes.getData().getVoucherOrder().getStartDate());
 			res.setData(voucherRes);
 			return res;
 		}catch(Exception e){

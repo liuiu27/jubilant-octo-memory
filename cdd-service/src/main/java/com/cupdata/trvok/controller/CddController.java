@@ -15,6 +15,7 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.cdd.CddCodeReq;
 import com.cupdata.commons.vo.cdd.CddCodeRes;
+import com.cupdata.commons.vo.exception.ErrorException;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.commons.vo.sysconfig.SysConfigVo;
@@ -71,7 +72,7 @@ public class CddController implements ICddController{
 	 */
 	@Override
 	public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org,@RequestBody GetVoucherReq voucherReq, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response) throws ErrorException {
 		log.info("getVoucher is begin ........ org is " + org + "voucherReq is " + voucherReq.toString());
 		BaseResponse<GetVoucherRes>  res = new  BaseResponse<GetVoucherRes>();
 		try {
@@ -193,11 +194,13 @@ public class CddController implements ICddController{
 			voucherRes.setOrderNo(org);
 			voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			voucherRes.setVoucherCode(cddCodeRes.getData().getYzm());
+			voucherRes.setTakEffect(voucherOrderRes.getData().getVoucherOrder().getStartDate());
 			res.setData(voucherRes);
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
 			res.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
 			res.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+			throw new ErrorException("系统异常!");
 		}
 		return res;
 	}
