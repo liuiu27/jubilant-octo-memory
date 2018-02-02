@@ -225,7 +225,7 @@ public class TrvokController implements ITrvokController{
 			//响应参数
 			GetVoucherRes voucherRes = new GetVoucherRes();
 			voucherRes.setExpire(voucherReq.getExpire());
-			voucherRes.setOrderNo(org);
+			voucherRes.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
 			voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			voucherRes.setVoucherCode(baseResponse.getData().getVerifyCode());
 			voucherRes.setTakEffect(voucherOrderRes.getData().getVoucherOrder().getStartDate());

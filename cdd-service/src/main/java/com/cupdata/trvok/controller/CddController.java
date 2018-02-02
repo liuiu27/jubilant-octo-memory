@@ -191,7 +191,7 @@ public class CddController implements ICddController{
 			//响应参数
 			GetVoucherRes voucherRes = new GetVoucherRes();
 			voucherRes.setExpire(voucherReq.getExpire());
-			voucherRes.setOrderNo(org);
+			voucherRes.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
 			voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			voucherRes.setVoucherCode(cddCodeRes.getData().getYzm());
 			voucherRes.setTakEffect(voucherOrderRes.getData().getVoucherOrder().getStartDate());
