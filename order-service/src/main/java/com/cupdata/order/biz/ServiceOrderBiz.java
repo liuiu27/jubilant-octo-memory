@@ -3,16 +3,15 @@ package com.cupdata.order.biz;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.cupdata.commons.model.*;
+import com.cupdata.commons.vo.product.RechargeOrderVo;
+import com.cupdata.order.dao.ServiceOrderRechargeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cupdata.commons.biz.BaseBiz;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.dao.BaseDao;
-import com.cupdata.commons.model.OrgProductRela;
-import com.cupdata.commons.model.ServiceOrder;
-import com.cupdata.commons.model.ServiceOrderVoucher;
-import com.cupdata.commons.model.ServiceProduct;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.order.dao.ServiceOrderDao;
@@ -21,7 +20,7 @@ import com.cupdata.order.util.OrderUtils;
 
 /**
  * @Auth: LinYong
- * @Description:
+ * @Description: 订单业务
  * @Date: 20:20 2017/12/14
  */
 
@@ -33,6 +32,9 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
     @Autowired
     private ServiceOrderVoucherDao orderVoucherDao;
 
+    @Autowired
+	private ServiceOrderRechargeDao orderRechargeDao;
+
     @Override
     public BaseDao<ServiceOrder> getBaseDao() {
         return orderDao;
@@ -43,6 +45,8 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
      * @param voucherProduct 券码商品
      * @return
      */
+
+    //创建券码订单
     public ServiceOrderVoucher createVoucherOrder(String orgNo, String orgOrderNo, String orderDesc, ServiceProduct voucherProduct, OrgProductRela orgProductRela){
         //初始化主订单记录
         ServiceOrder order = OrderUtils.initServiceOrder(orgNo, orgOrderNo, orderDesc, voucherProduct, orgProductRela);
@@ -51,10 +55,10 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
         //初始化券码订单
         ServiceOrderVoucher voucherOrder = OrderUtils.initVoucherOrder(order, voucherProduct.getProductNo());
         orderVoucherDao.insert(voucherOrder);//插入券码订单
-
         return voucherOrder;
     }
 
+    //更新券码订单
 	public void updateVoucherOrder(VoucherOrderVo voucherOrderVo) {
 		//修改订单表状态
 		orderDao.update(voucherOrderVo.getOrder());
@@ -62,6 +66,28 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
 		//修改券码表 券码号
 		orderVoucherDao.update(voucherOrderVo.getVoucherOrder());
 	}
+
+	//创建充值订单
+	public ServiceOrderRecharge createRechargeOrder(String orgNo, String orgOrderNo, String orderDesc, ServiceProduct recharge, OrgProductRela orgProductRela){
+		//初始化主订单记录
+		ServiceOrder order = OrderUtils.initServiceOrder(orgNo, orgOrderNo, orderDesc, recharge, orgProductRela);
+		orderDao.insert(order);//插入主订单
+
+		//初始化充值订单
+        ServiceOrderRecharge rechargeOrder = OrderUtils.intiRechargeOrder(order,recharge.getProductNo());
+        orderRechargeDao.insert(rechargeOrder);
+        return rechargeOrder;
+	}
+
+	//更新充值订单
+    public void updateRechargeOrder(RechargeOrderVo rechargeOrderVo){
+        //修改订单表状态
+        orderDao.update(rechargeOrderVo.getOrder());
+        //修改充值订单表
+        orderRechargeDao.update(rechargeOrderVo.getRechargeOrder());
+
+
+    }
 
 	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
 		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();

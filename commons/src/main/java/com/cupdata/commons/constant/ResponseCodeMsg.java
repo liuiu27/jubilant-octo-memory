@@ -85,11 +85,28 @@ public enum ResponseCodeMsg {
      * 999999 - 查询机构信息失败
      */
     ILLEGAL_PARTNER("999999" ,"合作机构信息获取失败"),
-    
+
+    /**
+     * 800000 - 3DES加密数据获取失败
+     */
+    FAIL_TO_GET_3DES("800000", "3DES加密数据获取失败"),
+
+    /**
+     * 800000 - 3DES加密数据获取失败
+     */
+    FAIL_TO_GET_3DES_IV("800001", "3DES偏移加密数据获取失败"),
+
+    /**
+     * 800002 - 订单更新失败
+     */
+    ORDER_UPDATE_ERROR("800002", "订单更新失败"),
+
     /**
      * EEEEEE - 失败
      */
     FAIL("EEEEEE", "失败");
+
+
 
     /**
      * 响应码

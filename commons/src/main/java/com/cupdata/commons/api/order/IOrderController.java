@@ -1,5 +1,7 @@
 package com.cupdata.commons.api.order;
 
+import com.cupdata.commons.vo.product.RechargeOrderVo;
+import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,7 +61,24 @@ public interface IOrderController {
      * @return
      */
     @GetMapping("/getVoucherOrderByVoucher/{sup}/{supplierOrderNo}/{voucherCode}")
-    public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(@PathVariable("sup") String sup, @PathVariable("supplierOrderNo") String supplierOrderNo,@PathVariable("voucherCode") String voucherCode);   
-    
-    
+    public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(@PathVariable("sup") String sup, @PathVariable("supplierOrderNo") String supplierOrderNo,@PathVariable("voucherCode") String voucherCode);
+
+    /**
+     * 根据充值产品等信息，创建充值订单
+     * @param createRechargeOrderVo 创建充值订单参数vo
+     * @return
+     */
+    @PostMapping("/createRechargeOrder")
+    public BaseResponse<RechargeOrderVo> createRechargeOrder(@RequestBody CreateRechargeOrderVo createRechargeOrderVo);
+
+
+    /**
+     * 修改充值订单
+     * @param RechargeOrderVo
+     * @return
+     */
+    @PostMapping("/updateRechargeOrder")
+    public BaseResponse<RechargeOrderVo> updateRechargeOrder(@RequestBody RechargeOrderVo RechargeOrderVo);
+
+
 }
