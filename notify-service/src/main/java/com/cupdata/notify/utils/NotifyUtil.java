@@ -26,7 +26,7 @@ public class NotifyUtil {
 		notifyToOrgVo.setOrderNo(voucherOrderVo.getOrder().getOrderNo());
 		notifyToOrgVo.setUserMobileNo(voucherOrderVo.getVoucherOrder().getUserMobileNo());
 		notifyToOrgVo.setUserName(voucherOrderVo.getVoucherOrder().getUserName());
-		notifyToOrgVo.setUsePalce(voucherOrderVo.getVoucherOrder().getUsePalce());
+		notifyToOrgVo.setUsePalce(voucherOrderVo.getVoucherOrder().getUsePlace());
 		notifyToOrgVo.setUseTime(voucherOrderVo.getVoucherOrder().getUseTime());
 		String params = JSONObject.toJSONString(notifyToOrgVo);
 		resStr = HttpUtil.doPost(voucherOrderVo.getOrder().getNotifyUrl(), params);//TODO 通知参数待定，可能需要加密
