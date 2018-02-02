@@ -1,5 +1,7 @@
 package com.cupdata.trvok.biz;
 
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.utils.HttpUtil;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 * @createDate 创建时间：2018年1月29日 下午3:11:45
 */
 @Slf4j
+@Service
 public class CddBiz {
 	
 	/**
