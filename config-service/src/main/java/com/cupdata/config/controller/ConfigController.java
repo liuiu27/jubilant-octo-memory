@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Auth: LinYong
- * @Description:
+ * @Description: 配置信息的业务逻辑
  * @Date: 10:34 2017/12/21
  */
 @Slf4j

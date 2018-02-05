@@ -1,19 +1,5 @@
 package com.cupdata.voucher.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.cupdata.commons.api.voucher.IVoucherController;
@@ -25,24 +11,32 @@ import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
-import com.cupdata.commons.vo.voucher.DisableVoucherReq;
-import com.cupdata.commons.vo.voucher.DisableVoucherRes;
-import com.cupdata.commons.vo.voucher.GetVoucherReq;
-import com.cupdata.commons.vo.voucher.GetVoucherRes;
-import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
-import com.cupdata.commons.vo.voucher.WriteOffVoucherRes;
+import com.cupdata.commons.vo.voucher.*;
 import com.cupdata.voucher.feign.OrderFeignClient;
 import com.cupdata.voucher.feign.OrgFeignClient;
 import com.cupdata.voucher.feign.ProductFeignClient;
 import com.cupdata.voucher.utils.ExecuteThreadPool;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Auth: LinYong
  * @Description: 券码相关的controller
  * @Date: 16:45 2017/12/20
  */
+
 @Slf4j
 @RestController
 public class VoucherController implements IVoucherController {

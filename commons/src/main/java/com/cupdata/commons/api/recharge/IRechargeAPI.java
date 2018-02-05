@@ -18,7 +18,7 @@ public interface IRechargeAPI {
     /**
      * 充值业务接口（实现方法中需要添加@RequestBody注解获取参数）
      */
-    @PostMapping("/recharge")
+    @PostMapping("/getRecharge")
     public BaseResponse<RechargeRes> recharge(String org, RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response);
 
 

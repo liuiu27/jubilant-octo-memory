@@ -1,4 +1,4 @@
-package com.cupdata.recharge.fein;
+package com.cupdata.recharge.feign;
 
 import com.cupdata.commons.api.orgsupplier.IOrgController;
 import com.cupdata.commons.vo.BaseResponse;

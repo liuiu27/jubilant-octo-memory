@@ -132,7 +132,11 @@ public class OrderController implements IOrderController {
 		return res;
 	}
 
-	//实现创建充值订单接口，用于创建充值订单
+    /**
+     * 实现创建充值订单接口，用于创建充值订单
+     * @param createRechargeOrderVo 创建充值订单参数vo
+     * @return
+     */
 	@Override
 	public BaseResponse<RechargeOrderVo> createRechargeOrder(@RequestBody CreateRechargeOrderVo createRechargeOrderVo) {
         //设置响应信息
@@ -179,5 +183,25 @@ public class OrderController implements IOrderController {
         rechargeOrderVo.setRechargeOrder(rechargeOrder);
         rechargeOrderRes.setData(rechargeOrderVo);
         return rechargeOrderRes;
+	}
+
+	/**
+	 * 更新充值订单
+	 * @param rechargeOrderVo
+	 * @return
+	 */
+	@Override
+	public BaseResponse<RechargeOrderVo> updateRechargeOrder(RechargeOrderVo rechargeOrderVo) {
+		//设置响应结果
+	    BaseResponse<RechargeOrderVo>  res = new BaseResponse<RechargeOrderVo>();
+	    //判断主订单和充值功能订单是否为空
+        if (null == rechargeOrderVo.getRechargeOrder() || null == rechargeOrderVo.getRechargeOrder()){
+            res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+            res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+            return res;
+        }
+        orderBiz.updateRechargeOrder(rechargeOrderVo);
+        res.setData(rechargeOrderVo);
+        return res;
 	}
 }
