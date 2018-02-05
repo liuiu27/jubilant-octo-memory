@@ -22,8 +22,11 @@ public class NotifyUtil {
 	public static String httpToOrg(VoucherOrderVo voucherOrderVo){
 		String resStr = "";
 		//TODO  根据 机构 不同，通知的方式可能不同
+		//TODO 根据机构号查询秘钥  加密
 		NotifyToOrgVo notifyToOrgVo = new NotifyToOrgVo();
 		notifyToOrgVo.setOrderNo(voucherOrderVo.getOrder().getOrderNo());
+		notifyToOrgVo.setOrgOrderNo(voucherOrderVo.getOrder().getOrgOrderNo());
+		notifyToOrgVo.setVoucherCode(voucherOrderVo.getVoucherOrder().getVoucherCode());
 		notifyToOrgVo.setUserMobileNo(voucherOrderVo.getVoucherOrder().getUserMobileNo());
 		notifyToOrgVo.setUserName(voucherOrderVo.getVoucherOrder().getUserName());
 		notifyToOrgVo.setUsePalce(voucherOrderVo.getVoucherOrder().getUsePlace());

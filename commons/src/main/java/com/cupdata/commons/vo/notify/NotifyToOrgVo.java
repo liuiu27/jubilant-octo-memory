@@ -17,6 +17,11 @@ public class NotifyToOrgVo {
 	private String orderNo;
 	
 	/**
+	 * 机构订单号
+	 */
+	private String orgOrderNo;
+	
+	/**
 	 * 券码
 	 */
 	private String voucherCode;
