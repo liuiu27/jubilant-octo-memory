@@ -9,32 +9,26 @@ import com.cupdata.commons.vo.BaseResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
-* @author 作者: liwei
-* @createDate 创建时间：2018年2月2日 下午5:48:32
-*/
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
 	
-	
-	
-	@ExceptionHandler(value=Exception.class)  
-	public BaseResponse ExceptionHandler(HttpServletRequest request,  
-			Exception exception) throws Exception   {  
-		log.error("wocojfioas");
-		return new BaseResponse("200","系统错误");
-		
-	}
-	 @ExceptionHandler(value=ErrorException.class)  
-	 public BaseResponse ErrorExceptionHandler(HttpServletRequest request,  
-			 ErrorException exception) throws Exception   {  
-		 log.error("wocojfioas");
-		 return new BaseResponse(exception.getErrorCode(),exception.getMessage());
-		 
-	    }
-	 
-	 
-	
+
+    @ExceptionHandler(value = {Exception.class})
+    public BaseResponse handle(HttpServletRequest request, Exception ex) {
+
+        log.error(ex.getLocalizedMessage());
+        return new BaseResponse();
+    }
+
+    @ExceptionHandler(value = {BizException.class})
+    public BaseResponse handle(HttpServletRequest request, BizException ex) throws Exception {
+
+        log.error(ex.getErrorCode());
+        log.error(ex.getErrorMessage());
+        return new BaseResponse();
+    }
+
+
 }
