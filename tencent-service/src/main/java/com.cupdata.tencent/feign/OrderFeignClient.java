@@ -1,4 +1,4 @@
-package com.cupdata.tencent.fein;
+package com.cupdata.tencent.feign;
 
 
 import com.cupdata.commons.api.order.IOrderController;

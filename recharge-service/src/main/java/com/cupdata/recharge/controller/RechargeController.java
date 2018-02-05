@@ -52,9 +52,9 @@ public class RechargeController implements IRechargeController{
         BaseResponse<RechargeRes> res = new BaseResponse<RechargeRes>();
 
         // Step1：判断请求参数是否合法-机构订单编号是否为空、服务产品编号是否为空、订单描述是否为空
-        if (null == rechargeReq || StringUtils.isNotBlank(rechargeReq.getProductNo())
-                || StringUtils.isNotBlank(rechargeReq.getOrderDesc())
-                || StringUtils.isNotBlank(rechargeReq.getOrgOrderNo())){
+        if (null == rechargeReq || StringUtils.isBlank(rechargeReq.getProductNo())
+                || StringUtils.isBlank(rechargeReq.getOrderDesc())
+                || StringUtils.isBlank(rechargeReq.getOrgOrderNo())){
             log.error("params is null.......  errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
             res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
             res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
@@ -94,11 +94,12 @@ public class RechargeController implements IRechargeController{
         }
 
         // Step5：根据对应配置信息中的服务名称，调用不同的微服务进行完成充值业务
-        String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/recharge?org="
+        String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/getRecharge?org="
                 + org;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<RechargeReq> entity = new HttpEntity<RechargeReq>(rechargeReq, headers);
+
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
         String jsonStr = responseEntity.getBody();
         BaseResponse<RechargeRes> recharResult = JSONObject.parseObject(jsonStr,

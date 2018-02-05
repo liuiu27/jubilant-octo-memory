@@ -6,7 +6,7 @@ import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.utils.MD5Util;
-import com.cupdata.tencent.fein.CacheFeignClient;
+import com.cupdata.tencent.feign.CacheFeignClient;
 import com.cupdata.tencent.vo.QQCheckOpenReq;
 import com.cupdata.tencent.vo.QQCheckOpenRes;
 import com.cupdata.tencent.vo.QQOpenReq;
@@ -239,6 +239,7 @@ public class QQRechargeUtils {
 		checkOpenReq.setAmount(amount);
 		checkOpenReq.setSource(source);
 		checkOpenReq.setPaytype(paytype);
+		System.out.print("会员");
 		QQCheckOpenRes checkOpenRes = QQRechargeUtils.qqCheckOpen(checkOpenReq);
 		log.info("开通结果:"+checkOpenRes.getResult());
 		
