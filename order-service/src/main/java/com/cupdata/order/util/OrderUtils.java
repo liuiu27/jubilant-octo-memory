@@ -1,10 +1,7 @@
 package com.cupdata.order.util;
 
 import com.cupdata.commons.constant.ModelConstants;
-import com.cupdata.commons.model.OrgProductRela;
-import com.cupdata.commons.model.ServiceOrder;
-import com.cupdata.commons.model.ServiceOrderVoucher;
-import com.cupdata.commons.model.ServiceProduct;
+import com.cupdata.commons.model.*;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
 
@@ -72,7 +69,24 @@ public class OrderUtils {
         return voucherOrder;
     }
 
+
     /**
+     * 初始化充值订单
+     * @param order 主订单
+     * @param productNo 商品编号
+     * @return
+     */
+    public static ServiceOrderRecharge intiRechargeOrder(ServiceOrder order,String productNo){
+        ServiceOrderRecharge rechargeOrder = new ServiceOrderRecharge();
+        rechargeOrder.setOrderId(order.getId());
+        rechargeOrder.setProductNo(productNo);
+        return rechargeOrder;
+
+    }
+
+
+
+        /**
      * 生成订单编号
      * @return
      */

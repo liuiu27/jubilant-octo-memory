@@ -24,6 +24,9 @@ zuul:
     voucher-route:
       path: /voucher/**
       service-id: voucher-service
+    recharge-route:             #充值请求的路径
+      path: /recharge/**
+      service-id: recharge-service
 
 #配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
 hystrix:

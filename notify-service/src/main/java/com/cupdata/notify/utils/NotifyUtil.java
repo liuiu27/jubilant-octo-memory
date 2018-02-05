@@ -32,7 +32,7 @@ public class NotifyUtil {
 		notifyToOrgVo.setUsePalce(voucherOrderVo.getVoucherOrder().getUsePlace());
 		notifyToOrgVo.setUseTime(voucherOrderVo.getVoucherOrder().getUseTime());
 		String params = JSONObject.toJSONString(notifyToOrgVo);
-		resStr = HttpUtil.doPost(voucherOrderVo.getOrder().getNotifyUrl(), params);//TODO 通知参数待定，可能需要加密
+//		resStr = HttpUtil.doPost(voucherOrderVo.getOrder().getNotifyUrl(), params);//TODO 通知参数待定，可能需要加密
 		return resStr;
 	}
 	
