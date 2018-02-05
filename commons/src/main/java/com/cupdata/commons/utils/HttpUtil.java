@@ -26,8 +26,10 @@ import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.vo.trvok.TrvokAirportReq;
 import com.cupdata.commons.vo.trvok.TrvokAreaReq;
+import com.cupdata.commons.vo.voucher.DisableVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
+import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
 
 public class HttpUtil {
 	private static Logger log =LoggerFactory.getLogger(HttpUtil.class);
@@ -100,7 +102,7 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static String doPost(String url, String params) {
-		return doPost(url, params, "text/html");
+		return doPost(url, params, "application/x-www-form-urlencoded");
 	}
 
 	/**
@@ -257,10 +259,23 @@ public class HttpUtil {
 		
 		GetVoucherReq getVoucherReq = new GetVoucherReq();
 		getVoucherReq.setTimestamp(timestamp);
-		getVoucherReq.setExpire("20180109");
+		getVoucherReq.setExpire("20180123");
 		getVoucherReq.setProductNo("20180108V124");
-		getVoucherReq.setOrgOrderNo("132132131");
-		getVoucherReq.setOrderDesc("空港测试");
+		getVoucherReq.setOrgOrderNo("65656565656");
+		getVoucherReq.setOrderDesc("空港测试1");
+		
+		
+//		DisableVoucherReq disableVoucherReq = new DisableVoucherReq();
+//		disableVoucherReq.setOrgOrderNo("65656565652");
+//		disableVoucherReq.setDisableDesc("禁用测试1");
+//		disableVoucherReq.setVoucherCode("243800721");
+//		disableVoucherReq.setTimestamp(timestamp);
+		
+		//sup = 2018010800001235
+//		WriteOffVoucherReq writeOffVoucherReq = new WriteOffVoucherReq();
+//		writeOffVoucherReq.setVoucherCode("419151679");
+//		writeOffVoucherReq.setTimestamp(timestamp);
+//		writeOffVoucherReq.setSupplierOrderNo("666");
 		
 		
 		String reqStr = JSONObject.toJSONString(getVoucherReq);
@@ -280,10 +295,31 @@ public class HttpUtil {
 	     
 		System.out.println(dataPlain);*/
 		
+		//区域
+//		doPost("http://localhost:8040/trvok/trvok/getTrvokArea", "org=0000000120170203&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		//机场详情
+//		doPost("http://localhost:8040/trvok/trvok/getTrvokAirportInfo", "org=0000000120170203&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		//获取券码
 		doPost("http://localhost:8040/voucher/voucher/getVoucher", "org=0000000120170203&data=" + reqData + 
 				"&sign=" + authReqSign ,
 				"application/x-www-form-urlencoded;charset=UTF-8");
-	
+//		
+//		
+//		//禁用
+//		doPost("http://localhost:8040/voucher/voucher/disableVoucher", "org=0000000120170203&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		//使用
+//		doPost("http://localhost:8040/voucher/voucher/writeOffVoucher", "org=0000000120170203&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
 	}
 
 	public static void printByteLength(String charsetName) {
