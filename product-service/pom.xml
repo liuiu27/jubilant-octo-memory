@@ -5,7 +5,7 @@
     <parent>
         <artifactId>service-integration-platform</artifactId>
         <groupId>com.cupdata</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,6 @@
         <dependency>
             <groupId>com.cupdata</groupId>
             <artifactId>commons</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>

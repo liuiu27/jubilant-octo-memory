@@ -1,7 +1,6 @@
 package com.cupdata.commons.dao;
 
 import com.cupdata.commons.model.BaseModel;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import java.util.Map;
  * @Description: myBatis基础mapper
  * @author LinYong
  * @date 2017年3月20日 下午2:05:05
- *
  * @param <T>
  */
 public interface BaseDao<T extends BaseModel> {
