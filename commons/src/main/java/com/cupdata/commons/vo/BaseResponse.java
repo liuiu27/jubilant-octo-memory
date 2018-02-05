@@ -27,5 +27,10 @@ public class BaseResponse<T extends BaseData> {
         responseMsg = ResponseCodeMsg.SUCCESS.getMsg();
         this.data = data;
     }
+    
+    public  BaseResponse(String responseCode,String responseMsg){
+        responseCode =responseCode;
+        responseMsg = responseMsg;
+    }
 
 }

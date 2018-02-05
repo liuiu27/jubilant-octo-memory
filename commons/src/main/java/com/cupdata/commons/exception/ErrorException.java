@@ -1,4 +1,4 @@
-package com.cupdata.commons.vo.exception;
+package com.cupdata.commons.exception;
 /**
  *自定义异常类(继承运行时异常)
 * @author 作者: liwei

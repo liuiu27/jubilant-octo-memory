@@ -9,6 +9,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import com.cupdata.commons.api.voucher.IVoucherController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.constant.TimeConstants;
+import com.cupdata.commons.exception.ErrorException;
 import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
@@ -64,69 +66,76 @@ public class VoucherController implements IVoucherController {
 	@Autowired
 	private ExecuteThreadPool executeThreadPool;
 
+	@GetMapping("/test")
+	public BaseResponse test() {
+		log.info("VoucherController getVoucher is begin...");
+		throw new ErrorException("10000","异常测试");
+	}
+	
 	@Override
 	public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value = "org", required = true) String org,
-			@RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
+			@RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) throws ErrorException{
 		log.info("VoucherController getVoucher is begin...");
-		// 响应信息
-		BaseResponse<GetVoucherRes> res = new BaseResponse();// 默认为成功
-
-		// Step1：判断请求参数是否合法-机构订单编号是否为空、服务产品编号是否为空、订单描述是否为空
-		if (null == voucherReq || StringUtils.isBlank(voucherReq.getOrgOrderNo())
-				|| StringUtils.isBlank(voucherReq.getProductNo()) || StringUtils.isBlank(voucherReq.getOrderDesc())) {
-			log.error("params is null.......  errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-			res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
-			return res;
-		}
-
-		// Step2：查询服务产品信息
-		BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(voucherReq.getProductNo());
-		if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
-				|| null == productInfRes.getData()) {// 如果查询失败
-			log.error("procduct-service  findByProductNo result is null......  productNo is" + voucherReq.getProductNo()
-					+ " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-			res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-			res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
-			return res;
-		}
-
-		// Step3：判断服务产品是否为券码商品
-		if (!ModelConstants.PRODUCT_TYPE_VOUCHER.equals(productInfRes.getData().getProduct().getProductType())) {
-			log.error("Not a voucher product.....poductType is" + productInfRes.getData().getProduct().getProductType()
-					+ " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-			res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-			res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
-			return res;
-		}
-
-		// Step4：查询服务产品与机构是否关联
-		BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org, voucherReq.getProductNo());
-		if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
-				|| null == orgProductRelRes.getData()) {
-			log.error("procduct-service findRel result is null...org is" + org + "productNo is "
-					+ voucherReq.getProductNo() + " errorCode is "
-					+ ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
-			res.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
-			res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
-			return res;
-		}
-
-		// Step5：根据券码商品配置信息中的服务名称，调用不同的微服务获取券码
-		// http://trvok-service/trvok/trvok/getVoucher
-		String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/getVoucher?org="
-				+ org;
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		HttpEntity<GetVoucherReq> entity = new HttpEntity<GetVoucherReq>(voucherReq, headers);
-
-		ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
-		String jsonStr = responseEntity.getBody();
-		BaseResponse<GetVoucherRes> getVoucherResult = JSONObject.parseObject(jsonStr,
-				new TypeReference<BaseResponse<GetVoucherRes>>() {
-				});
-		return getVoucherResult;
+		throw new ErrorException("10000","异常测试");
+		 //响应信息
+//		BaseResponse<GetVoucherRes> res = new BaseResponse();// 默认为成功
+//
+//		// Step1：判断请求参数是否合法-机构订单编号是否为空、服务产品编号是否为空、订单描述是否为空
+//		if (null == voucherReq || StringUtils.isBlank(voucherReq.getOrgOrderNo())
+//				|| StringUtils.isBlank(voucherReq.getProductNo()) || StringUtils.isBlank(voucherReq.getOrderDesc())) {
+//			log.error("params is null.......  errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+//			res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+//			res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+//			return res;
+//		}
+//
+//		// Step2：查询服务产品信息
+//		BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(voucherReq.getProductNo());
+//		if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
+//				|| null == productInfRes.getData()) {// 如果查询失败
+//			log.error("procduct-service  findByProductNo result is null......  productNo is" + voucherReq.getProductNo()
+//					+ " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+//			res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+//			res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+//			return res;
+//		}
+//
+//		// Step3：判断服务产品是否为券码商品
+//		if (!ModelConstants.PRODUCT_TYPE_VOUCHER.equals(productInfRes.getData().getProduct().getProductType())) {
+//			log.error("Not a voucher product.....poductType is" + productInfRes.getData().getProduct().getProductType()
+//					+ " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+//			res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+//			res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+//			return res;
+//		}
+//
+//		// Step4：查询服务产品与机构是否关联
+//		BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org, voucherReq.getProductNo());
+//		if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
+//				|| null == orgProductRelRes.getData()) {
+//			log.error("procduct-service findRel result is null...org is" + org + "productNo is "
+//					+ voucherReq.getProductNo() + " errorCode is "
+//					+ ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
+//			res.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
+//			res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
+//			return res;
+//		}
+//
+//		// Step5：根据券码商品配置信息中的服务名称，调用不同的微服务获取券码
+//		// http://trvok-service/trvok/trvok/getVoucher
+//		String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/getVoucher?org="
+//				+ org;
+//
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+//		HttpEntity<GetVoucherReq> entity = new HttpEntity<GetVoucherReq>(voucherReq, headers);
+//
+//		ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
+//		String jsonStr = responseEntity.getBody();
+//		BaseResponse<GetVoucherRes> getVoucherResult = JSONObject.parseObject(jsonStr,
+//				new TypeReference<BaseResponse<GetVoucherRes>>() {
+//				});
+//		return getVoucherResult;
 	}
 
 	@Override
