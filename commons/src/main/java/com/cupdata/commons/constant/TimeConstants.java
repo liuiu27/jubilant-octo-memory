@@ -18,4 +18,7 @@ public class TimeConstants
     /** yyyy/MM/dd */
     public static final String DATE_PATTERN_4 = "yyyy/MM/dd";
     
+    /** yyyy/yyyyMMddHHmmssSSS/dd */
+    public static final String DATE_PATTERN_5 = "yyyyMMddHHmmssSSS"; 
+    
 }

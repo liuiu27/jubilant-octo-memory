@@ -1,5 +1,7 @@
 package com.cupdata.commons.vo.cdd;
 
+import com.cupdata.commons.vo.BaseRequest;
+
 /**
  * @author liwei
  * @date   2018/1/29
@@ -8,7 +10,7 @@ package com.cupdata.commons.vo.cdd;
 import lombok.Data;
 
 @Data
-public class CddCodeReq{
+public class CddCodeReq extends BaseRequest{
 	/**
 	 * 车点点平台分配给第三方商户的身份标识
 	 */

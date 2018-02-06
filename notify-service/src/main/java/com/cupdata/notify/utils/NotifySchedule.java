@@ -15,8 +15,10 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.notify.OrderNotifyComplete;
 import com.cupdata.commons.vo.notify.OrderNotifyWait;
+import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.notify.biz.NotifyBiz;
+import com.cupdata.notify.feign.CacheFeignClient;
 import com.cupdata.notify.feign.OrderFeignClient;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +40,9 @@ public class NotifySchedule {
 	
 	@Autowired
 	private OrderFeignClient orderFeignClient;
+	
+	@Autowired
+	private CacheFeignClient cacheFeignClient;
 	/**
 	 * 每分钟执行通知
 	 */
@@ -63,14 +68,20 @@ public class NotifySchedule {
         			//删除 orderNotifyWait 
         			notifyBiz.delete(Integer.parseInt(orderNotifyWait.getId().toString()));
         		}else {
-        			//发送通知
+        			//获取订单信息
         			BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByOrderNo(orderNotifyWait.getOrderNo());
         			if(!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
         				log.error("getVoucherOrderByOrderNo result is null orderNO is" + orderNotifyWait.getOrderNo());
         				return;
         			}
-        			String reqStr = NotifyUtil.httpToOrg(voucherOrderVo.getData());
-        			if(StringUtils.isBlank(reqStr)) {
+        			
+        			//根据机构号获取机构信息 秘钥
+        			BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(voucherOrderVo.getData().getOrder().getOrgNo());
+        			if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
+        				log.error("cacher-service getOrgInf result is null orgNo is" + voucherOrderVo.getData().getOrder().getOrgNo());
+        			}
+        			//发送通知
+        			if(!NotifyUtil.httpToOrg(voucherOrderVo.getData(),orgInf.getData())) {
         				log.error("FAIL   notify url is " + orderNotifyWait.getNotifyUrl() + "notifyTimes is  " + orderNotifyWait.getNotifyTimes());
         				//通知失败  通知失败次数 +1  下次通知时间修改
         				orderNotifyWait.setNotifyTimes(orderNotifyWait.getNotifyTimes()+1);

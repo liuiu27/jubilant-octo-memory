@@ -7,10 +7,12 @@ package com.cupdata.commons.vo.notify;
 
 import java.util.Date;
 
+import com.cupdata.commons.vo.BaseRequest;
+
 import lombok.Data;
 
 @Data
-public class NotifyToOrgVo {
+public class NotifyToOrgVo extends BaseRequest{
 	/**
 	 * 订单编号
 	 */

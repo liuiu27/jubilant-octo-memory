@@ -9,6 +9,7 @@ import com.cupdata.commons.biz.BaseBiz;
 import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.commons.vo.notify.OrderNotifyComplete;
 import com.cupdata.commons.vo.notify.OrderNotifyWait;
+import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.notify.dao.OrderNotifyCompleteDao;
 import com.cupdata.notify.dao.OrderNotifyWaitDao;
@@ -36,12 +37,11 @@ public class NotifyBiz extends BaseBiz<OrderNotifyWait> {
     	orderNotifyCompleteDao.insert(orderNotifyComplete);
     }
     
-	public void notifyToOrg3Times(VoucherOrderVo voucherOrderVo) {
+	public void notifyToOrg3Times(VoucherOrderVo voucherOrderVo, OrgInfVo orgInfVo) {
 			String str ="";
 			//发送通知  先发送3次通知 
 			for(int i=0;i<3;i++){
-				str = NotifyUtil.httpToOrg(voucherOrderVo);
-				if(!StringUtils.isBlank(str)) {
+				if(NotifyUtil.httpToOrg(voucherOrderVo,orgInfVo)) {
 					//通知成功    初始  OrderNotifyComplete 保存数据库
 					OrderNotifyComplete orderNotifyComplete = NotifyUtil.initOrderNotifyComplete(voucherOrderVo.getOrder().getOrderNo(),voucherOrderVo.getVoucherOrder().getQrCodeUrl());
 					orderNotifyCompleteDao.insert(orderNotifyComplete);

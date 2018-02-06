@@ -194,7 +194,7 @@ public class CddController implements ICddController{
 			voucherRes.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
 			voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			voucherRes.setVoucherCode(cddCodeRes.getData().getYzm());
-			voucherRes.setTakEffect(voucherOrderRes.getData().getVoucherOrder().getStartDate());
+			voucherRes.setStartDate(voucherOrderRes.getData().getVoucherOrder().getStartDate());
 			res.setData(voucherRes);
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
