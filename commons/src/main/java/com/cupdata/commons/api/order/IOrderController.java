@@ -74,11 +74,11 @@ public interface IOrderController {
 
     /**
      * 修改充值订单
-     * @param RechargeOrderVo
+     * @param rechargeOrderVo
      * @return
      */
     @PostMapping("/updateRechargeOrder")
-    public BaseResponse<RechargeOrderVo> updateRechargeOrder(@RequestBody RechargeOrderVo RechargeOrderVo);
+    public BaseResponse<RechargeOrderVo> updateRechargeOrder(@RequestBody RechargeOrderVo rechargeOrderVo);
 
 
 }

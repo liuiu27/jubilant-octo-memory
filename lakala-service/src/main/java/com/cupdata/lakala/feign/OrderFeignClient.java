@@ -1,4 +1,4 @@
-package com.cupdata.lakala.fein;
+package com.cupdata.lakala.feign;
 
 
 import com.cupdata.commons.api.order.IOrderController;

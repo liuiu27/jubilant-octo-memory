@@ -74,7 +74,7 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
 		orderDao.insert(order);//插入主订单
 
 		//初始化充值订单
-        ServiceOrderRecharge rechargeOrder = OrderUtils.intiRechargeOrder(order,recharge.getProductNo());
+        ServiceOrderRecharge rechargeOrder = OrderUtils.initRechargeOrder(order,recharge.getProductNo());
         orderRechargeDao.insert(rechargeOrder);
         return rechargeOrder;
 	}
@@ -85,9 +85,8 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
         orderDao.update(rechargeOrderVo.getOrder());
         //修改充值订单表
         orderRechargeDao.update(rechargeOrderVo.getRechargeOrder());
-
-
     }
+
 
 	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
 		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();

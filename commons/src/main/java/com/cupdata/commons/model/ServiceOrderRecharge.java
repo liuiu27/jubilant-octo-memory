@@ -10,17 +10,17 @@ import lombok.Data;
 @Data
 public class ServiceOrderRecharge extends BaseModel{
     /**
-     *
+     * 主订单ID
      */
     private Long orderId;
 
     /**
-     *
+     * 服务产品编号
      */
     private String productNo;
 
     /**
-     *
+     * 充值账号
      */
     private String accountNumber;
 
@@ -35,22 +35,22 @@ public class ServiceOrderRecharge extends BaseModel{
     private Long rechargeAmt;
 
     /**
-     *
+     * 充值流量
      */
     private Long rechargeTraffic;
 
     /**
-     *
+     * 充值话费
      */
     private Long rechargeNumber;
 
     /**
-     *
+     * 游戏大区
      */
     private String gameRegion;
 
     /**
-     *
+     * 游戏服务器名称
      */
-    private String gameService;
+    private String gameServer;
 }
