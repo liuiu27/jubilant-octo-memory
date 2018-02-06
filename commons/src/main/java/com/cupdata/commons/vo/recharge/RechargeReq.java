@@ -23,12 +23,6 @@ public class RechargeReq extends BaseRequest{
 	private String productNo;
 
 	/**
-	 * 有效期
-	 * 格式为yyyyMMdd
-	 */
-	private String expire;
-
-	/**
 	 *订单描述
 	 */
 	private String orderDesc;

@@ -61,7 +61,7 @@ public class RechargeController implements IRechargeController{
             return res;
         }
 
-        // Step2：查询服务产品信息
+        // Step2：查询服务产品信息：查看机构是否存在此服务产品
         BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(rechargeReq.getProductNo());
         if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
                 || null == productInfRes.getData()) {// 如果查询失败
@@ -81,7 +81,7 @@ public class RechargeController implements IRechargeController{
             return res;
         }
 
-        // Step4：查询服务产品与机构是否关联
+        // Step4：查询服务产品与机构是否关联：验证机构是否有该产品权限
         BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org, rechargeReq.getProductNo());
         if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
                 || null == orgProductRelRes.getData()) {

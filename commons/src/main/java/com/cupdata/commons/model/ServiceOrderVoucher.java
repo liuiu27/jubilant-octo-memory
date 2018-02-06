@@ -6,7 +6,7 @@ import lombok.Data;
 
 /**
  * @Auth: LinYong
- * @Description:券码产品订单实体类
+ * @Description: 券码产品订单实体类
  * @Date: 21:17 2017/12/20
  */
 @Data

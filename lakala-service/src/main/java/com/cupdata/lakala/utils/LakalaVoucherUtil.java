@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.constant.SysConfigParaNameEn;
 import com.cupdata.commons.utils.*;
-import com.cupdata.lakala.fein.CacheFeignClient;
+import com.cupdata.lakala.feign.CacheFeignClient;
 import com.cupdata.lakala.vo.LakalaVoucherReq;
 import com.cupdata.lakala.vo.LakalaVoucherRes;
 import org.apache.commons.lang.StringUtils;

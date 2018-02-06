@@ -5,7 +5,7 @@ import lombok.Data;
 
 /**
  * @Auth: LinYong
- * @Description:
+ * @Description: 发券接口vo
  * @Date: 14:39 2017/12/19
  */
 

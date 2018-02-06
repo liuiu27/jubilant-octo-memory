@@ -76,7 +76,7 @@ public class OrderUtils {
      * @param productNo 商品编号
      * @return
      */
-    public static ServiceOrderRecharge intiRechargeOrder(ServiceOrder order,String productNo){
+    public static ServiceOrderRecharge initRechargeOrder(ServiceOrder order,String productNo){
         ServiceOrderRecharge rechargeOrder = new ServiceOrderRecharge();
         rechargeOrder.setOrderId(order.getId());
         rechargeOrder.setProductNo(productNo);
