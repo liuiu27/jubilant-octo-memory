@@ -51,6 +51,7 @@ public class NotifyController implements INotifyController{
 		BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(voucherOrderVo.getData().getOrder().getOrgNo());
 		if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
 			log.error("cacher-service getOrgInf result is null orgNo is" + voucherOrderVo.getData().getOrder().getOrgNo());
+			return;
 		}
 		notifyBiz.notifyToOrg3Times(voucherOrderVo.getData(),orgInf.getData());
 	}

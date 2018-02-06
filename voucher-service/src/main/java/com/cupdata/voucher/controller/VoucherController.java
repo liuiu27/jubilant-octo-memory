@@ -252,17 +252,8 @@ public class VoucherController implements IVoucherController {
 
 	@Override
 	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value = "sup", required = true) String sup,
-			WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request,
+			@RequestBody WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request,
 			HttpServletResponse response) {
-//	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value = "sup", required = true) String sup,
-//			@RequestBody WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request,
-//			HttpServletResponse response) {
-		writeOffVoucherReq.setVoucherCode("2018020217235306340");
-		writeOffVoucherReq.setSupplierOrderNo("12313213");
-		writeOffVoucherReq.setUsePlace("shanghai");
-		writeOffVoucherReq.setUserMobileNo("13911111111");
-		writeOffVoucherReq.setUserName("zhangsan");
-		writeOffVoucherReq.setWriteOffDesc("NONONO");
 		BaseResponse<WriteOffVoucherRes> res = new BaseResponse<>();
 		// Step1：判断参数是否合法
 		if (StringUtils.isBlank(writeOffVoucherReq.getVoucherCode())) {

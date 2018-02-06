@@ -142,7 +142,7 @@ public class CacheManager {
 			log.info("缓存所有机构数据信息...");
 			BaseResponse<OrgInfListVo> orgInfListVoRes =  orgFeignClient.selectAll();
 			if (ResponseCodeMsg.SUCCESS.getCode().equals(orgInfListVoRes.getResponseCode())){
-				CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_BANKINF, orgInfListVoRes.getData().getOrgInfList());
+				CACHE.refreshCacheData(CacheConstants.CACHE_TYPE_ORGINF, orgInfListVoRes.getData().getOrgInfList());
 			}else {
 				log.error("调用orgsupplier-service获取机构列表出现错误，响应码为" + orgInfListVoRes.getResponseCode());
 			}
