@@ -252,8 +252,17 @@ public class VoucherController implements IVoucherController {
 
 	@Override
 	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value = "sup", required = true) String sup,
-			@RequestBody WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request,
+			WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request,
 			HttpServletResponse response) {
+//	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value = "sup", required = true) String sup,
+//			@RequestBody WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request,
+//			HttpServletResponse response) {
+		writeOffVoucherReq.setVoucherCode("2018020217235306340");
+		writeOffVoucherReq.setSupplierOrderNo("12313213");
+		writeOffVoucherReq.setUsePlace("shanghai");
+		writeOffVoucherReq.setUserMobileNo("13911111111");
+		writeOffVoucherReq.setUserName("zhangsan");
+		writeOffVoucherReq.setWriteOffDesc("NONONO");
 		BaseResponse<WriteOffVoucherRes> res = new BaseResponse<>();
 		// Step1：判断参数是否合法
 		if (StringUtils.isBlank(writeOffVoucherReq.getVoucherCode())) {
@@ -274,14 +283,8 @@ public class VoucherController implements IVoucherController {
 			res.setResponseMsg(voucherOrderVo.getResponseMsg());
 			return res;
 		}
-		// Step3：判断是否存在券码号
-		if (!writeOffVoucherReq.getVoucherCode().equals(voucherOrderVo.getData().getVoucherOrder().getVoucherCode())) {
-			log.error("voucherCode is not exist ! errorCode is " + ResponseCodeMsg.FAIL.getCode());
-			res.setResponseCode(ResponseCodeMsg.FAIL.getCode());
-			res.setResponseMsg(ResponseCodeMsg.FAIL.getMsg());
-			return res;
-		}
-		// Step4：数据库 修改券码
+
+		// Step3：数据库 修改券码
 		voucherOrderVo.getData().getVoucherOrder().setUserName(writeOffVoucherReq.getUserName());
 		voucherOrderVo.getData().getVoucherOrder().setUserMobileNo(writeOffVoucherReq.getUserMobileNo());
 		voucherOrderVo.getData().getVoucherOrder().setUseTime(DateTimeUtil.stringToDate(writeOffVoucherReq.getUseTime(), TimeConstants.DATE_PATTERN_2));
@@ -295,7 +298,7 @@ public class VoucherController implements IVoucherController {
 			res.setResponseMsg(voucherOrderVo.getResponseMsg());
 			return res;
 		}
-		// Step5：判断是否需要通知
+		// Step4：判断是否需要通知
 		if (ModelConstants.IS_NOTIFY_YES.equals(voucherOrderVo.getData().getOrder().getIsNotify())) {
 			// 异步通知
 			executeThreadPool.addNotifyTaskToPool(voucherOrderVo.getData().getOrder().getOrderNo());
