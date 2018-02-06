@@ -38,8 +38,10 @@ public class GetVoucherRes extends BaseData {
     
     /**
      *  券码生效期
+     *  时间格式：yyyyMMdd
      */
-    private String takEffect;
+    private String startDate;
+
     /**
      * 券码有效期
      * 时间格式：yyyyMMdd
