@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cupdata.commons.api.notify.INotifyController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.exception.ErrorException;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.notify.OrderNotifyWait;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
@@ -41,19 +42,24 @@ public class NotifyController implements INotifyController{
 	@Override
 	public void notifyToOrg3Times(@PathVariable("orderNo") String orderNo) {
 		log.info("NotifyController notifyToOrg is begin.......orderNo is" +  orderNo);
-		//根据订单号 查询订单信息 和券码信息
-		BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByOrderNo(orderNo);
-		if(!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
-			log.error("order-service getVoucherOrderByOrderNo result is null orderNO is" + orderNo);
-			return;
+		try {
+			//根据订单号 查询订单信息 和券码信息
+			BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByOrderNo(orderNo);
+			if(!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
+				log.error("order-service getVoucherOrderByOrderNo result is null orderNO is" + orderNo);
+				return;
+			}
+			//根据机构号获取机构信息 秘钥
+			BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(voucherOrderVo.getData().getOrder().getOrgNo());
+			if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
+				log.error("cacher-service getOrgInf result is null orgNo is" + voucherOrderVo.getData().getOrder().getOrgNo());
+				return;
+			}
+			notifyBiz.notifyToOrg3Times(voucherOrderVo.getData(),orgInf.getData());
+		} catch (Exception e) {
+			log.error("error is " + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
-		//根据机构号获取机构信息 秘钥
-		BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(voucherOrderVo.getData().getOrder().getOrgNo());
-		if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
-			log.error("cacher-service getOrgInf result is null orgNo is" + voucherOrderVo.getData().getOrder().getOrgNo());
-			return;
-		}
-		notifyBiz.notifyToOrg3Times(voucherOrderVo.getData(),orgInf.getData());
 	}
     
 }

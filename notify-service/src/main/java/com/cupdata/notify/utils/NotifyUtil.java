@@ -52,6 +52,8 @@ public class NotifyUtil {
 			String authReqSign = RSAUtils.sign(reqStr, merchantPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
 			authReqSign = URLEncoder.encode(authReqSign);
 			// 发送请求
+			log.info("dopost request url is " + voucherOrderVo.getOrder().getNotifyUrl() + "data is  " +  
+					reqData + "sign is " + authReqSign);
 			String resStr = HttpUtil.doPost(voucherOrderVo.getOrder().getNotifyUrl(), "data=" + reqData + "&sign=" + authReqSign ,
 					"application/x-www-form-urlencoded;charset=UTF-8");
 			if("SUCCESS".equals(resStr)) {

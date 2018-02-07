@@ -74,8 +74,8 @@ public class CddController implements ICddController{
 	public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org,@RequestBody GetVoucherReq voucherReq, HttpServletRequest request,
 			HttpServletResponse response) throws ErrorException {
 		log.info("getVoucher is begin ........ org is " + org + "voucherReq is " + voucherReq.toString());
-		BaseResponse<GetVoucherRes>  res = new  BaseResponse<GetVoucherRes>();
 		try {
+			BaseResponse<GetVoucherRes>  res = new  BaseResponse<GetVoucherRes>();
 			//从缓存中获取请求URL
 			BaseResponse<SysConfigVo> sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_URL);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
@@ -196,13 +196,11 @@ public class CddController implements ICddController{
 			voucherRes.setVoucherCode(cddCodeRes.getData().getYzm());
 			voucherRes.setStartDate(voucherOrderRes.getData().getVoucherOrder().getStartDate());
 			res.setData(voucherRes);
+			return res;
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
-			res.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
-			res.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-			throw new ErrorException("系统异常!");
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
-		return res;
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cupdata.commons.api.orgsupplier.IOrgController;
+import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.exception.ErrorException;
 import com.cupdata.commons.model.OrgInf;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
@@ -28,15 +30,27 @@ public class OrgController implements IOrgController {
     @Override
     public BaseResponse<OrgInfVo> findOrgByNo(@PathVariable("orgNo") String orgNo) {
     	log.info("OrgController findOrgByNo is begin ,param  orgNo is" + orgNo);
-    	return orgInfBiz.findOrgByNo(orgNo);
+    	try {
+    		return orgInfBiz.findOrgByNo(orgNo);
+    	} catch (Exception e) {
+			log.error("error is " + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
+    	
     }
 
 	@Override
 	public BaseResponse<OrgInfListVo> selectAll() {
-		BaseResponse<OrgInfListVo> orgInfListVoRes = new BaseResponse();
-		OrgInfListVo orgInfListVo = new OrgInfListVo();
-		orgInfListVo.setOrgInfList(orgInfBiz.selectAll(null));
-		orgInfListVoRes.setData(orgInfListVo);
-		return orgInfListVoRes;
+		log.info("OrgController selectAll is begin");
+		try {
+			BaseResponse<OrgInfListVo> orgInfListVoRes = new BaseResponse();
+			OrgInfListVo orgInfListVo = new OrgInfListVo();
+			orgInfListVo.setOrgInfList(orgInfBiz.selectAll(null));
+			orgInfListVoRes.setData(orgInfListVo);
+			return orgInfListVoRes;
+		} catch (Exception e) {
+			log.error("error is " + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
 	}
 }

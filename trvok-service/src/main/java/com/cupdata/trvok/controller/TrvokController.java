@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cupdata.commons.api.trvok.ITrvokController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.exception.ErrorException;
 import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
@@ -76,25 +77,30 @@ public class TrvokController implements ITrvokController{
     	log.info("TrvokController getTrvokArea begin.............param areaType is " + areaReq.getAreaType());
     	
     	BaseResponse<TrvokAreaRes>  res = new  BaseResponse<TrvokAreaRes>();
-    	BaseResponse<SysConfigVo> sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_AREA_SIGN_KEY);
-    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_AREA_SIGN_KEY);
-    		res.setResponseCode(sysConfigVo.getResponseCode());
-    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-    		return res;
-    	}
-    	areaReq.setAreaSignKey(sysConfigVo.getData().getSysConfig().getParaValue());
-    	
-    	sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL);
-    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_REQUST_URL);
-    		res.setResponseCode(sysConfigVo.getResponseCode());
-    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-    		return res;
-    	}
-    	areaReq.setRequstUrl(sysConfigVo.getData().getSysConfig().getParaValue());
-    	
-    	res = tripService.getTrvokArea(areaReq);
+    	try {
+	    	BaseResponse<SysConfigVo> sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_AREA_SIGN_KEY);
+	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
+	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_AREA_SIGN_KEY);
+	    		res.setResponseCode(sysConfigVo.getResponseCode());
+	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
+	    		return res;
+	    	}
+	    	areaReq.setAreaSignKey(sysConfigVo.getData().getSysConfig().getParaValue());
+	    	
+	    	sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL);
+	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
+	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_REQUST_URL);
+	    		res.setResponseCode(sysConfigVo.getResponseCode());
+	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
+	    		return res;
+	    	}
+	    	areaReq.setRequstUrl(sysConfigVo.getData().getSysConfig().getParaValue());
+	    	
+	    	res = tripService.getTrvokArea(areaReq);
+    	}catch(Exception e){
+			log.error("getTrvokArea error is" + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
         return res;
     }
     
@@ -105,35 +111,39 @@ public class TrvokController implements ITrvokController{
 	public BaseResponse<TrvokAirportRes> getTrvokAirportInfo(@RequestBody TrvokAirportReq trvokAirportReq) {
 		log.info("TrvokController getTrvokAirportInfo begin.............param areaType is " + trvokAirportReq.getAreaType() + " airportId is " + trvokAirportReq.getAirportId());
 		BaseResponse<TrvokAirportRes> res = new  BaseResponse<TrvokAirportRes>();
-		
-		BaseResponse<SysConfigVo> sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_AREA_SIGN_KEY);
-    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_AREA_SIGN_KEY);
-    		res.setResponseCode(sysConfigVo.getResponseCode());
-    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-    		return res;
-    	}
-		trvokAirportReq.setAreaSignKey(sysConfigVo.getData().getSysConfig().getParaValue());
-		
-		sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL);
-    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_REQUST_URL);
-    		res.setResponseCode(sysConfigVo.getResponseCode());
-    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-    		return res;
-    	}
-		trvokAirportReq.setRequstUrl(sysConfigVo.getData().getSysConfig().getParaValue());
-		
-		sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_IMG_URL);
-    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_IMG_URL);
-    		res.setResponseCode(sysConfigVo.getResponseCode());
-    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-    		return res;
-    	}
-		trvokAirportReq.setImgUrl(sysConfigVo.getData().getSysConfig().getParaValue());
-		
-		res = tripService.getTrvokAirportInfo(trvokAirportReq);
+		try {
+			BaseResponse<SysConfigVo> sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_AREA_SIGN_KEY);
+	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
+	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_AREA_SIGN_KEY);
+	    		res.setResponseCode(sysConfigVo.getResponseCode());
+	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
+	    		return res;
+	    	}
+			trvokAirportReq.setAreaSignKey(sysConfigVo.getData().getSysConfig().getParaValue());
+			
+			sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL);
+	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
+	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_REQUST_URL);
+	    		res.setResponseCode(sysConfigVo.getResponseCode());
+	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
+	    		return res;
+	    	}
+			trvokAirportReq.setRequstUrl(sysConfigVo.getData().getSysConfig().getParaValue());
+			
+			sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_IMG_URL);
+	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
+	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_IMG_URL);
+	    		res.setResponseCode(sysConfigVo.getResponseCode());
+	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
+	    		return res;
+	    	}
+			trvokAirportReq.setImgUrl(sysConfigVo.getData().getSysConfig().getParaValue());
+			
+			res = tripService.getTrvokAirportInfo(trvokAirportReq);
+		}catch(Exception e){
+			log.error("getTrvokAirportInfo error is" + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
 		return res;
 	}
 	
@@ -230,13 +240,11 @@ public class TrvokController implements ITrvokController{
 			voucherRes.setVoucherCode(baseResponse.getData().getVerifyCode());
 			voucherRes.setStartDate(voucherOrderRes.getData().getVoucherOrder().getStartDate());
 			res.setData(voucherRes);
-			return res;
 		}catch(Exception e){
 			log.error("getVoucher error is" + e.getMessage());
-			res.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
-			res.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-			return res;
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
+		return res;
 	}
 
 	@Override
@@ -280,13 +288,11 @@ public class TrvokController implements ITrvokController{
 				res.setResponseMsg(baseResponse.getResponseMsg());
 				return res;
 			}
-			return res;
 		}catch(Exception e){
-			log.error("getVoucher error is" + e.getMessage());
-			res.setResponseCode(ResponseCodeMsg.SYSTEM_ERROR.getCode());
-			res.setResponseMsg(ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-			return res;
+			log.error("disableVoucher error is" + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
+		return res;
 	}
 	@Override
 	public BaseResponse<WriteOffVoucherRes> writeOffVoucher( String sup,WriteOffVoucherReq writeOffVoucherReq,
