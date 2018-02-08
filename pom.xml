@@ -34,6 +34,7 @@
 		<module>lakala-service</module>
 		<module>notify-service</module>
 		<module>cdd-service</module>
+        <module>iqiyi-service</module>
     </modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->

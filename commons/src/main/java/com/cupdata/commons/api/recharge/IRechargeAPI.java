@@ -22,5 +22,4 @@ public interface IRechargeAPI {
     public BaseResponse<RechargeRes> recharge(String org, RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response);
 
 
-
 }

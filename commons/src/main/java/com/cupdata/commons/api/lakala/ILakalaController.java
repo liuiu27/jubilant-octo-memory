@@ -11,5 +11,4 @@ import com.cupdata.commons.api.voucher.IVoucherApi;
  */
 @RequestMapping("/lakala")
 public interface ILakalaController extends IVoucherApi{
-
 }

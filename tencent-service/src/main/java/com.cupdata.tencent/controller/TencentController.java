@@ -3,6 +3,7 @@ package com.cupdata.tencent.controller;
 import com.cupdata.commons.api.tencent.ITencentController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
@@ -100,13 +101,17 @@ public class TencentController implements ITencentController{
                 return rechargeRes;
             }
 
-            //封装请求参数,调用腾讯充值工具类来进行业务办理
+            //封装请求参数,调用腾讯充值工具类来进行充值业务
             QQOpenReq openReq = new QQOpenReq();
             openReq.setAmount(String.valueOf(productInfo.getData().getProduct().getRechargeDuration()));//开通时长
             openReq.setServiceid(productInfo.getData().getProduct().getSupplierParam());//充值业务类型
             openReq.setUin(rechargeReq.getAccount());//需要充值QQ
             openReq.setServernum(rechargeReq.getMobileNo());//手机号码
             openReq.setPaytype("1");//支付类型
+            openReq.setTxparam(checkOpenRes.getTxparam());//腾讯给予鉴权结果响应
+            openReq.setCommand("1");//开通状态
+            openReq.setTimestamp(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmss"));//设置时间戳
+            openReq.setPrice(productInfo.getData().getProduct().getSupplierPrice().toString());//设置供应商价格
             QQOpenRes openRes = QQRechargeUtils.qqOpen(openReq);//充值业务办理响应结果
             if (null==openRes || !QQRechargeResCode.SUCCESS.getCode().equals(openRes.getResult())){
                 log.error("调用腾讯QQ会员充值接口,QQ会员充值失败");

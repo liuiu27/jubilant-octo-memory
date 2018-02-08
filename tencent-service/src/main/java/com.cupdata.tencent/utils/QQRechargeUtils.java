@@ -190,13 +190,17 @@ public class QQRechargeUtils {
         log.info("解析xml格式的鉴权");
 		QQCheckOpenRes checkOpenRes = new QQCheckOpenRes();
 		try {
-			Document document = DocumentHelper.parseText(xmlStr);
-			Element root = document.getRootElement();
-			checkOpenRes.setResult(root.element("result").getText());
-			checkOpenRes.setDesc(root.element("desc").getText());
-			if("0".equals(checkOpenRes.getResult())){
-				checkOpenRes.setTxparam(root.element("txparam").getText());
-			}
+            Document document = DocumentHelper.parseText(xmlStr);
+            Element root = document.getRootElement();
+		     if (CommonUtils.isWindows()){
+                 checkOpenRes.setResult("0");
+            }else {
+                 checkOpenRes.setResult(root.element("result").getText());
+                 checkOpenRes.setDesc(root.element("desc").getText());
+             }
+            if("0".equals(checkOpenRes.getResult())){
+                checkOpenRes.setTxparam(root.element("txparam").getText());
+            }
 //			checkOpenRes.setTxparam(root.element("txparam").getText());
 			return checkOpenRes;
 		} catch (DocumentException e) {

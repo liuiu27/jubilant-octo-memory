@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: iqiyi-service
+server:
+   port: 9020         # 指定该实例的端口
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+  instance:
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 6
+    lease-renewal-interval-in-seconds: 2

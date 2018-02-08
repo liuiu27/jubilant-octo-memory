@@ -74,6 +74,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.cupdata</groupId>
+            <artifactId>hessian-cupdclient</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>
