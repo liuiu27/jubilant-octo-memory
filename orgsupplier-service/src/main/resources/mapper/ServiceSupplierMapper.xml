@@ -11,6 +11,9 @@
 		<result column="CONTACTS" property="contacts" jdbcType="VARCHAR"/>
 		<result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR"/>
 		<result column="SUPPLIER_TYPE" property="supplierType" jdbcType="VARCHAR"/>
+		<result column="SUPPLIER_PUB_KEY" property="supplierPubKey" jdbcType="VARCHAR"/>
+		<result column="SIP_PUB_KEY" property="sipPubKey" jdbcType="VARCHAR"/>
+		<result column="SIP_PRI_KEY" property="sipPriKey" jdbcType="VARCHAR"/>
 		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
         <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
 		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
@@ -26,6 +29,9 @@
 	CONTACTS,
 	MOBILE_NO,
 	SUPPLIER_TYPE,
+	SUPPLIER_PUB_KEY,
+	SIP_PUB_KEY,
+	SIP_PRI_KEY,
 	CREATE_BY,
 	CREATE_DATE,
 	UPDATE_BY,
@@ -65,6 +71,15 @@
 		 </if>
 		 <if test=" supplierType != null and supplierType != ''">
 			 and SUPPLIER_TYPE = #{supplierType}
+		 </if>
+		 <if test=" supplierPubKey != null and supplierPubKey != ''">
+			 and SUPPLIER_PUB_KEY = #{supplierPubKey}
+		 </if>
+		 <if test=" sipPubKey != null and sipPubKey != ''">
+			 and SIP_PUB_KEY = #{sipPubKey}
+		 </if>
+		 <if test=" sipPriKey != null and sipPriKey != ''">
+			 and SIP_PRI_KEY = #{sipPriKey}
 		 </if>
     </select>
 

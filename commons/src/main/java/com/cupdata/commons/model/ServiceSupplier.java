@@ -43,5 +43,19 @@ public class ServiceSupplier extends BaseModel{
      * 供应商类型
      */
     private String supplierType;
-   
+
+    /**
+     * 供应商公钥字符串
+     */
+    private String supplierPubKey;
+
+    /**
+     * 平台公钥字符串
+     */
+    private String sipPubKey;
+
+    /**
+     * 平台私钥字符串
+     */
+    private String sipPriKey;
 }

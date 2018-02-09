@@ -38,4 +38,15 @@ public class SupplierController implements ISupplierController {
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
+
+	@Override
+	public BaseResponse<SupplierInfVo> findSupByNo(String supplierNo) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("supplierNo", supplierNo);
+		ServiceSupplier serviceSupplier = ServiceSupplierBiz.selectSingle(paramMap);
+
+		BaseResponse<SupplierInfVo> supplierInfVoRes = new BaseResponse<>();
+		supplierInfVoRes.getData().setSuppliersInf(serviceSupplier);
+		return supplierInfVoRes;
+	}
 }
