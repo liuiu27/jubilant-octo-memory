@@ -33,6 +33,8 @@ public class ApplicationReadyEventListener implements ApplicationListener<Applic
 			log.info("初始化启动监听器......");
 			ConfigurableApplicationContext configurableApplicationContext = applicationReadyEvent.getApplicationContext();
 			this.init(configurableApplicationContext);
+		}else {
+			this.init(applicationReadyEvent.getApplicationContext());
 		}
 	}
 

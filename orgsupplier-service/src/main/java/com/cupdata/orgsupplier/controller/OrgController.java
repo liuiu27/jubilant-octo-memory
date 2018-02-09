@@ -1,8 +1,5 @@
 package com.cupdata.orgsupplier.controller;
 
-import java.util.List;
-
-import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cupdata.commons.api.orgsupplier.IOrgController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
-import com.cupdata.commons.model.OrgInf;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.cupdata.orgsupplier.biz.OrgInfBiz;
 
