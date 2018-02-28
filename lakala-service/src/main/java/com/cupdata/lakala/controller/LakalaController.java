@@ -8,6 +8,7 @@ import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.commons.vo.voucher.*;
+import com.cupdata.lakala.feign.CacheFeignClient;
 import com.cupdata.lakala.feign.OrderFeignClient;
 import com.cupdata.lakala.feign.ProductFeignClient;
 import com.cupdata.lakala.utils.LakalaVoucherUtil;
@@ -30,6 +31,9 @@ public class LakalaController implements ILakalaController{
 
     @Autowired
     private ProductFeignClient productFeignClient ;
+
+    @Autowired
+    private  CacheFeignClient cacheFeignClient ;
 
     @Autowired
     private OrderFeignClient orderFeignClient;
@@ -77,12 +81,13 @@ public class LakalaController implements ILakalaController{
                     getVoucherRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
                     return getVoucherRes;
                 }
-
-                //调用拉卡拉券码工具类获取券码,从请求体中获取需要传递的参数：手机号，订单号，产品描述，产品编号
-                LakalaVoucherRes lakalaVoucherRes = LakalaVoucherUtil.obtainvValidTicketNo(voucherReq.getMobileNo(),voucherReq.getOrgOrderNo(),voucherReq.getOrderDesc(),voucherReq.getProductNo());
+                //调用拉卡拉券码工具类获取券码,从请求体中获取需要传递的参数：手机号，订单号，业务参数，订单描述
+                LakalaVoucherRes lakalaVoucherRes = LakalaVoucherUtil.obtainvValidTicketNo(voucherReq.getMobileNo(),voucherReq.getOrgOrderNo(),productInfo.getData().getProduct().getSupplierParam(),voucherReq.getOrderDesc(),cacheFeignClient);
                 //对返回数据进行异常处理
                 if (null == lakalaVoucherRes || !lakalaVoucherRes.getRes()){
+                    LOGGER.info("券码获取失败");
                     getVoucherRes.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
+                    getVoucherRes.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
                     return getVoucherRes;
                 }
 
@@ -90,7 +95,7 @@ public class LakalaController implements ILakalaController{
                 voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                 voucherOrderRes.getData().getVoucherOrder().setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED);
                 voucherOrderRes.getData().getVoucherOrder().setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
-                voucherOrderRes.getData().getVoucherOrder().setVoucherCode(getVoucherRes.getData().getVoucherCode());
+                voucherOrderRes.getData().getVoucherOrder().setVoucherCode(lakalaVoucherRes.getData().getVoucherList().get(0).getVoucher_num());
                 voucherOrderRes.getData().getVoucherOrder().setStartDate(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMdd"));
                 voucherOrderRes.getData().getVoucherOrder().setEndDate(voucherReq.getExpire());
                 //调用订单服务更新订单
