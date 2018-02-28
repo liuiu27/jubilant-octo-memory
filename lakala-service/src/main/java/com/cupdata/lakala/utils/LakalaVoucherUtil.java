@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,9 +24,6 @@ import java.util.Map;
  */
 public class LakalaVoucherUtil {
 
-	@Autowired
-	private static CacheFeignClient cacheFeignClient ;
-
 
 	public static Logger log = Logger.getLogger(LakalaVoucherUtil.class);
 	
@@ -37,11 +35,11 @@ public class LakalaVoucherUtil {
 	 * @param orderTitle 
 	 * @return
 	 */
-	public static LakalaVoucherRes obtainvValidTicketNo(String mobileNo, String orderNo, String voucherItem, String orderTitle){
+	public  static LakalaVoucherRes obtainvValidTicketNo(String mobileNo, String orderNo, String voucherItem, String orderTitle,CacheFeignClient cacheFeignClient){
 		//设置响应信息
 		LakalaVoucherRes lakalaVoucherRes = null;
 		try {
-			log.info("调用lakala拉卡拉发券接口，mobile=" + mobileNo + "，orderNo=" + orderNo + "，voucherItem=" + voucherItem + "，orderTitle" + orderTitle);
+			log.info("调用lakala拉卡拉发券工具类，mobile=" + mobileNo + "，orderNo=" + orderNo + "，voucherItem=" + voucherItem + "，orderTitle" + orderTitle);
 			//合作商户号
 			String partner_id = null;
 			if(CommonUtils.isWindows()){
@@ -83,7 +81,7 @@ public class LakalaVoucherUtil {
 			//3DES加密key
 			String desKey = null;
 			if(CommonUtils.isWindows()){
-				desKey = "5045783eb5294a48"; 
+				desKey = "5045783eb5294a48";
 			}else{
 				//判空处理
 				if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_KEY").getData())
@@ -121,7 +119,17 @@ public class LakalaVoucherUtil {
 			//拉卡拉发券接口地址
 			String lakalaVoucherUrl = null;
 			if(CommonUtils.isWindows()){
-				lakalaVoucherUrl = "http://vouchers.hicardhome.com/vouchers/getvoucher/p/" + partner_id;
+				//lakalaVoucherUrl = "http://vouchers.hicardhome.com/vouchers/getvoucher/p/" + partner_id;
+                //判空处理
+                if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData())
+                        || null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData()){
+                    //打印日志并设置响应结果：拉卡拉发券接口获取失败
+                    log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
+                    lakalaVoucherRes.setRes(false);
+                    return lakalaVoucherRes;
+                }
+                //从配置信息表中根据银行号和3DES加密偏移量参数来获得指定的密钥数据
+                lakalaVoucherUrl = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData().getSysConfig().getParaValue();
 			}else{
 				//判空处理
 				if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData())
@@ -132,7 +140,7 @@ public class LakalaVoucherUtil {
 					return lakalaVoucherRes;
 				}
 				//从配置信息表中根据银行号和3DES加密偏移量参数来获得指定的密钥数据
-				desIv = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData().getSysConfig().getParaValue();
+                lakalaVoucherUrl = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData().getSysConfig().getParaValue();
 			}
 			
 			Map<String, Object> param = new HashMap<String, Object>();
@@ -142,6 +150,8 @@ public class LakalaVoucherUtil {
 			if(StringUtils.isNotBlank(resStr)){
 				log.info("打印判断信息："+StringUtils.isNotBlank(resStr));
 				lakalaVoucherRes = JSONObject.parseObject(resStr, LakalaVoucherRes.class);
+				log.info("响应结果信息:"+lakalaVoucherRes);
+				log.info("响应结果信息:"+lakalaVoucherRes.getData());
 			}
 		} catch (Exception e) {
 			log.error("调用拉卡拉发券接口，出现异常", e);
