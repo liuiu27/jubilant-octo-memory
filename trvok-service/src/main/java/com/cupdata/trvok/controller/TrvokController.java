@@ -1,8 +1,11 @@
 package com.cupdata.trvok.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,6 +71,8 @@ public class TrvokController implements ITrvokController{
  	private static String TRVOK_IMG_URL = "TRVOK_IMG_URL"; //图片路径
  	private static String TRVOK_PARTNER = "TRVOK_PARTNER";	//合作方ID
  	private static String TRVOK_WCF_SIGN_KEY = "TRVOK_WCF_SIGN_KEY";//WC秘钥
+ 	private static String TRVOK_VOUCHER_EXPIRE = "TRVOK_VOUCHER_EXPIRE";//券码有效期时间
+ 	
 	
 	/**
 	 * 获取空港区域信息
@@ -181,6 +186,19 @@ public class TrvokController implements ITrvokController{
 	        } 
 			TrovkCodeReq trovkCodeReq = new TrovkCodeReq();
 			trovkCodeReq.setSku(sku);
+			if(StringUtils.isBlank(voucherReq.getExpire())) {
+				//从缓存中获取券码有效期时间
+				BaseResponse<SysConfigVo> sysConfigVo = cacheFeignClient.getSysConfig("CUPD", TRVOK_VOUCHER_EXPIRE);
+		    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
+		    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_VOUCHER_EXPIRE);
+		    		res.setResponseCode(sysConfigVo.getResponseCode());
+		    		res.setResponseMsg(sysConfigVo.getResponseMsg());
+		    		return res;
+		    	}
+		    	//获取当前时间  加上默认的有效期时间
+		    	Date time = DateTimeUtil.addDay(DateTimeUtil.getCurrentTime(), Integer.valueOf(sysConfigVo.getData().getSysConfig().getParaValue()));
+		    	voucherReq.setExpire(DateTimeUtil.getFormatDate(time, "yyyyMMdd"));
+			}
 			trovkCodeReq.setExpire(voucherReq.getExpire());
 			trovkCodeReq.setOutTradeNo(voucherOrderRes.getData().getOrder().getOrderNo());
 			//从缓存中获取秘钥及请求URL
