@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @CreateDate: 2018/2/6 14:56
  */
 @Slf4j
-public class IQiYiRechargeUtils {
+public class IqiyiRechargeUtils {
 
     @Autowired
     private static CacheFeignClient cacheFeignClient ;
@@ -28,7 +28,7 @@ public class IQiYiRechargeUtils {
      * 爱奇艺充值业务
      */
     public static IqiyiRechargeRes iqiyiRecharge(IqiyiRechargeReq req){
-        //创建响应结果对象
+        //设置响应信息
         IqiyiRechargeRes iqiyiRechargeRes = null;
         try {
             //调用爱奇艺充值接口
@@ -47,7 +47,6 @@ public class IQiYiRechargeUtils {
                 //调用爱奇艺官方接口
                 rechargeUrl = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_URL").getData().getSysConfig().getParaValue();
             }
-
             //合作商户编号
             String partnerNo = null;
             if(CommonUtils.isWindows()){
