@@ -21,6 +21,7 @@ public class TestUtils {
     public static void main(String[] args) throws Exception {
         //腾讯QQ充值网关URL
         String url = "http://localhost:8040/recharge/recharge/getRecharge";
+        String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
         //花积分机构编号
         String org = "2018010200000001";
 
