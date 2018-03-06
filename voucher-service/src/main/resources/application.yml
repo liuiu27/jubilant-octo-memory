@@ -3,6 +3,13 @@ server:
 spring:
   application:
     name: voucher-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+    username: resdb
+    password: resdb
+    type: com.alibaba.druid.pool.DruidDataSource
+
 
 eureka:
   client:
@@ -14,6 +21,11 @@ eureka:
     lease-expiration-duration-in-seconds: 6
     lease-renewal-interval-in-seconds: 2
 
+#mybatis相关配置
+mybatis:
+    type-aliases-package: com.cupdata.commons.model
+    mapper-locations: classpath:mapper/*.xml
+
 #配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
 hystrix:
   command:
@@ -21,4 +33,4 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 10000
+            timeoutInMilliseconds: 5000
