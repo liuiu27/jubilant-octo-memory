@@ -22,7 +22,6 @@ import java.util.Date;
 
 public class TestUtils {
 
-
     public static void main(String[] args) throws Exception {
         //爱奇艺获取券码充值网关URL
         String url = "http://localhost:8040/recharge/recharge/getRecharge";
