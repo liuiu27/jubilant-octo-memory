@@ -51,5 +51,10 @@ public class RechargeReq extends BaseRequest{
      *服务异步通知地址
      */
     private String notifyUrl;
+
+	/**
+	 * 券码类型
+	 */
+	private Long category;
 }
 

@@ -36,4 +36,9 @@ public class GetVoucherReq extends BaseRequest {
      *订单描述
      */
     private String orderDesc;
+
+    /**
+     * 券码类型
+     */
+    private Long category;
 }

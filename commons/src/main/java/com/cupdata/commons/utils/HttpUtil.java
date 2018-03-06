@@ -1,5 +1,6 @@
 package com.cupdata.commons.utils;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -282,6 +283,7 @@ public class HttpUtil {
      * @return
      */
     public static String doPost(String url, List<NameValuePair> params, final Map<String, File> files, ContentType contentType, String charset) {
+        log.info("post请求url为：" + url + ",参数params为：" + JSON.toJSONString(params));
         //响应信息
         String resStr = null;
         try{
