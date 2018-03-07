@@ -18,5 +18,4 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RequestMapping("/voucher")
 public interface IVoucherController extends IVoucherApi{
-
 }

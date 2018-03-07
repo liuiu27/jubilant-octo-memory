@@ -1,5 +1,6 @@
 package com.cupdata.commons.api.voucher;
 
+import com.cupdata.commons.model.ElectronicVoucherCategory;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.voucher.*;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,4 +47,6 @@ public interface IVoucherApi {
      */
     @PostMapping("/writeOffVoucher")
     public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup,WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response);
+
+
 }

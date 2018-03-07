@@ -1,7 +1,5 @@
 package com.cupdata.commons.constant;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * @ProjectName: service-integration-platform
  * @Package: com.cupdata.commons.constant
@@ -22,8 +20,5 @@ public class SysConfigParaNameEn {
      * 拉卡拉发券请求地址
      */
     public static String LAKALA_REQUEST_URL = "LAKALA_REQUEST_URL";
-
-
-
 
 }

@@ -1,18 +1,15 @@
 package com.cupdata.iqiyi.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.cupdata.commons.api.iqiyi.IQiYiController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.utils.CommonUtils;
+import com.cupdata.commons.model.ElectronicVoucherLib;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
 import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.recharge.RechargeRes;
-import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
 import com.cupdata.iqiyi.constant.IqiyiRechargeResCode;
 import com.cupdata.iqiyi.feign.OrderFeignClient;
@@ -23,17 +20,9 @@ import com.cupdata.iqiyi.vo.IqiyiRechargeReq;
 import com.cupdata.iqiyi.vo.IqiyiRechargeRes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.RestTemplate;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -102,7 +91,7 @@ public class IqiyiRechargeController implements IQiYiController {
             BaseResponse<GetVoucherRes> IqiyiVoucherGetres = voucherFeignClient.getVoucherByCategoryId(org , rechargeReq);
             log.info("激活码结果:"+IqiyiVoucherGetres);
 
-            //判断是否存在可用券码
+            //对返回数据处理，判断是否存在可用券码
             if(!"000000".equals(IqiyiVoucherGetres.getResponseCode())){
                 log.info("券码列表没有可用券码");
                 rechargeRes.setResponseCode(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getCode());
@@ -116,18 +105,29 @@ public class IqiyiRechargeController implements IQiYiController {
             req.setCardCode(IqiyiVoucherGetres.getData().getVoucherCode());//充值激活码
 
             //调用爱奇艺工具类进行券码激活充值
-            IqiyiRechargeRes res = IqiyiRechargeUtils.iqiyiRecharge(req);
+           /* IqiyiRechargeRes res = IqiyiRechargeUtils.iqiyiRecharge(req);
             if(null == res || !"A00000".equals(res.getCode())) {
                 log.error("调用爱奇艺会员充值接口，返回报文结果result非A00000-爱奇艺会员充值失败");
-                //QQ会员充值失败，设置错误状态码和错误信息，给予返回
+                //爱奇艺会员充值失败，设置错误状态码和错误信息，给予返回
                 rechargeRes.setResponseCode(IqiyiRechargeResCode.RECHARGE_EXCEPTION.getCode());
                 rechargeRes.setResponseMsg(IqiyiRechargeResCode.RECHARGE_EXCEPTION.getMsg());
                 return rechargeRes;
-            }
+            }*/
+
+
+            //会员充值成功，更新券码列表中券码信息
+            ElectronicVoucherLib voucherLib = new ElectronicVoucherLib();
+            voucherLib.setId(IqiyiVoucherGetres.getData().getVoucherLibId());
+            voucherLib.setOrgOrderNo(rechargeReq.getOrgOrderNo());
+            voucherLib.setOrgNo(org);
+            voucherLib.setMobileNo(rechargeReq.getMobileNo());
+            voucherFeignClient.updateVoucherLib(voucherLib);
+
 
             //会员充值成功,修改订单状态
             rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
-
+            rechargeOrderRes.getData().getRechargeOrder().setProductNo(rechargeReq.getProductNo());
+            rechargeOrderRes.getData().getRechargeOrder().setAccountNumber(rechargeReq.getAccount());
             //调用订单服务更新订单
             rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())

@@ -47,4 +47,9 @@ public class GetVoucherRes extends BaseData {
      * 时间格式：yyyyMMdd
      */
     private String expire;
+
+    /**
+     * 券码列表id
+     */
+    private Long voucherLibId;
 }

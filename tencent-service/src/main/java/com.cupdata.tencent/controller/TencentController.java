@@ -137,11 +137,11 @@ public class TencentController implements ITencentController{
 
             //充值成功,响应用户
             RechargeRes res = new RechargeRes();
-            res.setOrderNo(rechargeReq.getOrgOrderNo());
-            res.setRechargeStatus(QQRechargeResCode.SUCCESS.getMsg());
+            res.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo());
+            res.setRechargeStatus(ModelConstants.RECHARGE_SUCCESS);
             rechargeRes.setData(res);
         }catch (Exception e){
-            log.info("充值出现异常");
+            log.info("腾讯充值业务出现异常");
             e.printStackTrace();
             rechargeRes.setResponseCode(QQRechargeResCode.QQRECHARGE_EXCEPTION.getCode());
             rechargeRes.setResponseMsg(QQRechargeResCode.QQRECHARGE_EXCEPTION.getMsg());

@@ -82,7 +82,7 @@ public class LakalaController implements ILakalaController{
                     return getVoucherRes;
                 }
                 //调用拉卡拉券码工具类获取券码,从请求体中获取需要传递的参数：手机号，订单号，业务参数，订单描述
-                LakalaVoucherRes lakalaVoucherRes = LakalaVoucherUtil.obtainvValidTicketNo(voucherReq.getMobileNo(),voucherReq.getOrgOrderNo(),productInfo.getData().getProduct().getSupplierParam(),voucherReq.getOrderDesc(),cacheFeignClient);
+                LakalaVoucherRes lakalaVoucherRes = LakalaVoucherUtil.obtainvValidTicketNo(voucherReq.getMobileNo(),voucherOrderRes.getData().getOrder().getOrderNo(),productInfo.getData().getProduct().getSupplierParam(),voucherReq.getOrderDesc(),cacheFeignClient);
                 //对返回数据进行异常处理
                 if (null == lakalaVoucherRes || !lakalaVoucherRes.getRes()){
                     LOGGER.info("券码获取失败");
@@ -93,11 +93,15 @@ public class LakalaController implements ILakalaController{
 
                 //获取券码成功，修改订单保存券码状态
                 voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
+                voucherOrderRes.getData().getOrder().setSupplierOrderNo(lakalaVoucherRes.getData().getOrder_id());      //主订单中存入供应商订单编号
                 voucherOrderRes.getData().getVoucherOrder().setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED);
                 voucherOrderRes.getData().getVoucherOrder().setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
-                voucherOrderRes.getData().getVoucherOrder().setVoucherCode(lakalaVoucherRes.getData().getVoucherList().get(0).getVoucher_num());
-                voucherOrderRes.getData().getVoucherOrder().setStartDate(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMdd"));
-                voucherOrderRes.getData().getVoucherOrder().setEndDate(voucherReq.getExpire());
+                voucherOrderRes.getData().getVoucherOrder().setVoucherCode(lakalaVoucherRes.getData().getVoucherList().get(0).getVoucher_num()); //券码号
+                voucherOrderRes.getData().getVoucherOrder().setVoucherPassword(lakalaVoucherRes.getData().getVoucherList().get(0).getVoucher_pass());    //卡密
+                voucherOrderRes.getData().getVoucherOrder().setQrCodeUrl(lakalaVoucherRes.getData().getVoucherList().get(0).getUrl());                   //二维码短链接
+                voucherOrderRes.getData().getVoucherOrder().setStartDate(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMdd")); //起始时间
+                voucherOrderRes.getData().getVoucherOrder().setEndDate(lakalaVoucherRes.getData().getVoucherList().get(0).getEnd_time());                //有效期结束时间
+
                 //调用订单服务更新订单
                 voucherOrderRes = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())

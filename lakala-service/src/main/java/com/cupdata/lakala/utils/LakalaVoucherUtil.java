@@ -10,8 +10,6 @@ import com.cupdata.lakala.vo.LakalaVoucherRes;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 

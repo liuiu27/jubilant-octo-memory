@@ -234,7 +234,7 @@ public class OrderController implements IOrderController {
 	 * @return
 	 */
 	@Override
-	public BaseResponse<RechargeOrderVo> updateRechargeOrder(RechargeOrderVo rechargeOrderVo) {
+	public BaseResponse<RechargeOrderVo> updateRechargeOrder(@RequestBody RechargeOrderVo rechargeOrderVo) {
 		log.info("OrderController updateRechargeOrder is begin params is" + rechargeOrderVo.toString());
 	    try {
 	    	//设置响应结果

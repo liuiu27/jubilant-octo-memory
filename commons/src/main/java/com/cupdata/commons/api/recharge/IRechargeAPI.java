@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Description: 充值相关接口,所有充值相关业务必须实现该接口
- * @Author: Dcein
+ * @Author: DingCong
  * @CreateDate: 2018/2/1 10:15
  */
 
 public interface IRechargeAPI {
+
     /**
      * 充值业务接口（实现方法中需要添加@RequestBody注解获取参数）
      */

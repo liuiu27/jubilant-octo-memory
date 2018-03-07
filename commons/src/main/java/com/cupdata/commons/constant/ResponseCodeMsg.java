@@ -104,7 +104,17 @@ public enum ResponseCodeMsg {
     /**
      * EEEEEE - 失败
      */
-    FAIL("EEEEEE", "失败");
+    FAIL("EEEEEE", "失败"),
+
+    /**
+     * 800003 - 券码类型无效
+     */
+    VOUCHER_TYPE_INVALID("800003","该类券码状态为无效"),
+
+    /**
+     * 800004 - 券码列表获没有可用券码
+     */
+    NO_VOUCHER_AVALIABLE("800004","券码列表没有可用券码");
 
 
 

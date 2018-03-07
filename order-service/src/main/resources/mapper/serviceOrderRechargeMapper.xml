@@ -45,6 +45,28 @@
 		#{rechargeTraffic},#{rechargeNumber},#{gameRegion},#{gameServer})
 	</insert>
 
+	<!--更新记录-->
+	<update id="update" parameterType="com.cupdata.commons.model.ServiceOrderRecharge">
+		UPDATE
+		SERVICE_ORDER_RECHARGE
+		SET
+		ORDER_ID = #{orderId},
+		PRODUCT_NO = #{productNo},
+		ACCOUNT_NUMBER = #{accountNumber},
+		OPEN_DURATION = #{openDuration},
+		RECHARGE_AMT = #{rechargeAmt},
+		RECHARGE_TRAFFIC = #{rechargeTraffic},
+		RECHARGE_NUMBER = #{rechargeNumber},
+		GAME_REGION = #{gameRegion},
+		GAME_SERVER = #{gameServer},
+		CREATE_BY = #{createBy},
+		CREATE_DATE = #{createDate},
+		UPDATE_BY = #{updateBy},
+		UPDATE_DATE = NOW()
+		WHERE ORDER_ID = #{orderId};
+	</update>
+
+
     <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
