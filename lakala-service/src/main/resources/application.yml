@@ -13,3 +13,12 @@ eureka:
     hostname: localhost    # 指定该Eureka实例的主机名
     lease-expiration-duration-in-seconds: 6
     lease-renewal-interval-in-seconds: 2
+    
+ #配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000   
