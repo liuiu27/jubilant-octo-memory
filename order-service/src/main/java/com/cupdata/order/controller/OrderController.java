@@ -152,6 +152,26 @@ public class OrderController implements IOrderController {
 	}
 
 	@Override
+	public BaseResponse<RechargeOrderVo> getRechargeOrderByOrderNo(@PathVariable String orderNo) {
+        log.info("OrderController getRechargeOrderByOrderNo is begin orderNo is" + orderNo);
+        try {
+            BaseResponse<RechargeOrderVo> res = new BaseResponse<>();
+            if (StringUtils.isBlank(orderNo)) {
+                res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+                res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+                return res;
+            }
+            res = orderBiz.getRechargeOrderByOrderNo(orderNo);
+            return res;
+
+        }catch (Exception e){
+            log.error("error is " + e.getMessage());
+            throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+
+        }
+	}
+
+	@Override
 	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrderNo(@PathVariable String orderNo) {
 		log.info("OrderController getVoucherOrderByOrderNo is begin orderNo is" + orderNo);
 		try {
@@ -169,7 +189,9 @@ public class OrderController implements IOrderController {
 		}
 	}
 
-    /**
+
+
+	/**
      * 实现创建充值订单接口，用于创建充值订单
      * @param createRechargeOrderVo 创建充值订单参数vo
      * @return
