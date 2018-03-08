@@ -190,11 +190,11 @@ public class CddController implements ICddController{
 		    } 
 			//响应参数
 			GetVoucherRes voucherRes = new GetVoucherRes();
-			voucherRes.setExpire(voucherReq.getExpire());
+			voucherRes.setExpire(cddCodeRes.getData().getDateOutTime());
 			voucherRes.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
 			voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			voucherRes.setVoucherCode(cddCodeRes.getData().getYzm());
-			voucherRes.setStartDate(voucherOrderRes.getData().getVoucherOrder().getStartDate());
+			voucherRes.setStartDate(cddCodeRes.getData().getDateBeginTime());
 			res.setData(voucherRes);
 			return res;
 		} catch (Exception e) {

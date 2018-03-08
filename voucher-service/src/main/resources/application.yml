@@ -26,11 +26,10 @@ mybatis:
     type-aliases-package: com.cupdata.commons.model
     mapper-locations: classpath:mapper/*.xml 
 
-#配置Hystrix的超时时间为10秒，解决Feign/Ribbon第一次请求失败的问题
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 10000
+#配置Hystrix的超时时间为10秒，解决Feign/Ribbon第一次请求失败的问题  测试 
+hystrix:  
+  command:  
+      default:  
+        execution:  
+          timeout:  
+            enabled: false  
