@@ -117,6 +117,7 @@ public class PreRequestFilter extends ZuulFilter {
 		String dataPlain = null;// 请求参数明文
 		try {
 			dataPlain = RSAUtils.decrypt(data, sipPriKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+			LOGGER.info("解密明文為 " + dataPlain);
 		} catch (Exception e) {
 			LOGGER.error("请求报文的密文解密失败");
 			ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由

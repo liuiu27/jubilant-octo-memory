@@ -73,10 +73,9 @@ public class ResponseFilter extends ZuulFilter {
             InputStream stream = ctx.getResponseDataStream();
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
             LOGGER.info("响应信息明文为" + body);
-
+            body = body.replaceAll(":null,", ":\"\","); 
             //Step1：转换响应参数json格式，原始json格式为{"responseCode":"","responseMsg":"","data":{}}
             JSONObject jsonObj = JSONObject.parseObject(body);//原始json对象
-
             JSONObject resultJsonObj = new JSONObject();//返回结果json对象
             resultJsonObj.put("responseCode", jsonObj.get("responseCode"));
             resultJsonObj.put("responseMsg", jsonObj.get("responseMsg"));
