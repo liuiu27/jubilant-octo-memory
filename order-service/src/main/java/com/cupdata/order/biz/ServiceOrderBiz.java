@@ -26,6 +26,7 @@ import com.cupdata.order.util.OrderUtils;
 
 @Service
 public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
+
     @Autowired
     private ServiceOrderDao orderDao;
 
@@ -140,27 +141,54 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
 	}
 
 	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrderNo(String orderNo) {
-		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
-		VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("orderNo", orderNo);
-    	ServiceOrder order = orderDao.selectSingle(paramMap);
-    	if(null == order) {
-    		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
-			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
-			return res;
-    	}
-    	paramMap.clear();
-    	paramMap.put("orderId", order.getId());
-    	ServiceOrderVoucher voucherOrder =  orderVoucherDao.selectSingle(paramMap);
-    	if(null == voucherOrder) {
-    		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
-			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
-			return res;
-    	}
-    	voucherOrderVo.setOrder(order);
-    	voucherOrderVo.setVoucherOrder(voucherOrder);
-    	res.setData(voucherOrderVo);
-    	return res;
-	}
+        BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
+        VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("orderNo", orderNo);
+        ServiceOrder order = orderDao.selectSingle(paramMap);
+        if(null == order) {
+            res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+            res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+            return res;
+        }
+        paramMap.clear();
+        paramMap.put("orderId", order.getId());
+        ServiceOrderVoucher voucherOrder =  orderVoucherDao.selectSingle(paramMap);
+        if(null == voucherOrder) {
+            res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+            res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+            return res;
+        }
+        voucherOrderVo.setOrder(order);
+        voucherOrderVo.setVoucherOrder(voucherOrder);
+        res.setData(voucherOrderVo);
+        return res;
+    }
+
+    public BaseResponse<RechargeOrderVo> getRechargeOrderByOrderNo(String orderNo) {
+        BaseResponse<RechargeOrderVo> res = new BaseResponse<>();
+        RechargeOrderVo rechargeOrderVo = new RechargeOrderVo();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("orderNo", orderNo);
+        ServiceOrder order = orderDao.selectSingle(paramMap);
+        if(null == order) {
+            res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+            res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+            return res;
+        }
+        paramMap.clear();
+        paramMap.put("orderId", order.getId());
+        ServiceOrderRecharge rechargeOrder =  orderRechargeDao.selectSingle(paramMap);
+        if(null == rechargeOrder) {
+            res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+            res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+            return res;
+        }
+        rechargeOrderVo.setOrder(order);
+        rechargeOrderVo.setRechargeOrder(rechargeOrder);
+        res.setData(rechargeOrderVo);
+        return res;
+    }
+
+
 }
