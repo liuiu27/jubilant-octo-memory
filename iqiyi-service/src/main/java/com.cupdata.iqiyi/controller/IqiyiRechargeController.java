@@ -105,14 +105,14 @@ public class IqiyiRechargeController implements IQiYiController {
             req.setCardCode(IqiyiVoucherGetres.getData().getVoucherCode());//充值激活码
 
             //调用爱奇艺工具类进行券码激活充值
-           /* IqiyiRechargeRes res = IqiyiRechargeUtils.iqiyiRecharge(req);
+            IqiyiRechargeRes res = IqiyiRechargeUtils.iqiyiRecharge(req);
             if(null == res || !"A00000".equals(res.getCode())) {
                 log.error("调用爱奇艺会员充值接口，返回报文结果result非A00000-爱奇艺会员充值失败");
                 //爱奇艺会员充值失败，设置错误状态码和错误信息，给予返回
                 rechargeRes.setResponseCode(IqiyiRechargeResCode.RECHARGE_EXCEPTION.getCode());
                 rechargeRes.setResponseMsg(IqiyiRechargeResCode.RECHARGE_EXCEPTION.getMsg());
                 return rechargeRes;
-            }*/
+            }
 
 
             //会员充值成功，更新券码列表中券码信息
