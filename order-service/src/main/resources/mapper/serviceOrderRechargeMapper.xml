@@ -109,4 +109,42 @@
 		 </if>
     </select>
 
+	<select id="selectSingle" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from SERVICE_ORDER_RECHARGE
+		where 1=1
+		<if test=" id != null and id != ''">
+			and ID = #{id}
+		</if>
+		<if test=" orderId != null and orderId != ''">
+			and ORDER_ID = #{orderId}
+		</if>
+		<if test=" productNo != null and productNo != ''">
+			and PRODUCT_NO = #{productNo}
+		</if>
+		<if test=" accountNumber != null and accountNumber != ''">
+			and ACCOUNT_NUMBER = #{accountNumber}
+		</if>
+		<if test=" openDuration != null and openDuration != ''">
+			and OPEN_DURATION = #{openDuration}
+		</if>
+		<if test=" rechargeAmt != null and rechargeAmt != ''">
+			and RECHARGE_AMT = #{rechargeAmt}
+		</if>
+		<if test=" rechargeTraffic != null and rechargeTraffic != ''">
+			and RECHARGE_TRAFFIC = #{rechargeTraffic}
+		</if>
+		<if test=" rechargeNumber != null and rechargeNumber != ''">
+			and RECHARGE_NUMBER = #{rechargeNumber}
+		</if>
+		<if test=" gameRegion != null and gameRegion != ''">
+			and GAME_REGION = #{gameRegion}
+		</if>
+		<if test=" gameServer != null and gameServer != ''">
+			and GAME_SERVER = #{gameServer}
+		</if>
+		limit 1
+	</select>
+
 </mapper>
