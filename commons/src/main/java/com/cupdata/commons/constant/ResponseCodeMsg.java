@@ -114,7 +114,13 @@ public enum ResponseCodeMsg {
     /**
      * 800004 - 券码列表获没有可用券码
      */
-    NO_VOUCHER_AVALIABLE("800004","券码列表没有可用券码");
+    NO_VOUCHER_AVALIABLE("800004","券码列表没有可用券码"),
+	
+	 /**
+     * 800005 - 流水号无效
+     */
+    NO_TRANNO_AINVALID("800005","流水号无效");
+
 
 
 

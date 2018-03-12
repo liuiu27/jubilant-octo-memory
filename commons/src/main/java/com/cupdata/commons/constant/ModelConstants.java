@@ -121,7 +121,12 @@ public class ModelConstants {
     /**
      * 内容引入交易类型  未登录
      */
-    public static Character CONTENT_TYPE_NOT_LOGGED = '0'; 
+    public static String CONTENT_TYPE_NOT_LOGGED = "0"; 
+    
+    /**
+     * 内容引入交易类型  去登录
+     */
+    public static String CONTENT_TYPE_TO_LOGGED = "1"; 
     
     
     
