@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableFeignClients
-public class CddServiceApplication {
+public class ContentServiceApplication {
 	
 	/**
 	 * @LoadBalanced，整合ribbon，使其具备负载均衡的能力
@@ -24,6 +24,6 @@ public class CddServiceApplication {
 	}
 	
 	public static void main(String[] args) {
-		SpringApplication.run(CddServiceApplication.class, args);
+		SpringApplication.run(ContentServiceApplication.class, args);
 	}
 }
