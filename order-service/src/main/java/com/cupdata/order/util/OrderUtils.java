@@ -4,6 +4,8 @@ import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.model.*;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
+import com.cupdata.commons.vo.content.CreateContentOrderVo;
+import com.cupdata.commons.vo.content.ServiceOrderContent;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -68,7 +70,30 @@ public class OrderUtils {
         voucherOrder.setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
         return voucherOrder;
     }
-
+    
+    /**
+     * 初始化内容引入订单
+     * @param order
+     * @param productNo
+     * @return
+     */
+	public static ServiceOrderContent initContentOrder(ServiceOrder order,CreateContentOrderVo createContentOrderVo) {
+		ServiceOrderContent orderContent = new ServiceOrderContent();
+		orderContent.setOrderId(order.getId());
+		orderContent.setProductNo(createContentOrderVo.getProductNo());
+		orderContent.setOrgNo(createContentOrderVo.getOrgNo());
+		//TODO  获取供应商编号
+		orderContent.setSupNo("");
+		orderContent.setMobileNo(createContentOrderVo.getContentJumpReq().getMobileNo());
+		orderContent.setUserId(createContentOrderVo.getContentJumpReq().getUserId());
+		orderContent.setUserName(createContentOrderVo.getContentJumpReq().getUserName());
+		//供应商订单号
+		
+		
+		
+		
+		return null;
+	}
 
     /**
      * 初始化充值订单
@@ -93,4 +118,6 @@ public class OrderUtils {
     public static String generateOrderNo(){
         return DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyMMddHHmmss") + CommonUtils.getRandomNum(8);
     }
+
+	
 }

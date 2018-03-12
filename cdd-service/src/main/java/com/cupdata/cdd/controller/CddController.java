@@ -1,4 +1,4 @@
-package com.cupdata.trvok.controller;
+package com.cupdata.cdd.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,11 +26,11 @@ import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
 import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
 import com.cupdata.commons.vo.voucher.WriteOffVoucherRes;
-import com.cupdata.trvok.biz.CddBiz;
-import com.cupdata.trvok.feign.CacheFeignClient;
-import com.cupdata.trvok.feign.OrderFeignClient;
-import com.cupdata.trvok.feign.ProductFeignClient;
-import com.cupdata.trvok.utils.CddUtil;
+import com.cupdata.cdd.biz.CddBiz;
+import com.cupdata.cdd.feign.CacheFeignClient;
+import com.cupdata.cdd.feign.OrderFeignClient;
+import com.cupdata.cdd.feign.ProductFeignClient;
+import com.cupdata.cdd.utils.CddUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -107,8 +107,7 @@ public class CddController implements ICddController{
 				res.setResponseMsg(sysConfigVo.getResponseMsg());
 				return res;
 			}
-			cddCodeReq.setMobile(CddUtil.aesUrlEncode(voucherReq.getMobileNo(), sysConfigVo.getData().getSysConfig().getParaValue()));
-			cddCodeReq.setApiSign(cddCodeReq.getApiKey() + sysConfigVo.getData().getSysConfig().getParaValue() + cddCodeReq.getApiST());
+			
 			
 			//获取机构ID
 			sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_AGENCY_ID);
@@ -129,7 +128,6 @@ public class CddController implements ICddController{
 				return res;
 			}
 			cddCodeReq.setNum(sysConfigVo.getData().getSysConfig().getParaValue());
-			
 			//获取订单类型
 			sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_ORDER_TYPR);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
@@ -140,6 +138,16 @@ public class CddController implements ICddController{
 			}
 			cddCodeReq.setOrderType(sysConfigVo.getData().getSysConfig().getParaValue());//订单类型
 			cddCodeReq.setApiST(DateTimeUtil.getTenTimeStamp());//时间戳
+			
+			sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_APISECRET);
+			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
+				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_APISECRET);
+				res.setResponseCode(sysConfigVo.getResponseCode());
+				res.setResponseMsg(sysConfigVo.getResponseMsg());
+				return res;
+			}
+			cddCodeReq.setMobile(CddUtil.aesUrlEncode(voucherReq.getMobileNo(), sysConfigVo.getData().getSysConfig().getParaValue()));
+			cddCodeReq.setApiSign(cddCodeReq.getApiKey() + sysConfigVo.getData().getSysConfig().getParaValue() + cddCodeReq.getApiST());
 			
 			BaseResponse<ProductInfVo> productInfo = new BaseResponse<>();
 			//获取供应商产品

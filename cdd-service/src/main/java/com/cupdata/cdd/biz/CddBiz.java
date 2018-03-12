@@ -1,4 +1,4 @@
-package com.cupdata.trvok.biz;
+package com.cupdata.cdd.biz;
 
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.cdd.CddCodeReq;
 import com.cupdata.commons.vo.cdd.CddCodeRes;
-import com.cupdata.trvok.utils.CddUtil;
+import com.cupdata.cdd.utils.CddUtil;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -13,6 +13,8 @@ import com.cupdata.commons.biz.BaseBiz;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.content.CreateContentOrderVo;
+import com.cupdata.commons.vo.content.ServiceOrderContent;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.order.dao.ServiceOrderDao;
 import com.cupdata.order.dao.ServiceOrderVoucherDao;
@@ -58,6 +60,23 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder> {
         orderVoucherDao.insert(voucherOrder);//插入券码订单
         return voucherOrder;
     }
+    
+    
+    /**
+     * 创建内容引入订单
+     * @param createContentOrderVo
+     * @return
+     */
+	public ServiceOrderContent createContentOrder(CreateContentOrderVo createContentOrderVo,ServiceProduct contentProduct, OrgProductRela orgProductRela) {
+		//初始化主订单记录
+        ServiceOrder order = OrderUtils.initServiceOrder(createContentOrderVo.getOrgNo(), createContentOrderVo.getOrgOrderNo(), createContentOrderVo.getOrderDesc(), contentProduct, orgProductRela);
+        orderDao.insert(order);//插入主订单
+		
+        //初始化内容引入订单
+        ServiceOrderContent contentOrder = OrderUtils.initContentOrder(order,createContentOrderVo);
+       // orderVoucherDao.insert(contentOrder);//插入券码订单
+        return contentOrder;
+	}
 
     //更新券码订单
 	public void updateVoucherOrder(VoucherOrderVo voucherOrderVo) {

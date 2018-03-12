@@ -1,4 +1,4 @@
-package com.cupdata.trvok.feign;
+package com.cupdata.cdd.feign;
 
 
 import com.cupdata.commons.api.order.IOrderController;

@@ -15,6 +15,8 @@ import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.model.ServiceOrderRecharge;
 import com.cupdata.commons.model.ServiceOrderVoucher;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.content.CreateContentOrderVo;
+import com.cupdata.commons.vo.content.ServiceOrderContent;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
@@ -275,4 +277,53 @@ public class OrderController implements IOrderController {
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
+	
+	
+	/**
+	 * 创建内容引入订单
+	 */
+	public BaseResponse<VoucherOrderVo> createContentOrder(@RequestBody CreateContentOrderVo createContentOrderVo) {
+		log.info("OrderController createContentOrder is begin params is" + createContentOrderVo.toString());
+		try {
+			BaseResponse res = new BaseResponse();
+			// 根据产品编号,查询服务产品信息
+			BaseResponse<ProductInfVo> productInfRes = productFeignClient
+					.findByProductNo(createContentOrderVo.getProductNo());
+			if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
+					|| null == productInfRes.getData()) {// 如果查询失败
+				log.error("product-service findByProductNo is error ProductNo is " + createContentOrderVo.getProductNo());
+				res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+				res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+				return res;
+			}
+	
+			// 查询机构、商品关系记录
+			BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createContentOrderVo.getOrgNo(),
+					createContentOrderVo.getProductNo());
+			if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
+					|| null == orgProductRelRes.getData()) {// 如果查询失败
+				log.error("product-service findRel is error ProductNo is " + createContentOrderVo.getProductNo()
+				+ "orgNo is" + createContentOrderVo.getOrgNo());
+				res.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
+				res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
+				return res;
+			}
+			
+			//初始化内容引入订单 创建订单
+			ServiceOrderContent orderContent = orderBiz.createContentOrder(createContentOrderVo,productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
+			if (null == orderContent) {// 创建券码订单失败
+				log.error("order-service createContentOrder is error findRel is " + createContentOrderVo.getProductNo()
+				+ "orgNo is" + createContentOrderVo.getOrgNo());
+				res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
+				res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
+				return res;
+			}
+
+			return res;
+		} catch (Exception e) {
+			log.error("error is " + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
+	}
+
 }

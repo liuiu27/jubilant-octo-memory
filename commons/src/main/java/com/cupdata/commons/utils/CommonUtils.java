@@ -7,6 +7,8 @@ import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import com.cupdata.commons.constant.TimeConstants;
+
 import javax.servlet.http.HttpServletRequest;
 import java.beans.PropertyDescriptor;
 import java.io.InputStream;
@@ -697,7 +699,16 @@ public class CommonUtils {
 		return ip;
 	}
 	
+	//生成流水号  年月日时分秒加8位随机数
+	public static String serialNumber() {
+		String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), TimeConstants.DATE_PATTERN_5) + CommonUtils.getCharAndNum(8);
+		System.out.println(timestamp);
+		return "";
+	} 
+	
 	public static void main(String[] args) throws Exception {
+		
+		serialNumber();
 //		System.out.println(getRandomNum(6));
 		
 //		Character c = null;
@@ -760,6 +771,6 @@ public class CommonUtils {
 //		}
 //
 //		System.out.print(resultJsonObj.toJSONString());
-		getHostAddress();
+//		getHostAddress();
 	}
 }

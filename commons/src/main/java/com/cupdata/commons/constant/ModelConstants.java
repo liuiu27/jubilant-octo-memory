@@ -27,14 +27,19 @@ public class ModelConstants {
     public static String ORG_STATUS_VALID = "1";
 
     /**
-     * 商品类型-RECHARGE：充值产品   R
+     * 商品类型-RECHARGE：充值产品   RECHARGE
      */
     public static String PRODUCT_TYPE_RECHARGE = "RECHARGE";
 
     /**
-     * 商品类型-VOUCHER：券码产品  V
+     * 商品类型-VOUCHER：券码产品 VOUCHER
      */
     public static String PRODUCT_TYPE_VOUCHER = "VOUCHER";
+    
+    /**
+     * 商品类型-CONTENT：内容引入产品  CONTENT
+     */
+    public static String PRODUCT_TYPE_CONTENT = "CONTENT";
 
     /**
      * 订单状态-0：未支付
@@ -110,4 +115,14 @@ public class ModelConstants {
      * 券码有效状态 ： 禁用
      */
     public static Character VOUCHER_STATUS_INVALID = '1';
+    
+    //=================   内容引入交易类型  ============================
+    
+    /**
+     * 内容引入交易类型  未登录
+     */
+    public static Character CONTENT_TYPE_NOT_LOGGED = '0'; 
+    
+    
+    
 }

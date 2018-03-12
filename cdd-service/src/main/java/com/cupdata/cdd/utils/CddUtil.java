@@ -1,4 +1,4 @@
-package com.cupdata.trvok.utils;
+package com.cupdata.cdd.utils;
 
 import java.net.URLEncoder;
 import java.util.Date;
