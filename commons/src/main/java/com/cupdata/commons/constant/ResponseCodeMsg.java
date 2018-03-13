@@ -11,6 +11,8 @@ public enum ResponseCodeMsg {
      */
     SUCCESS("000000", "成功"),
 
+    PARAM_INVALID("100001","参数无效"),
+
     /**
      * 100002 - 密文有误，解密失败
      */

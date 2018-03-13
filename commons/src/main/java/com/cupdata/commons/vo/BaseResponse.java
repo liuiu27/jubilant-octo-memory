@@ -9,7 +9,7 @@ import lombok.Data;
  * @Date: 16:26 2017/12/19
  */
 @Data
-public class BaseResponse<T extends BaseData> {
+public class BaseResponse<T> {
 
     private String responseCode;
 
@@ -31,6 +31,11 @@ public class BaseResponse<T extends BaseData> {
     public  BaseResponse(String responseCode,String responseMsg){
         responseCode =responseCode;
         responseMsg = responseMsg;
+    }
+    public  BaseResponse(String responseCode,String responseMsg,T data){
+        this.responseCode =responseCode;
+        this.responseMsg = responseMsg;
+        this.data =data;
     }
 
 }

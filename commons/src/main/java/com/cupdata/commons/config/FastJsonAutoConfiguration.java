@@ -1,4 +1,4 @@
-package com.cupdata.commons;
+package com.cupdata.commons.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;

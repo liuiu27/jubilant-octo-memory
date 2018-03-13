@@ -1,25 +1,57 @@
 package com.cupdata.commons.exception;
 
-import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSONException;
+import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.vo.BaseData;
+import com.cupdata.commons.vo.BaseResponse;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.cupdata.commons.vo.BaseResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	
+
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public BaseResponse<List<Map>> MethodArgumentNotValidHandler(HttpServletRequest request,
+                                                                                   MethodArgumentNotValidException exception) throws Exception {
+        List<Map> invalids = new ArrayList<>();
+        //解析原错误信息，封装后返回，此处返回非法的字段名称，原始值，错误信息
+        for (FieldError error : exception.getBindingResult().getFieldErrors()) {
+            Map invalid = new HashMap(3);
+            invalid.put("DefaultMessage",error.getDefaultMessage());
+            invalid.put("Field",error.getField());
+            invalid.put("RejectedValue",error.getRejectedValue());
+            invalids.add(invalid);
+        }
+
+        return new BaseResponse(ResponseCodeMsg.PARAM_INVALID.getCode(),ResponseCodeMsg.PARAM_INVALID.getMsg(),invalids);
+    }
+    @ExceptionHandler(value = JSONException.class)
+    public BaseResponse<?> JSONExceptionHandler(HttpServletRequest request,JSONException exception) throws Exception {
+        log.error(exception.getLocalizedMessage());
+        return new BaseResponse(ResponseCodeMsg.PARAM_INVALID.getCode(),ResponseCodeMsg.PARAM_INVALID.getMsg(),exception.getMessage());
+    }
+
 
     @ExceptionHandler(value = {Exception.class})
     public BaseResponse handle(HttpServletRequest request, Exception ex) {
 
         log.error(ex.getLocalizedMessage());
-        return new BaseResponse();
+        return new BaseResponse(ResponseCodeMsg.PARAM_INVALID.getCode(),ResponseCodeMsg.PARAM_INVALID.getMsg(),ex.getMessage());
     }
 
     @ExceptionHandler(value = {BizException.class})
@@ -28,6 +60,15 @@ public class GlobalExceptionHandler {
         log.error(ex.getErrorCode());
         log.error(ex.getErrorMessage());
         return new BaseResponse();
+    }
+
+
+    @Getter
+    @Setter
+    class ArgumentInvalidResult extends BaseData {
+        private String field;
+        private Object rejectedValue;
+        private String defaultMessage;
     }
 
 
