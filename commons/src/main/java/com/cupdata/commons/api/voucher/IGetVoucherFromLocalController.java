@@ -16,14 +16,14 @@ import javax.servlet.http.HttpServletResponse;
  * @CreateDate: 2018/3/1 19:24
  */
 @RequestMapping("/getVoucherFromLocal")
-public interface IGetVoucherFromLocalController {
+public interface IGetVoucherFromLocalController{
 
     /**
      * SIP根据券码类型id从本地券码库获取一条券码
      * @return
      */
-    @PostMapping("/getVoucherByCategoryId")
-    public BaseResponse<GetVoucherRes> getVoucherByCategoryId(@RequestParam(value = "org" , required = true) String org ,@RequestBody RechargeReq rechargeReq);
+    @PostMapping("/getVoucherFromLocal")
+    public BaseResponse<GetVoucherRes> getVoucherFromLocal(@RequestBody GetVoucherReq voucherReq);
 
     /**
      * 其他机构调用SIP的接口来从本地获取一条券码
@@ -31,8 +31,8 @@ public interface IGetVoucherFromLocalController {
      * @param voucherReq
      * @return
      */
-    @PostMapping("/orgGetVoucherByCategoryId")
-    public BaseResponse<GetVoucherRes> orgGetVoucherByCategoryId(@RequestParam(value = "org" , required = true) String org , @RequestBody GetVoucherReq voucherReq);
+    @PostMapping("/getVoucher")
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value = "org" , required = true) String org , @RequestBody GetVoucherReq voucherReq);
 
 
     /**

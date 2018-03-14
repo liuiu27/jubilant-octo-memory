@@ -14,5 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface INotifyController{
 	    @GetMapping("/notifyToOrg3Times/{orderNo}")
 	    public void notifyToOrg3Times(@PathVariable("orderNo") String orderNo);
+
+	    @GetMapping("/rechargeNotifyToOrg3Times/{orderNo}")
+	    public void rechargeNotifyToOrg3Times(@PathVariable("orderNo") String orderNo);
 	    
 }

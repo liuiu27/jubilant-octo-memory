@@ -3,6 +3,7 @@ package com.cupdata.commons.api.recharge;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.recharge.RechargeRes;
+import com.cupdata.commons.vo.recharge.RechargeResQuery;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,5 @@ public interface IRechargeAPI {
      */
     @PostMapping("/getRecharge")
     public BaseResponse<RechargeRes> recharge(String org, RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response);
-
 
 }
