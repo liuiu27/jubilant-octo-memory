@@ -58,4 +58,9 @@ public class ServiceSupplier extends BaseModel{
      * 平台私钥字符串
      */
     private String sipPriKey;
+
+    /**
+     * 供应商标识
+     */
+    private String supplierFlag;
 }

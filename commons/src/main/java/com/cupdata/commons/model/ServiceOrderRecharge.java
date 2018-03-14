@@ -25,12 +25,12 @@ public class ServiceOrderRecharge extends BaseModel{
     private String accountNumber;
 
     /**
-     *
+     * 开通时长
      */
     private Long openDuration;
 
     /**
-     *
+     * 充值话费
      */
     private Long rechargeAmt;
 

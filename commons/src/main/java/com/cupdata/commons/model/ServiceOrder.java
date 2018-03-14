@@ -58,6 +58,12 @@ public class ServiceOrder extends BaseModel{
 	private String orderType;
 
 	/**
+	 * 子订单类型
+	 * 与服务产品子类型相同
+	 */
+	private String orderSubType;
+
+	/**
 	 *订单描述
 	 */
 	private String orderDesc;
@@ -214,5 +220,13 @@ public class ServiceOrder extends BaseModel{
 
 	public void setSupplierFlag(String supplierFlag) {
 		this.supplierFlag = supplierFlag;
+	}
+
+	public String getOrderSubType() {
+		return orderSubType;
+	}
+
+	public void setOrderSubType(String orderSubType) {
+		this.orderSubType = orderSubType;
 	}
 }

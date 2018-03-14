@@ -9,11 +9,17 @@ import lombok.Data;
  */
 @Data
 public class ServiceProduct extends BaseModel {
+
     /**
      *服务产品类型
      * RECHARGE：充值；VOUCHER：券码；
      */
     private String productType;
+
+    /**
+     * 服务产品子类型
+     */
+    private String productSubType;
 
     /**
      *供应商编号
