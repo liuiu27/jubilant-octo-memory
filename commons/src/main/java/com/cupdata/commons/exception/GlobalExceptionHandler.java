@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
         //解析原错误信息，封装后返回，此处返回非法的字段名称，原始值，错误信息
         for (FieldError error : exception.getBindingResult().getFieldErrors()) {
             Map invalid = new HashMap(3);
-            invalid.put("DefaultMessage",error.getDefaultMessage());
+            invalid.put("Message",error.getDefaultMessage());
             invalid.put("Field",error.getField());
             invalid.put("RejectedValue",error.getRejectedValue());
             invalids.add(invalid);
