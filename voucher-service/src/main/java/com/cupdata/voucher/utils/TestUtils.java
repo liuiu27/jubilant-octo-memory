@@ -20,18 +20,18 @@ import java.util.Date;
 public class TestUtils {
 
     public static void main(String[] args) throws Exception {
-        //本地获取券码网关URL
-        String url = "http://localhost:8040/voucher/getVoucherFromLocal/orgGetVoucherByCategoryId";
+        //获取券码网关URL
+        String url = "http://localhost:8040/voucher/voucher/getVoucher";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数
         GetVoucherReq voucherReq = new GetVoucherReq();
         voucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS")+ CommonUtils.getCharAndNum(8));
-        voucherReq.setMobileNo("1212121");
+        voucherReq.setMobileNo("78912");
         voucherReq.setOrderDesc("机构获取SIP本地券码测试");
-        voucherReq.setProductNo("SIP20180305VOUCHER");
+        voucherReq.setProductNo("20180309SIP");
         voucherReq.setCategory(8l);
-        voucherReq.setOrgOrderNo("OUTERGETSIPVOUCHER");
+        voucherReq.setOrgOrderNo("SIP20180312");
         String reqStr = JSONObject.toJSONString(voucherReq);
         System.out.print("请求参数json字符串" + reqStr);
         String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
@@ -43,7 +43,8 @@ public class TestUtils {
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
         String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
+    }
+}
 
-    }
-    }
+
 

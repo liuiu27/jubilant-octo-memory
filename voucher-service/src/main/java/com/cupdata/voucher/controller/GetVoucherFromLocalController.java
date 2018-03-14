@@ -6,6 +6,7 @@ import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
 import com.cupdata.commons.model.ElectronicVoucherCategory;
 import com.cupdata.commons.model.ElectronicVoucherLib;
+import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import sun.util.locale.provider.LocaleServiceProviderPool;
+
 import javax.annotation.Resource;
 
 /**
@@ -49,20 +52,18 @@ public class GetVoucherFromLocalController implements IGetVoucherFromLocalContro
 
     /**
      * SIP根据券码类型id从本地库获取券码
-     * @param org
-     * @param rechargeReq
+     * @param voucherReq
      * @return
      */
     @Override
-    public BaseResponse<GetVoucherRes> getVoucherByCategoryId(@RequestParam(value = "org" , required = true) String org , @RequestBody RechargeReq rechargeReq) {
+    public BaseResponse<GetVoucherRes> getVoucherFromLocal(@RequestBody GetVoucherReq voucherReq) {
         log.info("VoucherController getVoucherByCategoryId is begin......");
+        //响应信息
+        BaseResponse<GetVoucherRes> voucherRes = new BaseResponse<>();// 默认为成功
         try {
-            //响应信息
-            BaseResponse<GetVoucherRes> voucherRes = new BaseResponse<>();// 默认为成功
-
             //step1.根据券码类型获得券码状态是否有效
-            ElectronicVoucherCategory electronicVoucherCategory = voucherCategoryBiz.checkVoucherValidStatusByCategoryId(rechargeReq.getCategory());
-            if (StringUtils.isBlank(electronicVoucherCategory.toString())) {
+            ElectronicVoucherCategory electronicVoucherCategory = voucherCategoryBiz.checkVoucherValidStatusByCategoryId(voucherReq.getCategory());
+            if (CommonUtils.isNullOrEmptyOfObj(electronicVoucherCategory)) {
                 log.info("券码类型无效");
                 voucherRes.setResponseMsg(ResponseCodeMsg.VOUCHER_TYPE_INVALID.getMsg());
                 voucherRes.setResponseCode(ResponseCodeMsg.VOUCHER_TYPE_INVALID.getCode());
@@ -70,8 +71,8 @@ public class GetVoucherFromLocalController implements IGetVoucherFromLocalContro
             }
 
             //step2.判断券码列表是否存在有效券码,获取有效券码
-            ElectronicVoucherLib electronicVoucherLib = voucherLibGetBiz.selectVoucherByCategoryId(rechargeReq.getCategory());
-            if ("".equals(electronicVoucherLib) || electronicVoucherLib == null ) {
+            ElectronicVoucherLib electronicVoucherLib = voucherLibGetBiz.selectVoucherByCategoryId(voucherReq.getCategory());
+            if (CommonUtils.isNullOrEmptyOfObj(electronicVoucherLib)) {
                 log.info("券码列表没有可用券码");
                 voucherRes.setResponseMsg(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getMsg());
                 voucherRes.setResponseCode(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getCode());
@@ -88,25 +89,32 @@ public class GetVoucherFromLocalController implements IGetVoucherFromLocalContro
             return voucherRes;
         }catch (Exception e){
             log.error("error is " + e.getMessage());
-            throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+            voucherRes.setResponseMsg(ResponseCodeMsg.FAIL_GAT_LOCAL_VOUCHER.getMsg());
+            voucherRes.setResponseCode(ResponseCodeMsg.FAIL_GAT_LOCAL_VOUCHER.getCode());
+            return voucherRes;
         }
     }
 
     /**
-     * 其他机构通过SIP的券码库来获取券码:需要创建订单
+     * 其他机构通过SIP的券码库来获取券码:需要创建券码订单
+     * 参数:org(机构编号),categoryId(券码类型id),org_order_No(机构唯一订单号),order_Desc(订单描述)
+     * step1.根据categoryId查询该类别券码是否有效
+     * step2.根据categoryId、org、startDate、endDate、sendStatus去券码列表查询是否存在符合条件的券码
+     * step3.将该券码封装返回
+     * step4.将得到的券码写入主订单表和券码订单表
      * @param org
      * @param voucherReq
      * @return
      */
     @Override
-    public BaseResponse<GetVoucherRes> orgGetVoucherByCategoryId(@RequestParam(value = "org" , required = true) String org, @RequestBody GetVoucherReq voucherReq) {
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value = "org" , required = true) String org, @RequestBody GetVoucherReq voucherReq) {
         log.info("VoucherController orgGetVoucherByCategoryId is begin......");
         try {
             //响应信息
             BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse();// 默认为成功
             BaseResponse<ProductInfVo> productInfo = null;
 
-            //获取该供应商产品,如果不存在此产品,直接返回错误状态码和信息
+            //获取产品信息,如果不存在此产品,直接返回错误状态码和信息
             productInfo = productFeignClient.findByProductNo(voucherReq.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())) {
                 //设置状态码和错误信息,给予返回
@@ -137,7 +145,7 @@ public class GetVoucherFromLocalController implements IGetVoucherFromLocalContro
 
             //根据券码类型获得券码状态是否有效
             ElectronicVoucherCategory electronicVoucherCategory = voucherCategoryBiz.checkVoucherValidStatusByCategoryId(voucherReq.getCategory());
-            if ("".equals(electronicVoucherCategory) || electronicVoucherCategory == null) {
+            if (CommonUtils.isNullOrEmptyOfObj(electronicVoucherCategory)) {
                 log.info("券码类型无效");
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.VOUCHER_TYPE_INVALID.getMsg());
                 getVoucherRes.setResponseCode(ResponseCodeMsg.VOUCHER_TYPE_INVALID.getCode());
@@ -146,7 +154,7 @@ public class GetVoucherFromLocalController implements IGetVoucherFromLocalContro
 
             //判断券码列表是否存在有效券码,获取有效券码
             ElectronicVoucherLib electronicVoucherLib = voucherLibGetBiz.selectVoucherByCategoryId(voucherReq.getCategory());
-            if ("".equals(electronicVoucherLib) || electronicVoucherLib == null ) {
+            if (CommonUtils.isNullOrEmptyOfObj(electronicVoucherLib)) {
                 log.info("券码列表没有可用券码");
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getMsg());
                 getVoucherRes.setResponseCode(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getCode());
@@ -156,6 +164,7 @@ public class GetVoucherFromLocalController implements IGetVoucherFromLocalContro
             //券码列表存在可用券码,从券码中获取券码号，并更新
             electronicVoucherLib.setOrgOrderNo(voucherReq.getOrgOrderNo());
             electronicVoucherLib.setOrgNo(org);
+            electronicVoucherLib.setMobileNo(voucherReq.getMobileNo());
             voucherLibGetBiz.UpdateElectronicVoucherLib(electronicVoucherLib);
 
             //获取券码成功，修改订单保存券码状态
@@ -179,7 +188,10 @@ public class GetVoucherFromLocalController implements IGetVoucherFromLocalContro
             }
 
             //响应结果
+            log.info("获取券码结果为:券码号"+electronicVoucherLib.getTicketNo()+",有效期:"+electronicVoucherLib.getEndDate());
             GetVoucherRes res = new GetVoucherRes();
+            res.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());      //平台订单号
+            res.setOrgOrderNo(voucherOrderRes.getData().getOrder().getOrgOrderNo());//机构订单编号
             res.setVoucherCode(electronicVoucherLib.getTicketNo()); //券码号
             res.setStartDate(electronicVoucherLib.getStartDate());  //开始时间
             res.setExpire(electronicVoucherLib.getEndDate());       //结束时间

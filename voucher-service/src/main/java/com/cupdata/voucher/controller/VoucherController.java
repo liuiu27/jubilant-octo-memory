@@ -127,7 +127,6 @@ public class VoucherController implements IVoucherController {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 			HttpEntity<GetVoucherReq> entity = new HttpEntity<GetVoucherReq>(voucherReq, headers);
-	
 			ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
 			String jsonStr = responseEntity.getBody();
 			res = JSONObject.parseObject(jsonStr,
