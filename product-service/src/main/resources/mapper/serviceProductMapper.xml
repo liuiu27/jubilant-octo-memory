@@ -5,6 +5,7 @@
 	<resultMap id="BaseResultMap" type="com.cupdata.commons.model.ServiceProduct">
 		<result column="ID" property="id" jdbcType="INTEGER"/>
 		<result column="PRODUCT_TYPE" property="productType" jdbcType="VARCHAR"/>
+		<result column="PRODUCT_SUB_TYPE" property="productSubType" jdbcType="VARCHAR"/>
 		<result column="SUPPLIER_NO" property="supplierNo" jdbcType="VARCHAR"/>
 		<result column="PRODUCT_NO" property="productNo" jdbcType="VARCHAR"/>
 		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR"/>
@@ -25,6 +26,7 @@
 	<sql id="Base_Column_List">
 		ID,
 		PRODUCT_TYPE,
+		PRODUCT_SUB_TYPE,
 		SUPPLIER_NO,
 		PRODUCT_NO,
 		PRODUCT_NAME,
@@ -57,6 +59,9 @@
 		</if>
 		<if test=" productType != null and productType != ''">
 			and PRODUCT_TYPE = #{productType}
+		</if>
+		<if test=" productSubType != null and productSubType != ''">
+			and PRODUCT_SUB_TYPE = #{productSubType}
 		</if>
 		<if test=" supplierNo != null and supplierNo != ''">
 			and SUPPLIER_NO = #{supplierNo}
@@ -102,6 +107,9 @@
 		</if>
 		<if test=" productType != null and productType != ''">
 			and PRODUCT_TYPE = #{productType}
+		</if>
+		<if test=" productSubType != null and productSubType != ''">
+			and PRODUCT_SUB_TYPE = #{productSubType}
 		</if>
 		<if test=" supplierNo != null and supplierNo != ''">
 			and SUPPLIER_NO = #{supplierNo}
