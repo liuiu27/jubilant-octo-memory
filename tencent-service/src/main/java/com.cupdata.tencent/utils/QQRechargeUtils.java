@@ -48,8 +48,7 @@ public class QQRechargeUtils {
 			checkOpenUrl = "http://cgi.vip.qq.com/integopendebug/checkopen";
 		}else{
 			//如果获取数据信息为空
-			if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getData())
-					||null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getData()){
+			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getData())){
 				//设置错误码:获取信息失败
 				qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqCheckOpenRes;
@@ -63,8 +62,7 @@ public class QQRechargeUtils {
 			key = "yinlian01jf";
 		}else{
 			//判空处理
-			if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getData())
-					||null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getData()){
+			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getData())){
 				//设置错误码:获取信息失败
 				qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqCheckOpenRes;
@@ -78,8 +76,7 @@ public class QQRechargeUtils {
 				req.setSource("10017");
 			}else{
 				//判空处理
-				if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getData())
-						||null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getData()){
+				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getData())){
 					//设置错误码:获取信息失败
 					qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 					return qqCheckOpenRes;
@@ -117,9 +114,7 @@ public class QQRechargeUtils {
 			openUrl = "http://cgi.vip.qq.com/integopendebug/open";
 		}else{
 			//数据判空处理
-			if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_URL").getData().getSysConfig().getParaValue())
-					||null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_URL").getData().getSysConfig().getParaValue()){
-
+			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_URL").getData().getSysConfig().getParaValue())){
 				qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqOpenRes;
 			}
@@ -131,8 +126,7 @@ public class QQRechargeUtils {
 			key = "yinlian01jf";
 		}else{
 			//数据判空处理
-			if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_KEY"))
-					||null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_KEY")){
+			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_KEY"))){
 				qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqOpenRes;
 			}
@@ -143,8 +137,7 @@ public class QQRechargeUtils {
 			if(CommonUtils.isWindows()){
 				req.setSource("10017");
 			}else{
-				if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_SOURCE"))
-						||null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_SOURCE")){
+				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_SOURCE"))){
 					qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 					return qqOpenRes;
 				}

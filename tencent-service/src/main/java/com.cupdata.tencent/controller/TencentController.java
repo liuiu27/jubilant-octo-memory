@@ -10,6 +10,7 @@ import com.cupdata.commons.vo.product.RechargeOrderVo;
 import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.recharge.RechargeRes;
+import com.cupdata.commons.vo.recharge.RechargeResQuery;
 import com.cupdata.tencent.constant.QQRechargeResCode;
 import com.cupdata.tencent.feign.OrderFeignClient;
 import com.cupdata.tencent.feign.ProductFeignClient;
@@ -137,8 +138,8 @@ public class TencentController implements ITencentController{
 
             //充值成功,响应用户
             RechargeRes res = new RechargeRes();
-            res.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo());
-            res.setRechargeStatus(ModelConstants.RECHARGE_SUCCESS);
+            res.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo()); //平台单号
+            res.setRechargeStatus(ModelConstants.RECHARGE_SUCCESS);             //充值状态
             rechargeRes.setData(res);
         }catch (Exception e){
             log.info("腾讯充值业务出现异常");
@@ -149,4 +150,5 @@ public class TencentController implements ITencentController{
         }
         return rechargeRes;
     }
+
 }
