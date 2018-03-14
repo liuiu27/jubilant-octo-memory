@@ -10,6 +10,7 @@ import com.cupdata.commons.vo.orgsupplier.SupplierInfVo;
 import com.cupdata.orgsupplier.biz.ServiceSupplierBiz;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -43,13 +44,16 @@ public class SupplierController implements ISupplierController {
 	}
 
 	@Override
-	public BaseResponse<SupplierInfVo> findSupByNo(String supplierNo) {
+	public BaseResponse<SupplierInfVo> findSupByNo(@PathVariable("supplierNo") String supplierNo) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("supplierNo", supplierNo);
 		ServiceSupplier serviceSupplier = ServiceSupplierBiz.selectSingle(paramMap);
 
+		SupplierInfVo  supplierInfVo = new SupplierInfVo();
+		supplierInfVo.setSuppliersInf(serviceSupplier);
+
 		BaseResponse<SupplierInfVo> supplierInfVoRes = new BaseResponse<>();
-		supplierInfVoRes.getData().setSuppliersInf(serviceSupplier);
+		supplierInfVoRes.setData(supplierInfVo);
 		return supplierInfVoRes;
 	}
 }
