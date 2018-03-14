@@ -15,17 +15,62 @@ import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.vo.notify.NotifyToOrgVo;
 import com.cupdata.commons.vo.notify.OrderNotifyComplete;
 import com.cupdata.commons.vo.notify.OrderNotifyWait;
+import com.cupdata.commons.vo.notify.RechargeNotifyToOrgVo;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
+import com.cupdata.commons.vo.product.RechargeOrderVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class NotifyUtil {
+
 	/**
-	 * 发送通知
+	 * 充值业务发送通知
+	 * @param orgInfVo
+	 * @param rechargeOrderVo
+	 * @return
+	 */
+	public static Boolean rechargeHttpToOrg(RechargeOrderVo rechargeOrderVo, OrgInfVo orgInfVo){
+		Boolean bl = false;
+		try {
+		    //封装充值业务通知vo
+            RechargeNotifyToOrgVo rechargeNotifyToOrgVo = new RechargeNotifyToOrgVo();
+            rechargeNotifyToOrgVo.setOrderNo(rechargeOrderVo.getOrder().getOrderNo());            //平台订单号
+            rechargeNotifyToOrgVo.setOrgOrderNo(rechargeOrderVo.getOrder().getOrgOrderNo());      //机构唯一订单号
+            rechargeNotifyToOrgVo.setRechargeStatus(rechargeOrderVo.getOrder().getOrderStatus()); //订单状态
+			String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), TimeConstants.DATE_PATTERN_5) + CommonUtils.getCharAndNum(8);
+            rechargeNotifyToOrgVo.setTimestamp(timestamp);    //时间戳
+
+            //获取秘钥 加密 请求参数
+			String pubKeyStr = orgInfVo.getOrgInf().getOrgPubKey();
+			PublicKey uppPubKey = RSAUtils.getPublicKeyFromString(pubKeyStr);
+			String reqStr = JSONObject.toJSONString(rechargeNotifyToOrgVo);
+			String reqData = RSAUtils.encrypt(reqStr, uppPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+			reqData = URLEncoder.encode(reqData);
+			String merchantPriKeyStr = orgInfVo.getOrgInf().getSipPriKey();
+			PrivateKey merchantPriKey = RSAUtils.getPrivateKeyFromString(merchantPriKeyStr);
+			String authReqSign = RSAUtils.sign(reqStr, merchantPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
+			authReqSign = URLEncoder.encode(authReqSign);
+
+			//发送请求
+			log.info("dopost request url is " + rechargeOrderVo.getOrder().getNotifyUrl() + "data is  " +
+					reqData + "sign is " + authReqSign);
+			String resStr = HttpUtil.doPost(rechargeOrderVo.getOrder().getNotifyUrl(), "data=" + reqData + "&sign=" + authReqSign ,
+					"application/x-www-form-urlencoded;charset=UTF-8");
+			if("SUCCESS".equals(resStr)) {
+				bl = true;
+			}
+		} catch (Exception e) {
+			log.error("httpToOrg is error " + e.getMessage());
+		}
+		return bl;
+	}
+
+	/**
+	 * 券码业务发送通知
 	 * @param orgInfVo 
-	 * @param orderNotifyWait
+	 * @param voucherOrderVo
 	 * @return
 	 */
 	public static Boolean httpToOrg(VoucherOrderVo voucherOrderVo, OrgInfVo orgInfVo){
@@ -68,7 +113,7 @@ public class NotifyUtil {
 	
 	/**
 	 * 初始化  OrderNotifyWait
-	 * @param orderNotifyWait
+	 * @param orderNo
 	 */
 	public static OrderNotifyWait initOrderNotifyWait(String orderNo,String notifyUrl) {
 		OrderNotifyWait orderNotifyWait = new OrderNotifyWait();
@@ -83,7 +128,7 @@ public class NotifyUtil {
 	
 	/**
 	 * 初始化  OrderNotifyComplete
-	 * @param orderNotifyWait
+	 * @param orderNo
 	 */
 	public static OrderNotifyComplete initOrderNotifyComplete(String orderNo,String notifyUrl) {
 		OrderNotifyComplete orderNotifyComplete = new OrderNotifyComplete();
