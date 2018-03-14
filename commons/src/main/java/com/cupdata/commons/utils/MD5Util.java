@@ -1,9 +1,11 @@
 package com.cupdata.commons.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 
 
@@ -12,11 +14,8 @@ import java.security.SignatureException;
  * @author Hou Xin
  * 
  */
-
+@Slf4j
 public class MD5Util {
-
-
-
 
     private static String byteArrayToHexString(byte b[]) {
         StringBuffer resultSb = new StringBuffer();
@@ -87,6 +86,42 @@ public class MD5Util {
         }
         return resultString;
     }
+
+
+    /**
+     * 对入参字符串进行MD5加密
+     *
+     * @param origin
+     * @return
+     */
+    public static String encode(String origin) {
+        String resultString = null;
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            // There won't these kinds of exception throw, so catch it.
+            log.error("", e);
+            return null;
+        }
+        byte[] by = md.digest(origin.getBytes());
+        resultString = byteArrayToString(by);
+        return resultString;
+    }
+
+    private static String byteArrayToString(byte[] b) {
+        StringBuffer resultSb = new StringBuffer();
+        for (int i = 0; i < b.length; i++) {
+            // Return 32 bits Hex value.
+            resultSb.append(byteToHexString(b[i]));
+
+            // Retirm 32 bits Oct value.
+            // resultSb.append(byteToNumString(b[i]));
+        }
+        return resultSb.toString();
+    }
+
+
 
     /**
      * 默认utf-8编码
