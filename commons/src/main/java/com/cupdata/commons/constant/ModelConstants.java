@@ -35,7 +35,7 @@ public class ModelConstants {
      * 商品类型-VOUCHER：券码产品 VOUCHER
      */
     public static String PRODUCT_TYPE_VOUCHER = "VOUCHER";
-    
+
     /**
      * 商品类型-CONTENT：内容引入产品  CONTENT
      */
@@ -115,19 +115,78 @@ public class ModelConstants {
      * 券码有效状态 ： 禁用
      */
     public static Character VOUCHER_STATUS_INVALID = '1';
-    
+
+    /**
+     * 充值中
+     */
+    public static String RECHARGE_ING = "1";
+
+    /**
+     * 充值失败
+     */
+    public static String RECHARGE_FIAL = "F";
+
+    /**
+     * 充值成功
+     */
+    public static String RECHARGE_SUCCESS = "S";
+
+    /**
+     * 订单商户标识-IHUYI:互亿
+     */
+    public static final String ORDER_MERCHANT_FLAG_IHUYI = "IHUYI";
+
+    /**
+     * 订单子类型：流量充值
+     */
+    public static final String ORDER_TYPE_RECHARGE_TRAFFIC = "RECHARGE_TRAFFIC";
+
+    /**
+     * 订单子类型：话费充值
+     */
+    public static final String ORDER_TYPE_RECHARGE_PHONE = "RECHARGE_PHONE";
+
+    /**
+     * 订单子类型：虚拟充值:游戏
+     */
+    public static final String ORDER_TYPE_RECHARGE_GAME = "RECHARGE_GAME";
+
+    /**
+     * 订单子类型：虚拟充值:书籍
+     */
+    public static final String ORDER_TYPE_RECHARGE_BOOK = "RECHARGE_BOOK";
+
+    /**
+     * 订单子类型：虚拟充值:音乐
+     */
+    public static final String ORDER_TYPE_RECHARGE_MUSIC = "RECHARGE_MUSIC";
+
+    /**
+     * 订单子类型：虚拟充值:视频
+     */
+    public static final String ORDER_TYPE_RECHARGE_VIDEO = "RECHARGE_VIDEO";
+
+    /**
+     * 订单子类型：虚拟充值:社交
+     */
+    public static final String ORDER_TYPE_RECHARGE_SOCIAL = "RECHARGE_SOCIAL";
+
+
+
+
+
     //=================   内容引入交易类型  ============================
-    
+
     /**
      * 内容引入交易类型  未登录
      */
-    public static String CONTENT_TYPE_NOT_LOGGED = "0"; 
-    
+    public static String CONTENT_TYPE_NOT_LOGGED = "0";
+
     /**
      * 内容引入交易类型  去登录
      */
-    public static String CONTENT_TYPE_TO_LOGGED = "1"; 
-    
-    
-    
+    public static String CONTENT_TYPE_TO_LOGGED = "1";
+
+
+
 }
