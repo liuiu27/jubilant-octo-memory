@@ -11,7 +11,7 @@ public class PayPageRequestVO {
     /**
      *时间戳
      */
-    @NotBlank
+    @NotBlank(message="")
     String timestamp;
     /**
      *订单金额

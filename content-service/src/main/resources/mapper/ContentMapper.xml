@@ -143,10 +143,26 @@
 			    #{supNo},
 			    #{requestInfo},
 			    #{createBy},
-			    #{createDate},
-			    #{updateBy},
-			    #{updateDate}
-  ) ;
+			    #{createDate}
+			  ) 
 	</insert>
+	
+	
+	
+	<update id="update" parameterType="com.cupdata.commons.vo.content.ContentTransaction">
+		update 
+	  	service_content_transaction_log
+		set
+		  TRAN_NO= #{tranNo},
+		  PRODUCT_NO= #{productNo},
+		  TRAN_TYPE= #{tranType},
+		  TRAN_DESC= #{tranDesc},
+		  ORG_NO= #{orgNo},
+		  SUP_NO= #{supNo},
+		  REQUEST_INFO= #{requestInfo},
+		  UPDATE_BY= #{updateBy},
+		  UPDATE_DATE= #{updateDate}
+		where ID= #{id} 
+	</update>
 	
 </mapper>

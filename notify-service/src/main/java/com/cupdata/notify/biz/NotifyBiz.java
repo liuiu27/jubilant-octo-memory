@@ -1,10 +1,8 @@
 package com.cupdata.notify.biz;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.biz.BaseBiz;
 import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.commons.vo.notify.OrderNotifyComplete;

@@ -381,6 +381,7 @@ public class HttpUtil {
 		getVoucherReq.setExpire("20180109");
 		getVoucherReq.setProductNo("20180201CDD110");
 		getVoucherReq.setOrgOrderNo("132132131");
+		getVoucherReq.setMobileNo("13911111111");
 		getVoucherReq.setOrderDesc("车点点测试");
 		
 		String reqStr = JSONObject.toJSONString(getVoucherReq);
@@ -407,13 +408,13 @@ public class HttpUtil {
 //				"&sign=" + authReqSign ,
 //				"application/x-www-form-urlencoded;charset=UTF-8");
 		
-//		String  data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
-//				"&sign=" + authReqSign ,
-//				"application/x-www-form-urlencoded;charset=UTF-8");
-		
-		String data = doPost("http://localhost:8040/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+		String  data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
 				"&sign=" + authReqSign ,
 				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+//		String data = doPost("http://localhost:8040/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
 		
 		//String data = "Gb%2FDZbw8TY2BPpWTFVrVZyHOGYdeClprnES4xBEI4sAMgcA63w%2BRdzJr2RPKgtWHpAcX9QcHEQySrrB2eZiOrNgBtvMMWJ62scv2bbWF3zB%2FiIsWJwqURGNGSCk1tACD5PvcuicOEcMeGSTiyxXSJLmpuQO5DSYwIybRMt2685cLfyvBH0BjXichzjYi8qjYoirs76JIi3AUnVkaFAx86%2FifsoBS7I04OhFshMDbX0bj4z4miDlGeQRUZSou7yO6uqY5h7JM5O023yujfDynRFkIoMS3eoYUcQu6MYJB5PSx86GH1Tkp8TP8SDqYg9jrJDWwhW5U5NTKusdPD22PbQ%3D%3D";
 		

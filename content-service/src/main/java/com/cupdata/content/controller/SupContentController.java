@@ -21,6 +21,8 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.content.ContentJumpReq;
 import com.cupdata.commons.vo.content.ContentLoginReq;
+import com.cupdata.commons.vo.content.ContentQueryOrderReq;
+import com.cupdata.commons.vo.content.ContentQueryOrderRes;
 import com.cupdata.commons.vo.content.ContentTransaction;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
@@ -81,12 +83,41 @@ public class SupContentController {
 			paramMap.put("TRAN_NO", tranNo);
 			paramMap.put("TRAN_TYPE", ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 			contentTransaction =  ContentBiz.selectSingle(paramMap);
+			ContentTransaction ct = new ContentTransaction(); 
 			if(null == contentTransaction) {
 				//如果为空 则保存新记录到数据库
+				ct.setTranType(ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+				ct.setTranNo(tranNo);
+				ct.setRequestInfo(JSONObject.toJSONString(contentLoginReq));
+				ContentBiz.insert(ct);
 			}else {
 				//数据库更新此条交易记录
+				contentTransaction.setRequestInfo(JSONObject.toJSONString(contentLoginReq));
+				ContentBiz.update(contentTransaction);
 			}
 			//组装参数 跳转
+			return null;
+		} catch (Exception e) {
+			log.error("error is " + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
+	}
+	
+	public BaseResponse<ContentQueryOrderRes> contentQueryOrder(@RequestParam(value = "sup", required = true) String sup,
+			 @RequestParam(value = "tranNo", required = true) String tranNo,
+			 @RequestBody ContentQueryOrderReq contentQueryOrderReq,	HttpServletRequest request, HttpServletResponse response){
+		log.info("contentQueryOrder is begin params sup is" + sup + "contentQueryOrderReq is" + contentQueryOrderReq.toString());
+		BaseResponse<ContentQueryOrderRes> res = new BaseResponse<ContentQueryOrderRes>();	
+		try {
+			//验证参数是否合法
+			if(StringUtils.isBlank(contentQueryOrderReq.getSupOrderNo())
+					||StringUtils.isBlank(contentQueryOrderReq.getTranType())
+					||StringUtils.isBlank(tranNo)
+				    ||StringUtils.isBlank(sup)) {
+			}
+			//调用order-service的服务查询数据
+			
+			//验证查询结果   返回数据
 			return null;
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());

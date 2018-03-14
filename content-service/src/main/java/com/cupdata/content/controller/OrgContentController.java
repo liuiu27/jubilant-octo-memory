@@ -150,8 +150,7 @@ public class OrgContentController {
 					res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
 					return res;
 				}
-				// 组装参数 发送请求
-				
+				// 组装参数 发送请求 
 				response.sendRedirect("");
 				
 			}

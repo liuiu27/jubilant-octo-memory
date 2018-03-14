@@ -48,11 +48,6 @@ public class ServiceOrderContent extends BaseModel{
 	private String userName;
 	
 	/**
-	 * 供应商订单号
-	 */
-	private String supOrderNo;
-	
-	/**
 	 * 订单时间
 	 */
 	private String orderTime;
