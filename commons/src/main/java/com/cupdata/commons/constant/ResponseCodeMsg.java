@@ -118,12 +118,20 @@ public enum ResponseCodeMsg {
      */
     NO_VOUCHER_AVALIABLE("800004","券码列表没有可用券码"),
 
-
-
-	 /**
+    /**
      * 800005 - 流水号无效
      */
-    NO_TRANNO_AINVALID("800005","流水号无效");
+    NO_TRANNO_AINVALID("800005","流水号无效"),
+
+    /**
+     * 800006 - 查询订单异常
+     */
+    QUERY_ORDER_EXCEPTION("800006","查询订单异常"),
+
+    /**
+     * 800005 - 获取本地券码失败
+     */
+    FAIL_GAT_LOCAL_VOUCHER("800007","获取本地券码失败");
 
 
 
