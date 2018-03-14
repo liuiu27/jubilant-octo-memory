@@ -104,9 +104,9 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder>{
      * @param createContentOrderVo
      * @return
      */
-	public ServiceOrderContent createContentOrder(CreateContentOrderVo createContentOrderVo,ServiceProduct contentProduct, OrgProductRela orgProductRela) {
+	public ServiceOrderContent createContentOrder(String supplierFlag ,CreateContentOrderVo createContentOrderVo,ServiceProduct contentProduct, OrgProductRela orgProductRela) {
 		//初始化主订单记录
-        ServiceOrder order = OrderUtils.initServiceOrder(createContentOrderVo.getOrgNo(), createContentOrderVo.getOrgOrderNo(), createContentOrderVo.getOrderDesc(), contentProduct, orgProductRela);
+        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag,createContentOrderVo.getOrgNo(), createContentOrderVo.getOrgOrderNo(), createContentOrderVo.getOrderDesc(), contentProduct, orgProductRela);
         orderDao.insert(order);//插入主订单
 
         //初始化内容引入订单

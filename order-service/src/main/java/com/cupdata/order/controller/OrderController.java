@@ -1,22 +1,6 @@
 package com.cupdata.order.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
-
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.vo.order.ServiceOrderList;
-import com.cupdata.commons.vo.orgsupplier.SupplierInfVo;
-import com.cupdata.order.feign.OrgSupplierClient;
-import net.sf.json.JSONArray;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.cupdata.commons.api.order.IOrderController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
@@ -28,6 +12,8 @@ import com.cupdata.commons.vo.content.ContentQueryOrderReq;
 import com.cupdata.commons.vo.content.ContentQueryOrderRes;
 import com.cupdata.commons.vo.content.CreateContentOrderVo;
 import com.cupdata.commons.vo.content.ServiceOrderContent;
+import com.cupdata.commons.vo.order.ServiceOrderList;
+import com.cupdata.commons.vo.orgsupplier.SupplierInfVo;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
@@ -36,11 +22,16 @@ import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
 import com.cupdata.commons.vo.voucher.CreateVoucherOrderVo;
 import com.cupdata.order.biz.ServiceOrderBiz;
 import com.cupdata.order.biz.ServiceOrderContentBiz;
+import com.cupdata.order.feign.OrgSupplierClient;
 import com.cupdata.order.feign.ProductFeignClient;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
 import java.util.List;
 
 @Slf4j
@@ -343,6 +334,10 @@ public class OrderController implements IOrderController {
 				return res;
 			}
 
+			//获取商户标识
+			BaseResponse<SupplierInfVo>  SupplierInfVo = orgSupplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
+			String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
+
 			// 查询机构、商品关系记录
 			BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createContentOrderVo.getOrgNo(),
 					createContentOrderVo.getProductNo());
@@ -356,7 +351,7 @@ public class OrderController implements IOrderController {
 			}
 
 			//初始化内容引入订单 创建订单
-			ServiceOrderContent orderContent = orderBiz.createContentOrder(createContentOrderVo,productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
+			ServiceOrderContent orderContent = orderBiz.createContentOrder(supplierFlag,createContentOrderVo,productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
 			if (null == orderContent) {// 创建券码订单失败
 				log.error("order-service createContentOrder is error findRel is " + createContentOrderVo.getProductNo()
 				+ "orgNo is" + createContentOrderVo.getOrgNo());
