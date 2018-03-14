@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @Author: DingCong
- * @Description:
+ * @Description: 互亿充值响应结果
  * @CreateDate: 2018/3/6 16:57
  */
 @Data

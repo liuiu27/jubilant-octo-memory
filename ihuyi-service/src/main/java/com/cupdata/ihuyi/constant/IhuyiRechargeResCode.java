@@ -9,11 +9,6 @@ package com.cupdata.ihuyi.constant;
 public enum IhuyiRechargeResCode {
 
     /**
-     * 成功
-     */
-    SUCCESS("0","充值成功"),
-
-    /**
      * 获取互亿话费充值url失败
      */
     FAIL_TO_GET_URL("100004","互亿话费充值url获取失败"),
@@ -22,6 +17,26 @@ public enum IhuyiRechargeResCode {
      * 互亿充值失败
      */
     FAIL_TO_RECHARGE("100006","互亿充值失败"),
+
+    /**
+     * 互亿充值失败
+     */
+    FAIL_VIRTUAL_RECHARGE("100007","互亿虚拟商品充值失败"),
+
+    /**
+     * 互亿券码获取异常
+     */
+    EXCEPTION_GET_VOUCHER("100008","互亿券码获取异常"),
+
+    /**
+     * 互亿获取券码失败
+     */
+    FAIL_GRT_VOUCHER("100009","互亿获取券码失败"),
+
+    /**
+     * 互亿券码列表为空
+     */
+    EMPTY_VOUCHER_LIST("100010","互亿券码列表为空"),
 
     /**
      * 获取互亿api_id失败
