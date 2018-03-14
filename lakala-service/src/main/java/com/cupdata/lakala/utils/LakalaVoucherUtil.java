@@ -44,8 +44,7 @@ public class LakalaVoucherUtil {
 				partner_id = "unionpay";
 			}else{
 				//判空处理
-				if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_VOUCHER_PARTNER").getData())
-						|| null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_VOUCHER_PARTNER").getData()){
+				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_VOUCHER_PARTNER").getData())){
 					//打印日志并设置响应结果:合作商户信息获取失败
 					log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
 					lakalaVoucherRes.setRes(false);
@@ -82,8 +81,7 @@ public class LakalaVoucherUtil {
 				desKey = "5045783eb5294a48";
 			}else{
 				//判空处理
-				if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_KEY").getData())
-						|| null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_KEY").getData()){
+				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_KEY").getData())){
 					//打印日志并设置响应结果：3DES加密key明文数据参数获取失败
 					log.error(ResponseCodeMsg.FAIL_TO_GET_3DES);
 					lakalaVoucherRes.setRes(false);
@@ -100,8 +98,7 @@ public class LakalaVoucherUtil {
 				desIv = "661e659d";
 			}else{
 				//判空处理
-				if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_IV").getData())
-						|| null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_IV").getData()){
+				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_IV").getData())){
 					//打印日志并设置响应结果：3DES加密偏移量数据获取失败
 					log.error(ResponseCodeMsg.FAIL_TO_GET_3DES_IV.getCode());
 					lakalaVoucherRes.setRes(false);
@@ -119,8 +116,7 @@ public class LakalaVoucherUtil {
 			if(CommonUtils.isWindows()){
 				//lakalaVoucherUrl = "http://vouchers.hicardhome.com/vouchers/getvoucher/p/" + partner_id;
                 //判空处理
-                if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData())
-                        || null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData()){
+                if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData())){
                     //打印日志并设置响应结果：拉卡拉发券接口获取失败
                     log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
                     lakalaVoucherRes.setRes(false);
@@ -130,8 +126,7 @@ public class LakalaVoucherUtil {
                 lakalaVoucherUrl = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData().getSysConfig().getParaValue();
 			}else{
 				//判空处理
-				if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData())
-						|| null==cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData()){
+				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData())){
 					//打印日志并设置响应结果：拉卡拉发券接口获取失败
 					log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
 					lakalaVoucherRes.setRes(false);
