@@ -27,6 +27,9 @@ zuul:
     recharge-route:                 # 充值请求的路径
       path: /recharge/**
       service-id: recharge-service
+    ihuyi-route:                    # 互亿请求的路径
+      path: /ihuyi/**
+      service-id: ihuyi-service
 
 #配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
 hystrix:
