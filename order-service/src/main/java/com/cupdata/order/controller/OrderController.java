@@ -4,7 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 
+import com.alibaba.fastjson.JSONObject;
+import com.cupdata.commons.vo.order.ServiceOrderList;
+import com.cupdata.commons.vo.orgsupplier.SupplierInfVo;
+import com.cupdata.order.feign.OrgSupplierClient;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +40,9 @@ import com.cupdata.order.feign.ProductFeignClient;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @RestController
 public class OrderController implements IOrderController {
@@ -43,9 +52,12 @@ public class OrderController implements IOrderController {
 
 	@Resource
 	private ServiceOrderBiz orderBiz;
-	
-	@Autowired 
+
+	@Autowired
 	private ServiceOrderContentBiz ContentBiz;
+
+	@Autowired
+	private OrgSupplierClient orgSupplierClient;
 
 	@Override
 	public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody CreateVoucherOrderVo createVoucherOrderVo) {
@@ -62,7 +74,11 @@ public class OrderController implements IOrderController {
 				voucherOrderRes.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
 				return voucherOrderRes;
 			}
-	
+
+			//查询商户标识
+            BaseResponse<SupplierInfVo>  SupplierInfVo = orgSupplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
+            String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
+
 			// 查询机构、商品关系记录
 			BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createVoucherOrderVo.getOrgNo(),
 					createVoucherOrderVo.getProductNo());
@@ -75,7 +91,7 @@ public class OrderController implements IOrderController {
 				return voucherOrderRes;
 			}
 	
-			ServiceOrderVoucher voucherOrder = orderBiz.createVoucherOrder(createVoucherOrderVo.getOrgNo(),
+			ServiceOrderVoucher voucherOrder = orderBiz.createVoucherOrder(supplierFlag , createVoucherOrderVo.getOrgNo(),
 					createVoucherOrderVo.getOrgOrderNo(), createVoucherOrderVo.getOrderDesc(),
 					productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
 			if (null == voucherOrder) {// 创建券码订单失败
@@ -120,6 +136,25 @@ public class OrderController implements IOrderController {
 			log.error("error is " + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}	
+	}
+
+	@Override
+	public BaseResponse<RechargeOrderVo> getRechargeOrderByOrgNoAndOrgOrderNo(@PathVariable String orgNo, @PathVariable String orgOrderNo) {
+		log.info("OrderController getRechargeOrderByOrgAndOrgNo is begin orgNo is" + orgNo + "orgOrderNo is" + orgOrderNo) ;
+		try{
+		    BaseResponse<RechargeOrderVo> res = new BaseResponse<>();
+		    if(StringUtils.isBlank(orgNo) || StringUtils.isBlank(orgOrderNo)){
+                res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+		        res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+		        return res;
+            }
+            res = orderBiz.getRechargeOrderByOrgNoAndOrgOrderNo(orgNo,orgOrderNo);
+		    return res;
+
+        }catch(Exception e){
+		    log.error("getRechargeOrderByOrgAndOrgNo error is" + e.getMessage());
+		    throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+        }
 	}
 
 	@Override
@@ -200,8 +235,6 @@ public class OrderController implements IOrderController {
 		}
 	}
 
-
-
 	/**
      * 实现创建充值订单接口，用于创建充值订单
      * @param createRechargeOrderVo 创建充值订单参数vo
@@ -222,7 +255,11 @@ public class OrderController implements IOrderController {
 	            rechargeOrderRes.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
 	            return rechargeOrderRes;
 	        }
-	
+
+	        //获取商户标识
+            BaseResponse<SupplierInfVo>  SupplierInfVo = orgSupplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
+            String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
+
 	        // 查询机构、商品关系记录
 	        BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createRechargeOrderVo.getOrgNo(),
 	                createRechargeOrderVo.getProductNo());
@@ -234,7 +271,7 @@ public class OrderController implements IOrderController {
 	        }
 	
 	        //根据订单业务来创建充值订单
-	        ServiceOrderRecharge rechargeOrder = orderBiz.createRechargeOrder(createRechargeOrderVo.getOrgNo(),
+	        ServiceOrderRecharge rechargeOrder = orderBiz.createRechargeOrder(supplierFlag,createRechargeOrderVo.getOrgNo(),
 	                createRechargeOrderVo.getOrgOrderNo(), createRechargeOrderVo.getOrderDesc(),
 	                productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
 	        if (null == rechargeOrder) {// 创建券码订单失败
@@ -286,8 +323,8 @@ public class OrderController implements IOrderController {
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
-	
-	
+
+
 	/**
 	 * 创建内容引入订单
 	 */
@@ -305,7 +342,7 @@ public class OrderController implements IOrderController {
 				res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
 				return res;
 			}
-	
+
 			// 查询机构、商品关系记录
 			BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createContentOrderVo.getOrgNo(),
 					createContentOrderVo.getProductNo());
@@ -317,7 +354,7 @@ public class OrderController implements IOrderController {
 				res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
 				return res;
 			}
-			
+
 			//初始化内容引入订单 创建订单
 			ServiceOrderContent orderContent = orderBiz.createContentOrder(createContentOrderVo,productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
 			if (null == orderContent) {// 创建券码订单失败
@@ -334,7 +371,7 @@ public class OrderController implements IOrderController {
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
-	
+
 	/**
 	 * 内容引入订单查询
 	 * @param contentQueryOrderReq
@@ -358,12 +395,59 @@ public class OrderController implements IOrderController {
 				res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
 				res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
 				return res;
-		 }	
-		 res.setData(contentQueryOrderRes);	
+		 }
+		 res.setData(contentQueryOrderRes);
 	     return res;
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
+
+    /**
+     * 更新主订单
+     * @param order
+     */
+    @Override
+    public Integer updateServiceOrder(@RequestBody ServiceOrder order) {
+        log.info("更新主订单...update serviceOrder");
+        //修改订单表状态
+        Integer i = orderBiz.updateServiceOrder(order);
+        return i;
+    }
+
+
+    /**
+	 * 根据参数查询主订单
+	 * @param orderStatus
+	 * @param orderSubType
+	 * @param supplierFlag
+	 * @return
+	 */
+	@Override
+	public BaseResponse<ServiceOrderList> getServiceOrderListByParam(@PathVariable Character orderStatus, @PathVariable String orderSubType, @PathVariable String supplierFlag) {
+		log.info("getServiceOrderListByParam controller is begin...,orderStatus"+orderStatus+",orderSubType"+orderSubType+",supplierFlag"+supplierFlag);
+		try {
+			//设置响应结果
+			BaseResponse<ServiceOrderList> res = new BaseResponse<ServiceOrderList>();
+
+			//判断参数是否为空
+			if(Character.isWhitespace(orderStatus) || StringUtils.isBlank(orderSubType) || StringUtils.isBlank(supplierFlag)){
+				res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+				res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+				return res;
+			}
+			res = orderBiz.getServiceOrderListByParam(orderStatus,orderSubType,supplierFlag);
+			return res ;
+		}catch (Exception e){
+			log.error("error is " + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
+	}
+
+    @Override
+    public List<ServiceOrder> selectMainOrderList(@PathVariable Character orderStatus, @PathVariable String supplierFlag, @PathVariable String orderSubType) {
+        List<String> typeList = JSONObject.parseArray(orderSubType,String.class);
+        return orderBiz.selectMainOrderList(orderStatus,supplierFlag,typeList);
+    }
 }

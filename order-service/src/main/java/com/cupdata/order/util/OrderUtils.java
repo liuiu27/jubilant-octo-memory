@@ -7,9 +7,11 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.content.CreateContentOrderVo;
 import com.cupdata.commons.vo.content.ServiceOrderContent;
 
+import com.cupdata.order.feign.OrgSupplierClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Auth: LinYong
@@ -17,6 +19,9 @@ import org.slf4j.LoggerFactory;
  * @Date: 16:22 2017/12/21
  */
 public class OrderUtils {
+
+
+
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderUtils.class);
 
     /**
@@ -28,9 +33,10 @@ public class OrderUtils {
      * @param orgProductRela 机构、商品关系记录
      * @return
      */
-    public static ServiceOrder initServiceOrder(String orgNo, String OrgOrderNo, String orderDesc, ServiceProduct product, OrgProductRela orgProductRela){
+    public static ServiceOrder initServiceOrder(String supplierFlag , String orgNo, String OrgOrderNo, String orderDesc, ServiceProduct product, OrgProductRela orgProductRela){
         ServiceOrder order = new ServiceOrder();
         order.setOrgNo(orgNo);
+        order.setOrderSubType(product.getProductSubType());
         order.setSupplierNo(product.getSupplierNo());
         order.setOrderNo(generateOrderNo());
         order.setOrgOrderNo(OrgOrderNo);
@@ -42,6 +48,7 @@ public class OrderUtils {
         order.setOrderType(product.getProductType());
         order.setOrderDesc(orderDesc);
         order.setOrderFailDesc(null);
+        order.setSupplierFlag(supplierFlag);
         if (ModelConstants.PRODUCT_TYPE_VOUCHER.equals(product.getProductType())){//如果是券码商品
         	if(StringUtils.isBlank(order.getNotifyUrl())) {
         		 order.setIsNotify(ModelConstants.IS_NOTIFY_NO);
