@@ -11,6 +11,7 @@ import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.recharge.RechargeRes;
+import com.cupdata.commons.vo.recharge.RechargeResQuery;
 import com.cupdata.recharge.feign.ProductFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -100,7 +101,6 @@ public class RechargeController implements IRechargeController{
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 	        HttpEntity<RechargeReq> entity = new HttpEntity<RechargeReq>(rechargeReq, headers);
-	
 	        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
 	        String jsonStr = responseEntity.getBody();
 	        BaseResponse<RechargeRes> recharResult = JSONObject.parseObject(jsonStr,
