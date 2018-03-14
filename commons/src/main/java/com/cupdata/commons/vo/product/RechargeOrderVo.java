@@ -19,7 +19,7 @@ public class RechargeOrderVo extends BaseData{
     private ServiceOrder order;
 
     /**
-     * 充值订单实体类
+     * 充值子订单实体类
      */
     private ServiceOrderRecharge rechargeOrder;
 }

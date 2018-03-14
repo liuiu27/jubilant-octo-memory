@@ -56,5 +56,20 @@ public class RechargeReq extends BaseRequest{
 	 * 券码类型
 	 */
 	private Long category;
+
+	/**
+	 * 充值话费
+	 */
+	private Long rechargeAmt;
+
+	/**
+	 * 充值流量
+	 */
+	private Long rechargeTraffic;
+
+	/**
+	 * 充值件数
+	 */
+	private Long rechargeNumber;
 }
 
