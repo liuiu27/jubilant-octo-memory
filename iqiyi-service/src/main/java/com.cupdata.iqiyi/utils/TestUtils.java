@@ -16,7 +16,7 @@ import java.util.Date;
 
 /**
  * @Author: DingCong
- * @Description:
+ * @Description: 爱奇艺测试工具类
  * @CreateDate: 2018/3/1 9:51
  */
 
@@ -32,7 +32,7 @@ public class TestUtils {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("707316407");           //充值账号
-        rechargeReq.setOrgOrderNo("DHAD478479824KJK"); //唯一订单编号
+        rechargeReq.setOrgOrderNo("DHAD478479824KJK"); //机构唯一订单编号
         rechargeReq.setProductNo("171026R640");        //爱奇艺产品编号
         rechargeReq.setOrderDesc("爱奇艺会员充值");
         rechargeReq.setCategory(8l);//券码类型

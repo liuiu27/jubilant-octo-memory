@@ -38,8 +38,7 @@ public class IqiyiRechargeUtils {
                 rechargeUrl = "http://openapi.vip.iqiyi.com/partner/card-subscribe.action";
             }else{
                 //对data进行判空处理
-                if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_URL").getData())
-                        || null == cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_URL").getData()){
+                if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_URL").getData())){
                     log.error("获取爱奇艺地址接口数据异常");
                     iqiyiRechargeRes.setCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
                     return iqiyiRechargeRes;
@@ -53,8 +52,7 @@ public class IqiyiRechargeUtils {
                 partnerNo = "SHrongshu-YLZGS_JHMZC";
             }else{
                 //对data进行判空处理
-                if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IQIYI_RECHARGE_PARTNER").getData())
-                        || null == cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IQIYI_RECHARGE_PARTNER").getData()){
+                if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IQIYI_RECHARGE_PARTNER").getData())) {
                     log.error("获取爱奇艺合作商户数据异常");
                     iqiyiRechargeRes.setCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
                     return iqiyiRechargeRes;
@@ -70,8 +68,7 @@ public class IqiyiRechargeUtils {
                 key = "9d458a0d3552edb1";
             }else{
                 //data判空处理
-                if ("".equals(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_KEY").getData())
-                        || null == cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_KEY").getData()){
+                if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_KEY").getData())){
                     log.error("获取爱奇艺秘钥数据异常");
                     iqiyiRechargeRes.setCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
                     return iqiyiRechargeRes;
