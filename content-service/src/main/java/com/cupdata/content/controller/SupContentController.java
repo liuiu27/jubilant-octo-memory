@@ -1,6 +1,5 @@
 package com.cupdata.content.controller;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,18 +15,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.content.ContentJumpReq;
 import com.cupdata.commons.vo.content.ContentLoginReq;
 import com.cupdata.commons.vo.content.ContentQueryOrderReq;
 import com.cupdata.commons.vo.content.ContentQueryOrderRes;
 import com.cupdata.commons.vo.content.ContentTransaction;
-import com.cupdata.commons.vo.product.OrgProductRelVo;
-import com.cupdata.commons.vo.product.ProductInfVo;
-import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.biz.ContentBiz;
+import com.cupdata.content.feign.OrderFeignClient;
+import com.cupdata.content.feign.ProductFeignClient;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,6 +36,9 @@ public class SupContentController {
 	
 	@Autowired
 	private ProductFeignClient productFeignClient;
+	
+	@Autowired
+	private OrderFeignClient OrderFeignClient;
 	
 	
 	@Autowired
@@ -111,14 +109,16 @@ public class SupContentController {
 		try {
 			//验证参数是否合法
 			if(StringUtils.isBlank(contentQueryOrderReq.getSupOrderNo())
-					||StringUtils.isBlank(contentQueryOrderReq.getTranType())
 					||StringUtils.isBlank(tranNo)
 				    ||StringUtils.isBlank(sup)) {
+				log.error("params is null.......  errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+				res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+				res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+				return res;
 			}
 			//调用order-service的服务查询数据
-			
-			//验证查询结果   返回数据
-			return null;
+			res = OrderFeignClient.queryContentOrder(contentQueryOrderReq);
+			return res;
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());

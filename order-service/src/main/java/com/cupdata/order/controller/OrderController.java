@@ -1,5 +1,8 @@
 package com.cupdata.order.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +18,8 @@ import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.model.ServiceOrderRecharge;
 import com.cupdata.commons.model.ServiceOrderVoucher;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.content.ContentQueryOrderReq;
+import com.cupdata.commons.vo.content.ContentQueryOrderRes;
 import com.cupdata.commons.vo.content.CreateContentOrderVo;
 import com.cupdata.commons.vo.content.ServiceOrderContent;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
@@ -24,6 +29,7 @@ import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
 import com.cupdata.commons.vo.voucher.CreateVoucherOrderVo;
 import com.cupdata.order.biz.ServiceOrderBiz;
+import com.cupdata.order.biz.ServiceOrderContentBiz;
 import com.cupdata.order.feign.ProductFeignClient;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +43,9 @@ public class OrderController implements IOrderController {
 
 	@Resource
 	private ServiceOrderBiz orderBiz;
+	
+	@Autowired 
+	private ServiceOrderContentBiz ContentBiz;
 
 	@Override
 	public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody CreateVoucherOrderVo createVoucherOrderVo) {
@@ -325,5 +334,36 @@ public class OrderController implements IOrderController {
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
-
+	
+	/**
+	 * 内容引入订单查询
+	 * @param contentQueryOrderReq
+	 * @return
+	 */
+	public BaseResponse<ContentQueryOrderRes> queryContentOrder(@RequestBody ContentQueryOrderReq contentQueryOrderReq) {
+		log.info("OrderController queryContentOrder is begin params is" + contentQueryOrderReq.toString());
+		BaseResponse<ContentQueryOrderRes> res = new BaseResponse<ContentQueryOrderRes>();
+		try {
+			//验证参数是否合法
+			if(StringUtils.isBlank(contentQueryOrderReq.getSupOrderNo())) {
+				log.error("params is null.......  errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+				res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+				res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+				return res;
+			}
+			//查询内容引入子订单表
+		 ContentQueryOrderRes contentQueryOrderRes = ContentBiz.queryContentOrder(contentQueryOrderReq);
+		 if(null == contentQueryOrderRes) {
+			    log.error("queryContentOrder result is null.......  errorCode is " + ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+				res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+				res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+				return res;
+		 }	
+		 res.setData(contentQueryOrderRes);	
+	     return res;
+		} catch (Exception e) {
+			log.error("error is " + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
+	}
 }

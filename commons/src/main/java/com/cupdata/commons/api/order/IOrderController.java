@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.content.ContentQueryOrderReq;
+import com.cupdata.commons.vo.content.ContentQueryOrderRes;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.commons.vo.voucher.CreateVoucherOrderVo;
 
@@ -71,7 +73,6 @@ public interface IOrderController {
     @PostMapping("/createRechargeOrder")
     public BaseResponse<RechargeOrderVo> createRechargeOrder(@RequestBody CreateRechargeOrderVo createRechargeOrderVo);
 
-
     /**
      * 修改充值订单
      * @param rechargeOrderVo
@@ -79,6 +80,13 @@ public interface IOrderController {
      */
     @PostMapping("/updateRechargeOrder")
     public BaseResponse<RechargeOrderVo> updateRechargeOrder(@RequestBody RechargeOrderVo rechargeOrderVo);
-
+    
+    /**
+     * 内容引入订单查询
+     * @param contentQueryOrderReq
+     * @return
+     */
+    @PostMapping("/queryContentOrder")
+    public BaseResponse<ContentQueryOrderRes> queryContentOrder(@RequestBody ContentQueryOrderReq contentQueryOrderReq);
 
 }

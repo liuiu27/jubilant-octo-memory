@@ -14,9 +14,4 @@ public class ContentQueryOrderReq extends BaseRequest{
 	 * 供应商订单号
 	 */
 	private String supOrderNo;
-	
-	/**
-	 * 交易类型
-	 */
-	private String tranType;
 }
