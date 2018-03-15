@@ -124,4 +124,22 @@ public class SupContentController {
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
+
+
+	/**
+	 * 支付请求接口
+	 * @param sup
+	 * @param tranNo
+	 * @param payPageVO
+	 * @return
+	 */
+	public BaseResponse payRequest(@RequestParam(value = "sup", required = true) String sup,
+								   @RequestParam(value = "tranNo", required = true) String tranNo,
+								   @RequestBody @Validated PayPageVO payPageVO ){
+
+
+
+	}
+
+
 }
