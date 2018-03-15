@@ -1,4 +1,4 @@
-package com.cupdata.commons.vo.content;
+package com.cupdata.content.vo;
 
 import com.cupdata.commons.vo.BaseRequest;
 
@@ -46,5 +46,10 @@ public class ContentJumpReq extends BaseRequest{
 	 * 支付URL
 	 */
 	private String payUrl;
+	
+	/**
+	 * 交易流水号
+	 */
+	private String 	sipTranNo;
 	
 }
