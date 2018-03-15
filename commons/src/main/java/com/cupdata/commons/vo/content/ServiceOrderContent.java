@@ -1,7 +1,5 @@
 package com.cupdata.commons.vo.content;
 
-import java.util.Date;
-
 import com.cupdata.commons.model.BaseModel;
 
 import lombok.Data;
