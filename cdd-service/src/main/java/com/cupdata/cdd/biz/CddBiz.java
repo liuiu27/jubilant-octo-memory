@@ -70,19 +70,19 @@ public class CddBiz {
 		}
 		return res;
 	}
-	public static void main(String[] args) {
-		CddCodeReq cddCodeReq = new CddCodeReq();
-		cddCodeReq.setApiKey("e504fa8ec6a242f09f983557f3c72bfc");
-		cddCodeReq.setMobile(CddUtil.aesUrlEncode("18611111111", "b55c936cd48048499ffb5d71227711f8"));
-		cddCodeReq.setApiST(DateTimeUtil.getTenTimeStamp());
-		cddCodeReq.setApiSign("e504fa8ec6a242f09f983557f3c72bfc" + "b55c936cd48048499ffb5d71227711f8" + cddCodeReq.getApiST());
-		cddCodeReq.setSn("123456791118");
-		cddCodeReq.setPackageID("13718");
-		cddCodeReq.setOpenCode("ZJ");
-		cddCodeReq.setNum("1");
-		cddCodeReq.setAgencyID("3513");
-		cddCodeReq.setOrderType("0");
-		CddBiz biz = new CddBiz();
-		biz.getVoucherCode(cddCodeReq, "http://testorg.chediandian.com/api/ticket/SendGift");
-	}
+//	public static void main(String[] args) {
+//		CddCodeReq cddCodeReq = new CddCodeReq();
+//		cddCodeReq.setApiKey("e504fa8ec6a242f09f983557f3c72bfc");
+//		cddCodeReq.setMobile(CddUtil.aesUrlEncode("18611111111", "b55c936cd48048499ffb5d71227711f8"));
+//		cddCodeReq.setApiST(DateTimeUtil.getTenTimeStamp());
+//		cddCodeReq.setApiSign("e504fa8ec6a242f09f983557f3c72bfc" + "b55c936cd48048499ffb5d71227711f8" + cddCodeReq.getApiST());
+//		cddCodeReq.setSn("123456791118");
+//		cddCodeReq.setPackageID("13718");
+//		cddCodeReq.setOpenCode("ZJ");
+//		cddCodeReq.setNum("1");
+//		cddCodeReq.setAgencyID("3513");
+//		cddCodeReq.setOrderType("0");
+//		CddBiz biz = new CddBiz();
+//		biz.getVoucherCode(cddCodeReq, "http://testorg.chediandian.com/api/ticket/SendGift");
+//	}
 }
