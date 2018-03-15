@@ -1,16 +1,5 @@
 package com.cupdata.content.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -23,14 +12,26 @@ import com.cupdata.commons.vo.content.ContentTransaction;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
-
+import com.cupdata.content.vo.request.PayPageVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
 * @author 作者: liwei
 * @createDate 创建时间：2018年3月12日 下午15:42:31
 */
 @Slf4j
+@Controller
 public class SupContentController {
 	
 	
@@ -124,4 +125,29 @@ public class SupContentController {
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
+
+
+
+
+	/**
+	 * 支付请求接口
+	 * @param sup 供应商号
+	 * @param tranNo 流水号
+	 * @param payPageVO 请求参数
+	 * @return
+	 */
+	public String payRequest(@RequestParam(value = "sup", required = true) String sup,
+								   @RequestParam(value = "tranNo", required = true) String tranNo,
+								   @RequestBody @Validated PayPageVO payPageVO ){
+	    //Step1 验证本流水是否有效
+	    //Step2 验证是否有对应交易订单。并对其进行检验。
+	    //Step3 创建交易订单，并保存参数
+	    //Step4 获取对应的支付接口。
+	    //Step5 拼接参数。
+
+        return "redirect:http://www.oschina.net";
+
+	}
+
+
 }

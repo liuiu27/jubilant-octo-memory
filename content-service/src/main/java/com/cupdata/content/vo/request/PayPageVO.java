@@ -1,4 +1,4 @@
-package com.cupdata.content.vo;
+package com.cupdata.content.vo.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Getter
 @Setter
-public class PayPageRequestVO {
+public class PayPageVO {
 
     /**
      *时间戳

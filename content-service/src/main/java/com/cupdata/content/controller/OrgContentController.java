@@ -1,5 +1,6 @@
 package com.cupdata.content.controller;
 
+<<<<<<< HEAD
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+=======
+>>>>>>> 65e85e1e2e5811fa38c44e97076fbfebb7cba20d
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.api.content.IContentController;
 import com.cupdata.commons.constant.ModelConstants;
@@ -28,8 +31,21 @@ import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.feign.ProductFeignClient;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 65e85e1e2e5811fa38c44e97076fbfebb7cba20d
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
 * @author 作者: liwei
@@ -124,6 +140,7 @@ public class OrgContentController implements IContentController{
 				contentTransaction.setRequestInfo(requestInfo);
 				ContentBiz.insert(contentTransaction);
 			}else {
+
 				//不为空查询数据库
 				Map<String, Object> paramMap = new HashMap<String,Object>();
 				paramMap.put("TRAN_NO", tranNo);
