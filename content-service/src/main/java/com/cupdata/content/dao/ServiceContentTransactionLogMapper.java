@@ -13,4 +13,7 @@ public interface ServiceContentTransactionLogMapper {
     List<ServiceContentTransactionLog> selectAll();
 
     int updateByPrimaryKey(ServiceContentTransactionLog record);
+
+    ServiceContentTransactionLog selectByTranNo(String tranNo);
+
 }

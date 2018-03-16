@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableFeignClients
+@MapperScan(basePackages = {"com.cupdata.content.dao"})
 public class ContentServiceApplication {
 
     /**
