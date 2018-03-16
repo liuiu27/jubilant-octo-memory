@@ -145,7 +145,9 @@ public class SupContentController {
 	    //Step4 获取对应的支付接口。
 	    //Step5 拼接参数。
 
-        return "redirect:http://www.oschina.net";
+        StringBuffer ret = new StringBuffer("redirect:");
+
+        return ret.toString();
 
 	}
 

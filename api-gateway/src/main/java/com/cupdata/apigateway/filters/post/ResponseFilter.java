@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -69,7 +70,8 @@ public class ResponseFilter extends ZuulFilter {
             HttpServletRequest request = ctx.getRequest();
             String org = request.getParameter("org"); // 机构编号
             String sup = request.getParameter("sup"); // 供应商编号
-
+            if (isIgnorePath(request.getRequestURI()))
+                return null;
             InputStream stream = ctx.getResponseDataStream();
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
             LOGGER.info("响应信息明文为" + body);
@@ -185,5 +187,17 @@ public class ResponseFilter extends ZuulFilter {
             rethrowRuntimeException(e);
         }
         return null;
+    }
+
+    @Value("${zuul.ignore-url}")
+    private String ignoreUrl;
+
+    private boolean isIgnorePath(String path) {
+        for (String url : ignoreUrl.split(",")) {
+            if (path.startsWith(url)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -17,6 +17,7 @@ eureka:
 # zuul 网关配置
 zuul:
   #prefix: /api
+  ignore-url: /content
   routes:
     trvok-route:                    # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
       path: /trvok/**               # 想要映射到的路径
@@ -30,7 +31,7 @@ zuul:
     ihuyi-route:                    # 互亿请求的路径
       path: /ihuyi/**
       service-id: ihuyi-service
-    content-route:                    # 内容请求的路径
+    content-route:
       path: /content/**
       service-id: content-service
 
