@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.cupdata.config.dao.ConfigDao">
+<mapper namespace="com.cupdata.content.dao.ContentDao">
 
   <resultMap id="BaseResultMap" type="com.cupdata.commons.vo.content.ContentTransaction">
         <result column="ID" property="id" jdbcType="INTEGER"/>
@@ -129,9 +129,7 @@
 			  SUP_NO,
 			  REQUEST_INFO,
 			  CREATE_BY,
-			  CREATE_DATE,
-			  UPDATE_BY,
-			  UPDATE_DATE
+			  CREATE_DATE
 			) 
 			VALUES
 			  (
@@ -143,7 +141,7 @@
 			    #{supNo},
 			    #{requestInfo},
 			    #{createBy},
-			    #{createDate}
+			    now()
 			  ) 
 	</insert>
 	

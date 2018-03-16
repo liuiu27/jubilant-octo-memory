@@ -4,6 +4,8 @@ import com.cupdata.commons.biz.BaseBiz;
 import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.commons.vo.content.ContentTransaction;
 import com.cupdata.content.dao.ContentDao;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContentBiz  extends BaseBiz<ContentTransaction> {
 	
-	//@Autowired
+	@Autowired
 	private ContentDao contentDao;
 	
 	@Override

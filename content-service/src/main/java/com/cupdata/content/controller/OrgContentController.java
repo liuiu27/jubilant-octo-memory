@@ -47,7 +47,6 @@ import java.util.Map;
 */
 @Slf4j
 @RestController
-@RequestMapping("/content")
 public class OrgContentController implements IContentController{
 	
 	
@@ -168,10 +167,10 @@ public class OrgContentController implements IContentController{
 					res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
 					return res;
 				}
-				// 组装参数 发送请求 
-				response.sendRedirect("");
 			}
-			return null;
+			// 组装参数 发送请求 
+			response.sendRedirect("www.baidu.com");
+			return res;
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
