@@ -17,7 +17,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Date;
 
 /**
@@ -29,8 +29,7 @@ import java.util.Date;
 *
  */
 public class QQRechargeUtils {
-	@Autowired
-	private static CacheFeignClient cacheFeignClient ;
+
 	/**
 	 * 日志
 	 */
@@ -39,8 +38,8 @@ public class QQRechargeUtils {
 	/**
 	 * QQ会员开通鉴权
 	 */
-	public static QQCheckOpenRes qqCheckOpen(QQCheckOpenReq req){
-	    log.info("QQ会员开通鉴权");
+	public static QQCheckOpenRes qqCheckOpen(QQCheckOpenReq req,CacheFeignClient cacheFeignClient){
+	    log.info("QQ会员开通鉴权,Uin:"+req.getUin()+",Serviceid:"+req.getServiceid()+",Servernum"+req.getServernum());
 		QQCheckOpenRes qqCheckOpenRes = new QQCheckOpenRes();
 		//开通鉴权url获取
 		String checkOpenUrl = null;
@@ -103,7 +102,7 @@ public class QQRechargeUtils {
 	/**
 	 * QQ会员开通
 	 */
-	public static QQOpenRes qqOpen(QQOpenReq req){
+	public static QQOpenRes qqOpen(QQOpenReq req,CacheFeignClient cacheFeignClient){
         log.info("QQ会员开通");
 		//建立响应对象
 		QQOpenRes qqOpenRes = new QQOpenRes();
@@ -222,7 +221,7 @@ public class QQRechargeUtils {
 		}
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		QQCheckOpenReq checkOpenReq = new QQCheckOpenReq();
 		String servernum = "15857128524";
 		String serviceid = "01";
@@ -256,5 +255,5 @@ public class QQRechargeUtils {
 			System.out.println("开通状态" + openRes.getResult());
 		}
 		
-	}
+	}*/
 }
