@@ -1,35 +1,42 @@
 package com.cupdata.content.controller;
 
-import com.cupdata.content.vo.PayPageRequestVO;
-import com.cupdata.content.vo.SupVO;
+import com.cupdata.content.vo.request.PayPageVO;
+import com.cupdata.content.vo.request.SupVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/test")
 public class TestController {
 
-	@ResponseBody
+
+   // @ResponseBody
     @GetMapping("/testOne")
     public Object testOne(){
-        PayPageRequestVO a =new PayPageRequestVO();
-        SupVO<PayPageRequestVO> b =new SupVO<>();
+        PayPageVO a =new PayPageVO();
+        SupVO<PayPageVO> b =new SupVO<>();
         b.setData(a);
 
-        return b;
+        return "redirect:http://www.oschina.net";
     }
 
 
     @ResponseBody
-    @PostMapping(name="/two",produces = "application/json")
-    public Object testTwo(@RequestBody @Validated SupVO<PayPageRequestVO> requestVOSupVO){
+    @PostMapping(path="/two",produces = "application/json")
+    public Object testTwo(@RequestBody @Validated SupVO<PayPageVO> requestVOSupVO){
 
 
-        return  "qqq";
+        return  "success!";
+    }
+
+    @PostMapping(path="/payRequest",produces = "application/json")
+    public String payRequest(@RequestBody @Validated PayPageVO payPageVO){
+
+
+
+
+        return "";
     }
 
 }

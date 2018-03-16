@@ -702,7 +702,8 @@ public class CommonUtils {
 	//生成流水号  年月日时分秒加8位随机数
 	public static String serialNumber() {
 		String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), TimeConstants.DATE_PATTERN_5) + CommonUtils.getCharAndNum(8);
-		System.out.println(timestamp);
+		log.info("timestamp : "+timestamp);
+		System.out.println();
 		return "";
 	} 
 	

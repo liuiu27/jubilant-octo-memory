@@ -47,6 +47,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cupdata.commons.vo.content.ContentJumpReq;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 
 /**
@@ -376,15 +377,31 @@ public class HttpUtil {
 //		getVoucherReq.setOrgOrderNo("132132131");
 //		getVoucherReq.setOrderDesc("空港测试");
 		
-		GetVoucherReq getVoucherReq = new GetVoucherReq();
-		getVoucherReq.setTimestamp(timestamp);
-		getVoucherReq.setExpire("20180109");
-		getVoucherReq.setProductNo("20180201CDD110");
-		getVoucherReq.setOrgOrderNo("132132131");
-		getVoucherReq.setMobileNo("13911111111");
-		getVoucherReq.setOrderDesc("车点点测试");
+//		GetVoucherReq getVoucherReq = new GetVoucherReq();
+//		getVoucherReq.setTimestamp(timestamp);
+//		getVoucherReq.setExpire("20180109");
+//		getVoucherReq.setProductNo("20180201CDD110");
+//		getVoucherReq.setOrgOrderNo("132132131");
+//		getVoucherReq.setMobileNo("13911111111");
+//		getVoucherReq.setOrderDesc("车点点测试");
 		
-		String reqStr = JSONObject.toJSONString(getVoucherReq);
+		
+		
+		ContentJumpReq contentJumpReq = new ContentJumpReq();
+		contentJumpReq.setLoginFlag("123");
+		contentJumpReq.setLoginUrl("123");
+		contentJumpReq.setMobileNo("666");
+		contentJumpReq.setPayUrl("12312");
+		contentJumpReq.setProductNo("20180315SIP");
+		contentJumpReq.setTimestamp(timestamp);
+		contentJumpReq.setUserId("1");
+		contentJumpReq.setUserName("213");
+		
+		
+		
+		
+		
+		String reqStr = JSONObject.toJSONString(contentJumpReq);
 		
 		String pubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
 		PublicKey uppPubKey = RSAUtils.getPublicKeyFromString(pubKeyStr);
@@ -408,13 +425,18 @@ public class HttpUtil {
 //				"&sign=" + authReqSign ,
 //				"application/x-www-form-urlencoded;charset=UTF-8");
 		
-		String  data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
-				"&sign=" + authReqSign ,
-				"application/x-www-form-urlencoded;charset=UTF-8");
-		
+//		String  data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+////		
 //		String data = doPost("http://localhost:8040/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
 //				"&sign=" + authReqSign ,
 //				"application/x-www-form-urlencoded;charset=UTF-8");
+//		
+		
+		String data = doPost("http://localhost:8022/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+				"&sign=" + authReqSign ,
+				"application/x-www-form-urlencoded;charset=UTF-8");
 		
 		//String data = "Gb%2FDZbw8TY2BPpWTFVrVZyHOGYdeClprnES4xBEI4sAMgcA63w%2BRdzJr2RPKgtWHpAcX9QcHEQySrrB2eZiOrNgBtvMMWJ62scv2bbWF3zB%2FiIsWJwqURGNGSCk1tACD5PvcuicOEcMeGSTiyxXSJLmpuQO5DSYwIybRMt2685cLfyvBH0BjXichzjYi8qjYoirs76JIi3AUnVkaFAx86%2FifsoBS7I04OhFshMDbX0bj4z4miDlGeQRUZSou7yO6uqY5h7JM5O023yujfDynRFkIoMS3eoYUcQu6MYJB5PSx86GH1Tkp8TP8SDqYg9jrJDWwhW5U5NTKusdPD22PbQ%3D%3D";
 		

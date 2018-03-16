@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cupdata.content.dao.ServiceContentTransactionLogMapper">
+  <resultMap id="BaseResultMap" type="com.cupdata.content.domain.ServiceContentTransactionLog">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="TRAN_NO" jdbcType="VARCHAR" property="tranNo" />
+    <result column="PRODUCT_NO" jdbcType="VARCHAR" property="productNo" />
+    <result column="TRAN_TYPE" jdbcType="VARCHAR" property="tranType" />
+    <result column="TRAN_DESC" jdbcType="VARCHAR" property="tranDesc" />
+    <result column="ORG_NO" jdbcType="VARCHAR" property="orgNo" />
+    <result column="SUP_NO" jdbcType="VARCHAR" property="supNo" />
+    <result column="REQUEST_INFO" jdbcType="VARCHAR" property="requestInfo" />
+    <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from service_content_transaction_log
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cupdata.content.domain.ServiceContentTransactionLog">
+    insert into service_content_transaction_log (ID, TRAN_NO, PRODUCT_NO, 
+      TRAN_TYPE, TRAN_DESC, ORG_NO, 
+      SUP_NO, REQUEST_INFO, CREATE_BY, 
+      CREATE_DATE, UPDATE_BY, UPDATE_DATE
+      )
+    values (#{id,jdbcType=BIGINT}, #{tranNo,jdbcType=VARCHAR}, #{productNo,jdbcType=VARCHAR}, 
+      #{tranType,jdbcType=VARCHAR}, #{tranDesc,jdbcType=VARCHAR}, #{orgNo,jdbcType=VARCHAR}, 
+      #{supNo,jdbcType=VARCHAR}, #{requestInfo,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.cupdata.content.domain.ServiceContentTransactionLog">
+    update service_content_transaction_log
+    set TRAN_NO = #{tranNo,jdbcType=VARCHAR},
+      PRODUCT_NO = #{productNo,jdbcType=VARCHAR},
+      TRAN_TYPE = #{tranType,jdbcType=VARCHAR},
+      TRAN_DESC = #{tranDesc,jdbcType=VARCHAR},
+      ORG_NO = #{orgNo,jdbcType=VARCHAR},
+      SUP_NO = #{supNo,jdbcType=VARCHAR},
+      REQUEST_INFO = #{requestInfo,jdbcType=VARCHAR},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_DATE = #{updateDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select ID, TRAN_NO, PRODUCT_NO, TRAN_TYPE, TRAN_DESC, ORG_NO, SUP_NO, REQUEST_INFO, 
+    CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE
+    from service_content_transaction_log
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ID, TRAN_NO, PRODUCT_NO, TRAN_TYPE, TRAN_DESC, ORG_NO, SUP_NO, REQUEST_INFO, 
+    CREATE_BY, CREATE_DATE, UPDATE_BY, UPDATE_DATE
+    from service_content_transaction_log
+  </select>
+</mapper>
