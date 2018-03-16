@@ -37,7 +37,7 @@ public class LakalaVoucherUtil {
 		//设置响应信息
 		LakalaVoucherRes lakalaVoucherRes = null;
 		try {
-			log.info("调用lakala拉卡拉发券工具类，mobile=" + mobileNo + "，orderNo=" + orderNo + "，voucherItem=" + voucherItem + "，orderTitle" + orderTitle);
+			log.info("调用lakala拉卡拉获取工具类，mobile=" + mobileNo + "，orderNo=" + orderNo + "，voucherItem=" + voucherItem + "，orderTitle" + orderTitle);
 			//合作商户号
 			String partner_id = null;
 			if(CommonUtils.isWindows()){
@@ -113,17 +113,8 @@ public class LakalaVoucherUtil {
 			
 			//拉卡拉发券接口地址
 			String lakalaVoucherUrl = null;
-			if(CommonUtils.isWindows()){
-				//lakalaVoucherUrl = "http://vouchers.hicardhome.com/vouchers/getvoucher/p/" + partner_id;
-                //判空处理
-                if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData())){
-                    //打印日志并设置响应结果：拉卡拉发券接口获取失败
-                    log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
-                    lakalaVoucherRes.setRes(false);
-                    return lakalaVoucherRes;
-                }
-                //从配置信息表中根据银行号和3DES加密偏移量参数来获得指定的密钥数据
-                lakalaVoucherUrl = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData().getSysConfig().getParaValue();
+			if(CommonUtils.isWindows()) {
+				lakalaVoucherUrl = "http://vouchers.hicardhome.com/vouchers/getvoucher/p/" + partner_id;
 			}else{
 				//判空处理
 				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getData())){
@@ -139,15 +130,13 @@ public class LakalaVoucherUtil {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("param", encodeParam);
 			String resStr = HttpUtil.doPost(lakalaVoucherUrl, param, ContentType.MULTIPART_FORM_DATA);
-			log.info("调用lakala拉卡拉发券接口，获取券码的响应信息为" + resStr);
+			log.info("lakala拉卡拉获取券码接口工具类,获取券码的响应信息为" + resStr);
 			if(StringUtils.isNotBlank(resStr)){
-				log.info("打印判断信息："+StringUtils.isNotBlank(resStr));
 				lakalaVoucherRes = JSONObject.parseObject(resStr, LakalaVoucherRes.class);
-				log.info("响应结果信息:"+lakalaVoucherRes);
 				log.info("响应结果信息:"+lakalaVoucherRes.getData());
 			}
 		} catch (Exception e) {
-			log.error("调用拉卡拉发券接口，出现异常", e);
+			log.error("调用拉卡拉发券工具类,出现异常", e);
 		}
 		return lakalaVoucherRes;
 	}

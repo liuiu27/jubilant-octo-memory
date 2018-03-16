@@ -47,7 +47,7 @@ public class LakalaController implements ILakalaController{
     @Override
     public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
 
-        LOGGER.info("lakala获取券码controller,orderNo:" + voucherReq.getOrgOrderNo() + ",OrderDesc" + voucherReq.getOrderDesc() + "org" + org + "mobileNo" + voucherReq.getMobileNo());
+        LOGGER.info("lakala获取券码controller,orderNo:" + voucherReq.getOrgOrderNo() + ",OrderDesc:" + voucherReq.getOrderDesc() + "org:" + org + "mobileNo:" + voucherReq.getMobileNo());
         //设置响应数据结果
         BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse<GetVoucherRes>();
         try {
@@ -55,9 +55,8 @@ public class LakalaController implements ILakalaController{
             BaseResponse<ProductInfVo> productInfo = productFeignClient.findByProductNo(voucherReq.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())) {
                 //设置状态码和错误信息,给予返回
-                LOGGER.info("获取产品失败！");
-                getVoucherRes.setResponseCode(productInfo.getResponseCode());
-                getVoucherRes.setResponseMsg(productInfo.getResponseMsg());
+                getVoucherRes.setResponseCode(ResponseCodeMsg.QUERY_PRODUCT_INF_NULL.getCode());
+                getVoucherRes.setResponseMsg(ResponseCodeMsg.QUERY_PRODUCT_INF_NULL.getMsg());
                 return getVoucherRes;
             }
 
@@ -74,7 +73,7 @@ public class LakalaController implements ILakalaController{
                     || null == voucherOrderRes.getData().getOrder()
                     || null == voucherOrderRes.getData().getVoucherOrder()) {   //如果创建订单失败
                 //设置错误状态码和错误消息,给予返回
-                LOGGER.info("创建订单失败！");
+                LOGGER.info("lakala controller : 创建订单失败");
                 getVoucherRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
                 return getVoucherRes;
@@ -83,7 +82,7 @@ public class LakalaController implements ILakalaController{
             LakalaVoucherRes lakalaVoucherRes = LakalaVoucherUtil.obtainvValidTicketNo(voucherReq.getMobileNo(),voucherOrderRes.getData().getOrder().getOrderNo(),productInfo.getData().getProduct().getSupplierParam(),voucherReq.getOrderDesc(),cacheFeignClient);
             //对返回数据进行异常处理
             if (null == lakalaVoucherRes || !lakalaVoucherRes.getRes()){
-                LOGGER.info("券码获取失败");
+                LOGGER.info("lakala获取券码controller:券码获取失败");
                 getVoucherRes.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
                 return getVoucherRes;
