@@ -21,18 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Slf4j
 public class IqiyiRechargeUtils {
 
-    @Autowired
-    private static CacheFeignClient cacheFeignClient ;
+
 
     /**
      * 爱奇艺充值业务
      */
-    public static IqiyiRechargeRes iqiyiRecharge(IqiyiRechargeReq req){
+    public static IqiyiRechargeRes iqiyiRecharge(IqiyiRechargeReq req,CacheFeignClient cacheFeignClient){
         //设置响应信息
         IqiyiRechargeRes iqiyiRechargeRes = null;
         try {
             //调用爱奇艺充值接口
-            log.info("调用爱奇艺充值接口");
+            log.info("调用爱奇艺充值接口,请求数据CardCode:"+req.getCardCode()+",PartnerNo:"+req.getPartnerNo()+",UserAccount:"+req.getUserAccount()+",Sign:"+req.getSign());
             String rechargeUrl = null;
             if(CommonUtils.isWindows()){
                 rechargeUrl = "http://openapi.vip.iqiyi.com/partner/card-subscribe.action";
