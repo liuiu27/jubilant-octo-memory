@@ -129,11 +129,13 @@ public enum ResponseCodeMsg {
     QUERY_ORDER_EXCEPTION("800006","查询订单异常"),
 
     /**
-     * 800005 - 获取本地券码失败
+     * 800007 - 获取本地券码失败
      */
-    FAIL_GAT_LOCAL_VOUCHER("800007","获取本地券码失败");
-
-
+    FAIL_GAT_LOCAL_VOUCHER("800007","获取本地券码失败"),
+    /**
+     * 800008 - 查询订单异常
+     */
+    QUERY_PRODUCT_INF_NULL("800008","查询商品信息为空");
 
 
     /**
