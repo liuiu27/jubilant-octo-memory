@@ -434,7 +434,7 @@ public class HttpUtil {
 //				"application/x-www-form-urlencoded;charset=UTF-8");
 //		
 		
-		String data = doPost("http://localhost:8022/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+		String data = doPost("http://localhost:8040/content/content/contentJump", "org=20180208O21995540&data=" + reqData + 
 				"&sign=" + authReqSign ,
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		

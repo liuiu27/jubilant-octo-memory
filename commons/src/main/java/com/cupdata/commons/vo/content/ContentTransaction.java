@@ -13,6 +13,11 @@ import lombok.Data;
 public class ContentTransaction extends BaseModel{
 	
 	/**
+	 * 时间戳
+	 */
+	private String timestamp;
+	
+	/**
 	 * 交易流水编号
 	 */
 	private String tranNo;
