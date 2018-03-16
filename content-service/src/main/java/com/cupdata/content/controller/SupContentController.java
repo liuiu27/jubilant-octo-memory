@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
+import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.content.ContentLoginReq;
 import com.cupdata.commons.vo.content.ContentQueryOrderReq;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,8 +57,9 @@ public class SupContentController {
 	 * @return
 	 */
 	public BaseResponse contentLogin(@RequestParam(value = "sup", required = true) String sup,
-									 @RequestParam(value = "tranNo", required = true) String tranNo,
+//									 @RequestParam(value = "tranNo", required = true) String tranNo,
 			@RequestBody ContentLoginReq contentLoginReq,	HttpServletRequest request, HttpServletResponse response){
+		String tranNo = "";
 		//Step1： 验证数据是否为空 是否合法
 		log.info("contentLogin is begin params sup is" + sup + "contentLoginReq is" + contentLoginReq.toString());
 		BaseResponse res = new BaseResponse();	
@@ -90,6 +94,17 @@ public class SupContentController {
 				ct.setRequestInfo(JSONObject.toJSONString(contentLoginReq));
 				ContentBiz.insert(ct);
 			}else {
+				
+				// 查到数据判断时间戳是否超时
+				Date timestamp = DateTimeUtil.getDateByString(ct.getTimestamp().substring(0, 17),
+						"yyyyMMddHHmmssSSS");
+				// 时间戳超时
+				if (!DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -60 * 1000L, 3000 * 1000L)) {
+					// 超时 抛出异常
+					res.setResponseCode(ResponseCodeMsg.TIMESTAMP_TIMEOUT.getCode());
+					res.setResponseMsg(ResponseCodeMsg.TIMESTAMP_TIMEOUT.getMsg());
+					return res;
+				}
 				//数据库更新此条交易记录
 				contentTransaction.setRequestInfo(JSONObject.toJSONString(contentLoginReq));
 				ContentBiz.update(contentTransaction);
@@ -103,8 +118,9 @@ public class SupContentController {
 	}
 	
 	public BaseResponse<ContentQueryOrderRes> contentQueryOrder(@RequestParam(value = "sup", required = true) String sup,
-			 @RequestParam(value = "tranNo", required = true) String tranNo,
+			// @RequestParam(value = "tranNo", required = true) String tranNo,
 			 @RequestBody ContentQueryOrderReq contentQueryOrderReq,	HttpServletRequest request, HttpServletResponse response){
+		String tranNo = "";
 		log.info("contentQueryOrder is begin params sup is" + sup + "contentQueryOrderReq is" + contentQueryOrderReq.toString());
 		BaseResponse<ContentQueryOrderRes> res = new BaseResponse<ContentQueryOrderRes>();	
 		try {

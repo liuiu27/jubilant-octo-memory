@@ -94,7 +94,7 @@ public enum ResponseCodeMsg {
     FAIL_TO_GET_3DES("800000", "3DES加密数据获取失败"),
 
     /**
-     * 800000 - 3DES加密数据获取失败
+     * 800001 - 3DES加密数据获取失败
      */
     FAIL_TO_GET_3DES_IV("800001", "3DES偏移加密数据获取失败"),
 
@@ -133,7 +133,7 @@ public enum ResponseCodeMsg {
      */
     FAIL_GAT_LOCAL_VOUCHER("800007","获取本地券码失败"),
     /**
-     * 800008 - 查询订单异常
+     * 800008 - 查询订单异常查询商品信息为空
      */
     QUERY_PRODUCT_INF_NULL("800008","查询商品信息为空");
 

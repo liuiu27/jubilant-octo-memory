@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.api.content.IContentController;
+import com.cupdata.commons.api.content.IOrgContentController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
@@ -47,7 +47,7 @@ import java.util.Map;
 */
 @Slf4j
 @RestController
-public class OrgContentController implements IContentController{
+public class OrgContentController implements IOrgContentController{
 	
 	
 	@Autowired

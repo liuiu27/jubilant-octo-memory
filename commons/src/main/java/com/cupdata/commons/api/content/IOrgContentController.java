@@ -13,8 +13,8 @@ import com.cupdata.commons.vo.content.ContentJumpReq;
 * @author 作者: liwei
 * @createDate 创建时间：2018年3月15日 下午3:43:02
 */
-@RequestMapping("/content")
-public interface IContentController {
+@RequestMapping("/orgContent")
+public interface IOrgContentController {
 	    @PostMapping("/contentJump")
 	    public BaseResponse contentJump(String org,ContentJumpReq contentJumpReq, HttpServletRequest request, HttpServletResponse response);
 	
