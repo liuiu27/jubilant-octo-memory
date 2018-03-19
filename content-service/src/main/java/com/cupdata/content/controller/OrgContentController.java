@@ -1,19 +1,5 @@
 package com.cupdata.content.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.api.content.IOrgContentController;
 import com.cupdata.commons.constant.ModelConstants;
@@ -28,12 +14,12 @@ import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.feign.ProductFeignClient;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,13 +47,10 @@ public class OrgContentController implements IOrgContentController{
 	 * 内容引入跳转接口   机构请求
 	 * @param org
 	 * @param contentJumpReq
-	 * @param request
-	 * @param response
 	 * @return
 	 */
-	public BaseResponse contentJump(@RequestParam(value = "org", required = true) String org,
-//			@RequestParam(value = "tranNo", required = true) String tranNo,
-			@RequestBody ContentJumpReq contentJumpReq,	HttpServletRequest request, HttpServletResponse response){
+	public BaseResponse contentJump(@RequestParam(value = "org") String org,
+			@RequestBody ContentJumpReq contentJumpReq){
 		String tranNo = "";
 		//Step1： 验证数据是否为空 是否合法
 		log.info("contentJump is begin params org is" + org + "contentJumpReq is" + contentJumpReq.toString());
@@ -169,11 +152,16 @@ public class OrgContentController implements IOrgContentController{
 				}
 			}
 			// 组装参数 发送请求 
-			response.sendRedirect("www.baidu.com");
+			//response.sendRedirect("www.baidu.com");
 			return res;
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
+	}
+
+	@Override
+	public BaseResponse contentJump(String org, ContentJumpReq contentJumpReq, HttpServletRequest request, HttpServletResponse response) {
+		return null;
 	}
 }

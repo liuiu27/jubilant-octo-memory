@@ -27,7 +27,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
+      defaultZone: http://10.193.17.84:46960/eureka/,http://10.193.17.86:46960/eureka/
   instance:
     prefer-ip-address: true     #表示将ip注册到Eureka server
     hostname: localhost    # 指定该Eureka实例的主机名
@@ -40,7 +40,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
+      defaultZone: http://10.150.9.20:46960/eureka/,http://10.150.9.21:46960/eureka/
   instance:
     prefer-ip-address: true     #表示将ip注册到Eureka server
     hostname: localhost    # 指定该Eureka实例的主机名

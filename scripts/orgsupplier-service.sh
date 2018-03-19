@@ -1,15 +1,16 @@
 #!/bin/bash
 
 ## java env
-export JAVA_HOME=/app/sip/jdk1.7.0_80
+export JAVA_HOME=/app/sip/jdk1.8.0_151
 export JRE_HOME=$JAVA_HOME/jre
 
 ## service name
 ## 服务所在目录
-SERVICE_DIR=/app/sip/service-integration-platform/orgsupplier-service
+SERVICE_DIR=/app/sip/service-integration-platform/jar
 ## 服务名称
 SERVICE_NAME=orgsupplier-service
 JAR_NAME=$SERVICE_NAME\.jar
+RUN_PARAM=-Dspring.profiles.active=\$2
 PID=$SERVICE_NAME\.pid
 
 cd $SERVICE_DIR
@@ -18,7 +19,7 @@ case "$1" in
 
     start)
         ##nohup &  以守护进程启动
-        nohup $JRE_HOME/bin/java -Xms256m -Xmx512m -jar $JAR_NAME >> $SERVICE_DIR/$SERVICE_NAME.log 2>&1 &
+        nohup $JRE_HOME/bin/java -Xms256m -Xmx512m -jar $JAR_NAME $RUN_PARAM >> $SERVICE_DIR/null 2>&1 &
         echo $! > $SERVICE_DIR/$PID
         echo "=== start $SERVICE_NAME"
         ;;

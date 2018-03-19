@@ -35,7 +35,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
+      defaultZone: http://10.193.17.84:46960/eureka/,http://10.193.17.86:46960/eureka/
   instance:
     prefer-ip-address: true     #表示将ip注册到Eureka server
     hostname: localhost    # 指定该Eureka实例的主机名
@@ -48,7 +48,7 @@ spring:
   profiles: prd
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://10.150.9.22:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
     username: resdb
     password: resdb
     type: com.alibaba.druid.pool.DruidDataSource
@@ -56,7 +56,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
+      defaultZone: http://10.150.9.20:46960/eureka/,http://10.150.9.21:46960/eureka/
   instance:
     prefer-ip-address: true     #表示将ip注册到Eureka server
     hostname: localhost    # 指定该Eureka实例的主机名

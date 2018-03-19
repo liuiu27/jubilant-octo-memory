@@ -1,16 +1,16 @@
 #!/bin/bash
 
 ## java env
-export JAVA_HOME=/home/sip/jdk1.8.0_151
+export JAVA_HOME=/app/sip/jdk1.8.0_151
 export JRE_HOME=$JAVA_HOME/jre
 
 ## service name
 ## 服务所在目录
-SERVICE_DIR=/home/sip/service-integration-platform/jar
+SERVICE_DIR=/app/sip/service-integration-platform/jar
 ## 服务名称
 SERVICE_NAME=eureka-service
 JAR_NAME=$SERVICE_NAME\.jar
-RUN_PARAM=$2
+RUN_PARAM=-Dspring.profiles.active=\$2
 PID=$SERVICE_NAME\.pid
 
 cd $SERVICE_DIR
