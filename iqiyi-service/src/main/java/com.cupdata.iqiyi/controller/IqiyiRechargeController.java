@@ -4,6 +4,7 @@ import com.cupdata.commons.api.iqiyi.IQiYiController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.model.ElectronicVoucherLib;
+import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
@@ -59,7 +60,7 @@ public class IqiyiRechargeController implements IQiYiController {
      */
     @Override
     public BaseResponse<RechargeRes> recharge(@RequestParam(value = "org" , required = true) String org, @RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
-        log.info("调用爱奇艺会员充值接口...org:"+org+",ProductNo:"+rechargeReq.getProductNo()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo()+",Account:"+rechargeReq.getAccount()+",OrderDesc:"+rechargeReq.getOrderDesc());
+        log.info("调用爱奇艺会员充值controller...org:"+org+",ProductNo:"+rechargeReq.getProductNo()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo()+",Account:"+rechargeReq.getAccount()+",OrderDesc:"+rechargeReq.getOrderDesc());
         //设置响应结果
         BaseResponse<RechargeRes> rechargeRes = new BaseResponse<RechargeRes>();
         try {
@@ -79,6 +80,7 @@ public class IqiyiRechargeController implements IQiYiController {
 
             //调用订单服务创建订单
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
+            log.info("爱奇艺会员充值controller,创建订单成功,订单号 : "+rechargeOrderRes.getData().getOrder().getOrderNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                     || null == rechargeOrderRes.getData()
                     || null == rechargeOrderRes.getData().getOrder()
@@ -96,15 +98,20 @@ public class IqiyiRechargeController implements IQiYiController {
             getVoucherReq.setOrgOrderNo(rechargeReq.getOrgOrderNo());  //机构订单号
             getVoucherReq.setMobileNo(rechargeReq.getMobileNo());      //手机号
             BaseResponse<GetVoucherRes> IqiyiVoucherGetRes = voucherFeignClient.getLocalVoucher(org,getVoucherReq);
-            log.info("aiqiyi controller激活码获取结果:"+IqiyiVoucherGetRes.getData().getVoucherCode());
+
+            if(!CommonUtils.isNullOrEmptyOfObj(IqiyiVoucherGetRes.getData())){
+                log.info("爱奇艺会员充值controller激活码获取结果 : "+IqiyiVoucherGetRes.getData().getVoucherCode());
+            }
+
 
             //对返回数据处理，判断是否存在可用券码
             if(!"000000".equals(IqiyiVoucherGetRes.getResponseCode())){
-                log.info("aiqiyi controller从本地获取券码失败:券码列表没有可用券码");
+                log.info("爱奇艺会员充值controller从本地获取券码失败 : 券码列表没有可用券码");
                 rechargeRes.setResponseCode(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getCode());
                 rechargeRes.setResponseMsg(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getMsg());
                 return rechargeRes;
             }
+
 
             //封装请求参数,调用爱奇艺充值工具类来进行充值业务
             IqiyiRechargeReq req = new IqiyiRechargeReq();
@@ -113,6 +120,7 @@ public class IqiyiRechargeController implements IQiYiController {
 
             //调用爱奇艺工具类进行券码激活充值
             IqiyiRechargeRes res = IqiyiRechargeUtils.iqiyiRecharge(req,cacheFeignClient);
+            log.info("爱奇艺会员充值工具类充值结果 : "+res.toString());
             if(null == res || !"A00000".equals(res.getCode())) {
                 log.error("调用爱奇艺会员充值接口，返回报文结果result非A00000-爱奇艺会员充值失败"+res);
                 //爱奇艺会员充值失败,设置错误状态码和错误信息，给予返回
@@ -127,6 +135,7 @@ public class IqiyiRechargeController implements IQiYiController {
             rechargeOrderRes.getData().getRechargeOrder().setProductNo(rechargeReq.getProductNo());
             rechargeOrderRes.getData().getRechargeOrder().setAccountNumber(rechargeReq.getAccount());
             //调用订单服务更新订单
+            log.info("爱奇艺会员充值controller,更新充值订单OrderNo : "+rechargeOrderRes.getData().getOrder().getOrderNo());
             rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                     || null == rechargeOrderRes.getData()
@@ -138,6 +147,7 @@ public class IqiyiRechargeController implements IQiYiController {
             }
 
             //充值成功,响应用户
+            log.info("爱奇艺会员充值controller充值成功,响应用户");
             RechargeRes IqiyirechargeRes = new RechargeRes();
             IqiyirechargeRes.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo()); //平台单号
             IqiyirechargeRes.setRechargeStatus(IqiyiRechargeResCode.SUCCESS.getMsg());       //充值状态
