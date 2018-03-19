@@ -192,9 +192,12 @@ public class ResponseFilter extends ZuulFilter {
     @Value("${zuul.ignore-url}")
     private String ignoreUrl;
 
+    @Value("${zuul.prefix}")
+    private String zuulPrefix;
+
     private boolean isIgnorePath(String path) {
         for (String url : ignoreUrl.split(",")) {
-            if (path.startsWith(url)) {
+            if (path.substring(zuulPrefix.length()).startsWith(url)) {
                 return true;
             }
         }

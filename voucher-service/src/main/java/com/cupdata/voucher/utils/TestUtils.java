@@ -30,7 +30,6 @@ public class TestUtils {
         voucherReq.setMobileNo("78912");
         voucherReq.setOrderDesc("机构获取SIP本地券码测试");
         voucherReq.setProductNo("20180309SIP");
-        voucherReq.setCategory(8l);
         voucherReq.setOrgOrderNo("SIP20180312");
         String reqStr = JSONObject.toJSONString(voucherReq);
         System.out.print("请求参数json字符串" + reqStr);

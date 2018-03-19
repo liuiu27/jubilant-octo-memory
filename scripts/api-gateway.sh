@@ -18,7 +18,7 @@ case "$1" in
 
     start)
         ##nohup &  以守护进程启动
-        nohup $JRE_HOME/bin/java -Xms256m -Xmx512m -jar $JAR_NAME >> $SERVICE_DIR/$SERVICE_NAME.log 2>&1 &
+        nohup $JRE_HOME/bin/java -Xms256m -Xmx512m -jar $JAR_NAME  >> $SERVICE_DIR/null 2>&1 &
         echo $! > $SERVICE_DIR/$PID
         echo "=== start $SERVICE_NAME"
         ;;

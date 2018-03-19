@@ -45,7 +45,7 @@
 		<revision>0.0.1-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 		<spring-cloud.version>Dalston.RELEASE</spring-cloud.version>
 		<commons-lang3.version>3.6</commons-lang3.version>
 		<mybatis.version>1.3.0</mybatis.version>
@@ -53,6 +53,7 @@
 		<joda.version>2.9.9</joda.version>
 		<guava.version>18.0</guava.version>
 		<fastjson.version>1.2.45</fastjson.version>
+		<jasypt.version>1.16</jasypt.version>
 	</properties>
 
 	<!-- 必须的依赖-->
@@ -87,6 +88,12 @@
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>${joda.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.ulisesbocchio</groupId>
+			<artifactId>jasypt-spring-boot-starter</artifactId>
+			<version>${jasypt.version}</version>
 		</dependency>
 
 		<dependency>

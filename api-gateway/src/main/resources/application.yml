@@ -1,18 +1,36 @@
 spring:
   application:
     name: api-gateway
+ profiles:
+   active: test
 server:
-   port: 8040         # 指定该实例的端口
+   port: 46959         # 指定该实例的端口
+#日志配置
+logging:
+  config: classpath:logback-spring.xml
+
+#配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
+hystrix:
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 5000
+
+--- # 测试环境 **********************************************************************************************************
+spring:
+  profiles: test
 eureka:
   client:
     registerWithEureka: true  #false:不作为一个客户端注册到注册中心
     fetchRegistry: true      #为true时，可以启动，但报异常：Cannot execute request on any known server
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
+      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
   instance:
    hostname: localhost    # 指定该Eureka实例的主机名
-   lease-expiration-duration-in-seconds: 6
-   lease-renewal-interval-in-seconds: 2
+   lease-expiration-duration-in-seconds: 60
+   lease-renewal-interval-in-seconds: 20
 
 # zuul 网关配置
 zuul:
@@ -35,11 +53,41 @@ zuul:
       path: /content/**
       service-id: content-service
 
-#配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
-hystrix:
-  command:
-      default:
-        execution:
-          isolation:
-            thread:
-              timeoutInMilliseconds: 5000
+
+--- # 生产环境***********************************************************************************************************
+spring:
+  profiles: prd
+
+eureka:
+  client:
+    registerWithEureka: true  #false:不作为一个客户端注册到注册中心
+    fetchRegistry: true      #为true时，可以启动，但报异常：Cannot execute request on any known server
+    serviceUrl:
+      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
+  instance:
+   hostname: localhost    # 指定该Eureka实例的主机名
+   lease-expiration-duration-in-seconds: 60
+   lease-renewal-interval-in-seconds: 20
+
+# zuul 网关配置
+zuul:
+  #prefix: /api
+  ignore-url: /content
+  routes:
+    trvok-route:                    # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
+      path: /trvok/**               # 想要映射到的路径
+      service-id: trvok-service     # Eureka中的serviceId
+    voucher-route:
+      path: /voucher/**             # SIP获取本地券码请求的路径
+      service-id: voucher-service
+    recharge-route:                 # 充值请求的路径
+      path: /recharge/**
+      service-id: recharge-service
+    ihuyi-route:                    # 互亿请求的路径
+      path: /ihuyi/**
+      service-id: ihuyi-service
+    content-route:
+      path: /content/**
+      service-id: content-service
+
+

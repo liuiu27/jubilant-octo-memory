@@ -1,24 +1,47 @@
 spring:
   application:
     name: lakala-service
+  profiles:
+    active: test
 server:
-   port: 9000         # 指定该实例的端口
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
-  instance:
-    prefer-ip-address: true     #表示将ip注册到Eureka server
-    hostname: localhost    # 指定该Eureka实例的主机名
-    lease-expiration-duration-in-seconds: 6
-    lease-renewal-interval-in-seconds: 2
-    
- #配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
+   port: 46981         # 指定该实例的端口
+#日志配置
+logging:
+  config: classpath:logback-spring.xml
+#配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
 hystrix:
   command:
     default:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 10000   
+            timeoutInMilliseconds: 5000
+
+--- # 测试环境**********************************************************************************************************
+spring:
+  profiles: test
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
+  instance:
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 60
+    lease-renewal-interval-in-seconds: 20
+
+
+--- # 生产环境**********************************************************************************************************
+spring:
+  profiles: prd
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
+  instance:
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 6
+    lease-renewal-interval-in-seconds: 2

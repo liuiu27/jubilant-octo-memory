@@ -1,30 +1,55 @@
-server:
-   port: 8030         # 指定该实例的端口
-
 spring:
   application:
     name: orgsupplier-service
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
-    username: resdb
-    password: resdb
-#    url: jdbc:mysql://127.0.0.1:3306/sip?useUnicode=true&characterEncoding=UTF-8
-#    username: root
-#    password: linyongw
-    type: com.alibaba.druid.pool.DruidDataSource
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:8761/eureka/
-  instance:
-    prefer-ip-address: true     #表示将ip注册到Eureka server
-    hostname: localhost    # 指定该Eureka实例的主机名
-    lease-expiration-duration-in-seconds: 6
-    lease-renewal-interval-in-seconds: 2
+  profiles:
+    active: test
+server:
+   port: 46962         # 指定该实例的端口
+#日志配置
+logging:
+  config: classpath:logback-spring.xml
 
 #mybatis相关配置
 mybatis:
     type-aliases-package: com.cupdata.commons.model
     mapper-locations: classpath:mapper/*.xml
+
+--- # 测试环境**********************************************************************************************************
+spring:
+  profiles: test
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+    username: resdb
+    password: resdb
+    type: com.alibaba.druid.pool.DruidDataSource
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
+  instance:
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 60
+    lease-renewal-interval-in-seconds: 20
+
+--- # 生产环境**********************************************************************************************************
+spring:
+  profiles: prd
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+    username: resdb
+    password: resdb
+    type: com.alibaba.druid.pool.DruidDataSource
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http:10.193.17.84:46960/eureka/,http:10.193.17.86:46960/eureka/
+  instance:
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 60
+    lease-renewal-interval-in-seconds: 20
