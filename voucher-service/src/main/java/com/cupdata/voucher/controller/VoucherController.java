@@ -74,7 +74,7 @@ public class VoucherController implements IVoucherController {
 	@Override
 	public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value = "org", required = true) String org,
 			@RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response){
-		log.info("VoucherController getVoucher is begin...");
+		log.info("VoucherController getVoucher is begin... org:"+org+" ,ProductNo:"+voucherReq.getProductNo()+" ,OrderDesc:"+voucherReq.getOrderDesc());
 		 //响应信息
 		BaseResponse<GetVoucherRes> res = new BaseResponse();// 默认为成功
 		try {
