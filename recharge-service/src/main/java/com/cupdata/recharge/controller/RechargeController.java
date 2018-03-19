@@ -49,7 +49,7 @@ public class RechargeController implements IRechargeController{
     public BaseResponse<RechargeRes> recharge(@RequestParam(value = "org" ,required = true) String org,
                                               @RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
     	try {
-	        log.info("开始访问充值服务......");
+	        log.info("开始访问充值服务......org:"+org+",ProductNo:"+rechargeReq.getProductNo());
 	        //响应信息:默认为成功
 	        BaseResponse<RechargeRes> res = new BaseResponse<RechargeRes>();
 	
