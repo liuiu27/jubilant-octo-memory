@@ -28,8 +28,8 @@ public class TestUtils {
         RechargeReq rechargeReq = new RechargeReq();
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
-        rechargeReq.setAccount("707316407");
-        rechargeReq.setOrgOrderNo("DHAD478479824KJK");
+        rechargeReq.setAccount("625192155");
+        rechargeReq.setOrgOrderNo("TENAD478479824KJK");
         rechargeReq.setProductNo("170810R001");
         rechargeReq.setOrderDesc("腾讯QQ充值业务测试");
 

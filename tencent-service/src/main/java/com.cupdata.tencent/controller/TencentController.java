@@ -56,7 +56,7 @@ public class TencentController implements ITencentController{
      */
     @Override
     public BaseResponse<RechargeRes> recharge(@RequestParam(value = "org" , required = true)String org, @RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
-       log.info("调用腾讯充值接口......org:"+org+",Account:"+rechargeReq.getAccount()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo()+",ProductNo:"+rechargeReq.getProductNo()+",MobileNo:"+rechargeReq.getMobileNo());
+       log.info("调用腾讯充值controller......org:"+org+",Account:"+rechargeReq.getAccount()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo()+",ProductNo:"+rechargeReq.getProductNo()+",MobileNo:"+rechargeReq.getMobileNo());
         //设置响应结果
         BaseResponse<RechargeRes> rechargeRes = new BaseResponse<RechargeRes>();
         try {
@@ -78,9 +78,12 @@ public class TencentController implements ITencentController{
             checkOpenReq.setUin(rechargeReq.getAccount());//需要充值QQ
             checkOpenReq.setServernum(rechargeReq.getMobileNo());//手机号码
             checkOpenReq.setPaytype("1");//支付类型
+            long l1 = System.currentTimeMillis();
             QQCheckOpenRes checkOpenRes = QQRechargeUtils.qqCheckOpen(checkOpenReq,cacheFeignClient);//开通鉴权响应结果
+            long l2 = System.currentTimeMillis();
+            log.info("腾讯充值controller鉴权结果,checkOpenRes:"+checkOpenRes+",时间差"+(l2 - l1));
             if (null == checkOpenRes || !QQRechargeResCode.SUCCESS.getCode().equals(checkOpenRes.getResult())){
-                log.info("腾讯充值鉴权失败,SupplierParam:"+productInfo.getData().getProduct().getSupplierParam());
+                log.info("腾讯充值controller鉴权失败,SupplierParam:"+productInfo.getData().getProduct().getSupplierParam());
                 //鉴权失败，设置错误状态码和错误信息，给予返回
                 rechargeRes.setResponseCode(QQRechargeResCode.QQNUMBER_ILLEGAL.getCode());
                 rechargeRes.setResponseMsg(QQRechargeResCode.QQNUMBER_ILLEGAL.getMsg());
@@ -94,6 +97,7 @@ public class TencentController implements ITencentController{
             createRechargeOrderVo.setOrgOrderNo(rechargeReq.getOrgOrderNo());
             createRechargeOrderVo.setProductNo(rechargeReq.getProductNo());
             //调用订单服务创建订单
+            log.info("腾讯充值controller开始创建服务订单");
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                     || null == rechargeOrderRes.getData()
@@ -117,6 +121,7 @@ public class TencentController implements ITencentController{
             openReq.setTimestamp(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmss"));//设置时间戳
             openReq.setPrice(productInfo.getData().getProduct().getSupplierPrice().toString());//设置供应商价格
             QQOpenRes openRes = QQRechargeUtils.qqOpen(openReq,cacheFeignClient);//充值业务办理响应结果
+            log.info("腾讯充值controller调用充值接口充值结果,openRes:"+openRes);
             if (null==openRes || !QQRechargeResCode.SUCCESS.getCode().equals(openRes.getResult())){
                 log.error("调用腾讯充值接口失败");
                 //QQ会员充值失败，设置错误状态码和错误信息，给予返回
@@ -130,6 +135,7 @@ public class TencentController implements ITencentController{
             rechargeOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_NO);            //不通知机构
 
             //调用订单服务更新订单
+            log.info("腾讯充值controller充值成功,更新服务订单OrderNo:"+rechargeOrderRes.getData().getOrder().getOrderNo());
             rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                     || null == rechargeOrderRes.getData()
@@ -141,6 +147,7 @@ public class TencentController implements ITencentController{
             }
 
             //充值成功,响应用户
+            log.info("腾讯充值controller充值成功,响应用户");
             RechargeRes res = new RechargeRes();
             res.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo()); //平台单号
             res.setRechargeStatus(ModelConstants.RECHARGE_SUCCESS);             //充值状态

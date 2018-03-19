@@ -39,12 +39,19 @@ public class QQRechargeUtils {
 	 * QQ会员开通鉴权
 	 */
 	public static QQCheckOpenRes qqCheckOpen(QQCheckOpenReq req,CacheFeignClient cacheFeignClient){
-	    log.info("QQ会员开通鉴权,Uin:"+req.getUin()+",Serviceid:"+req.getServiceid()+",Servernum"+req.getServernum());
+	    log.info("QQ会员鉴权,Uin:"+req.getUin()+",Serviceid:"+req.getServiceid()+",Servernum:"+req.getServernum());
 		QQCheckOpenRes qqCheckOpenRes = new QQCheckOpenRes();
 		//开通鉴权url获取
 		String checkOpenUrl = null;
 		if(CommonUtils.isWindows()){
-			checkOpenUrl = "http://cgi.vip.qq.com/integopendebug/checkopen";
+			//checkOpenUrl = "http://cgi.vip.qq.com/integopendebug/checkopen";
+			//如果获取数据信息为空
+			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getData())){
+				//设置错误码:获取信息失败
+				qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+				return qqCheckOpenRes;
+			}
+			checkOpenUrl = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getData().getSysConfig().getParaValue();
 		}else{
 			//如果获取数据信息为空
 			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getData())){
@@ -58,7 +65,15 @@ public class QQRechargeUtils {
 		//会员充值key获取
 		String key = null;
 		if(CommonUtils.isWindows()){
-			key = "yinlian01jf";
+			//key = "yinlian01jf";
+			//判空处理
+			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getData())){
+				//设置错误码:获取信息失败
+				qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+				return qqCheckOpenRes;
+			}
+			key = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getData().getSysConfig().getParaValue();
+
 		}else{
 			//判空处理
 			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getData())){
@@ -72,7 +87,14 @@ public class QQRechargeUtils {
 		//QQ会员充值source
 		if(StringUtils.isBlank(req.getSource())){
 			if(CommonUtils.isWindows()){
-				req.setSource("10017");
+				//req.setSource("10017");
+				//判空处理
+				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getData())){
+					//设置错误码:获取信息失败
+					qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+					return qqCheckOpenRes;
+				}
+				req.setSource(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getData().getSysConfig().getParaValue());
 			}else{
 				//判空处理
 				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getData())){
@@ -91,7 +113,10 @@ public class QQRechargeUtils {
 		checkOpenUrl = checkOpenUrl + "?" + reqStr;
 		QQCheckOpenRes res = null;
 		try {
+			long l1 = System.currentTimeMillis();
 			String resStr = HttpUtil.doGet(checkOpenUrl);
+			long l2 = System.currentTimeMillis();
+			log.info("调用腾讯鉴权接口耗时:"+(l2 - l1)+"ms");
 			res = parseQQCheckOpenXml(resStr);
 		} catch (Exception e) {
 			log.error("", e);
@@ -103,14 +128,21 @@ public class QQRechargeUtils {
 	 * QQ会员开通
 	 */
 	public static QQOpenRes qqOpen(QQOpenReq req,CacheFeignClient cacheFeignClient){
-        log.info("QQ会员开通");
+        log.info("QQ会员开通,Uin"+req.getUin()+",Serviceid:"+req.getServiceid()+",Servernum"+req.getServernum()+",Txparam:"+req.getTxparam());
 		//建立响应对象
 		QQOpenRes qqOpenRes = new QQOpenRes();
 
 		//QQ充值接口
 		String openUrl = null;
 		if(CommonUtils.isWindows()){
-			openUrl = "http://cgi.vip.qq.com/integopendebug/open";
+			//openUrl = "http://cgi.vip.qq.com/integopendebug/open";
+			//数据判空处理
+			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_URL").getData().getSysConfig().getParaValue())){
+				qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+				return qqOpenRes;
+			}
+			openUrl = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_URL").getData().getSysConfig().getParaValue();
+
 		}else{
 			//数据判空处理
 			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_URL").getData().getSysConfig().getParaValue())){
@@ -122,7 +154,14 @@ public class QQRechargeUtils {
 
 		String key = null;
 		if(CommonUtils.isWindows()){
-			key = "yinlian01jf";
+			//key = "yinlian01jf";
+			//数据判空处理
+			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_KEY"))){
+				qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+				return qqOpenRes;
+			}
+			key = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getData().getSysConfig().getParaValue();
+
 		}else{
 			//数据判空处理
 			if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_KEY"))){
@@ -134,7 +173,13 @@ public class QQRechargeUtils {
 		
 		if(StringUtils.isBlank(req.getSource())){
 			if(CommonUtils.isWindows()){
-				req.setSource("10017");
+				//req.setSource("10017");
+				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_SOURCE"))){
+					qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
+					return qqOpenRes;
+				}
+				req.setSource(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getData().getSysConfig().getParaValue());
+
 			}else{
 				if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_SOURCE"))){
 					qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
@@ -164,8 +209,10 @@ public class QQRechargeUtils {
 		reqParams.append("</data>");
 		QQOpenRes res = null;
 		try {
+			long l1 = System.currentTimeMillis();
 			String resStr = HttpUtil.doPost(openUrl, reqParams.toString());
-			log.info("XML格式的QQ会员开通响应数据为" + resStr);
+			long l2 = System.currentTimeMillis();
+			log.info("XML格式的QQ会员开通响应数据为" + resStr+",耗时为:"+(l2 - l1));
 			res = parseQQOpenXml(resStr);
 		} catch (Exception e) {
 			log.error("解析XML格式的QQ会员开通响应数据出现异常", e);
