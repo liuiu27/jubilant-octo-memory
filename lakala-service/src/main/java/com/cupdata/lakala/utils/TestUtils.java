@@ -26,7 +26,7 @@ public class TestUtils {
         GetVoucherReq getVoucherReq = new GetVoucherReq();
         getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         getVoucherReq.setProductNo("20180105V123");
-        getVoucherReq.setOrgOrderNo("1DHdAul8a24KJ");
+        getVoucherReq.setOrgOrderNo("lakala20180316");
         getVoucherReq.setOrderDesc("拉卡拉券码测试");
         getVoucherReq.setMobileNo("15857128524");
         getVoucherReq.setExpire("20180331");
@@ -42,7 +42,7 @@ public class TestUtils {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(URL2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
 
 
