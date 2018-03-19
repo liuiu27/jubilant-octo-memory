@@ -97,7 +97,9 @@ public class IqiyiRechargeController implements IQiYiController {
             getVoucherReq.setProductNo(rechargeReq.getProductNo());    //产品编号
             getVoucherReq.setOrgOrderNo(rechargeReq.getOrgOrderNo());  //机构订单号
             getVoucherReq.setMobileNo(rechargeReq.getMobileNo());      //手机号
+
             BaseResponse<GetVoucherRes> IqiyiVoucherGetRes = voucherFeignClient.getLocalVoucher(org,getVoucherReq);
+
 
             if(!CommonUtils.isNullOrEmptyOfObj(IqiyiVoucherGetRes.getData())){
                 log.info("爱奇艺会员充值controller激活码获取结果 : "+IqiyiVoucherGetRes.getData().getVoucherCode());
@@ -119,8 +121,10 @@ public class IqiyiRechargeController implements IQiYiController {
             req.setCardCode(IqiyiVoucherGetRes.getData().getVoucherCode());//充值激活码
 
             //调用爱奇艺工具类进行券码激活充值
+            long l1 = System.currentTimeMillis();
             IqiyiRechargeRes res = IqiyiRechargeUtils.iqiyiRecharge(req,cacheFeignClient);
-            log.info("爱奇艺会员充值工具类充值结果 : "+res.toString());
+            long l2 = System.currentTimeMillis();
+            log.info("爱奇艺会员充值工具类充值结果 : "+res.toString()+",调用爱奇艺充值接口时间:"+(l2-l1));
             if(null == res || !"A00000".equals(res.getCode())) {
                 log.error("调用爱奇艺会员充值接口，返回报文结果result非A00000-爱奇艺会员充值失败"+res);
                 //爱奇艺会员充值失败,设置错误状态码和错误信息，给予返回

@@ -25,6 +25,7 @@ public class TestUtils {
     public static void main(String[] args) throws Exception {
         //爱奇艺获取券码充值网关URL
         String url = "http://localhost:8040/recharge/recharge/getRecharge";
+        String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数
@@ -32,10 +33,9 @@ public class TestUtils {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("707316407");           //充值账号
-        rechargeReq.setOrgOrderNo("DHAD478479824KJK"); //机构唯一订单编号
+        rechargeReq.setOrgOrderNo("test"); //机构唯一订单编号
         rechargeReq.setProductNo("171026R640");        //爱奇艺产品编号
         rechargeReq.setOrderDesc("爱奇艺会员充值");
-        rechargeReq.setCategory(8l);//券码类型
         String reqStr = JSONObject.toJSONString(rechargeReq);
         System.out.print("请求参数json字符串" + reqStr);
         String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
