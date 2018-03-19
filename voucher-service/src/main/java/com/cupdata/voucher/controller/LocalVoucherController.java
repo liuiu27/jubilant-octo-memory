@@ -55,7 +55,7 @@ public class LocalVoucherController implements ILocalVoucherController {
      */
     @Override
     public BaseResponse<GetVoucherRes> getLocalVoucher(@RequestParam(value = "org" , required = true) String org ,@RequestBody GetVoucherReq voucherReq) {
-        log.info("LocalVoucherController getLocalVoucher is begin......");
+        log.info("LocalVoucherController getLocalVoucher is begin......org:"+org+",ProductNo"+voucherReq.getProductNo());
         //响应信息
         BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse<>();// 默认为成功
         try {
@@ -97,6 +97,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             voucherLibGetBiz.UpdateElectronicVoucherLib(electronicVoucherLib);
 
             //step6.封装券码信息,给予返回
+            log.info("本地回获取券码成功,券码号:"+electronicVoucherLib.getTicketNo());
             GetVoucherRes res = new GetVoucherRes();
             res.setVoucherLibId(electronicVoucherLib.getId());      //该条券码id
             res.setVoucherCode(electronicVoucherLib.getTicketNo()); //券码号
@@ -119,7 +120,7 @@ public class LocalVoucherController implements ILocalVoucherController {
      * @return
      */
     @Override
-    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value = "org" , required = true) String org ,@RequestBody GetVoucherReq voucherReq) {
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam (value = "org" , required = true) String org, @RequestBody GetVoucherReq voucherReq) {
         log.info("LocalVoucherController getVoucher is begin......");
         try {
             //响应信息
@@ -142,7 +143,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             createvoucherOrderVo.setProductNo(voucherReq.getProductNo());
             createvoucherOrderVo.setOrgOrderNo(voucherReq.getOrgOrderNo());
             //调用创建订单服务
-            log.info("LocalVoucherController getVoucher create order ,ProductNo:"+voucherReq.getProductNo());
+            log.info("LocalVoucherController getVoucher create order ,ProductNo:"+voucherReq.getProductNo()+",org"+org);
             BaseResponse<VoucherOrderVo> voucherOrderRes = orderFeignClient.createVoucherOrder(createvoucherOrderVo);
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())
                     || null == voucherOrderRes.getData()
@@ -186,7 +187,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
             voucherOrderRes.getData().getVoucherOrder().setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED);
             voucherOrderRes.getData().getVoucherOrder().setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
-            voucherOrderRes.getData().getOrder().setSupplierOrderNo(voucherReq.getOrgOrderNo());             //我方订单存入机构订单号
+            voucherOrderRes.getData().getOrder().setSupplierOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
             voucherOrderRes.getData().getVoucherOrder().setVoucherCode(electronicVoucherLib.getTicketNo());  //券码号
             voucherOrderRes.getData().getVoucherOrder().setStartDate(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMdd")); //起始时间
             voucherOrderRes.getData().getVoucherOrder().setEndDate(electronicVoucherLib.getEndDate());
@@ -216,5 +217,15 @@ public class LocalVoucherController implements ILocalVoucherController {
             log.error("error is " + e.getMessage());
             throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
         }
+    }
+
+    @Override
+    public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value = "org" , required = true) String org,@RequestBody DisableVoucherReq disableVoucherReq) {
+        return null;
+    }
+
+    @Override
+    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value = "sup" , required = true) String sup,@RequestBody WriteOffVoucherReq writeOffVoucherReq) {
+        return null;
     }
 }
