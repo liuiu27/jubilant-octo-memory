@@ -1,7 +1,22 @@
 package com.cupdata.content.controller;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.api.content.IOrgContentController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
@@ -14,26 +29,18 @@ import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.feign.ProductFeignClient;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.cupdata.content.vo.request.OrgVO;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
 * @author 作者: liwei
 * @createDate 创建时间：2018年3月8日 下午6:24:22
 */
 @Slf4j
-@RestController
-public class OrgContentController implements IOrgContentController{
+@Controller
+@RequestMapping("/content")
+public class OrgContentController{
 	
 	
 	@Autowired
@@ -41,16 +48,19 @@ public class OrgContentController implements IOrgContentController{
 	
 	
 	@Autowired
-	private ContentBiz ContentBiz;
+	private ContentBiz contentBiz;
 	
 	/**
 	 * 内容引入跳转接口   机构请求
 	 * @param org
 	 * @param contentJumpReq
+	 * @param request
+	 * @param response
 	 * @return
 	 */
-	public BaseResponse contentJump(@RequestParam(value = "org") String org,
-			@RequestBody ContentJumpReq contentJumpReq){
+	public BaseResponse contentJump1(@RequestParam(value = "org", required = true) String org,
+//			@RequestParam(value = "tranNo", required = true) String tranNo,
+			@RequestBody ContentJumpReq contentJumpReq,	HttpServletRequest request, HttpServletResponse response){
 		String tranNo = "";
 		//Step1： 验证数据是否为空 是否合法
 		log.info("contentJump is begin params org is" + org + "contentJumpReq is" + contentJumpReq.toString());
@@ -114,14 +124,14 @@ public class OrgContentController implements IOrgContentController{
 				contentTransaction.setSupNo(productInfRes.getData().getProduct().getSupplierNo());
 				String requestInfo = JSONObject.toJSONString(contentJumpReq);
 				contentTransaction.setRequestInfo(requestInfo);
-				ContentBiz.insert(contentTransaction);
+				contentBiz.insert(contentTransaction);
 			}else {
 
 				//不为空查询数据库
 				Map<String, Object> paramMap = new HashMap<String,Object>();
 				paramMap.put("TRAN_NO", tranNo);
 				paramMap.put("TRAN_TYPE", ModelConstants.CONTENT_TYPE_NOT_LOGGED);
-				ContentTransaction contentTransaction = ContentBiz.selectSingle(paramMap);
+				ContentTransaction contentTransaction = contentBiz.selectSingle(paramMap);
 				if (null != contentTransaction) {
 					// 查到数据判断时间戳是否超时
 					Date timestamp = DateTimeUtil.getDateByString(contentJumpReq.getTimestamp().substring(0, 17),
@@ -137,7 +147,7 @@ public class OrgContentController implements IOrgContentController{
 						contentTransaction.setSupNo(productInfRes.getData().getProduct().getSupplierNo());
 						String requestInfo = JSONObject.toJSONString(contentJumpReq);
 						contentTransaction.setRequestInfo(requestInfo);
-						ContentBiz.update(contentTransaction);
+						contentBiz.update(contentTransaction);
 					} else {
 						// 超时 抛出异常
 						res.setResponseCode(ResponseCodeMsg.TIMESTAMP_TIMEOUT.getCode());
@@ -152,7 +162,7 @@ public class OrgContentController implements IOrgContentController{
 				}
 			}
 			// 组装参数 发送请求 
-			//response.sendRedirect("www.baidu.com");
+			response.sendRedirect("www.baidu.com");
 			return res;
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
@@ -160,8 +170,61 @@ public class OrgContentController implements IOrgContentController{
 		}
 	}
 
-	@Override
-	public BaseResponse contentJump(String org, ContentJumpReq contentJumpReq, HttpServletRequest request, HttpServletResponse response) {
-		return null;
+	/***
+	 * 新   内容引入跳转接口   机构请求
+	 * @param contentJumpReq
+	 * @return
+	 */
+	@PostMapping(path="/contentJump",produces = "application/json")
+	public String contentJump(@RequestBody @Validated OrgVO<ContentJumpReq> contentJumpReq){
+		log.info("contentJump is begin params  is" + contentJumpReq.toString());
+		try {
+			// Step1：查询服务产品信息
+			ProductInfVo productInfRes = contentBiz.findByProductNo(contentJumpReq.getData().getProductNo());
+			// Step2：判断服务产品是否为内容 引入商品 是否与机构相关连
+			contentBiz.validatedProductNo(contentJumpReq.getOrg(), productInfRes.getProduct().getProductType(), productInfRes.getProduct().getProductType());
+			//Step3 :   判断流水号
+			if(StringUtils.isBlank(contentJumpReq.getTranNo())){
+				//生成新的流水号
+				String tranNo = CommonUtils.serialNumber();
+				//如果为空创建 新的 并保持数据库
+				contentBiz.insertContentTransaction(tranNo,
+						contentJumpReq.getOrg(),
+						JSONObject.toJSONString(contentJumpReq),
+						productInfRes);
+			}else {
+				//不为空查询流水表
+				ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(contentJumpReq.getTranNo(), ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+				//验证流水号
+				if(null == contentTransaction) {
+					log.error("query result is null");
+					throw new ErrorException(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode(),ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
+				}
+				//验证时间戳
+				contentBiz.validatedtimestamp(contentJumpReq.getData().getTimestamp());
+				// 合法更新数据
+				contentBiz.updateContentTransaction(contentTransaction,
+						productInfRes.getProduct().getProductNo(),
+						ModelConstants.CONTENT_TYPE_NOT_LOGGED,
+						contentJumpReq.getOrg(),
+						null,
+						JSONObject.toJSONString(contentJumpReq));
+			}
+			//TODO 组装参数 发送请求
+			return null;
+		} catch (Exception e) {
+			log.error("error is " + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
 	}
+
+
+
+
+
+
+
+
+
+
 }

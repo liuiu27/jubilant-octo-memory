@@ -1,33 +1,32 @@
 package com.cupdata.content.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
-import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.content.ContentLoginReq;
 import com.cupdata.commons.vo.content.ContentQueryOrderReq;
 import com.cupdata.commons.vo.content.ContentQueryOrderRes;
 import com.cupdata.commons.vo.content.ContentTransaction;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
+import com.cupdata.content.vo.ContentLoginReq;
 import com.cupdata.content.vo.request.PayPageVO;
+import com.cupdata.content.vo.request.SupVO;
+
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
 * @author 作者: liwei
@@ -44,9 +43,8 @@ public class SupContentController {
 	@Autowired
 	private OrderFeignClient OrderFeignClient;
 	
-	
 	@Autowired
-	private ContentBiz ContentBiz;
+	private ContentBiz contentBiz;
 	
 	/**
 	 * 内容引入登录接口   供应商请求
@@ -56,58 +54,33 @@ public class SupContentController {
 	 * @param response
 	 * @return
 	 */
-	public BaseResponse contentLogin(@RequestParam(value = "sup", required = true) String sup,
-//									 @RequestParam(value = "tranNo", required = true) String tranNo,
-			@RequestBody ContentLoginReq contentLoginReq,	HttpServletRequest request, HttpServletResponse response){
-		String tranNo = "";
-		//Step1： 验证数据是否为空 是否合法
-		log.info("contentLogin is begin params sup is" + sup + "contentLoginReq is" + contentLoginReq.toString());
-		BaseResponse res = new BaseResponse();	
+	@PostMapping(path="/contentLogin",produces = "application/json")
+	public String contentLogin(@RequestBody @Validated SupVO<ContentLoginReq> contentLoginReq){
+		log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
 		try {
-			// 验证 参数是否合法
-			if(StringUtils.isBlank(contentLoginReq.getCallBackUrl())||StringUtils.isBlank(tranNo)) {
-				log.error("params is null.......  errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-				res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-				res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
-				return res;
-			}
 			//查询数据库中是否存在此流水号
-			Map<String,Object> paramMap =  new HashMap<String,Object>();
-			paramMap.put("TRAN_NO", tranNo);
-			ContentTransaction contentTransaction =  ContentBiz.selectSingle(paramMap);
+			ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getTranNo(),null);
+			//验证流水号
 			if(null == contentTransaction) {
-				log.error("query tranNo is Null tranNo is " + tranNo + "errorCode is" + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-				res.setResponseCode(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode());
-				res.setResponseMsg(ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
-				return res;
+				log.error("query result is null");
+				throw new ErrorException(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode(),ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
 			}
 			//查询数据中是否存在此交易类型的流水号
-			paramMap.clear();
-			paramMap.put("TRAN_NO", tranNo);
-			paramMap.put("TRAN_TYPE", ModelConstants.CONTENT_TYPE_NOT_LOGGED);
-			contentTransaction =  ContentBiz.selectSingle(paramMap);
-			ContentTransaction ct = new ContentTransaction(); 
+			contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getTranNo(),ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 			if(null == contentTransaction) {
-				//如果为空 则保存新记录到数据库
-				ct.setTranType(ModelConstants.CONTENT_TYPE_NOT_LOGGED);
-				ct.setTranNo(tranNo);
-				ct.setRequestInfo(JSONObject.toJSONString(contentLoginReq));
-				ContentBiz.insert(ct);
+				//保持新的流水记录
+				contentBiz.insertContentTransaction(contentLoginReq.getTranNo(), 
+						contentLoginReq.getSup(), 
+						JSONObject.toJSONString(contentLoginReq), 
+						null);
 			}else {
-				
-				// 查到数据判断时间戳是否超时
-				Date timestamp = DateTimeUtil.getDateByString(ct.getTimestamp().substring(0, 17),
-						"yyyyMMddHHmmssSSS");
-				// 时间戳超时
-				if (!DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -60 * 1000L, 3000 * 1000L)) {
-					// 超时 抛出异常
-					res.setResponseCode(ResponseCodeMsg.TIMESTAMP_TIMEOUT.getCode());
-					res.setResponseMsg(ResponseCodeMsg.TIMESTAMP_TIMEOUT.getMsg());
-					return res;
-				}
-				//数据库更新此条交易记录
-				contentTransaction.setRequestInfo(JSONObject.toJSONString(contentLoginReq));
-				ContentBiz.update(contentTransaction);
+				//更新流水表
+				contentBiz.updateContentTransaction(contentTransaction, 
+						null, 
+						ModelConstants.CONTENT_TYPE_NOT_LOGGED, 
+						null, 
+						contentLoginReq.getSup(), 
+						JSONObject.toJSONString(contentLoginReq));
 			}
 			//组装参数 跳转
 			return null;
@@ -117,24 +90,13 @@ public class SupContentController {
 		}
 	}
 	
-	public BaseResponse<ContentQueryOrderRes> contentQueryOrder(@RequestParam(value = "sup", required = true) String sup,
-			// @RequestParam(value = "tranNo", required = true) String tranNo,
-			 @RequestBody ContentQueryOrderReq contentQueryOrderReq,	HttpServletRequest request, HttpServletResponse response){
-		String tranNo = "";
-		log.info("contentQueryOrder is begin params sup is" + sup + "contentQueryOrderReq is" + contentQueryOrderReq.toString());
+	@PostMapping(path="/contentQueryOrder",produces = "application/json")
+	public BaseResponse<ContentQueryOrderRes> contentQueryOrder(SupVO<ContentQueryOrderReq> contentQueryOrderReq){
+		log.info("contentQueryOrder is begin params contentQueryOrderReq is" + contentQueryOrderReq.toString());
 		BaseResponse<ContentQueryOrderRes> res = new BaseResponse<ContentQueryOrderRes>();	
 		try {
-			//验证参数是否合法
-			if(StringUtils.isBlank(contentQueryOrderReq.getSupOrderNo())
-					||StringUtils.isBlank(tranNo)
-				    ||StringUtils.isBlank(sup)) {
-				log.error("params is null.......  errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-				res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-				res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
-				return res;
-			}
 			//调用order-service的服务查询数据
-			res = OrderFeignClient.queryContentOrder(contentQueryOrderReq);
+			res = OrderFeignClient.queryContentOrder(contentQueryOrderReq.getData());
 			return res;
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
@@ -142,7 +104,7 @@ public class SupContentController {
 		}
 	}
 
-
+	
 
 
 	/**
