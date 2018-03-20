@@ -2,7 +2,7 @@ spring:
   application:
     name: order-service
   profiles:
-    active: test
+    active: dev
 server:
    port: 46964         # 指定该实例的端口
 #mybatis相关配置
@@ -25,6 +25,27 @@ logging:
 jasypt:
   encryptor:
     password: cupdata
+
+--- # 开发环境**********************************************************************************************************
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+    username: resdb
+    password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
+    type: com.alibaba.druid.pool.DruidDataSource
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:46960/eureka/
+  instance:
+     prefer-ip-address: true     #表示将ip注册到Eureka server
+     hostname: localhost    # 指定该Eureka实例的主机名
+     lease-expiration-duration-in-seconds: 60
+     lease-renewal-interval-in-seconds: 20
+
 --- # 测试环境**********************************************************************************************************
 spring:
   profiles: test
