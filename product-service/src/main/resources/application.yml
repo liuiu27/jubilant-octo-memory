@@ -13,6 +13,10 @@ mybatis:
 logging:
   config: classpath:logback-spring.xml
 
+
+jasypt:
+  encryptor:
+    password: cupdata
 --- # 测试环境**********************************************************************************************************
 spring:
   profiles: test
@@ -20,9 +24,9 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
     username: resdb
-    password: resdb
+    password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
     type: com.alibaba.druid.pool.DruidDataSource
-    
+
 eureka:
   client:
     serviceUrl:
@@ -39,9 +43,9 @@ spring:
   profiles: prd
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.150.9.22:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
-    username: resdb
-    password: resdb
+    url: jdbc:mysql://10.150.9.22:3306/sip?useUnicode=true&characterEncoding=UTF-8
+    username: sip
+    password: ENC(7eaGzJhB0t+ZjmzjELKw0QjoNwE573Mr)
     type: com.alibaba.druid.pool.DruidDataSource
     
 eureka:
