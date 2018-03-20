@@ -2,7 +2,7 @@ spring:
   application:
     name: content-service
   profiles:
-    active: test
+    active: dev
 server:
    port: 8022         # 指定该实例的端口
 #日志配置

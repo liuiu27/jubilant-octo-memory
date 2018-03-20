@@ -11,22 +11,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.biz.BaseBiz;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.commons.exception.ErrorException;
-import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.content.ContentJumpReq;
 import com.cupdata.commons.vo.content.ContentTransaction;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.content.dao.ContentDao;
 import com.cupdata.content.feign.ProductFeignClient;
-import com.cupdata.content.vo.request.OrgVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 */
 @Slf4j
 @Service
-public class ContentBiz  extends BaseBiz<ContentTransaction> {
+public class ContentBiz extends BaseBiz<ContentTransaction> {
 	
 	@Resource
 	private ProductFeignClient productFeignClient;

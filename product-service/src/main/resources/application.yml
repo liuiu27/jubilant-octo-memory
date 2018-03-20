@@ -2,7 +2,7 @@ spring:
   application:
     name: product-service
   profiles:
-    active: test
+    active: dev
 server:
    port: 46963         # 指定该实例的端口
 #mybatis相关配置

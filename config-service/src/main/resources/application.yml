@@ -2,7 +2,7 @@ spring:
   application:
     name: config-service
   profiles:
-    active: test
+    active: dev
 server:
    port: 46966         # 指定该实例的端口
 #日志配置
