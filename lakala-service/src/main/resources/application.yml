@@ -2,7 +2,7 @@ spring:
   application:
     name: lakala-service
   profiles:
-    active: test
+    active: dev
 server:
    port: 46981         # 指定该实例的端口
 #日志配置

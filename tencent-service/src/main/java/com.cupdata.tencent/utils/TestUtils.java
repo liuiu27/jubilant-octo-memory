@@ -17,7 +17,7 @@ import java.util.Date;
  * @CreateDate: 2018/2/2 17:53
  */
 public class TestUtils {
-    public static void main(String[] args) throws Exception {
+    public static void main1(String[] args) throws Exception {
         //腾讯QQ充值网关URL
         String url = "http://localhost:8040/recharge/recharge/getRecharge";
         String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
