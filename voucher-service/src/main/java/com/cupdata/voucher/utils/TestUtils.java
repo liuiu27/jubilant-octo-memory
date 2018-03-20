@@ -21,7 +21,7 @@ public class TestUtils {
 
     public static void main(String[] args) throws Exception {
         //获取券码网关URL
-        String url = "http://localhost:8040/voucher/voucher/getVoucher";
+        String url = "http://localhost:46959/voucher/voucher/getVoucher";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数

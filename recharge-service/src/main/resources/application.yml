@@ -37,7 +37,7 @@ eureka:
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
   instance:
-    hostname: localhost    # 指定该Eureka实例的主机名      
+    hostname: localhost    # 指定该Eureka实例的主机名
 
 
 --- # 测试环境**********************************************************************************************************
