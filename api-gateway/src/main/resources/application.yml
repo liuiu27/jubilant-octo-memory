@@ -1,8 +1,8 @@
 spring:
   application:
     name: api-gateway
- profiles:
-   active: test
+  profiles:
+   active: dev
 server:
    port: 46959         # 指定该实例的端口
 #日志配置
@@ -17,6 +17,39 @@ hystrix:
           isolation:
             thread:
               timeoutInMilliseconds: 5000
+
+--- # 开发环境 **********************************************************************************************************
+spring:
+  profiles: dev
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:46960/eureka/
+  instance:
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 60
+    lease-renewal-interval-in-seconds: 20
+# zuul 网关配置
+zuul:
+  prefix:
+  ignore-url: /content
+  routes:
+    trvok-route:                    # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
+      path: /trvok/**               # 想要映射到的路径
+      service-id: trvok-service     # Eureka中的serviceId
+    voucher-route:
+      path: /voucher/**             # SIP获取本地券码请求的路径
+      service-id: voucher-service
+    recharge-route:                 # 充值请求的路径
+      path: /recharge/**
+      service-id: recharge-service
+    ihuyi-route:                    # 互亿请求的路径
+      path: /ihuyi/**
+      service-id: ihuyi-service
+    content-route:
+      path: /content/**
+      service-id: content-service
 
 --- # 测试环境 **********************************************************************************************************
 spring:
