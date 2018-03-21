@@ -2,7 +2,7 @@ spring:
   application:
     name: trvok-service
   profiles:
-    active: test
+    active: dev
 
 server:
    port: 46980         # 指定该实例的端口

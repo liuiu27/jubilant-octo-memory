@@ -2,7 +2,7 @@ spring:
   application:
     name: notify-service
   profiles:
-    active: test
+    active: dev
 server:
    port: 46965         # 指定该实例的端口
 #mybatis相关配置
@@ -38,7 +38,7 @@ spring:
 
 eureka:
   client:
-    registerWithEureka: false    #是否将自己注册到Eureka Server，因为当前应用就是Eureka Server，所以设置为false
+    registerWithEureka: true    #是否将自己注册到Eureka Server，因为当前应用就是Eureka Server，所以设置为false
     fetchRegistry: false         #是否从Eureka Server获取注册信息，因为为单点，所以设置为false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
