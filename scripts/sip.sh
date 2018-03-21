@@ -55,7 +55,7 @@ echo "=== execute trvok-service"
 ./voucher-service.sh $1 $2
 echo "=== execute voucher-service"
 
-sleep 10
+sleep 100
 
 ./cache-service.sh $1 $2
 echo "=== execute cache-service"
