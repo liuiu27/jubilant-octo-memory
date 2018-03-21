@@ -10,16 +10,18 @@ SERVICE_DIR=/app/sip/service-integration-platform/jar
 ## 服务名称
 SERVICE_NAME=eureka-service
 JAR_NAME=$SERVICE_NAME\.jar
-RUN_PARAM=-Dspring.profiles.active=\$2
+RUN_PARAM=--spring.profiles.active=$2
 PID=$SERVICE_NAME\.pid
 
 cd $SERVICE_DIR
+
+echo "SERVICE_DIR: $SERVICE_DIR SERVICE_NAME:$SERVICE_NAME JAR_NAME:$JAR_NAME RUN_PARAM:$RUN_PARAM  PID:$PID "
 
 case "$1" in
 
     start)
         ##nohup &  以守护进程启动
-        nohup $JRE_HOME/bin/java -Xms256m -Xmx512m -jar $JAR_NAME $RUN_PARAM >> $SERVICE_DIR/null 2>&1 &
+        nohup $JRE_HOME/bin/java -Xms256m -Xmx512m -jar $JAR_NAME $RUN_PARAM >/dev/null 2>&1 &
         echo $! > $SERVICE_DIR/$PID
         echo "=== start $SERVICE_NAME"
         ;;
