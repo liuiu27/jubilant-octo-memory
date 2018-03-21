@@ -28,9 +28,9 @@ public class TestUtils {
         GetVoucherReq voucherReq = new GetVoucherReq();
         voucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS")+ CommonUtils.getCharAndNum(8));
         voucherReq.setMobileNo("78912");
-        voucherReq.setOrderDesc("机构获取SIP本地券码测试");
+        voucherReq.setOrderDesc("获取sip爱奇艺券码");
         voucherReq.setProductNo("20180309SIP");
-        voucherReq.setOrgOrderNo("SIP20180312");
+        voucherReq.setOrgOrderNo("2018030120");
         String reqStr = JSONObject.toJSONString(voucherReq);
         System.out.print("请求参数json字符串" + reqStr);
         String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";

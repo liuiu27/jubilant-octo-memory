@@ -97,7 +97,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             voucherLibGetBiz.UpdateElectronicVoucherLib(electronicVoucherLib);
 
             //step6.封装券码信息,给予返回
-            log.info("本地回获取券码成功,券码号:"+electronicVoucherLib.getTicketNo());
+            log.info("本地获取券码成功,券码号:"+electronicVoucherLib.getTicketNo());
             GetVoucherRes res = new GetVoucherRes();
             res.setVoucherLibId(electronicVoucherLib.getId());      //该条券码id
             res.setVoucherCode(electronicVoucherLib.getTicketNo()); //券码号
@@ -204,7 +204,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             }
 
             //响应结果
-            log.info("获取券码结果为:券码号"+electronicVoucherLib.getTicketNo()+",有效期:"+electronicVoucherLib.getEndDate());
+            log.info("机构获取sip券码结果为:券码号"+electronicVoucherLib.getTicketNo()+",有效期:"+electronicVoucherLib.getEndDate());
             GetVoucherRes res = new GetVoucherRes();
             res.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());      //平台订单号
             res.setOrgOrderNo(voucherOrderRes.getData().getOrder().getOrgOrderNo());//机构订单编号

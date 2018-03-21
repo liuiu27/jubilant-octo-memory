@@ -32,6 +32,6 @@
         <if test=" categoryId != null and categoryId != ''">
             and ID = #{categoryId}
         </if>
-        and VALID_STATUS = '0'
+        and VALID_STATUS = '1'
 	</select>
 </mapper>
