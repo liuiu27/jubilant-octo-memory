@@ -26,8 +26,8 @@ public class TestUtils {
         GetVoucherReq getVoucherReq = new GetVoucherReq();
         getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         getVoucherReq.setProductNo("20180105V123");
-        getVoucherReq.setOrgOrderNo("lakala20180316");
-        getVoucherReq.setOrderDesc("拉卡拉券码测试");
+        getVoucherReq.setOrgOrderNo("lakala001");
+        getVoucherReq.setOrderDesc("lakla-voucher-test-once");
         getVoucherReq.setMobileNo("15857128524");
         getVoucherReq.setExpire("20180331");
         String reqStr = JSONObject.toJSONString(getVoucherReq);
