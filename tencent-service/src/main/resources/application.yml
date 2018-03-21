@@ -4,7 +4,7 @@ spring:
   profiles:
     active: dev
 server:
-  port: 46982         # 指定该实例的端口
+   port: 46982         # 指定该实例的端口
 #日志配置
 logging:
   config: classpath:logback-spring.xml
@@ -15,7 +15,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 10000
+            timeoutInMilliseconds: 5000
 ribbon:
   ReadTimeout: 60000
   ConnectTimeout: 60000
