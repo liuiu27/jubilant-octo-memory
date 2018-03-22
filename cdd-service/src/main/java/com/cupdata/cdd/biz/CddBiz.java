@@ -43,7 +43,8 @@ public class CddBiz {
 					.replaceAll("PList", "pList").replaceAll("Pid", "pid")
 					.replaceAll("YzmList", "yzmList").replaceAll("Yzm", "yzm")
 					.replaceAll("TicketId", "ticketId").replaceAll("DateBeginTime", "dateBeginTime")
-					.replaceAll("DateOutTime", "dateOutTime");
+					.replaceAll("DateOutTime", "dateOutTime")
+					.replaceAll("PackageId", "packageId");
 			JSONObject jsonStr = JSONObject.parseObject(resStr);
 			
 			if(!"200".equals(jsonStr.get("status").toString())&&!"201".equals(jsonStr.get("status").toString())
@@ -56,10 +57,9 @@ public class CddBiz {
 				JSONObject pListObject = JSONObject.parseObject(pListArray.get(0).toString());
 				JSONArray yzmListArray = (JSONArray) JSONArray.parseArray(pListObject.getString("yzmList"));
 				JSONObject yzmListObject = JSONObject.parseObject(yzmListArray.get(0).toString());
-				String yzm = yzmListObject.get("yzm").toString();
 				CddCodeRes cddCodeRes = new CddCodeRes();
-				cddCodeRes = jsonStr.toJavaObject(CddCodeRes.class);
-				cddCodeRes.setYzm(yzm);
+				cddCodeRes.setSn(jsonStr.get("sn").toString());
+				cddCodeRes = yzmListObject.toJavaObject(CddCodeRes.class);
 				res.setData(cddCodeRes);
 			}
 			

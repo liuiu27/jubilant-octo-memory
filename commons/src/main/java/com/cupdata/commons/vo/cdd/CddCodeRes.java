@@ -64,4 +64,9 @@ public class CddCodeRes extends BaseData {
      * 券的有效截止时间
      */
     private String dateOutTime;
+    
+    /**
+     * 礼包ID(双方约定好，由车点点提供)
+     */
+    private String packageId;
 }	

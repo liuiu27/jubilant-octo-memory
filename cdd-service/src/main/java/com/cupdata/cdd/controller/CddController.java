@@ -71,8 +71,7 @@ public class CddController implements ICddController{
 	 * 获取券码
 	 */
 	@Override
-	public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org,@RequestBody GetVoucherReq voucherReq, HttpServletRequest request,
-			HttpServletResponse response) throws ErrorException {
+	public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org,@RequestBody GetVoucherReq voucherReq) throws ErrorException {
 		log.info("getVoucher is begin ........ org is " + org + "voucherReq is " + voucherReq.toString());
 		try {
 			BaseResponse<GetVoucherRes>  res = new  BaseResponse<GetVoucherRes>();
@@ -198,7 +197,7 @@ public class CddController implements ICddController{
 		    } 
 			//响应参数
 			GetVoucherRes voucherRes = new GetVoucherRes();
-			voucherRes.setExpire(cddCodeRes.getData().getDateOutTime());
+			voucherRes.setExpire(cddCodeRes.getData().getDateOutTime());							
 			voucherRes.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
 			voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			voucherRes.setVoucherCode(cddCodeRes.getData().getYzm());
@@ -212,15 +211,13 @@ public class CddController implements ICddController{
 	}
 
 	@Override
-	public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq,
-			HttpServletRequest request, HttpServletResponse response) {
+	public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq,
-			HttpServletRequest request, HttpServletResponse response) {
+	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq) {
 		// TODO Auto-generated method stub
 		return null;
 	}
