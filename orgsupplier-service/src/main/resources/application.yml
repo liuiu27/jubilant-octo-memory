@@ -38,29 +38,6 @@ eureka:
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
     prefer-ip-address: true     #表示将ip注册到Eureka server
 
-
-feign:
-  compression:
-    request:
-      enabled: true
-    response:
-      enabled: true
-
-ribbon:
-  eager-load:
-    enabled: true
-  ConnectTimeout: 50000 # 设置连接超时时间
-  OkToRetryOnAllOperations: true # 对所有操作请求都进行重试
-  MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
-  MaxAutoRetries: 1 # 对当前实例的重试次数
-#该配置，用于禁用Hystrix的超时时间
-hystrix:
-  command:
-    default:
-      execution:
-        timeout:
-          enabled: false
-
 logging:
   level: debug
 
@@ -105,6 +82,6 @@ eureka:
       enabled: true
   instance:
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
-    prefer-ip-address: true        # 设置微服务调用地址为IP优先（缺省为false）
+    prefer-ip-address: true     # 设置微服务调用地址为IP优先（缺省为false）
     lease-renewal-interval-in-seconds: 20 # 心跳时间，即服务续约间隔时间（缺省为30s）
     lease-expiration-duration-in-seconds: 60 # 发呆时间，即服务续约到期时间（缺省为90s）

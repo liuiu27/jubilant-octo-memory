@@ -58,6 +58,13 @@ public class GlobalExceptionHandler {
         log.error(ex.getErrorMessage());
         return new BaseResponse();
     }
+    @ExceptionHandler(value = {ErrorException.class})
+    public BaseResponse handle(HttpServletRequest request, ErrorException ex) {
+        log.error(ex.getErrorCode());
+        log.error(ex.getMessage());
+        return new BaseResponse(ResponseCodeMsg.REQUEST_TIMEOUT.getCode(),ResponseCodeMsg.REQUEST_TIMEOUT.getMsg(),ex.getCause());
+    }
+
 
 
 

@@ -56,7 +56,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
      * @return
      */
     @Override
-    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org" ,required = true) String org, @RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org" ,required = true) String org, @RequestBody GetVoucherReq voucherReq) {
         log.info("获取互亿礼品券controller,orderNo:" + voucherReq.getOrgOrderNo() + ",OrderDesc" + voucherReq.getOrderDesc() + "org" + org + "mobileNo" + voucherReq.getMobileNo());
         //设置响应数据结果
         BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse<GetVoucherRes>();
@@ -179,12 +179,12 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
     }
 
     @Override
-    public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq) {
         return null;
     }
 
     @Override
-    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request, HttpServletResponse response) {
+    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq) {
         return null;
     }
 }
