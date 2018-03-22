@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.api.trvok.ITrvokController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -178,6 +179,7 @@ public class TrvokController implements ITrvokController{
 			createVoucherOrderVo.setOrgNo(org);
 			createVoucherOrderVo.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			createVoucherOrderVo.setProductNo(voucherReq.getProductNo());
+			log.info(JSONObject.toJSONString(createVoucherOrderVo));
 	        BaseResponse<VoucherOrderVo> voucherOrderRes = orderFeignClient.createVoucherOrder(createVoucherOrderVo);
 	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode()) || null == voucherOrderRes.getData() || null == voucherOrderRes.getData().getOrder() || null == voucherOrderRes.getData().getVoucherOrder()){
 	            res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());

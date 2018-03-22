@@ -26,12 +26,13 @@ spring:
 
 eureka:
   client:
-    registerWithEureka: true    #是否将自己注册到Eureka Server，因为当前应用就是Eureka Server，所以设置为false
-    fetchRegistry: false         #是否从Eureka Server获取注册信息，因为为单点，所以设置为false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
   instance:
-    hostname: localhost    # 指定该Eureka实例的主机名               
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 60
+    lease-renewal-interval-in-seconds: 20 
             
 --- # 测试环境**********************************************************************************************************
 spring:

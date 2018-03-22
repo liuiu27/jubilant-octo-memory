@@ -372,10 +372,12 @@ public class HttpUtil {
 				
 //		GetVoucherReq getVoucherReq = new GetVoucherReq();
 //		getVoucherReq.setTimestamp(timestamp);
-////	getVoucherReq.setExpire("20180302");
+//    	getVoucherReq.setExpire("20180302");
 //		getVoucherReq.setProductNo("20180108V124");
 //		getVoucherReq.setOrgOrderNo("132132131");
 //		getVoucherReq.setOrderDesc("空港测试");
+		
+//		System.out.println(JSONObject.toJSONString(getVoucherReq));
 		
 		GetVoucherReq getVoucherReq = new GetVoucherReq();
 		getVoucherReq.setTimestamp(timestamp);
@@ -428,11 +430,10 @@ public class HttpUtil {
 //		String  data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
 //				"&sign=" + authReqSign ,
 //				"application/x-www-form-urlencoded;charset=UTF-8");
-////		
-		String data = doPost("http://localhost:8040/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+		
+		String data = doPost("http://localhost:46959/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
 				"&sign=" + authReqSign ,
 				"application/x-www-form-urlencoded;charset=UTF-8");
-//		
 		
 //		String data = doPost("http://localhost:8040/content/content/contentJump", "org=20180208O21995540&data=" + reqData + 
 //				"&sign=" + authReqSign ,

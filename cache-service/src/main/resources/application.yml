@@ -43,10 +43,10 @@ eureka:
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
   instance:
-     prefer-ip-address: true
-     hostname: localhost    # 指定该Eureka实例的主机名
-     lease-expiration-duration-in-seconds: 60
-     lease-renewal-interval-in-seconds: 20
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+    hostname: localhost    # 指定该Eureka实例的主机名
+    lease-expiration-duration-in-seconds: 60
+    lease-renewal-interval-in-seconds: 20
 
 
 --- # 测试环境**********************************************************************************************************
