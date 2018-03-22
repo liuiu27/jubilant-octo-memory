@@ -3,10 +3,7 @@ package com.cupdata.commons.exception;
 
 import com.alibaba.fastjson.JSONException;
 import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.vo.BaseData;
 import com.cupdata.commons.vo.BaseResponse;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public BaseResponse<List<Map>> MethodArgumentNotValidHandler(HttpServletRequest request,
-                                                                                   MethodArgumentNotValidException exception) throws Exception {
+                                                                                   MethodArgumentNotValidException exception) {
         List<Map> invalids = new ArrayList<>();
         //解析原错误信息，封装后返回，此处返回非法的字段名称，原始值，错误信息
         for (FieldError error : exception.getBindingResult().getFieldErrors()) {
@@ -41,7 +38,7 @@ public class GlobalExceptionHandler {
         return new BaseResponse(ResponseCodeMsg.PARAM_INVALID.getCode(),ResponseCodeMsg.PARAM_INVALID.getMsg(),invalids);
     }
     @ExceptionHandler(value = JSONException.class)
-    public BaseResponse<?> JSONExceptionHandler(HttpServletRequest request,JSONException exception) throws Exception {
+    public BaseResponse<?> JSONExceptionHandler(HttpServletRequest request,JSONException exception) {
         log.error(exception.getLocalizedMessage());
         return new BaseResponse(ResponseCodeMsg.PARAM_INVALID.getCode(),ResponseCodeMsg.PARAM_INVALID.getMsg(),exception.getMessage());
     }
@@ -55,7 +52,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = {BizException.class})
-    public BaseResponse handle(HttpServletRequest request, BizException ex) throws Exception {
+    public BaseResponse handle(HttpServletRequest request, BizException ex) {
 
         log.error(ex.getErrorCode());
         log.error(ex.getErrorMessage());
@@ -63,13 +60,6 @@ public class GlobalExceptionHandler {
     }
 
 
-    @Getter
-    @Setter
-    class ArgumentInvalidResult extends BaseData {
-        private String field;
-        private Object rejectedValue;
-        private String defaultMessage;
-    }
 
 
 }

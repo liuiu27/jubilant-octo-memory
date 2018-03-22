@@ -54,8 +54,7 @@ public class OrderController implements IOrderController {
 		try {
 			BaseResponse<VoucherOrderVo> voucherOrderRes = new BaseResponse();
 			// 根据产品编号,查询服务产品信息
-			BaseResponse<ProductInfVo> productInfRes = productFeignClient
-					.findByProductNo(createVoucherOrderVo.getProductNo());
+			BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(createVoucherOrderVo.getProductNo());
 			if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
 					|| null == productInfRes.getData()) {// 如果查询失败
 				log.error("product-service findByProductNo is error ProductNo is " + createVoucherOrderVo.getProductNo());

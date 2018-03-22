@@ -14,15 +14,6 @@ mybatis:
     type-aliases-package: com.cupdata.commons.model
     mapper-locations: classpath:mapper/*.xml
 
-#配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 5000
-
 jasypt:
   encryptor:
     password: cupdata
@@ -39,13 +30,16 @@ spring:
 
 eureka:
   client:
+    healthcheck:
+          enabled: true
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
+      defaultZone: http://${spring.cloud.client.ipAddress}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
   instance:
-    prefer-ip-address: true
-    hostname: localhost    # 指定该Eureka实例的主机名
-    lease-expiration-duration-in-seconds: 60
-    lease-renewal-interval-in-seconds: 20
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+
+logging:
+  level: debug
 
 --- # 测试环境**********************************************************************************************************
 spring:

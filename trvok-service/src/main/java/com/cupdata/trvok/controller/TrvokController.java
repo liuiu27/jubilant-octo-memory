@@ -1,16 +1,6 @@
 package com.cupdata.trvok.controller;
 
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.alibaba.fastjson.JSON;
 import com.cupdata.commons.api.trvok.ITrvokController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -20,27 +10,22 @@ import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.commons.vo.sysconfig.SysConfigVo;
-import com.cupdata.commons.vo.trvok.TrovkCodeReq;
-import com.cupdata.commons.vo.trvok.TrovkCodeRes;
-import com.cupdata.commons.vo.trvok.TrovkDisableReq;
-import com.cupdata.commons.vo.trvok.TrovkDisableRes;
-import com.cupdata.commons.vo.trvok.TrvokAirportReq;
-import com.cupdata.commons.vo.trvok.TrvokAirportRes;
-import com.cupdata.commons.vo.trvok.TrvokAreaReq;
-import com.cupdata.commons.vo.trvok.TrvokAreaRes;
-import com.cupdata.commons.vo.voucher.CreateVoucherOrderVo;
-import com.cupdata.commons.vo.voucher.DisableVoucherReq;
-import com.cupdata.commons.vo.voucher.DisableVoucherRes;
-import com.cupdata.commons.vo.voucher.GetVoucherReq;
-import com.cupdata.commons.vo.voucher.GetVoucherRes;
-import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
-import com.cupdata.commons.vo.voucher.WriteOffVoucherRes;
+import com.cupdata.commons.vo.trvok.*;
+import com.cupdata.commons.vo.voucher.*;
 import com.cupdata.trvok.feign.CacheFeignClient;
 import com.cupdata.trvok.feign.OrderFeignClient;
 import com.cupdata.trvok.feign.ProductFeignClient;
 import com.cupdata.trvok.service.TripService;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 
 /**
  * @Auth: LinYong
@@ -178,6 +163,7 @@ public class TrvokController implements ITrvokController{
 			createVoucherOrderVo.setOrgNo(org);
 			createVoucherOrderVo.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			createVoucherOrderVo.setProductNo(voucherReq.getProductNo());
+			log.info("createVoucherOrderVo : "+ JSON.toJSONString(createVoucherOrderVo));
 	        BaseResponse<VoucherOrderVo> voucherOrderRes = orderFeignClient.createVoucherOrder(createVoucherOrderVo);
 	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode()) || null == voucherOrderRes.getData() || null == voucherOrderRes.getData().getOrder() || null == voucherOrderRes.getData().getVoucherOrder()){
 	            res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());

@@ -22,22 +22,43 @@ hystrix:
 --- # 开发环境**********************************************************************************************************
 spring:
   profiles: dev
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
-    username: resdb
-    password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
-    type: com.alibaba.druid.pool.DruidDataSource
 
 eureka:
   client:
-    registerWithEureka: true    #是否将自己注册到Eureka Server，因为当前应用就是Eureka Server，所以设置为false
-    fetchRegistry: false         #是否从Eureka Server获取注册信息，因为为单点，所以设置为false
+    healthcheck:
+          enabled: true
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
+      defaultZone: http://${spring.cloud.client.ipAddress}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
   instance:
-    hostname: localhost    # 指定该Eureka实例的主机名                  
-            
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 50000 # 设置连接超时时间
+  OkToRetryOnAllOperations: true # 对所有操作请求都进行重试
+  MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
+  MaxAutoRetries: 1 # 对当前实例的重试次数
+
+#该配置，用于禁用Hystrix的超时时间
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+
+logging:
+  level: debug
+
 --- # 测试环境**********************************************************************************************************
 spring:
   profiles: test
