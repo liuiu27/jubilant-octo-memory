@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 /**
@@ -143,8 +141,7 @@ public class TrvokController implements ITrvokController{
 	 * 创建订单   空港获取券码  激活券码
 	 */
 	@Override
-	public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org,@RequestBody GetVoucherReq voucherReq, HttpServletRequest request,
-			HttpServletResponse response) {
+	public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org", required=true) String org,@RequestBody GetVoucherReq voucherReq) {
 		log.info("TrvokController getVoucher begin.............org is " + org);
 		BaseResponse<ProductInfVo> productInfo = new BaseResponse<>();
 		BaseResponse<GetVoucherRes> res = new BaseResponse<>();
@@ -252,8 +249,7 @@ public class TrvokController implements ITrvokController{
 	}
 
 	@Override
-	public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value="org", required=true) String org, @RequestBody DisableVoucherReq disableVoucherReq,
-			HttpServletRequest request, HttpServletResponse response) {
+	public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value="org", required=true) String org, @RequestBody DisableVoucherReq disableVoucherReq) {
 		log.info("TrvokController disableVoucher begin.............");
 		BaseResponse<DisableVoucherRes> res = new BaseResponse<>();
 		try {
@@ -299,8 +295,7 @@ public class TrvokController implements ITrvokController{
 		return res;
 	}
 	@Override
-	public BaseResponse<WriteOffVoucherRes> writeOffVoucher( String sup,WriteOffVoucherReq writeOffVoucherReq,
-			HttpServletRequest request, HttpServletResponse response) {
+	public BaseResponse<WriteOffVoucherRes> writeOffVoucher( String sup,WriteOffVoucherReq writeOffVoucherReq) {
 		return null;
 	}
 

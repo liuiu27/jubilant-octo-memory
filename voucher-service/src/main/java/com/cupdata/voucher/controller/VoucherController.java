@@ -1,20 +1,5 @@
 package com.cupdata.voucher.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.cupdata.commons.api.voucher.IVoucherController;
@@ -27,18 +12,23 @@ import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
-import com.cupdata.commons.vo.voucher.DisableVoucherReq;
-import com.cupdata.commons.vo.voucher.DisableVoucherRes;
-import com.cupdata.commons.vo.voucher.GetVoucherReq;
-import com.cupdata.commons.vo.voucher.GetVoucherRes;
-import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
-import com.cupdata.commons.vo.voucher.WriteOffVoucherRes;
+import com.cupdata.commons.vo.voucher.*;
 import com.cupdata.voucher.feign.OrderFeignClient;
 import com.cupdata.voucher.feign.OrgFeignClient;
 import com.cupdata.voucher.feign.ProductFeignClient;
 import com.cupdata.voucher.utils.ExecuteThreadPool;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @Auth: LinYong
@@ -73,7 +63,7 @@ public class VoucherController implements IVoucherController {
 	}
 	@Override
 	public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value = "org", required = true) String org,
-			@RequestBody GetVoucherReq voucherReq, HttpServletRequest request, HttpServletResponse response){
+			@RequestBody GetVoucherReq voucherReq){
 		log.info("VoucherController getVoucher is begin... org:"+org+" ,ProductNo:"+voucherReq.getProductNo()+" ,OrderDesc:"+voucherReq.getOrderDesc());
 		 //响应信息
 		BaseResponse<GetVoucherRes> res = new BaseResponse();// 默认为成功
@@ -142,8 +132,7 @@ public class VoucherController implements IVoucherController {
 
 	@Override
 	public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value = "org", required = true) String org,
-			@RequestBody DisableVoucherReq disableVoucherReq, HttpServletRequest request,
-			HttpServletResponse response) {
+			@RequestBody DisableVoucherReq disableVoucherReq) {
 		log.info("VoucherController disableVoucher is begin....");
 		BaseResponse<DisableVoucherRes> res = new BaseResponse<>();
 		try {
@@ -261,8 +250,7 @@ public class VoucherController implements IVoucherController {
 
 	@Override
 	public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value = "sup", required = true) String sup,
-			@RequestBody WriteOffVoucherReq writeOffVoucherReq, HttpServletRequest request,
-			HttpServletResponse response) {
+			@RequestBody WriteOffVoucherReq writeOffVoucherReq) {
 		BaseResponse<WriteOffVoucherRes> res = new BaseResponse<>();
 		// Step1：判断参数是否合法
 		try {
