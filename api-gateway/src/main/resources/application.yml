@@ -20,7 +20,7 @@ hystrix:
         execution:
           isolation:
             thread:
-              timeoutInMilliseconds: 15000
+              timeoutInMilliseconds: 10000
 
 --- # 开发环境 **********************************************************************************************************
 spring:
