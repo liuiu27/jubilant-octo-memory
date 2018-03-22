@@ -22,6 +22,8 @@ public class TestUtils {
     public static void main(String[] args) throws Exception {
         //获取券码网关URL
         String url = "http://localhost:46959/voucher/voucher/getVoucher";
+
+        String url2 = "http://10.193.17.86:46959/voucher/voucher/getVoucher";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数
@@ -40,7 +42,7 @@ public class TestUtils {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
     }
 }

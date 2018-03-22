@@ -63,11 +63,13 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://10.193.17.84:46960/eureka/,http://10.193.17.86:46960/eureka/
+    healthcheck:
+      enabled: true
   instance:
-    prefer-ip-address: true     #表示将ip注册到Eureka server
-    hostname: localhost    # 指定该Eureka实例的主机名
-    lease-expiration-duration-in-seconds: 60
-    lease-renewal-interval-in-seconds: 20
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
+    prefer-ip-address: true        # 设置微服务调用地址为IP优先（缺省为false）
+    lease-renewal-interval-in-seconds: 20 # 心跳时间，即服务续约间隔时间（缺省为30s）
+    lease-expiration-duration-in-seconds: 60 # 发呆时间，即服务续约到期时间（缺省为90s）
 
 
 --- # 生产环境**********************************************************************************************************
@@ -84,8 +86,10 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://10.150.9.20:46960/eureka/,http://10.150.9.21:46960/eureka/
+    healthcheck:
+      enabled: true
   instance:
-    prefer-ip-address: true     #表示将ip注册到Eureka server
-    hostname: localhost    # 指定该Eureka实例的主机名
-    lease-expiration-duration-in-seconds: 60
-    lease-renewal-interval-in-seconds: 20
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
+    prefer-ip-address: true        # 设置微服务调用地址为IP优先（缺省为false）
+    lease-renewal-interval-in-seconds: 20 # 心跳时间，即服务续约间隔时间（缺省为30s）
+    lease-expiration-duration-in-seconds: 60 # 发呆时间，即服务续约到期时间（缺省为90s）

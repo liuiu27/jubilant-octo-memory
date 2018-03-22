@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
-    <contextName>cms-boot</contextName>
+    <contextName>tencent-service</contextName>
     <property name="log.path" value="../log/tencent/"/>
 
     <!--控制台打印日志信息-->

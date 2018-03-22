@@ -21,13 +21,13 @@ import java.util.Date;
 public class TestUtils {
     public static void main(String[] args) throws Exception{
         String url = "http://localhost:46959/voucher/voucher/getVoucher";
-        String URL2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
+        String URL2 = "http://10.193.17.86:46959/voucher/voucher/getVoucher";
         String org = "2018010200000001";
         GetVoucherReq getVoucherReq = new GetVoucherReq();
         getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         getVoucherReq.setProductNo("20180105V123");
-        getVoucherReq.setOrgOrderNo("lakala001");
-        getVoucherReq.setOrderDesc("lakla-voucher-test-once");
+        getVoucherReq.setOrgOrderNo("lakala0321");
+        getVoucherReq.setOrderDesc("lakla-voucher-test-0321");
         getVoucherReq.setMobileNo("15857128524");
         getVoucherReq.setExpire("20180331");
         String reqStr = JSONObject.toJSONString(getVoucherReq);
@@ -42,7 +42,7 @@ public class TestUtils {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(URL2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
 
 
