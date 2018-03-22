@@ -1,5 +1,15 @@
 package com.cupdata.order.controller;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.api.order.IOrderController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -20,17 +30,10 @@ import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
 import com.cupdata.commons.vo.voucher.CreateVoucherOrderVo;
 import com.cupdata.order.biz.ServiceOrderBiz;
 import com.cupdata.order.biz.ServiceOrderContentBiz;
-import com.cupdata.order.feign.OrgSupplierClient;
 import com.cupdata.order.feign.ProductFeignClient;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.cupdata.order.feign.SupplierFeignClient;
 
-import javax.annotation.Resource;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -43,10 +46,10 @@ public class OrderController implements IOrderController {
 	private ServiceOrderBiz orderBiz;
 
 	@Autowired
-	private ServiceOrderContentBiz ContentBiz;
+	private ServiceOrderContentBiz contentBiz;
 
 	@Autowired
-	private OrgSupplierClient orgSupplierClient;
+	private SupplierFeignClient supplierClient;
 
 	@Override
 	public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody CreateVoucherOrderVo createVoucherOrderVo) {
@@ -64,7 +67,7 @@ public class OrderController implements IOrderController {
 			}
 
 			//查询商户标识
-            BaseResponse<SupplierInfVo>  SupplierInfVo = orgSupplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
+            BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
             String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
 
 			// 查询机构、商品关系记录
@@ -245,7 +248,7 @@ public class OrderController implements IOrderController {
 	        }
 
 	        //获取商户标识
-            BaseResponse<SupplierInfVo>  SupplierInfVo = orgSupplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
+            BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
             String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
 
 	        // 查询机构、商品关系记录
@@ -332,7 +335,7 @@ public class OrderController implements IOrderController {
 				return res;
 			}
 			//查询内容引入子订单表
-		 ContentQueryOrderRes contentQueryOrderRes = ContentBiz.queryContentOrder(contentQueryOrderReq);
+		 ContentQueryOrderRes contentQueryOrderRes = contentBiz.queryContentOrder(contentQueryOrderReq);
 		 if(null == contentQueryOrderRes) {
 			    log.error("queryContentOrder result is null.......  errorCode is " + ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
 				res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
