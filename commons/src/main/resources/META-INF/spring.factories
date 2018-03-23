@@ -1,4 +1,4 @@
 # Auto Configure
-#org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-#com.cupdata.commons.exception.GlobalExceptionHandler,
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.cupdata.commons.exception.GlobalExceptionHandler
 #com.cupdata.commons.config.WebLogAspect
