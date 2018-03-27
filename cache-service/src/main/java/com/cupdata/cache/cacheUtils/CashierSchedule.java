@@ -35,9 +35,9 @@ public class CashierSchedule {
 	String refreshCacheCron;
 
 	/**
-	 * 每十分钟刷新系统缓存
+	 * 每十分钟刷新系统缓存     测试环境每小时刷新一次缓存
 	 */
-	@Scheduled(cron = "* 0/10 * * * ?")
+	@Scheduled(cron = "*0 0/60 * * * ?")
 	public void scheduleRefreshAllCache(){
 		log.info("--每十分钟刷新系统缓存...开始--");
 //		CacheManager cacheManager = springUtil.getBean(CacheManager.class);
