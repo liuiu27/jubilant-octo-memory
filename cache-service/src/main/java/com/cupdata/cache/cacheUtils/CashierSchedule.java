@@ -3,7 +3,6 @@ package com.cupdata.cache.cacheUtils;
 import com.cupdata.cache.utils.SpringContext;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -31,13 +30,20 @@ public class CashierSchedule {
 	@Autowired
 	private CacheManager cacheManager;
 
-	@Value("${refreshCacheCron:* * 0/1 * * ? }")
-	String refreshCacheCron;
+	//10分钟
+	private final static String refreshCacheCron ="0 */10 * * * ?";
+
+
+
 
 	/**
 	 * 每十分钟刷新系统缓存     测试环境每小时刷新一次缓存
 	 */
+<<<<<<< HEAD
 	@Scheduled(cron = "*0 0/60 * * * ?")
+=======
+	@Scheduled(cron = refreshCacheCron)
+>>>>>>> 4ccd8b3a64956b40d5e35ca1484aa019c2953a13
 	public void scheduleRefreshAllCache(){
 		log.info("--每十分钟刷新系统缓存...开始--");
 //		CacheManager cacheManager = springUtil.getBean(CacheManager.class);

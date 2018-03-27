@@ -22,6 +22,7 @@ case "$1" in
         nohup $JRE_HOME/bin/java -Xms256m -Xmx512m -jar $JAR_NAME $RUN_PARAM >/dev/null 2>&1 &
         echo $! > $SERVICE_DIR/$PID
         echo "=== start $SERVICE_NAME"
+        sleep 5
         ;;
 
     stop)
