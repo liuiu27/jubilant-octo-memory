@@ -22,7 +22,7 @@ public class OrderUtils {
 
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrderUtils.class);
 
     /**
      * 初始化订单
@@ -49,6 +49,7 @@ public class OrderUtils {
         order.setOrderDesc(orderDesc);
         order.setOrderFailDesc(null);
         order.setSupplierFlag(supplierFlag);
+        order.setNodeName(CommonUtils.getHostAddress()+":"+ServerPort.getPort());
         if (ModelConstants.PRODUCT_TYPE_VOUCHER.equals(product.getProductType())){//如果是券码商品
         	if(StringUtils.isBlank(order.getNotifyUrl())) {
         		 order.setIsNotify(ModelConstants.IS_NOTIFY_NO);
@@ -59,7 +60,6 @@ public class OrderUtils {
             order.setIsNotify(ModelConstants.IS_NOTIFY_YES);
         }
         order.setNotifyUrl(null);
-        order.setNodeName(CommonUtils.getServerFlag());
         return order;
     }
 
@@ -81,7 +81,7 @@ public class OrderUtils {
     /**
      * 初始化内容引入订单
      * @param order
-     * @param productNo
+     * @param createContentOrderVo
      * @return
      */
 	public static ServiceOrderContent initContentOrder(ServiceOrder order,CreateContentOrderVo createContentOrderVo) {
