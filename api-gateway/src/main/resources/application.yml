@@ -6,7 +6,7 @@ spring:
       retry:
         enabled: true
   profiles:
-   active: dev
+   active: test
 server:
    port: 46959         # 指定该实例的端口
 #日志配置
@@ -20,8 +20,28 @@ hystrix:
         execution:
           isolation:
             thread:
-              timeoutInMilliseconds: 10000
+              timeoutInMilliseconds: 5000
 
+# zuul 网关配置
+zuul:
+  prefix:
+  ignore-url: /content
+  routes:
+    trvok-route:                    # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
+      path: /trvok/**               # 想要映射到的路径
+      service-id: trvok-service     # Eureka中的serviceId
+    voucher-route:
+      path: /voucher/**             # SIP获取本地券码请求的路径
+      service-id: voucher-service
+    recharge-route:                 # 充值请求的路径
+      path: /recharge/**
+      service-id: recharge-service
+    ihuyi-route:                    # 互亿请求的路径
+      path: /ihuyi/**
+      service-id: ihuyi-service
+    content-route:
+      path: /content/**
+      service-id: content-service
 --- # 开发环境 **********************************************************************************************************
 spring:
   profiles: dev
@@ -61,27 +81,6 @@ hystrix:
 
 
 
-# zuul 网关配置
-zuul:
-  prefix:
-  ignore-url: /content
-  routes:
-    trvok-route:                    # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
-      path: /trvok/**               # 想要映射到的路径
-      service-id: trvok-service     # Eureka中的serviceId
-    voucher-route:
-      path: /voucher/**             # SIP获取本地券码请求的路径
-      service-id: voucher-service
-    recharge-route:                 # 充值请求的路径
-      path: /recharge/**
-      service-id: recharge-service
-    ihuyi-route:                    # 互亿请求的路径
-      path: /ihuyi/**
-      service-id: ihuyi-service
-    content-route:
-      path: /content/**
-      service-id: content-service
-
 --- # 测试环境 **********************************************************************************************************
 spring:
   profiles: test
@@ -94,7 +93,6 @@ eureka:
   instance:
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
     prefer-ip-address: true     #表示将ip注册到Eureka server
-
 feign:
   compression:
     request:
@@ -106,6 +104,7 @@ ribbon:
   eager-load:
     enabled: true
   ConnectTimeout: 1000 # 设置连接超时时间
+  ReadTimeout: 200000
   OkToRetryOnAllOperations: true # 对所有操作请求都进行重试
   MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
   MaxAutoRetries: 1 # 对当前实例的重试次数
@@ -119,55 +118,10 @@ hystrix:
           enabled: false
 
 
-# zuul 网关配置
-zuul:
-  prefix:
-  ignore-url: /content
-  routes:
-    trvok-route:                    # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
-      path: /trvok/**               # 想要映射到的路径
-      service-id: trvok-service     # Eureka中的serviceId
-    voucher-route:
-      path: /voucher/**             # SIP获取本地券码请求的路径
-      service-id: voucher-service
-    recharge-route:                 # 充值请求的路径
-      path: /recharge/**
-      service-id: recharge-service
-    ihuyi-route:                    # 互亿请求的路径
-      path: /ihuyi/**
-      service-id: ihuyi-service
-    content-route:
-      path: /content/**
-      service-id: content-service
-
 
 --- # 生产环境***********************************************************************************************************
 spring:
   profiles: prd
-
-# zuul 网关配置
-zuul:
-  retryable: true
-  add-host-header: true
-  prefix:
-  ignore-url: /content
-  routes:
-    trvok-route:                    # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
-      path: /trvok/**               # 想要映射到的路径
-      service-id: trvok-service     # Eureka中的serviceId
-    voucher-route:
-      path: /voucher/**             # SIP获取本地券码请求的路径
-      service-id: voucher-service
-    recharge-route:                 # 充值请求的路径
-      path: /recharge/**
-      service-id: recharge-service
-    ihuyi-route:                    # 互亿请求的路径
-      path: /ihuyi/**
-      service-id: ihuyi-service
-    content-route:
-      path: /content/**
-      service-id: content-service
-
 eureka:
   client:
     serviceUrl:

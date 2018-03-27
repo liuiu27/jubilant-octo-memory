@@ -2,28 +2,26 @@ package com.cupdata.cache.cacheUtils;
 
 import java.util.List;
 
-import com.cupdata.cache.fegin.BankFeignClient;
-import com.cupdata.cache.fegin.ConfigFeignClient;
-import com.cupdata.cache.fegin.OrgFeignClient;
-import com.cupdata.cache.fegin.SupplierFeignClient;
-import com.cupdata.cache.utils.SpringContext;
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.orgsupplier.BankInfListVo;
-import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
-import com.cupdata.commons.vo.orgsupplier.SupplierInfListVo;
-import com.cupdata.commons.vo.sysconfig.SysConfigListVo;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.cupdata.cache.fegin.BankFeignClient;
+import com.cupdata.cache.fegin.ConfigFeignClient;
+import com.cupdata.cache.fegin.OrgFeignClient;
+import com.cupdata.cache.fegin.SupplierFeignClient;
+import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.model.BankInf;
 import com.cupdata.commons.model.OrgInf;
 import com.cupdata.commons.model.ServiceSupplier;
 import com.cupdata.commons.model.SysConfig;
+import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.orgsupplier.BankInfListVo;
+import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
+import com.cupdata.commons.vo.orgsupplier.SupplierInfListVo;
+import com.cupdata.commons.vo.sysconfig.SysConfigListVo;
 
 
 /**
