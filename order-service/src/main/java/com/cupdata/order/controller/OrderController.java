@@ -262,7 +262,7 @@ public class OrderController implements IOrderController {
 	        }
 	
 	        //根据订单业务来创建充值订单
-	        ServiceOrderRecharge rechargeOrder = orderBiz.createRechargeOrder(supplierFlag,createRechargeOrderVo.getOrgNo(),
+	        ServiceOrderRecharge rechargeOrder = orderBiz.createRechargeOrder(createRechargeOrderVo.getAccountNumber(),productInfRes.getData(),supplierFlag,createRechargeOrderVo.getOrgNo(),
 	                createRechargeOrderVo.getOrgOrderNo(), createRechargeOrderVo.getOrderDesc(),
 	                productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
 	        if (null == rechargeOrder) {// 创建券码订单失败

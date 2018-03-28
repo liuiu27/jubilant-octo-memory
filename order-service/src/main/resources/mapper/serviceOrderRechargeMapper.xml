@@ -39,10 +39,10 @@
 
 	<!-- 增加记录 -->
 	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.cupdata.commons.model.ServiceOrderRecharge">
-		insert into SERVICE_ORDER_RECHARGE (ORDER_ID, PRODUCT_NO, ACCOUNT_NUMBER, OPEN_DURATION, RECHARGE_AMT,
-		RECHARGE_TRAFFIC, RECHARGE_NUMBER, GAME_REGION, GAME_SERVER)
-		values(#{orderId},#{productNo},#{accountNumber},#{openDuration},#{rechargeAmt},
-		#{rechargeTraffic},#{rechargeNumber},#{gameRegion},#{gameServer})
+		insert into SERVICE_ORDER_RECHARGE (ORDER_ID,PRODUCT_NO,ACCOUNT_NUMBER,OPEN_DURATION,RECHARGE_AMT,RECHARGE_TRAFFIC,
+		RECHARGE_NUMBER,GAME_REGION,GAME_SERVER,CREATE_BY,CREATE_DATE)
+		values(#{orderId},#{productNo},#{accountNumber},#{openDuration},#{rechargeAmt},#{rechargeTraffic},
+		#{rechargeNumber},#{gameRegion},#{gameServer},#{createBy},now())
 	</insert>
 
 	<!--更新记录-->
@@ -59,8 +59,6 @@
 		RECHARGE_NUMBER = #{rechargeNumber},
 		GAME_REGION = #{gameRegion},
 		GAME_SERVER = #{gameServer},
-		CREATE_BY = #{createBy},
-		CREATE_DATE = #{createDate},
 		UPDATE_BY = #{updateBy},
 		UPDATE_DATE = NOW()
 		WHERE ORDER_ID = #{orderId};

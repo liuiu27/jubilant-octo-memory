@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cupdata.commons.vo.product.ProductInfVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -130,14 +131,14 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder>{
 	}
 
 	//创建充值订单
-	public ServiceOrderRecharge createRechargeOrder(String supplierFlag,String orgNo, String orgOrderNo, String orderDesc, ServiceProduct recharge, OrgProductRela orgProductRela){
+	public ServiceOrderRecharge createRechargeOrder(String accountNumber,ProductInfVo productInfVo, String supplierFlag, String orgNo, String orgOrderNo, String orderDesc, ServiceProduct recharge, OrgProductRela orgProductRela){
 
         //初始化主订单记录
 		ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,orgNo, orgOrderNo, orderDesc, recharge, orgProductRela);
 		orderDao.insert(order);//插入主订单
 
 		//初始化充值订单
-        ServiceOrderRecharge rechargeOrder = OrderUtils.initRechargeOrder(order,recharge.getProductNo());
+        ServiceOrderRecharge rechargeOrder = OrderUtils.initRechargeOrder(accountNumber,productInfVo,order,recharge.getProductNo());
         orderRechargeDao.insert(rechargeOrder);
         return rechargeOrder;
 	}

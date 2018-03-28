@@ -7,6 +7,7 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.content.CreateContentOrderVo;
 import com.cupdata.commons.vo.content.ServiceOrderContent;
 
+import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.order.feign.OrgSupplierClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -108,10 +109,14 @@ public class OrderUtils {
      * @param productNo 商品编号
      * @return
      */
-    public static ServiceOrderRecharge initRechargeOrder(ServiceOrder order,String productNo){
+    public static ServiceOrderRecharge initRechargeOrder(String accountNumber,ProductInfVo productInfVo,ServiceOrder order, String productNo){
         ServiceOrderRecharge rechargeOrder = new ServiceOrderRecharge();
         rechargeOrder.setOrderId(order.getId());
         rechargeOrder.setProductNo(productNo);
+        rechargeOrder.setOpenDuration(productInfVo.getProduct().getRechargeDuration());
+        rechargeOrder.setRechargeTraffic(productInfVo.getProduct().getRechargeTraffic());
+        rechargeOrder.setRechargeNumber(productInfVo.getProduct().getRechargeNumber());
+        rechargeOrder.setAccountNumber(accountNumber);
         return rechargeOrder;
 
     }
