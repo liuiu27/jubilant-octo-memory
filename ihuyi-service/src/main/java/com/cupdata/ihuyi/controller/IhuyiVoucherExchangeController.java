@@ -1,6 +1,7 @@
 package com.cupdata.ihuyi.controller;
 
 import com.cupdata.commons.api.ihuyi.IhuyiVoucherController;
+import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.constant.SysConfigParaNameEn;
 import com.cupdata.commons.utils.CommonUtils;
@@ -23,8 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -51,19 +50,17 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
      * 获取互亿礼品券
      * @param org 机构编号
      * @param voucherReq 获取券码请求参数（实现方法中需要添加@RequestBody注解获取参数）
-     * @param request
-     * @param response
      * @return
      */
     @Override
     public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org" ,required = true) String org, @RequestBody GetVoucherReq voucherReq) {
-        log.info("获取互亿礼品券controller,orderNo:" + voucherReq.getOrgOrderNo() + ",OrderDesc" + voucherReq.getOrderDesc() + "org" + org + "mobileNo" + voucherReq.getMobileNo());
+        log.info("进入获取互亿礼品券controller...orderNo:" + voucherReq.getOrgOrderNo() + ",OrderDesc:" + voucherReq.getOrderDesc() + ",org:" + org + ",mobileNo:" + voucherReq.getMobileNo());
         //设置响应数据结果
         BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse<GetVoucherRes>();
-        BaseResponse<ProductInfVo> productInfo = null;
         try {
             //获取该供应商产品,如果不存在此产品,直接返回错误状态码和信息
-            productInfo = productFeignClient.findByProductNo(voucherReq.getProductNo());
+            log.info("根据供应商编号获取商户信息,productNo:"+voucherReq.getProductNo());
+            BaseResponse<ProductInfVo> productInfo = productFeignClient.findByProductNo(voucherReq.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())) {
                 //设置状态码和错误信息,给予返回
                 log.info("获取产品失败！");
@@ -79,6 +76,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
             createvoucherOrderVo.setProductNo(voucherReq.getProductNo());
             createvoucherOrderVo.setOrgOrderNo(voucherReq.getOrgOrderNo());
             //调用创建订单服务
+            log.info("开始创建订单...");
             BaseResponse<VoucherOrderVo> voucherOrderRes = orderFeignClient.createVoucherOrder(createvoucherOrderVo);
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())
                     || null == voucherOrderRes.getData()
@@ -92,7 +90,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
             }
 
             //调用互亿电子券码接口获取礼品券码
-            IhuyiVoucherRes ihuyiVoucherRes = IhuyiUtils.ihuyiGiftCardBuy(voucherOrderRes.getData(),productInfo.getData().getProduct().getSupplierParam(),voucherReq);
+            IhuyiVoucherRes ihuyiVoucherRes = IhuyiUtils.ihuyiGiftCardBuy(voucherOrderRes.getData(),productInfo.getData().getProduct().getSupplierParam(),voucherReq,cacheFeignClient);
 
             //互亿获取券码是否成功
             if(ihuyiVoucherRes.getCode() != 1){
@@ -136,6 +134,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
             SimpleDateFormat format =  new SimpleDateFormat( "yyyyMMdd" );
             String endDate = format.format(cardInfoList.get(0).getExpired()*1000L);
             voucherOrderRes.getData().getOrder().setSupplierOrderNo(ihuyiVoucherRes.getTaskid());
+            voucherOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_NO);
             voucherOrderRes.getData().getVoucherOrder().setEndDate(endDate);
             voucherOrderRes.getData().getVoucherOrder().setVoucherCode(decodeNo);
             voucherOrderRes.getData().getVoucherOrder().setVoucherPassword(decodePwd);
@@ -150,7 +149,9 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
                 }
             }
             voucherOrderRes.getData().getVoucherOrder().setQrCodeUrl(other);
+            voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
             //更新订单信息
+            log.info("更新订单信息");
             voucherOrderRes = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())
                     || null == voucherOrderRes.getData()
@@ -169,6 +170,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
             voucherRes.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
             voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
             getVoucherRes.setData(voucherRes);
+            log.info("响应结果");
             return getVoucherRes;
         }catch (Exception e){
             log.error("IhuyiVoucherExchangeController getVoucher error is",e);

@@ -11,6 +11,7 @@ import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.recharge.RechargeRes;
 import com.cupdata.ihuyi.constant.IhuyiRechargeResCode;
+import com.cupdata.ihuyi.feign.CacheFeignClient;
 import com.cupdata.ihuyi.feign.NotifyFeignClient;
 import com.cupdata.ihuyi.feign.OrderFeignClient;
 import com.cupdata.ihuyi.feign.ProductFeignClient;
@@ -51,15 +52,19 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
     @Autowired
     private NotifyFeignClient notifyFeignClient;
 
+
+    @Autowired
+    private CacheFeignClient cacheFeignClient ;
+
     @Override
     public BaseResponse<RechargeRes> recharge(@RequestParam(value="org", required=true) String org,@RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
-        log.info("调用互亿流量充值controller......");
+        log.info("进入互亿流量充值controller......Account:"+rechargeReq.getAccount()+",ProductNo:"+rechargeReq.getProductNo()+",OrderDesc:"+rechargeReq.getOrderDesc()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo());
         //设置响应结果
         BaseResponse<RechargeRes> rechargeRes = new BaseResponse<RechargeRes>();
-        BaseResponse<ProductInfVo> productInfo = null;
         try {
             //step1.根据服务产品编号查询对应的服务产品
-            productInfo = productFeignClient.findByProductNo(rechargeReq.getProductNo());
+            log.info("根据产品编号查询产品信息...ProductNo:"+rechargeReq.getProductNo());
+            BaseResponse<ProductInfVo> productInfo = productFeignClient.findByProductNo(rechargeReq.getProductNo());
             //产品信息响应码失败,返回错误信息参数
             if (productInfo == null || !ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())){
                 log.info("获取产品失败");
@@ -77,6 +82,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
             createRechargeOrderVo.setProductNo(rechargeReq.getProductNo());
 
             //调用订单服务创建订单
+            log.info("创建订单");
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                     || null == rechargeOrderRes.getData()
@@ -89,7 +95,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
             }
 
             //step3.调用互亿充值工具类进行流量充值
-            IhuyiRechargeRes ihuyiRechargeRes = IhuyiUtils.ihuyiTrafficRecharge(rechargeOrderRes.getData(),rechargeReq);
+            IhuyiRechargeRes ihuyiRechargeRes = IhuyiUtils.ihuyiTrafficRecharge(rechargeOrderRes.getData(),rechargeReq,cacheFeignClient);
             RechargeRes res = new RechargeRes();
             //1:提交成功； 0、1015、1016、4001：核单处理,订购成功
             if (1 == ihuyiRechargeRes.getCode() || 0 == ihuyiRechargeRes.getCode()
@@ -98,11 +104,15 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                     || 4001 == ihuyiRechargeRes.getCode()) {
                 rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_HANDING); //处理中
                 rechargeOrderRes.getData().getOrder().setNotifyUrl(rechargeReq.getNotifyUrl());            //充值结果通知地址(机构接收地址)
+                rechargeOrderRes.getData().getRechargeOrder().setRechargeNumber(rechargeReq.getRechargeNumber());//充值数量
+                rechargeOrderRes.getData().getRechargeOrder().setRechargeAmt(rechargeReq.getRechargeAmt());//充值金额
+                rechargeOrderRes.getData().getRechargeOrder().setRechargeTraffic(rechargeReq.getRechargeTraffic());//充值流量
                 if (!StringUtils.isEmpty(ihuyiRechargeRes.getTaskid())) {
                     rechargeOrderRes.getData().getOrder().setSupplierOrderNo(ihuyiRechargeRes.getTaskid());
                 }
 
                 //调用订单服务更新订单
+                log.info("互亿流量充值下单成功,更新订单");
                 rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                         || null == rechargeOrderRes.getData()
@@ -113,16 +123,13 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                     return rechargeRes;
                 }
 
-                //开启充值通知服务:此服务会连续三次通知给机构充值结果,若三次内通知成功，那么直接写入order_notify_complete表;否则，写入order_notify_wait表,NotifySchedual会轮询这张表进行通知
-                notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderRes.getData().getOrder().getOrderNo());
-
-                //充值成功响应结果
+                //互亿流量下单成功响应结果
                 res.setRechargeStatus(ModelConstants.RECHARGE_ING);
                 rechargeRes.setData(res);
                 return rechargeRes;
             } else {
-                //充值失败响应结果
-                log.info("互亿话费充值失败");
+                //下单失败响应结果,并通知机构
+                log.info("互亿话费充值下单失败");
                 rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL); //订单失败
                 //调用订单服务更新订单
                 rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
@@ -134,6 +141,10 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                     rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getMsg());
                     return rechargeRes;
                 }
+
+                //通知机构下单失败
+                notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderRes.getData().getOrder().getOrderNo());
+
                 //设置响应结果
                 rechargeRes.setResponseMsg(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getMsg());
                 rechargeRes.setResponseCode(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getCode());
@@ -185,7 +196,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
             map.put("mobile", mobile);
             map.put("status", status);//流量充值
             map.put("message", message);
-            String validateSign = IhuyiUtils.getSign(map);
+            String validateSign = IhuyiUtils.getSign(map,cacheFeignClient);
             map.put("orderid",orderid);
             map.put("sign",sign);
             log.info("互亿流量充值回调，互亿请求数据:" + JSONObject.toJSONString(map));
@@ -207,24 +218,28 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                     rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                     if (rechargeOrderVo.getData().getOrder() != null && ModelConstants.ORDER_STATUS_HANDING.equals(rechargeOrderVo.getData().getOrder().getOrderStatus())) {
                         orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
-                        log.info("互亿话费充值订单更新成功");
+                        log.info("互亿流量充值状态推送...互亿话费充值订单更新成功");
                         writer.print(resultStr);
+                        //互亿流量充值成功,通知机构
+                        notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderVo.getData().getOrder().getOrderNo());
                     } else if (rechargeOrderVo.getData().getOrder() == null){
-                        log.info("互亿话费订购状态的订单号不存在");
+                        log.info("互亿流量充值状态推送...互亿话费订购状态的订单号不存在");
                         writer.print(resultStr);
                     } else {
-                        log.info("互亿话费流量订购,状态已处理");
+                        log.info("互亿流量充值状态推送...互亿话费流量订购,状态已处理");
                         writer.print(resultStr);
                     }
                 } else { //充值失败
-                    log.info("话费充值失败,订单状态更新为失败");
+                    log.info("互亿流量充值状态推送...话费充值失败,订单状态更新为失败");
                     rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);
                     orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
                     resultStr = "fail";
                     writer.print(resultStr);
+                    //充值失败,通知机构
+                    notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderVo.getData().getOrder().getOrderNo());
                 }
             } else {
-                log.info("互亿流量充值回调，验签失败");
+                log.info("互亿流量充值状态推送...互亿流量充值回调，验签失败");
                 resultStr = "fail";
                 writer.print(resultStr);
             }
@@ -233,6 +248,6 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
             resultStr = "fail";
             writer.print(resultStr);
         }
-        log.info("互亿流量充值回调返回字符：" + resultStr);
+        log.info("互亿流量充值状态推送...互亿流量充值回调返回字符：" + resultStr);
     }
 }

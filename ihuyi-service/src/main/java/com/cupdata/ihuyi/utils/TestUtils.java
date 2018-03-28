@@ -31,6 +31,7 @@ public class TestUtils {
         //phoneRecharge();
         //trafficRecharge();
         //virtualTest();
+        getVoucherTest();
     }
 
     /**
@@ -39,7 +40,7 @@ public class TestUtils {
      */
     public static void phoneRecharge() throws Exception{
         //互亿话费充值网关URL
-        String url = "http://localhost:8040/recharge/recharge/getRecharge";
+        String url = "http://localhost:46959/recharge/recharge/getRecharge";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数
@@ -47,7 +48,7 @@ public class TestUtils {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("15737317830");           //充值账号
-        rechargeReq.setOrgOrderNo("IHUYI001");           //唯一订单编号
+        rechargeReq.setOrgOrderNo("IHUYIphoneRecharge");           //唯一订单编号
         rechargeReq.setProductNo("171114R304");          //互亿话费充值产品编号
         rechargeReq.setOrderDesc("互亿话费充值");
         rechargeReq.setNotifyUrl("http://10.152.0.24:8040/huyi/ihuyiRecharge/orgTest"); //通知地址
@@ -67,7 +68,7 @@ public class TestUtils {
 
     public static void trafficRecharge() throws Exception{
         //互亿流量充值网关URL
-        String url = "http://localhost:8040/recharge/recharge/getRecharge";
+        String url = "http://localhost:46959/recharge/recharge/getRecharge";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数
@@ -75,7 +76,7 @@ public class TestUtils {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("15737317830");           //充值账号
-        rechargeReq.setOrgOrderNo("IHUYI002");           //唯一订单编号
+        rechargeReq.setOrgOrderNo("IHUYItrafficRecharge");           //唯一订单编号
         rechargeReq.setProductNo("171114R602");          //互亿流量充值产品编号
         rechargeReq.setOrderDesc("互亿流量充值");
         rechargeReq.setNotifyUrl("http://10.152.0.24:8040/huyi/ihuyiTraffic/orgTest"); //通知地址
@@ -98,13 +99,13 @@ public class TestUtils {
      * @throws Exception
      */
     public static void virtualTest() throws Exception {
-        String url = "http://localhost:8040/recharge/recharge/getRecharge";
+        String url = "http://localhost:46959/recharge/recharge/getRecharge";
         String org = "2018010200000001";
         RechargeReq rechargeReq = new RechargeReq();
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");        //手机号
         rechargeReq.setAccount("625192155");           //充值账号
-        rechargeReq.setOrgOrderNo("IHUYI003");         //唯一订单编号
+        rechargeReq.setOrgOrderNo("IHUYIvirtualRecharge");         //唯一订单编号
         rechargeReq.setProductNo("171130R475");        //互亿虚拟充值产品编号
         rechargeReq.setOrderDesc("互亿英雄联盟虚拟充值");      //充值描述
         rechargeReq.setGameRegion("绯红之刃");         //游戏大区
@@ -129,14 +130,14 @@ public class TestUtils {
      * @throws Exception
      */
     public static void getVoucherTest() throws Exception {
-        String url = "http://localhost:8040/voucher/voucher/getVoucher";
+        String url = "http://localhost:46959/voucher/voucher/getVoucher";
         String org = "2018010200000001";
         GetVoucherReq getVoucherReq = new GetVoucherReq();
         getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         getVoucherReq.setProductNo("171116E873");
-        getVoucherReq.setOrgOrderNo("huyivoucher001");
-        getVoucherReq.setOrderDesc("互亿电子礼券测试");
-        getVoucherReq.setMobileNo("15857128524");
+        getVoucherReq.setOrgOrderNo("testNodeName");
+        getVoucherReq.setOrderDesc("获取互亿电子券码");
+        getVoucherReq.setMobileNo("15737377830");
         getVoucherReq.setExpire("20180331");
         String reqStr = JSONObject.toJSONString(getVoucherReq);
         System.out.print("请求参数json字符串" + reqStr);
@@ -149,7 +150,6 @@ public class TestUtils {
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
         String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
-
     }
 
 }
