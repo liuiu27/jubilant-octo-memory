@@ -30,6 +30,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import com.cupdata.commons.vo.trvok.TrvokAirportReq;
 import com.cupdata.commons.vo.trvok.TrvokAreaReq;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -49,6 +50,7 @@ import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.vo.content.ContentJumpReq;
+import com.cupdata.commons.vo.voucher.DisableVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 
 /**
@@ -359,27 +361,40 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) throws Exception {
-String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);
+    	String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);
 		
-//		TrvokAreaReq areaReq = new TrvokAreaReq();
-//		areaReq.setAreaType("1");
-//		areaReq.setTimestamp(timestamp);
+		//获取区域信息请求参数
+//		TrvokAreaReq req = new TrvokAreaReq();
+//		req.setAreaType("1");
+//		req.setTimestamp(timestamp);
+
+//		String data = doPost("http://cvpa.leagpoint.com/sipService/trvok/trvok/getTrvokArea", "org=20180208O21995540&data=" + reqData +
+//		"&sign=" + authReqSign ,
+//		"application/x-www-form-urlencoded;charset=UTF-8");
+
 	
+		//获取机场详情请求参数
+//		TrvokAirportReq req = new TrvokAirportReq();
+//		req.setAirportId("504");
+//		req.setAreaType("1");
+//		req.setTimestamp(timestamp);
 		
-//		TrvokAirportReq trvokAirportReq = new TrvokAirportReq();
-//		trvokAirportReq.setAirportId("504");
-//		trvokAirportReq.setAreaType("1");
-//		trvokAirportReq.setTimestamp(timestamp);
-				
-		GetVoucherReq getVoucherReq = new GetVoucherReq();
-		getVoucherReq.setTimestamp(timestamp);
-    	getVoucherReq.setExpire("20180302");
-		getVoucherReq.setProductNo("20180108V124");
-		getVoucherReq.setOrgOrderNo("132132131");
-		getVoucherReq.setOrderDesc("空港测试");
-
-//		System.out.println(JSONObject.toJSONString(getVoucherReq));
-
+		//获取空港券码请求参数
+//		GetVoucherReq req = new GetVoucherReq();
+//		req.setTimestamp(timestamp);
+//		req.setExpire("20180327");
+//		req.setProductNo("20180108V124");
+//		req.setOrgOrderNo("13213213166");
+//		req.setOrderDesc("空港测试");
+		
+		//空港禁用券码请求参数
+		DisableVoucherReq req =  new DisableVoucherReq();
+		req.setDisableDesc("禁用测试");
+		req.setOrgOrderNo("13213213166");
+		req.setTimestamp(timestamp);
+		req.setVoucherCode("246716108");
+		
+		//获取车点点券码请求参数
 //		GetVoucherReq getVoucherReq = new GetVoucherReq();
 //		getVoucherReq.setTimestamp(timestamp);
 //		getVoucherReq.setExpire("20180109");
@@ -387,22 +402,8 @@ String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yy
 //		getVoucherReq.setOrgOrderNo("132132131");
 //		getVoucherReq.setMobileNo("13911111111");
 //		getVoucherReq.setOrderDesc("车点点测试");
-		
-		
-		
-//		ContentJumpReq contentJumpReq = new ContentJumpReq();
-//		contentJumpReq.setLoginFlag("123");
-//		contentJumpReq.setLoginUrl("123");
-//		contentJumpReq.setMobileNo("666");
-//		contentJumpReq.setPayUrl("12312");
-//		contentJumpReq.setProductNo("20180315SIP");
-//		contentJumpReq.setTimestamp(timestamp);
-//		contentJumpReq.setUserId("1");
-//		contentJumpReq.setUserName("213");
-		
-		
-		
-		String reqStr = JSONObject.toJSONString(getVoucherReq);
+
+		String reqStr = JSONObject.toJSONString(req);
 		
 		String pubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
 		PublicKey uppPubKey = RSAUtils.getPublicKeyFromString(pubKeyStr);
@@ -413,33 +414,26 @@ String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yy
 		String authReqSign = RSAUtils.sign(reqStr, merchantPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
 		authReqSign = URLEncoder.encode(authReqSign);	
 		
-		
-//		String data = doPost("http://10.193.17.86:46959/trvok/trvok/getTrvokArea", "org=20180208O21995540&data=" + reqData +
-//				"&sign=" + authReqSign ,
-//				"application/x-www-form-urlencoded;charset=UTF-8");
-//		
-//		doPost("http://cvpa.leagpoint.com/sipService/trvok/trvok/getTrvokAirportInfo", "org=20180208O21995540&data=" + reqData + 
-//				"&sign=" + authReqSign ,
-//				"application/x-www-form-urlencoded;charset=UTF-8");
-//		
-//		doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+		//获取区域信息URL
+//		String data = doPost("http://cvpa.leagpoint.com/sipService/trvok/trvok/getTrvokArea", "org=20180208O21995540&data=" + reqData +
 //				"&sign=" + authReqSign ,
 //				"application/x-www-form-urlencoded;charset=UTF-8");
 		
-//		String  data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData +
+		//获取机场详情URL		
+//		String data = doPost("http://cvpa.leagpoint.com/sipService/trvok/trvok/getTrvokAirportInfo", "org=20180208O21995540&data=" + reqData + 
 //				"&sign=" + authReqSign ,
 //				"application/x-www-form-urlencoded;charset=UTF-8");
 		
-		String data = doPost("http://localhost:46959/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+		//获取券码URL
+//		String data =  doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		//禁用券码URL
+		String data = doPost("http://localhost:46959/voucher/voucher/disableVoucher", "org=20180208O21995540&data=" + reqData + 
 				"&sign=" + authReqSign ,
 				"application/x-www-form-urlencoded;charset=UTF-8");
-		
-//		String data = doPost("http://localhost:8040/content/content/contentJump", "org=20180208O21995540&data=" + reqData + 
-//				"&sign=" + authReqSign ,
-//				"application/x-www-form-urlencoded;charset=UTF-8");
-		
-		//String data = "Gb%2FDZbw8TY2BPpWTFVrVZyHOGYdeClprnES4xBEI4sAMgcA63w%2BRdzJr2RPKgtWHpAcX9QcHEQySrrB2eZiOrNgBtvMMWJ62scv2bbWF3zB%2FiIsWJwqURGNGSCk1tACD5PvcuicOEcMeGSTiyxXSJLmpuQO5DSYwIybRMt2685cLfyvBH0BjXichzjYi8qjYoirs76JIi3AUnVkaFAx86%2FifsoBS7I04OhFshMDbX0bj4z4miDlGeQRUZSou7yO6uqY5h7JM5O023yujfDynRFkIoMS3eoYUcQu6MYJB5PSx86GH1Tkp8TP8SDqYg9jrJDWwhW5U5NTKusdPD22PbQ%3D%3D";
-		
+			
         String [] a =	data.split("&sign=");
 		data = a[0].substring(5, a[0].length());
 		data = URLDecoder.decode(data,"utf-8");

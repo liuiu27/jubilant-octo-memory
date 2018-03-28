@@ -6,7 +6,7 @@ spring:
       retry:
         enabled: true
   profiles:
-   active: test
+   active: dev
 server:
    port: 46959         # 指定该实例的端口
 #日志配置

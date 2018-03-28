@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
 <mapper namespace="com.cupdata.order.dao.ServiceOrderDao">
 
     <resultMap id="BaseResultMap" type="com.cupdata.commons.model.ServiceOrder">
@@ -102,20 +103,14 @@
 		<include refid="Base_Column_List" />
 		from SERVICE_ORDER
 		where 1=1
-		<if test=" id != null and id != ''">
-			and ID = #{id}
-		</if>
 		<if test=" orgNo != null and orgNo != ''">
 			and ORG_NO = #{orgNo}
 		</if>
 		<if test=" supplierNo != null and supplierNo != ''">
 			and SUPPLIER_NO = #{supplierNo}
 		</if>
-		<if test=" orgOrderNo != null and orgOrderNo != ''">
-			and ORG_ORDER_NO = #{orgOrderNo}
-		</if>
-		<if test=" orgNo != null and orgNo != ''">
-			and SUPPLIER_ORDER_NO = #{orgNo}
+		<if test=" orderNo != null and orderNo != ''">
+			and ORDER_NO = #{orderNo}
 		</if>
 		<if test=" orgOrderNo != null and orgOrderNo != ''">
 			and ORG_ORDER_NO = #{orgOrderNo}
@@ -151,48 +146,42 @@
      <select id="selectAll"  resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from SERVICE_ORDER
         where 1=1
-		 <if test=" id != null and id != ''">
-			 and ID = #{id}
-		 </if>
 		 <if test=" orgNo != null and orgNo != ''">
-			 and ORG_NO = #{orgNo}
-		 </if>
-		 <if test=" supplierNo != null and supplierNo != ''">
-			 and SUPPLIER_NO = #{supplierNo}
-		 </if>
-		 <if test=" orgOrderNo != null and orgOrderNo != ''">
-			 and ORG_ORDER_NO = #{orgOrderNo}
-		 </if>
-		 <if test=" orgNo != null and orgNo != ''">
-			 and SUPPLIER_ORDER_NO = #{orgNo}
-		 </if>
-		 <if test=" orgOrderNo != null and orgOrderNo != ''">
-			 and ORG_ORDER_NO = #{orgOrderNo}
-		 </if>
-		 <if test=" supplierOrderNo != null and supplierOrderNo != ''">
-			 and SUPPLY_ORDER_NO = #{supplierOrderNo}
-		 </if>
-		 <if test=" orgPrice != null and orgPrice != ''">
-			 and ORG_PRICE = #{orgPrice}
-		 </if>
-		 <if test=" supplierPrice != null and supplierPrice != ''">
-			 and SUPPLIER_PRICE = #{supplierPrice}
-		 </if>
-		 <if test=" settleDate != null and settleDate != ''">
-			 and SETTLE_DATE = #{settleDate}
-		 </if>
-		 <if test=" orderStatus != null and orderStatus != ''">
-			 and ORDER_STATUS = #{orderStatus}
-		 </if>
-		 <if test=" orderType != null and orderType != ''">
-			 and ORDER_TYPE = #{orderType}
-		 </if>
-		 <if test=" supplierFlag != null and supplierFlag != ''">
-			 and SUPPLIER_FLAG = #{supplierFlag}
-		 </if>
-		 <if test=" orderSubType != null and orderSubType != ''">
-			 and ORDER_SUB_TYPE = #{orderSubType}
-		 </if>
+			and ORG_NO = #{orgNo}
+		</if>
+		<if test=" supplierNo != null and supplierNo != ''">
+			and SUPPLIER_NO = #{supplierNo}
+		</if>
+		<if test=" orderNo != null and orderNo != ''">
+			and ORDER_NO = #{orderNo}
+		</if>
+		<if test=" orgOrderNo != null and orgOrderNo != ''">
+			and ORG_ORDER_NO = #{orgOrderNo}
+		</if>
+		<if test=" supplierOrderNo != null and supplierOrderNo != ''">
+			and SUPPLY_ORDER_NO = #{supplierOrderNo}
+		</if>
+		<if test=" orgPrice != null and orgPrice != ''">
+			and ORG_PRICE = #{orgPrice}
+		</if>
+		<if test=" supplierPrice != null and supplierPrice != ''">
+			and SUPPLIER_PRICE = #{supplierPrice}
+		</if>
+		<if test=" settleDate != null and settleDate != ''">
+			and SETTLE_DATE = #{settleDate}
+		</if>
+		<if test=" orderStatus != null and orderStatus != ''">
+			and ORDER_STATUS = #{orderStatus}
+		</if>
+		<if test=" orderType != null and orderType != ''">
+			and ORDER_TYPE = #{orderType}
+		</if>
+		<if test=" supplierFlag != null and supplierFlag != ''">
+			and SUPPLIER_FLAG = #{supplierFlag}
+		</if>
+		<if test=" orderSubType != null and orderSubType != ''">
+			and ORDER_SUB_TYPE = #{orderSubType}
+		</if>
 	 </select>
 
 	<select id="selectMainOrderList" parameterType="map" resultMap="BaseResultMap">
