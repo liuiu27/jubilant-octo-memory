@@ -17,7 +17,7 @@ import java.util.Map;
  * @Date: 20:20 2017/12/14
  */
 
-//@Service
+@Service
 public class ServiceProductBiz extends BaseBiz<ServiceProduct> {
     @Autowired
     private ServiceProductDao productDao;
