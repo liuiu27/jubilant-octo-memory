@@ -39,5 +39,4 @@ public class OrgProductRelaBiz extends BaseBiz<OrgProductRela> {
         params.put("productNo", productNo);
         return orgProductRelaDao.selectSingle(params);
     }
-
 }
