@@ -1,9 +1,20 @@
 package com.cupdata.order.biz;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.cupdata.commons.biz.BaseBiz;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.dao.BaseDao;
-import com.cupdata.commons.model.*;
+import com.cupdata.commons.model.OrgProductRela;
+import com.cupdata.commons.model.ServiceOrder;
+import com.cupdata.commons.model.ServiceOrderRecharge;
+import com.cupdata.commons.model.ServiceOrderVoucher;
+import com.cupdata.commons.model.ServiceProduct;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.content.CreateContentOrderVo;
@@ -15,12 +26,6 @@ import com.cupdata.order.dao.ServiceOrderDao;
 import com.cupdata.order.dao.ServiceOrderRechargeDao;
 import com.cupdata.order.dao.ServiceOrderVoucherDao;
 import com.cupdata.order.util.OrderUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Auth: LinYong
@@ -149,7 +154,7 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder>{
 	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
 		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
 		VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
-		Map<String, Object> paramMap = new HashMap<>();
+		Map<String, Object> paramMap = new HashMap<String,Object>();
 		paramMap.put("orgNo", orgNo);
 		paramMap.put("orgOrderNo", orgOrderNo);
     	ServiceOrder order = orderDao.selectSingle(paramMap);

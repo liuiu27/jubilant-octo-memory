@@ -21,7 +21,13 @@ mybatis:
 #              timeoutInMilliseconds: 5000
 #日志配置
 logging:
+  level: classpath:mapper/*.xml
   config: classpath:logback-spring.xml
+  mapper: DEBUG   
+  
+
+  
+ 
 
 jasypt:
   encryptor:

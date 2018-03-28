@@ -1,21 +1,36 @@
 spring:
   application:
-    name: product-service
+    name: order-service
   profiles:
     active: dev
 server:
-   port: 46963         # 指定该实例的端口
+   port: 46964         # 指定该实例的端口
 #mybatis相关配置
 mybatis:
     type-aliases-package: com.cupdata.commons.model
     mapper-locations: classpath:mapper/*.xml
+    config-location: classpath:mybatis.xml
+ 
+#配置Hystrix的超时时间为10秒，解决Feign/Ribbon第一次请求失败的问题
+#hystrix:
+#  command:
+#      default:
+#        execution:
+#          isolation:
+#            thread:
+#              timeoutInMilliseconds: 5000
 #日志配置
 logging:
   config: classpath:logback-spring.xml
+ 
 jasypt:
   encryptor:
     password: cupdata
-
+    
+feign:
+  hystrix:
+    enabled: true   
+ 
 --- # 开发环境**********************************************************************************************************
 spring:
   profiles: dev
@@ -25,7 +40,7 @@ spring:
     username: resdb
     password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
     type: com.alibaba.druid.pool.DruidDataSource
-
+ 
 eureka:
   client:
     healthcheck:
@@ -35,15 +50,15 @@ eureka:
   instance:
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
     prefer-ip-address: true     #表示将ip注册到Eureka server
-
-
+ 
+ 
 feign:
   compression:
     request:
       enabled: true
     response:
       enabled: true
-
+ 
 ribbon:
   eager-load:
     enabled: true
@@ -58,8 +73,8 @@ hystrix:
       execution:
         timeout:
           enabled: false
-
-
+ 
+ 
 --- # 测试环境**********************************************************************************************************
 spring:
   profiles: test
@@ -69,7 +84,7 @@ spring:
     username: resdb
     password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
     type: com.alibaba.druid.pool.DruidDataSource
-
+ 
 eureka:
   client:
     healthcheck:
@@ -79,8 +94,31 @@ eureka:
   instance:
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
     prefer-ip-address: true     #表示将ip注册到Eureka server
-
-
+ 
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+ 
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 1000 # 设置连接超时时间
+  OkToRetryOnAllOperations: true # 对所有操作请求都进行重试
+  MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
+  MaxAutoRetries: 1 # 对当前实例的重试次数
+ 
+#该配置，用于禁用Hystrix的超时时间
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+ 
+ 
 --- # 生产环境**********************************************************************************************************
 spring:
   profiles: prd
@@ -90,7 +128,7 @@ spring:
     username: sip
     password: ENC(7eaGzJhB0t+ZjmzjELKw0QjoNwE573Mr)
     type: com.alibaba.druid.pool.DruidDataSource
-    
+ 
 eureka:
   client:
     serviceUrl:
@@ -102,4 +140,19 @@ eureka:
     prefer-ip-address: true     # 设置微服务调用地址为IP优先（缺省为false）
     lease-renewal-interval-in-seconds: 20 # 心跳时间，即服务续约间隔时间（缺省为30s）
     lease-expiration-duration-in-seconds: 60 # 发呆时间，即服务续约到期时间（缺省为90s）
-
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+ 
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 1000 # 设置连接超时时间
+  ReadTimeout: 10000
+  OkToRetryOnAllOperations: false # 对所有操作请求都进行重试
+  MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
+  MaxAutoRetries: 1 # 对当前实例的重试次数
+  retryableStatusCodes: 404,502

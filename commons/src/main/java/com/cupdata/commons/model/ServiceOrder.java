@@ -1,8 +1,11 @@
 package com.cupdata.commons.model;
 
+import lombok.Data;
+
 /**
  *服务产品主订单表
  */
+@Data
 public class ServiceOrder extends BaseModel{
 	/**
 	 * 机构编号
@@ -94,139 +97,5 @@ public class ServiceOrder extends BaseModel{
 	 */
 	private String supplierFlag;
 
-	public String getOrgNo() {
-		return orgNo;
-	}
 
-	public void setOrgNo(String orgNo) {
-		this.orgNo = orgNo;
-	}
-
-	public String getSupplierNo() {
-		return supplierNo;
-	}
-
-	public void setSupplierNo(String supplierNo) {
-		this.supplierNo = supplierNo;
-	}
-
-	public String getOrderNo() {
-		return orderNo;
-	}
-
-	public void setOrderNo(String orderNo) {
-		this.orderNo = orderNo;
-	}
-
-	public String getOrgOrderNo() {
-		return orgOrderNo;
-	}
-
-	public void setOrgOrderNo(String orgOrderNo) {
-		this.orgOrderNo = orgOrderNo;
-	}
-
-	public String getSupplierOrderNo() {
-		return supplierOrderNo;
-	}
-
-	public void setSupplierOrderNo(String supplierOrderNo) {
-		this.supplierOrderNo = supplierOrderNo;
-	}
-
-	public Long getOrgPrice() {
-		return orgPrice;
-	}
-
-	public void setOrgPrice(Long orgPrice) {
-		this.orgPrice = orgPrice;
-	}
-
-	public Long getSupplierPrice() {
-		return supplierPrice;
-	}
-
-	public void setSupplierPrice(Long supplierPrice) {
-		this.supplierPrice = supplierPrice;
-	}
-
-	public String getSettleDate() {
-		return settleDate;
-	}
-
-	public void setSettleDate(String settleDate) {
-		this.settleDate = settleDate;
-	}
-
-	public Character getOrderStatus() {
-		return orderStatus;
-	}
-
-	public void setOrderStatus(Character orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-
-	public String getOrderType() {
-		return orderType;
-	}
-
-	public void setOrderType(String orderType) {
-		this.orderType = orderType;
-	}
-
-	public String getOrderDesc() {
-		return orderDesc;
-	}
-
-	public void setOrderDesc(String orderDesc) {
-		this.orderDesc = orderDesc;
-	}
-
-	public String getOrderFailDesc() {
-		return orderFailDesc;
-	}
-
-	public void setOrderFailDesc(String orderFailDesc) {
-		this.orderFailDesc = orderFailDesc;
-	}
-
-	public Character getIsNotify() {
-		return isNotify;
-	}
-
-	public void setIsNotify(Character isNotify) {
-		this.isNotify = isNotify;
-	}
-
-	public String getNotifyUrl() {
-		return notifyUrl;
-	}
-
-	public void setNotifyUrl(String notifyUrl) {
-		this.notifyUrl = notifyUrl;
-	}
-
-	public String getNodeName() {
-		return nodeName;
-	}
-
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
-	}
-
-	public String getSupplierFlag() {
-		return supplierFlag;
-	}
-
-	public void setSupplierFlag(String supplierFlag) {
-		this.supplierFlag = supplierFlag;
-	}
-
-	public String getOrderSubType() {
-		return orderSubType;
-	}
-
-	public void setOrderSubType(String orderSubType) {
-		this.orderSubType = orderSubType;
-	}
 }

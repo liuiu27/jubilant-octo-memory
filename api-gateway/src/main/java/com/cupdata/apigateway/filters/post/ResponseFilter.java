@@ -39,30 +39,30 @@ import static org.springframework.util.ReflectionUtils.rethrowRuntimeException;
  */
 @Component
 public class ResponseFilter extends ZuulFilter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResponseFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResponseFilter.class);
 
-    @Autowired
-    private OrgFeignClient orgFeignClient;
+	@Autowired
+	private OrgFeignClient orgFeignClient;
 
-    @Autowired
-    private SupplierFeignClient supplierFeignClient;
+	@Autowired
+	private SupplierFeignClient supplierFeignClient;
 
-    @Override
-    public String filterType() {
-        return "post";
-    }
+	@Override
+	public String filterType() {
+		return "post";
+	}
 
-    @Override
-    public int filterOrder() {
-        return 2;
-    }
+	@Override
+	public int filterOrder() {
+		return 2;
+	}
 
-    @Override
-    public boolean shouldFilter() {
-        return true;
-    }
+	@Override
+	public boolean shouldFilter() {
+		return true;
+	}
 
-    @Override
+	@Override
     public Object run() {
         try {
             RequestContext ctx = getCurrentContext();
@@ -73,6 +73,7 @@ public class ResponseFilter extends ZuulFilter {
             if (isIgnorePath(request.getRequestURI()))
                 return null;
             InputStream stream = ctx.getResponseDataStream();
+            if(null == stream) return null;
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
             LOGGER.info("响应信息明文为" + body);
             body = body.replaceAll(":null,", ":\"\","); 
@@ -189,18 +190,18 @@ public class ResponseFilter extends ZuulFilter {
         return null;
     }
 
-    @Value("${zuul.ignore-url}")
-    private String ignoreUrl;
+	@Value("${zuul.ignore-url}")
+	private String ignoreUrl;
 
-    @Value("${zuul.prefix}")
-    private String zuulPrefix;
+	@Value("${zuul.prefix}")
+	private String zuulPrefix;
 
-    private boolean isIgnorePath(String path) {
-        for (String url : ignoreUrl.split(",")) {
-            if (path.substring(zuulPrefix.length()).startsWith(url)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	private boolean isIgnorePath(String path) {
+		for (String url : ignoreUrl.split(",")) {
+			if (path.substring(zuulPrefix.length()).startsWith(url)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
