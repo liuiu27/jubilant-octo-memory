@@ -56,6 +56,14 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
     @Autowired
     private CacheFeignClient cacheFeignClient ;
 
+    /**
+     * 互亿流量充值
+     * @param org
+     * @param rechargeReq
+     * @param request
+     * @param response
+     * @return
+     */
     @Override
     public BaseResponse<RechargeRes> recharge(@RequestParam(value="org", required=true) String org,@RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
         log.info("进入互亿流量充值controller......Account:"+rechargeReq.getAccount()+",ProductNo:"+rechargeReq.getProductNo()+",OrderDesc:"+rechargeReq.getOrderDesc()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo());
@@ -80,6 +88,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
             createRechargeOrderVo.setOrgNo(org);
             createRechargeOrderVo.setOrgOrderNo(rechargeReq.getOrgOrderNo());
             createRechargeOrderVo.setProductNo(rechargeReq.getProductNo());
+            createRechargeOrderVo.setAccountNumber(rechargeReq.getAccount());
 
             //调用订单服务创建订单
             log.info("创建订单");
@@ -102,13 +111,10 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                     || 1015 == ihuyiRechargeRes.getCode()
                     || 1016 == ihuyiRechargeRes.getCode()
                     || 4001 == ihuyiRechargeRes.getCode()) {
-                rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_HANDING); //处理中
-                rechargeOrderRes.getData().getOrder().setNotifyUrl(rechargeReq.getNotifyUrl());            //充值结果通知地址(机构接收地址)
-                rechargeOrderRes.getData().getRechargeOrder().setRechargeNumber(rechargeReq.getRechargeNumber());//充值数量
-                rechargeOrderRes.getData().getRechargeOrder().setRechargeAmt(rechargeReq.getRechargeAmt());//充值金额
-                rechargeOrderRes.getData().getRechargeOrder().setRechargeTraffic(rechargeReq.getRechargeTraffic());//充值流量
+                rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_HANDING);  //处理中
+                rechargeOrderRes.getData().getOrder().setNotifyUrl(rechargeReq.getNotifyUrl());             //充值结果通知地址(机构接收地址)
                 if (!StringUtils.isEmpty(ihuyiRechargeRes.getTaskid())) {
-                    rechargeOrderRes.getData().getOrder().setSupplierOrderNo(ihuyiRechargeRes.getTaskid());
+                    rechargeOrderRes.getData().getOrder().setSupplierOrderNo(ihuyiRechargeRes.getTaskid()); //商户订单号
                 }
 
                 //调用订单服务更新订单
@@ -142,7 +148,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                     return rechargeRes;
                 }
 
-                //通知机构下单失败
+                //充值失败,通知机构下单失败
                 notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderRes.getData().getOrder().getOrderNo());
 
                 //设置响应结果
@@ -159,7 +165,6 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
             return rechargeRes;
         }
     }
-
 
     /**
      * 互亿流量订购接口回调(此接口用于互亿调用,以此告知SIP流量充值的最终结果)

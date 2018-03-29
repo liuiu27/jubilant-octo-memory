@@ -1,5 +1,6 @@
 
 package com.cupdata.ihuyi.schedule;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
@@ -10,21 +11,16 @@ import com.cupdata.commons.vo.order.ServiceOrderList;
 import com.cupdata.ihuyi.feign.CacheFeignClient;
 import com.cupdata.ihuyi.feign.NotifyFeignClient;
 import com.cupdata.ihuyi.feign.OrderFeignClient;
-import com.cupdata.ihuyi.feign.ProductFeignClient;
 import com.cupdata.ihuyi.utils.IhuyiUtils;
 import com.cupdata.ihuyi.vo.IhuyiOrderQueryRes;
 import com.cupdata.ihuyi.vo.IhuyiVirtualOrderQueryRes;
-import com.sun.xml.internal.bind.v2.TODO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.*;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: DingCong
@@ -47,7 +43,7 @@ public class IhuyiSchedule {
 
 
     /**
-     * 互亿流量轮询（每5分钟去循环查询）
+     * 互亿流量充值轮询（每5分钟去循环查询）
      * @throws Exception
      */
     @Scheduled(cron = "0 0/5 * * * ?")
@@ -113,7 +109,7 @@ public class IhuyiSchedule {
 
 
     /**
-     * 互亿话费轮询（每5分钟去循环查询）
+     * 互亿话费充值轮询（每5分钟去循环查询）
      * @throws Exception
      */
     @Scheduled(cron = "0 0/5 * * * ?")

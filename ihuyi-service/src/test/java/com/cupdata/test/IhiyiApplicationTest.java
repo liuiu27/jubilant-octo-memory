@@ -1,44 +1,28 @@
-package com.cupdata.ihuyi.utils;
+package com.cupdata.test;
+
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import org.apache.commons.lang3.StringUtils;
-
+import org.junit.Test;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
-/**
- * @Author: DingCong
- * @Description: 互亿虚拟充值测试类
- * @CreateDate: 2018/3/7 16:19
- */
 
-public class TestUtils {
-
-    public static void main(String[] args) throws Exception {
-        //phoneRecharge();
-        //trafficRecharge();
-        //virtualTest();
-        getVoucherTest();
-    }
+public class IhiyiApplicationTest {
 
     /**
      * 互亿话费充值测试
      * @throws Exception
      */
-    public static void phoneRecharge() throws Exception{
+    @Test
+    public void phoneRecharge() throws Exception {
         //互亿话费充值网关URL
         String url = "http://localhost:46959/recharge/recharge/getRecharge";
         //花积分机构编号
@@ -66,7 +50,12 @@ public class TestUtils {
         System.out.print("互亿话费充值响应数据为" + res);
     }
 
-    public static void trafficRecharge() throws Exception{
+    /**
+     * 互亿流量充值测试
+     * @throws Exception
+     */
+    @Test
+    public void trafficRecharge() throws Exception{
         //互亿流量充值网关URL
         String url = "http://localhost:46959/recharge/recharge/getRecharge";
         //花积分机构编号
@@ -98,7 +87,8 @@ public class TestUtils {
      * 互亿虚拟商品测试
      * @throws Exception
      */
-    public static void virtualTest() throws Exception {
+    @Test
+    public void virtualTest() throws Exception {
         String url = "http://localhost:46959/recharge/recharge/getRecharge";
         String org = "2018010200000001";
         RechargeReq rechargeReq = new RechargeReq();
@@ -129,13 +119,14 @@ public class TestUtils {
      * 互亿电子礼券测试
      * @throws Exception
      */
-    public static void getVoucherTest() throws Exception {
+    @Test
+    public void getVoucherTest() throws Exception {
         String url = "http://localhost:46959/voucher/voucher/getVoucher";
         String org = "2018010200000001";
         GetVoucherReq getVoucherReq = new GetVoucherReq();
         getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         getVoucherReq.setProductNo("171116E873");
-        getVoucherReq.setOrgOrderNo("testNodeName");
+        getVoucherReq.setOrgOrderNo("IHUYIvoucher");
         getVoucherReq.setOrderDesc("获取互亿电子券码");
         getVoucherReq.setMobileNo("15737377830");
         getVoucherReq.setExpire("20180331");

@@ -86,6 +86,7 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
             createRechargeOrderVo.setOrgNo(org);
             createRechargeOrderVo.setOrgOrderNo(rechargeReq.getOrgOrderNo());
             createRechargeOrderVo.setProductNo(rechargeReq.getProductNo());
+            createRechargeOrderVo.setAccountNumber(rechargeReq.getAccount());
 
             //调用订单服务创建订单
             log.info("开始创建互亿话费充值订单...");
@@ -112,11 +113,8 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                 log.info("互亿话费充值下单成功,互亿充值结果状态码:"+ihuyiRechargeRes.getCode());
                 rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_HANDING);    //订单状态:处理中
                 rechargeOrderRes.getData().getOrder().setNotifyUrl(rechargeReq.getNotifyUrl());               //充值结果通知地址(机构接收地址)
-                rechargeOrderRes.getData().getRechargeOrder().setAccountNumber(rechargeReq.getAccount());     //充值账号
-                rechargeOrderRes.getData().getRechargeOrder().setRechargeAmt(rechargeReq.getRechargeAmt());      //充值金额
-                rechargeOrderRes.getData().getRechargeOrder().setRechargeNumber(rechargeReq.getRechargeNumber());//充值数量
                 if (!StringUtils.isEmpty(ihuyiRechargeRes.getTaskid())) {
-                    rechargeOrderRes.getData().getOrder().setSupplierOrderNo(ihuyiRechargeRes.getTaskid());      //商户订单号
+                    rechargeOrderRes.getData().getOrder().setSupplierOrderNo(ihuyiRechargeRes.getTaskid());   //商户订单号
                 }
 
                 //调用订单服务更新订单
@@ -153,7 +151,7 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                     return rechargeRes;
                 }
 
-                //通知机构充值结果
+                //充值失败,通知机构下单失败
                 notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderRes.getData().getOrder().getOrderNo());
 
                 //设置响应结果
@@ -173,13 +171,10 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
     }
 
     /**
-     * @Description 互亿话费订购接口回调(此接口用于互亿调用,以此告知SIP话费充值的最终结果)
-     * @param @param request
-     * @param @param response
-     * @param @throws IOException 参数
-     * @return void 返回类型
-     * @Author KaiZhang
-     * @throws
+     * 互亿话费订购接口回调(此接口用于互亿调用,以此告知SIP话费充值的最终结果)
+     * @param request
+     * @param response
+     * @throws IOException
      */
     @RequestMapping(value = "ihuyiPhoneRechargeCallBack", method = {RequestMethod.POST})
     public void ihuyiPhoneRechargeCallBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
