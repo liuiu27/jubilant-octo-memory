@@ -96,6 +96,4 @@ public class ServiceOrder extends BaseModel{
 	 *服务供应商标识
 	 */
 	private String supplierFlag;
-
-
 }
