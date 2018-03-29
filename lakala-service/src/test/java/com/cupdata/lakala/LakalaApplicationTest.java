@@ -1,4 +1,4 @@
-package com.cupdata.lakala.utils;
+package com.cupdata.lakala;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.utils.CommonUtils;
@@ -6,19 +6,16 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
-
+import org.junit.Test;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Date;
 
-/**
- * @author LinYong
- * @Description: lakala测试类
- * @create 2018-01-04 18:41
- */
-public class TestUtils {
-    public static void main(String[] args) throws Exception{
+public class LakalaApplicationTest {
+
+    @Test
+    public void LakalaApplicationTest() throws Exception{
         String url = "http://localhost:46959/voucher/voucher/getVoucher";
         String URL2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
         String URL3 = "http://10.193.17.86:46959/voucher/voucher/getVoucher";

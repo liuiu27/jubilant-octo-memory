@@ -33,7 +33,6 @@ import com.cupdata.order.util.OrderUtils;
  * @Description: 订单业务
  * @Date: 20:20 2017/12/14
  */
-
 @Service
 public class ServiceOrderBiz extends BaseBiz<ServiceOrder>{
 

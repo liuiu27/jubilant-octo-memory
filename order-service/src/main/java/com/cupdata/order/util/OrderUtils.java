@@ -111,12 +111,13 @@ public class OrderUtils {
      */
     public static ServiceOrderRecharge initRechargeOrder(String accountNumber,ProductInfVo productInfVo,ServiceOrder order, String productNo){
         ServiceOrderRecharge rechargeOrder = new ServiceOrderRecharge();
-        rechargeOrder.setOrderId(order.getId());
-        rechargeOrder.setProductNo(productNo);
-        rechargeOrder.setOpenDuration(productInfVo.getProduct().getRechargeDuration());
-        rechargeOrder.setRechargeTraffic(productInfVo.getProduct().getRechargeTraffic());
-        rechargeOrder.setRechargeNumber(productInfVo.getProduct().getRechargeNumber());
-        rechargeOrder.setAccountNumber(accountNumber);
+        rechargeOrder.setOrderId(order.getId());      //订单id
+        rechargeOrder.setAccountNumber(accountNumber);//充值账号
+        rechargeOrder.setProductNo(productNo);        //产品编号
+        rechargeOrder.setRechargeAmt(productInfVo.getProduct().getRechargeAmt()); //充值金额
+        rechargeOrder.setOpenDuration(productInfVo.getProduct().getRechargeDuration());//开通时长
+        rechargeOrder.setRechargeTraffic(productInfVo.getProduct().getRechargeTraffic());//充值流量
+        rechargeOrder.setRechargeNumber(productInfVo.getProduct().getRechargeNumber());//充值数量
         return rechargeOrder;
 
     }
