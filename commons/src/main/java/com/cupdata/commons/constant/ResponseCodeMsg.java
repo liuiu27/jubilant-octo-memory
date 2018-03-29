@@ -136,10 +136,17 @@ public enum ResponseCodeMsg {
      * 800007 - 获取本地券码失败
      */
     FAIL_GAT_LOCAL_VOUCHER("800007","获取本地券码失败"),
+
     /**
      * 800008 - 查询订单异常查询商品信息为空
      */
-    QUERY_PRODUCT_INF_NULL("800008","查询商品信息为空");
+    QUERY_PRODUCT_INF_NULL("800008","查询商品信息为空"),
+
+    /**
+     * 800009 - 根据商户编号获取商户失败
+     */
+    GET_SUPPLIER_FAIL_BY_NO("800009","根据商户编号获取商户失败");
+
 
 
     /**
