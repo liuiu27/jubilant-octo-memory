@@ -13,14 +13,12 @@ import java.security.PublicKey;
 import java.util.Date;
 
 public class VoucherApplicationtest {
-
     /**
      * 外部机构获取本地券码测试
-     * @param args
      * @throws Exception
      */
     @Test
-    public static void main(String[] args) throws Exception {
+    public void getVoucher () throws Exception {
         //获取券码网关URL
         String url = "http://localhost:46959/voucher/voucher/getVoucher";
         String url2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
