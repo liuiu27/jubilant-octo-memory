@@ -1,4 +1,4 @@
-package com.cupdata.voucher.utils;
+package com.cupdata.voucher;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.utils.CommonUtils;
@@ -6,33 +6,34 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
+import org.junit.Test;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Date;
 
-/**
- * @Author: DingCong
- * @Description: 外部机构获取SIP本地券码测试类
- * @CreateDate: 2018/3/1 13:24
- */
+public class VoucherApplicationtest {
 
-public class TestUtils {
-
+    /**
+     * 外部机构获取本地券码测试
+     * @param args
+     * @throws Exception
+     */
+    @Test
     public static void main(String[] args) throws Exception {
         //获取券码网关URL
         String url = "http://localhost:46959/voucher/voucher/getVoucher";
-
-        String url2 = "http://10.193.17.86:46959/voucher/voucher/getVoucher";
+        String url2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
+        String url3 = "http://172.17.100.6:46959/voucher/voucher/getVoucher";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数
         GetVoucherReq voucherReq = new GetVoucherReq();
         voucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS")+ CommonUtils.getCharAndNum(8));
         voucherReq.setMobileNo("78912");
-        voucherReq.setOrderDesc("获取sip爱奇艺券码");
+        voucherReq.setOrderDesc("TestOfLocalVoucher");
         voucherReq.setProductNo("20180309SIP");
-        voucherReq.setOrgOrderNo("2018030120");
+        voucherReq.setOrgOrderNo("TestOfLocalVoucher");
         String reqStr = JSONObject.toJSONString(voucherReq);
         System.out.print("请求参数json字符串" + reqStr);
         String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
@@ -46,6 +47,3 @@ public class TestUtils {
         System.out.print("响应数据为" + res);
     }
 }
-
-
-
