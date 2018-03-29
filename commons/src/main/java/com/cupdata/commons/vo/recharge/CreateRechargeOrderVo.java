@@ -39,5 +39,11 @@ public class CreateRechargeOrderVo {
      * 游戏服务名称
      */
     private String gameServer;
+
+    /**
+     *充值账号
+     */
+    private String accountNumber;
+
 }
 
