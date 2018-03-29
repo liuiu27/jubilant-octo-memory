@@ -96,6 +96,7 @@ public class TencentController implements ITencentController{
             createRechargeOrderVo.setOrgNo(org);
             createRechargeOrderVo.setOrgOrderNo(rechargeReq.getOrgOrderNo());
             createRechargeOrderVo.setProductNo(rechargeReq.getProductNo());
+            createRechargeOrderVo.setAccountNumber(rechargeReq.getAccount());
             //调用订单服务创建订单
             log.info("腾讯充值controller开始创建服务订单");
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
@@ -121,7 +122,7 @@ public class TencentController implements ITencentController{
             openReq.setTimestamp(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmss"));//设置时间戳
             openReq.setPrice(productInfo.getData().getProduct().getSupplierPrice().toString());//设置供应商价格
             QQOpenRes openRes = QQRechargeUtils.qqOpen(openReq,cacheFeignClient);//充值业务办理响应结果
-            log.info("腾讯充值controller调用充值接口充值结果,openRes:"+openRes);
+            log.info("腾讯充值controller调用充值接口充值结果,openRes:"+openRes.getResult());
             if (null==openRes || !QQRechargeResCode.SUCCESS.getCode().equals(openRes.getResult())){
                 log.error("调用腾讯充值接口失败");
                 //QQ会员充值失败，设置错误状态码和错误信息，给予返回

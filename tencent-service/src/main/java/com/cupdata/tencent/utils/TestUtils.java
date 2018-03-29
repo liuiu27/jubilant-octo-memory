@@ -21,6 +21,7 @@ public class TestUtils {
         //腾讯QQ充值网关URL
         String url = "http://localhost:46959/recharge/recharge/getRecharge";
         String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
+        String url3 = "http://172.17.100.6:46959/recharge/recharge/getRecharge";
         //花积分机构编号
         String org = "2018010200000001";
 
@@ -29,9 +30,9 @@ public class TestUtils {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("625192155");
-        rechargeReq.setOrgOrderNo("TENAD478479824KJK");
+        rechargeReq.setOrgOrderNo("001TencentService");
         rechargeReq.setProductNo("170810R001");
-        rechargeReq.setOrderDesc("腾讯QQ充值业务测试");
+        rechargeReq.setOrderDesc("TestOfTencentService");
 
         //请求参数转化为字符串
         String reqStr = JSONObject.toJSONString(rechargeReq);
