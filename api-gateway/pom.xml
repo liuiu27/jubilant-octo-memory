@@ -3,14 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.cupdata</groupId>
+        <groupId>com.cupdata.sip</groupId>
         <artifactId>service-integration-platform</artifactId>
         <version>${revision}</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.cupdata</groupId>
+    <groupId>com.cupdata.sip</groupId>
     <artifactId>api-gateway</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
@@ -19,7 +19,7 @@
     <description>api-gateway-service</description>
     <dependencies>
         <dependency>
-            <groupId>com.cupdata</groupId>
+            <groupId>com.cupdata.sip</groupId>
             <artifactId>commons</artifactId>
         </dependency>
 

@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.cupdata</groupId>
+	<groupId>com.cupdata.sip</groupId>
 	<artifactId>service-integration-platform</artifactId>
 	<version>${revision}</version>
 	<packaging>pom</packaging>
@@ -118,7 +118,7 @@
 				<version>${fastjson.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.cupdata</groupId>
+				<groupId>com.cupdata.sip</groupId>
 				<artifactId>commons</artifactId>
 				<version>${revision}</version>
 			</dependency>
@@ -145,6 +145,8 @@
 
 	<!-- maven插件 -->
 	<build>
+
+		<finalName>${artifactId}</finalName>
 		<plugins>
 			<!--默认跳过测试-->
 			<plugin>

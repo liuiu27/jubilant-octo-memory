@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.cupdata</groupId>
+	<groupId>com.cupdata.sip</groupId>
 	<artifactId>eureka-service</artifactId>
 	<version>${revision}</version>
 	<packaging>jar</packaging>
@@ -12,7 +12,7 @@
 	<description>eureka-service</description>
 
 	<parent>
-		<groupId>com.cupdata</groupId>
+		<groupId>com.cupdata.sip</groupId>
 		<artifactId>service-integration-platform</artifactId>
 		<version>${revision}</version>
 	</parent>
