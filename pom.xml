@@ -54,6 +54,7 @@
 		<guava.version>18.0</guava.version>
 		<fastjson.version>1.2.45</fastjson.version>
 		<jasypt.version>1.16</jasypt.version>
+		<target.dir>D:\${revision}</target.dir>
 	</properties>
 
 	<!-- 必须的依赖-->
@@ -174,6 +175,27 @@
 						<goals>
 							<goal>clean</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<mkdir dir="${target.dir}"/>
+								<copy todir="${target.dir}" overwrite="true" >
+									<fileset dir="${project.build.directory}" erroronmissingdir="false">
+										<include name="*.jar"/>
+									</fileset>
+								</copy>
+							</tasks>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

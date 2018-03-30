@@ -8,6 +8,7 @@ import com.cupdata.content.vo.request.SupVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 
@@ -35,7 +36,7 @@ public class TestController {
     @ResponseBody
     @PostMapping(path="/two",produces = "application/json")
     public Object testTwo(@RequestBody @Validated SupVO<PayPageVO> requestVOSupVO){
-
+        RedirectView redirectView = new RedirectView();
 
         return  "success!";
     }
