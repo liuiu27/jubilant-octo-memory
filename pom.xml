@@ -39,6 +39,7 @@
 		<module>content-service</module>
 		<module>ihuyi-service</module>
 		<module>common-parent</module>
+		<module>bestdo-service</module>
 	</modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->
@@ -122,25 +123,35 @@
 				<artifactId>commons</artifactId>
 				<version>${revision}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.cupdata.sip</groupId>
+				<artifactId>common-cache</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.cupdata.sip</groupId>
+				<artifactId>common-lang</artifactId>
+				<version>${revision}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<!-- 配置全局maven私服-->
-	<repositories>
-		<repository>
-			<id>cupdmaven</id>
-			<name>maven-public</name>
-			<url>http://10.193.17.10:8081/repository/maven-public/</url>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+	<!--<repositories>-->
+		<!--<repository>-->
+			<!--<id>cupdmaven</id>-->
+			<!--<name>maven-public</name>-->
+			<!--<url>http://10.193.17.10:8081/repository/maven-public/</url>-->
+		<!--</repository>-->
+		<!--<repository>-->
+			<!--<id>spring-milestones</id>-->
+			<!--<name>Spring Milestones</name>-->
+			<!--<url>https://repo.spring.io/milestone</url>-->
+			<!--<snapshots>-->
+				<!--<enabled>false</enabled>-->
+			<!--</snapshots>-->
+		<!--</repository>-->
+	<!--</repositories>-->
 	<!-- 不用在mirror里面配置-->
 
 	<!-- maven插件 -->
