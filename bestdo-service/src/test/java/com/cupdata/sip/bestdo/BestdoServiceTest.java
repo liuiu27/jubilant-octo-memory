@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 测试新赛点
  * @author Tony
  * @date 2018/03/30
  */
@@ -40,12 +41,12 @@ public class BestdoServiceTest {
         //1020103	银联数据-游泳
         //1020107	银联数据-星级酒店游泳
         restTemplate =new RestTemplate();
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("source", "CUPD");
-        jsonObject.put("tradeCode", "VENUElIST");
-        jsonObject.put("merItemId", "1020125");
+        JSONObject merItemInfo = new JSONObject();
+        merItemInfo.put("source", "CUPD");
+        merItemInfo.put("tradeCode", "VENUElIST");
+        merItemInfo.put("merItemId", "1020125");
 
-        String ret = restTemplate.getForObject(TEST_URL + "/mer/item/detail/merDetail?merItemInfo={merItemInfo}", String.class, jsonObject.toJSONString());
+        String ret = restTemplate.getForObject(TEST_URL + "/mer/item/detail/merDetail?merItemInfo={merItemInfo}", String.class, merItemInfo.toJSONString());
         log.info(ret);
 
     }
