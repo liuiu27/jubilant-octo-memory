@@ -5,7 +5,7 @@
     <parent>
         <artifactId>service-integration-platform</artifactId>
         <groupId>com.cupdata.sip</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -70,6 +70,7 @@
             <groupId>com.cupdata.sip</groupId>
             <artifactId>common-lang</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>
