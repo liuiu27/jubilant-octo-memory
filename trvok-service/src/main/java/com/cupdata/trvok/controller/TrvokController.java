@@ -72,6 +72,8 @@ public class TrvokController implements ITrvokController{
 	    		res.setResponseCode(sysConfigVo.getResponseCode());
 	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
 	    		return res;
+	    	}else {
+	    		log.info("cacheFeignClient  TRVOK_AREA_SIGN_KEY  SUCCESS");
 	    	}
 	    	areaReq.setAreaSignKey(sysConfigVo.getData().getSysConfig().getParaValue());
 	    	
@@ -81,7 +83,10 @@ public class TrvokController implements ITrvokController{
 	    		res.setResponseCode(sysConfigVo.getResponseCode());
 	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
 	    		return res;
+	    	}else {
+	    		log.info("cacheFeignClient  TRVOK_REQUST_URL  SUCCESS");
 	    	}
+	    	
 	    	areaReq.setRequstUrl(sysConfigVo.getData().getSysConfig().getParaValue());
 	    	
 	    	res = tripService.getTrvokArea(areaReq);
@@ -106,6 +111,8 @@ public class TrvokController implements ITrvokController{
 	    		res.setResponseCode(sysConfigVo.getResponseCode());
 	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
 	    		return res;
+	    	}else {
+	    		log.info("cacheFeignClient  TRVOK_AREA_SIGN_KEY  SUCCESS");
 	    	}
 			trvokAirportReq.setAreaSignKey(sysConfigVo.getData().getSysConfig().getParaValue());
 			
@@ -115,6 +122,8 @@ public class TrvokController implements ITrvokController{
 	    		res.setResponseCode(sysConfigVo.getResponseCode());
 	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
 	    		return res;
+	    	}else {
+	    		log.info("cacheFeignClient  TRVOK_REQUST_URL  SUCCESS");
 	    	}
 			trvokAirportReq.setRequstUrl(sysConfigVo.getData().getSysConfig().getParaValue());
 			
@@ -124,6 +133,8 @@ public class TrvokController implements ITrvokController{
 	    		res.setResponseCode(sysConfigVo.getResponseCode());
 	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
 	    		return res;
+	    	}else {
+	    		log.info("cacheFeignClient  TRVOK_IMG_URL  SUCCESS");
 	    	}
 			trvokAirportReq.setImgUrl(sysConfigVo.getData().getSysConfig().getParaValue());
 			
@@ -166,7 +177,9 @@ public class TrvokController implements ITrvokController{
 	            res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
 	            res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
 	            return res;
-	        } 
+	        }else {
+	    		log.info("orderFeignClient createVoucherOrder    SUCCESS");
+	    	}
 			TrovkCodeReq trovkCodeReq = new TrovkCodeReq();
 			trovkCodeReq.setSku(sku);
 			if(StringUtils.isBlank(voucherReq.getExpire())) {
@@ -232,7 +245,9 @@ public class TrvokController implements ITrvokController{
 	            res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
 	            res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
 	            return res;
-	        } 
+	        }else {
+	    		log.info("orderFeignClient updateVoucherOrder    SUCCESS");
+	    	} 
 			//响应参数
 			GetVoucherRes voucherRes = new GetVoucherRes();
 			voucherRes.setExpire(voucherReq.getExpire());
@@ -261,6 +276,8 @@ public class TrvokController implements ITrvokController{
 	    		res.setResponseCode(sysConfigVo.getResponseCode());
 	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
 	    		return res;
+	    	}else {
+	    		log.info("cacheFeignClient TRVOK_PARTNER    SUCCESS");
 	    	}
 	    	trovkDisableReq.setPartner(sysConfigVo.getData().getSysConfig().getParaValue());
 	    	
@@ -270,6 +287,8 @@ public class TrvokController implements ITrvokController{
 	    		res.setResponseCode(sysConfigVo.getResponseCode());
 	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
 	    		return res;
+	    	}else {
+	    		log.info("cacheFeignClient TRVOK_WCF_SIGN_KEY    SUCCESS");
 	    	}
 	    	trovkDisableReq.setWcfSignKey(sysConfigVo.getData().getSysConfig().getParaValue());
 			
@@ -279,6 +298,8 @@ public class TrvokController implements ITrvokController{
 	    		res.setResponseCode(sysConfigVo.getResponseCode());
 	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
 	    		return res;
+	    	}else {
+	    		log.info("cacheFeignClient TRVOK_REQUST_URL    SUCCESS");
 	    	}
 			trovkDisableReq.setRequstUrl(sysConfigVo.getData().getSysConfig().getParaValue());
 			trovkDisableReq.setVerifyCode(disableVoucherReq.getVoucherCode());
