@@ -17,9 +17,11 @@
 
     </properties>
 
-
     <dependencies>
-
+        <dependency>
+            <groupId>com.cupdata.sip</groupId>
+            <artifactId>common-lang</artifactId>
+        </dependency>
 
     </dependencies>
 </project>

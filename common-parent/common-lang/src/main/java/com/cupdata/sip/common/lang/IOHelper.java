@@ -1,14 +1,12 @@
 package com.cupdata.sip.common.lang;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.UUID;
 
-@Slf4j
+
 public class IOHelper {
 
     public static final InputStream byte2Input(byte[] buf) {
@@ -62,7 +60,6 @@ public class IOHelper {
         if (inputStream != null) {
             inputStream.close();
         }
-        log.info("info:" + url + " download success");
 
     }
 

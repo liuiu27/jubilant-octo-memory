@@ -30,7 +30,6 @@
         <module>voucher-service</module>
         <module>recharge-service</module>
         <module>config-service</module>
-        <module>cache-service</module>
 		<module>lakala-service</module>
 		<module>notify-service</module>
 		<module>cdd-service</module>
@@ -62,36 +61,24 @@
 
 	<!-- 必须的依赖-->
 	<dependencies>
-		<!-- Spring Boot的核心启动器，包含了自动配置、日志和YAML -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-
-		<!-- 支持 @ConfigurationProperties 注解 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>${commons-lang3.version}</version>
-		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+		<!-- 支持 @ConfigurationProperties 注解 -->
+		<!--<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure -->
 		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>${joda.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
 
 		<dependency>
@@ -119,6 +106,12 @@
 				<artifactId>fastjson</artifactId>
 				<version>${fastjson.version}</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
@@ -139,25 +132,30 @@
 				<artifactId>common-lang</artifactId>
 				<version>${revision}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.cupdata.sip</groupId>
+				<artifactId>common-api</artifactId>
+				<version>${revision}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<!-- 配置全局maven私服-->
-	<!--<repositories>-->
-		<!--<repository>-->
-			<!--<id>cupdmaven</id>-->
-			<!--<name>maven-public</name>-->
-			<!--<url>http://10.193.17.10:8081/repository/maven-public/</url>-->
-		<!--</repository>-->
-		<!--<repository>-->
-			<!--<id>spring-milestones</id>-->
-			<!--<name>Spring Milestones</name>-->
-			<!--<url>https://repo.spring.io/milestone</url>-->
-			<!--<snapshots>-->
-				<!--<enabled>false</enabled>-->
-			<!--</snapshots>-->
-		<!--</repository>-->
-	<!--</repositories>-->
+	<repositories>
+		<repository>
+			<id>cupdmaven</id>
+			<name>maven-public</name>
+			<url>http://10.193.17.10:8081/repository/maven-public/</url>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<!-- 不用在mirror里面配置-->
 
 	<!-- maven插件 -->
@@ -177,7 +175,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.0.0</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 				</configuration>
