@@ -28,7 +28,7 @@ public class VoucherApplicationtest {
         //请求参数
         GetVoucherReq voucherReq = new GetVoucherReq();
         voucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS")+ CommonUtils.getCharAndNum(8));
-        voucherReq.setMobileNo("78912");
+        voucherReq.setMobileNo("15523562215");
         voucherReq.setOrderDesc("TestOfLocalVoucher");
         voucherReq.setProductNo("20180309SIP");
         voucherReq.setOrgOrderNo("TestOfLocalVoucher");

@@ -98,6 +98,7 @@ public class RechargeController implements IRechargeController{
 	        // Step5：根据对应配置信息中的服务名称，调用不同的微服务进行完成充值业务
 	        String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/getRecharge?org="
 	                + org;
+	        log.info("请求充值业务路径为:"+url);
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 	        HttpEntity<RechargeReq> entity = new HttpEntity<RechargeReq>(rechargeReq, headers);
