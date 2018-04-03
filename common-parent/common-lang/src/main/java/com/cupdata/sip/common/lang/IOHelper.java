@@ -1,5 +1,7 @@
 package com.cupdata.sip.common.lang;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -73,7 +75,7 @@ public class IOHelper {
         return newFileName;
     }
 
-    public static String readFile(String filepath) throws IOException {
+    public static String readFileToSting(String filepath) throws IOException {
         File file =new File(filepath);
         InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
         StringBuilder content = new StringBuilder();
@@ -85,7 +87,7 @@ public class IOHelper {
         }finally{
             isr.close();
         }
-        return content.toString();
+        return content.toString().replace(StringUtils.LF,"").replace(StringUtils.CR,"");
     }
     //从指定目录下查找指定文件
     public static void findFile(File root,String fileName,ArrayList<File> rs){

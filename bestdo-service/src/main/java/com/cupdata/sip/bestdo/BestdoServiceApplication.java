@@ -98,7 +98,6 @@ public class BestdoServiceApplication {
         return factory;
     }
 
-
     /**
      * 绕过验证
      *
@@ -184,6 +183,5 @@ public class BestdoServiceApplication {
                 .setConnectionManager(connectionManager)
                 .build();
     }
-
 
 }

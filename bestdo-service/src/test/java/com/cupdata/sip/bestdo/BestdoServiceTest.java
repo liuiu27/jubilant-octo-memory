@@ -2,8 +2,10 @@ package com.cupdata.sip.bestdo;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.cupdata.sip.common.lang.IOHelper;
 import com.cupdata.sip.common.lang.RSAHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
@@ -38,6 +40,13 @@ public class BestdoServiceTest {
     }
 
 
+    @Test
+    public void merLists() {
+
+        String ret =  restTemplate.getForObject("http://test.cupd.bestdo.com/mer/merLists",String.class);
+
+        log.info(ret);
+    }
 
     @Test
     public void testMerDetail() {
@@ -101,7 +110,6 @@ public class BestdoServiceTest {
 
     }
 
-
     @Test
     public void testCrateOrder() throws Exception {
 
@@ -111,6 +119,10 @@ public class BestdoServiceTest {
                 String.class, parma);
 
         log.info(ret);
+
+        //私钥文件路径
+        String privateKeyFilePath = "D:\\Work\\.sip\\bestdo\\private.key";
+
 
         String privateKey ="MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI8U/zj1piPd741OtdAMdSZSdBRE" +
                 "+3iq8vURpjs3zwCmiO3chcyR1hW3aIUc3WYkEWga4/Gm7eKlXxaitd5hENTwnjxAOpSuAByOFHPb" +
@@ -125,6 +137,13 @@ public class BestdoServiceTest {
                 "dDc7I28Xq70rVji003hq6qrqNPaKfqr7TwUjHY07BNuA9v+EO4G8TPfPmVCxksetRX69BUn1BMTU" +
                 "8asBsgbp";
 
+        log.info(privateKey);
+
+
+        privateKey = IOHelper.readFileToSting(privateKeyFilePath);
+
+        log.info("111");
+        log.info(privateKey);
 
         ret =new String(Base64.getDecoder().decode(ret));
 
@@ -134,26 +153,26 @@ public class BestdoServiceTest {
 
         log.info(RSAHelper.decipher(Base64.getEncoder().encodeToString(b64.decodeBuffer(ret)),privateKey,256));
 
-
     }
 
 
     @Test
     public void test() throws Exception {
 
-        byte[] a = null;
+       String a ="MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI8U/zj1piPd741OtdAMdSZSdBRE\n" +
+               "+3iq8vURpjs3zwCmiO3chcyR1hW3aIUc3WYkEWga4/Gm7eKlXxaitd5hENTwnjxAOpSuAByOFHPb\n" +
+               "Q/WIsMuoiRzoYV7gIJy9WekSCIcGL9JW7wLijJCpTf8uhXFLCfAo3CI/gbi46xgSVW77AgMBAAEC\n" +
+               "gYAElCbvQEktdu14mR2gzUSHAKVMZmQtjd4u9ttlpAHJgCITLRnpBTZCOY7PSpkh5Qt+dvS9EHI9\n" +
+               "7QI1kxd867dzt6vI1Y4v0PSHIlgRxYqODp0hw/3tjOiK/RvyKU9wleh7FgcxDETepUEMTXDeo647\n" +
+               "tU4TF7J4+GyUJxz9+/eXMQJBAMPTAQVjwQmFiGuUV8BjEWyoFfT+tWPUcqDllz62BAqzQ6hm42D2\n" +
+               "uVDzP+9eg+6Mzhp5NWEqmeADC+etFLIJ1ysCQQC7DOWK3hJwbmIi/GzkwgNVDfksClz2YGz8XPB9\n" +
+               "gc/m7XPMNabQRcxvoTy24o92Wbt3DqRb36LznadeFrDFLd9xAkBcQFkoytezvp6H37h/P6yDvaOq\n" +
+               "aRvWzcy6k65uspyw1ca33NCda13eDto90A7jIJ4vxo4pGkKnT4gaOmWXgh9FAkAzHsAxJqYVciWB\n" +
+               "+EjucBOnEC2UGrTzZMEEa4YSVwLx0t195v/TFfBcZc2JEfwxVS7FyAulTEZlnCWcskjXasURAkBl\n" +
+               "dDc7I28Xq70rVji003hq6qrqNPaKfqr7TwUjHY07BNuA9v+EO4G8TPfPmVCxksetRX69BUn1BMTU\n" +
+               "8asBsgbp";
 
-
-        String data ="RmdaRUwrQ1BKNndFZExKSGZFR2QrQlNLREx3OU9NT3VFM2U3MWtPemZQOS9xYXpBOXZ1aDg2cHZjWXgyRWV5bDVKUklBV0JlOXROSgpsNjNzeStWU055cFBnbmZFalZpQllFK0tZZmhxNGM2WEJWUk1sR3dndHhsU3VwUG5vQ2FOSlJjbjdnbFF0QmVPQ3dxVWc5KzN4SFdKCkVDQUpnQ1RFTXBhdHpoWXhmaDA9";
-
-        //log.info(RSAHelper.decrypt(parma,privateKey));
-
-        a = Base64.getDecoder().decode(data.getBytes());
-
-        log.info(new String(a));
-
-        BASE64Decoder b64=new BASE64Decoder();
-        b64.decodeBuffer(new String(a));
+       log.info(a.replace(StringUtils.LF,""));
 
     }
 
