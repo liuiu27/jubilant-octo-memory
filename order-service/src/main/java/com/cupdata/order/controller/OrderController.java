@@ -1,6 +1,8 @@
 package com.cupdata.order.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -50,6 +52,33 @@ public class OrderController implements IOrderController {
 
 	@Autowired
 	private SupplierFeignClient supplierClient;
+
+	/**
+	 * 根据订单编号获取主订单
+	 * @param orderNo
+	 * @return
+	 */
+	@Override
+	public BaseResponse<ServiceOrder> getServiceOrderByOrderNo(@PathVariable String orderNo) {
+	    log.info("根据订单编号获取主订单,订单编号:"+orderNo);
+        BaseResponse<ServiceOrder> serviceOrderRes = new BaseResponse();
+	    try {
+	        if (StringUtils.isBlank(orderNo)){
+                serviceOrderRes.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+                serviceOrderRes.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+                return serviceOrderRes;
+            }
+            Map<String,Object> map = new  HashMap();
+	        map.put("orderNo",orderNo);
+            ServiceOrder order = orderBiz.selectSingle(map);
+            log.info("查询主订单信息为:OrderNo:"+order.getOrderNo()+",OrderStatus:"+order.getOrderStatus()+",OrgOrderNo:"+order.getOrgOrderNo());
+            serviceOrderRes.setData(order);
+	    }catch (Exception e){
+	        log.info("根据订单号查询主订单出现异常,异常信息:"+e.getMessage());
+            throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+        }
+		return serviceOrderRes;
+	}
 
 	@Override
 	public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody CreateVoucherOrderVo createVoucherOrderVo) {
