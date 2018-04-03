@@ -24,7 +24,10 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -64,12 +67,13 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
      */
     @Override
     public BaseResponse<RechargeRes> recharge(@RequestParam(value="org", required=true) String org,@RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
-
+        log.info("互亿话费充值**********************************************");
         log.info("进入互亿话费充值controller......Account:"+rechargeReq.getAccount()+",MobileNo:"+rechargeReq.getMobileNo()+",ProductNo:"+rechargeReq.getProductNo()+",OrderDesc:"+rechargeReq.getOrderDesc());
         //设置响应结果
         BaseResponse<RechargeRes> rechargeRes = new BaseResponse<RechargeRes>();
         try {
             //step1.根据服务产品编号查询对应的服务产品
+            log.info("根据产品编号查询充值产品,ProductNo："+rechargeReq.getProductNo());
             BaseResponse<ProductInfVo> productInfo = productFeignClient.findByProductNo(rechargeReq.getProductNo());
             //产品信息响应码失败,返回错误信息参数
             if (productInfo == null || !ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())){
@@ -89,20 +93,21 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
             createRechargeOrderVo.setAccountNumber(rechargeReq.getAccount());
 
             //调用订单服务创建订单
-            log.info("开始创建互亿话费充值订单...");
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                     || null == rechargeOrderRes.getData()
                     || null == rechargeOrderRes.getData().getOrder()
                     || null == rechargeOrderRes.getData().getRechargeOrder()){
                 //创建订单失败，设置响应错误消息和错误状态码，给予返回
+                log.info("创建订单失败");
                 rechargeRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
                 rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
                 return rechargeRes;
             }
+            log.info("创建订单成功,订单编号:"+rechargeOrderRes.getData().getOrder().getOrderNo());
 
             //step3.调用互亿充值工具类进行话费充值
-            log.info("开始调用互亿充值工具类进行话费充值...");
+            log.info("调用互亿工具类进行话费充值");
             IhuyiRechargeRes ihuyiRechargeRes = IhuyiUtils.ihuyiPhoneRecharge(rechargeOrderRes.getData(),rechargeReq,cacheFeignClient);
             RechargeRes res = new RechargeRes();
             //1:提交成功； 0、1015、1016、4001：核单处理,订购成功
@@ -118,7 +123,7 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                 }
 
                 //调用订单服务更新订单
-                log.info("调用订单服务更新订单中商户订单号,Taskid:"+ihuyiRechargeRes.getTaskid());
+                log.info("互亿话费充值下单成功更新订单,订单编号:"+rechargeOrderRes.getData().getOrder().getOrderNo());
                 rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                         || null == rechargeOrderRes.getData()
@@ -176,17 +181,20 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "ihuyiPhoneRechargeCallBack", method = {RequestMethod.POST})
-    public void ihuyiPhoneRechargeCallBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @Override
+    public void ihuyiPhoneRechargeCallBack(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        log.info("互亿话费充值结果有新的通知消息...");
         response.setContentType("text/html;charset=utf-8");
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         PrintWriter writer = response.getWriter();
         upload.setHeaderEncoding("UTF-8");
         String resultStr = "success";
-        List<?> items;
+        String TASK = request.getParameter("taskid");
+        String order = request.getParameter("orderid");
+
         try {
-            items = upload.parseRequest(request);
+            List<?> items = upload.parseRequest(request);
             Map<String, String> param = new HashMap();
             for(Object object:items){
                 FileItem fileItem = (FileItem) object;

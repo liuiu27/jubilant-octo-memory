@@ -136,8 +136,6 @@ public class IqiyiRechargeController implements IQiYiController {
             rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS); //订单状态成功
             rechargeOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_NO);            //不通知
             rechargeOrderRes.getData().getRechargeOrder().setProductNo(rechargeReq.getProductNo());    //产品编号
-            rechargeOrderRes.getData().getRechargeOrder().setAccountNumber(rechargeReq.getAccount());  //充值账号
-            rechargeOrderRes.getData().getRechargeOrder().setRechargeAmt(rechargeReq.getRechargeAmt());//充值金额
 
             //调用订单服务更新订单
             log.info("爱奇艺会员充值controller,更新充值订单OrderNo : "+rechargeOrderRes.getData().getOrder().getOrderNo());

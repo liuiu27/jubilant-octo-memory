@@ -24,8 +24,9 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -66,6 +67,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
      */
     @Override
     public BaseResponse<RechargeRes> recharge(@RequestParam(value="org", required=true) String org,@RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
+        log.info("互亿流量充值**********************************************");
         log.info("进入互亿流量充值controller......Account:"+rechargeReq.getAccount()+",ProductNo:"+rechargeReq.getProductNo()+",OrderDesc:"+rechargeReq.getOrderDesc()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo());
         //设置响应结果
         BaseResponse<RechargeRes> rechargeRes = new BaseResponse<RechargeRes>();
@@ -91,19 +93,21 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
             createRechargeOrderVo.setAccountNumber(rechargeReq.getAccount());
 
             //调用订单服务创建订单
-            log.info("创建订单");
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                     || null == rechargeOrderRes.getData()
                     || null == rechargeOrderRes.getData().getOrder()
                     || null == rechargeOrderRes.getData().getRechargeOrder()){
                 //创建订单失败，设置响应错误消息和错误状态码，给予返回
+                log.info("创建订单失败");
                 rechargeRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
                 rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
                 return rechargeRes;
             }
+            log.info("创建订单成功,订单编号:"+rechargeOrderRes.getData().getOrder().getOrderNo());
 
             //step3.调用互亿充值工具类进行流量充值
+            log.info("调用互亿工具类进行流量充值");
             IhuyiRechargeRes ihuyiRechargeRes = IhuyiUtils.ihuyiTrafficRecharge(rechargeOrderRes.getData(),rechargeReq,cacheFeignClient);
             RechargeRes res = new RechargeRes();
             //1:提交成功； 0、1015、1016、4001：核单处理,订购成功
@@ -111,6 +115,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                     || 1015 == ihuyiRechargeRes.getCode()
                     || 1016 == ihuyiRechargeRes.getCode()
                     || 4001 == ihuyiRechargeRes.getCode()) {
+                log.info("互亿流量充值下单成功,互亿充值结果状态码:"+ihuyiRechargeRes.getCode());
                 rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_HANDING);  //处理中
                 rechargeOrderRes.getData().getOrder().setNotifyUrl(rechargeReq.getNotifyUrl());             //充值结果通知地址(机构接收地址)
                 if (!StringUtils.isEmpty(ihuyiRechargeRes.getTaskid())) {
@@ -118,7 +123,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                 }
 
                 //调用订单服务更新订单
-                log.info("互亿流量充值下单成功,更新订单");
+                log.info("互亿流量充值下单成功更新订单,订单编号:"+rechargeOrderRes.getData().getOrder().getOrderNo());
                 rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                         || null == rechargeOrderRes.getData()
@@ -172,8 +177,8 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "ihuyiTrafficRechargeCallBack", method = {RequestMethod.POST})
     public void ihuyiTrafficRechargeCallBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.info("互亿流量充值结果有新的推送通知消息...");
         response.setContentType("text/html;charset=utf-8");
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);

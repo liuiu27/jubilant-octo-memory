@@ -2,17 +2,20 @@ package com.cupdata.test;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.utils.HttpUtil;
-import com.cupdata.commons.utils.RSAUtils;
+import com.cupdata.commons.constant.SysConfigParaNameEn;
+import com.cupdata.commons.utils.*;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import org.junit.Test;
+import org.springframework.util.StringUtils;
+
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class IhiyiApplicationTest {
@@ -24,7 +27,9 @@ public class IhiyiApplicationTest {
     @Test
     public void phoneRecharge() throws Exception {
         //互亿话费充值网关URL
-        String url = "http://localhost:46959/recharge/recharge/getRecharge";
+        String url = "http://10.193.17.86:46959/recharge/recharge/getRecharge";
+        String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
+        String url3 = "http://localhost:46959/recharge/recharge/getRecharge";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数
@@ -46,7 +51,7 @@ public class IhiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("互亿话费充值响应数据为" + res);
     }
 
@@ -58,6 +63,7 @@ public class IhiyiApplicationTest {
     public void trafficRecharge() throws Exception{
         //互亿流量充值网关URL
         String url = "http://localhost:46959/recharge/recharge/getRecharge";
+        String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数
@@ -79,7 +85,7 @@ public class IhiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("互亿话费充值响应数据为" + res);
     }
 
@@ -90,12 +96,13 @@ public class IhiyiApplicationTest {
     @Test
     public void virtualTest() throws Exception {
         String url = "http://localhost:46959/recharge/recharge/getRecharge";
+        String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
         String org = "2018010200000001";
         RechargeReq rechargeReq = new RechargeReq();
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");        //手机号
         rechargeReq.setAccount("625192155");           //充值账号
-        rechargeReq.setOrgOrderNo("IHUYIvirtualRecharge");         //唯一订单编号
+        rechargeReq.setOrgOrderNo("TestVirtual");         //唯一订单编号
         rechargeReq.setProductNo("171130R475");        //互亿虚拟充值产品编号
         rechargeReq.setOrderDesc("互亿英雄联盟虚拟充值");      //充值描述
         rechargeReq.setGameRegion("绯红之刃");         //游戏大区
@@ -111,7 +118,7 @@ public class IhiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("互亿虚拟充值响应数据为" + res);
     }
 
@@ -122,6 +129,7 @@ public class IhiyiApplicationTest {
     @Test
     public void getVoucherTest() throws Exception {
         String url = "http://localhost:46959/voucher/voucher/getVoucher";
+        String url2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
         String org = "2018010200000001";
         GetVoucherReq getVoucherReq = new GetVoucherReq();
         getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
@@ -139,8 +147,38 @@ public class IhiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
+    }
+
+    /**
+     * 互亿签名生成
+     */
+    @Test
+    public void generateSign(){
+        Map<String, String> map = new HashMap();
+        map.put("taskid", "EE123");
+        map.put("orderid", "18032916064609801593");
+        map.put("account", "625192155");
+        map.put("status", "2");
+        map.put("return", "11");
+        map.put("money", "12");
+        String apikeyCache = "6j3ao593wMNQRz4Zo4ao";
+        map.put("apikey", apikeyCache);//apiKey
+        String[] arr = map.keySet().toArray(new String[0]);
+        Arrays.sort(arr);
+        StringBuilder sb = new StringBuilder();
+        if (null != arr && arr.length > 0) {
+            for (int i = 0; i < arr.length; i++) {
+                String values = map.get(arr[i]);
+                sb.append(arr[i]).append("=").append(StringUtils.isEmpty(values) ? "" : values);
+                if (i < arr.length - 1) {
+                    sb.append("&");
+                }
+            }
+        }
+        String sign = MD5Util.encode(sb.toString());
+        System.out.print(sign);
     }
 
 }

@@ -48,13 +48,13 @@ public class IhuyiSchedule {
      */
     @Scheduled(cron = "0 0/5 * * * ?")
     public void scheduleIhuyiTrafficRecharge() throws Exception {
-        log.info("互亿流量查询轮询开始********************");
-        // 1.查询订单类型为:RECHARGE_TRAFFIC（流量）,订单状态:1（处理中）支付状态2（支付成功）,商户标识为:IHUYI(互亿)的合作商户订单号
+        log.info("互亿流量充值订单轮询开始**********************************************");
+        int timer = 0;
         try {
             //查询参数
             Character orderStatus = ModelConstants.ORDER_STATUS_HANDING;         //支付状态为处理中1
-            String orderSubType = ModelConstants.ORDER_TYPE_RECHARGE_TRAFFIC; //订单类型是流量充值
-            String merchantFlag = ModelConstants.ORDER_MERCHANT_FLAG_IHUYI;    //订单是互亿的
+            String orderSubType = ModelConstants.ORDER_TYPE_RECHARGE_TRAFFIC;    //订单类型是流量充值
+            String merchantFlag = ModelConstants.ORDER_MERCHANT_FLAG_IHUYI;      //订单是互亿的
             BaseResponse<ServiceOrderList> serviceOrderRes = orderFeignClient.getServiceOrderListByParam(orderStatus, orderSubType, merchantFlag);
             if (!serviceOrderRes.getResponseCode().equals("000000")) {
                 log.info("互亿订单列表信息获取失败... Ihuyi Order list acquisition failure");
@@ -67,25 +67,28 @@ public class IhuyiSchedule {
             //获取订单列表
             List<ServiceOrder> orderList = serviceOrderRes.getData().getServiceOrderList();
             for (ServiceOrder order : orderList) {
+                timer += 1 ;
                 //调用互亿订单接口去查询订单
                 log.info("订单号:"+order.getOrderNo()+",商户标识:"+order.getSupplierFlag()+",订单子类型:"+order.getOrderSubType());
-                IhuyiOrderQueryRes queryRes = IhuyiUtils.ihuyiRechargeQuery(order,cacheFeignClient);
 
+                //拿到订单去互亿查询该订单的充值状态
+                IhuyiOrderQueryRes queryRes = IhuyiUtils.ihuyiRechargeQuery(order,cacheFeignClient);
                 log.info("轮询互亿流量订购结果："+JSON.toJSONString(queryRes));
+
                 if (1 == queryRes.getCode()) { //提交成功
                     //如果商户订单号为空，则更新商户订单号
                     if (StringUtils.isEmpty(order.getSupplierOrderNo())) {
                         order.setSupplierOrderNo(queryRes.getTaskid());
                         Integer  i= orderFeignClient.updateServiceOrder(order);
-                        log.info("主订单更新数量:"+i);
+                        log.info("供应商订单号为空,更新供应商订单号,供应商订单号:"+queryRes.getTaskid());
                     }
                     if (2 == queryRes.getStatus()) { //充值成功
                         order.setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                         Integer i = orderFeignClient.updateServiceOrder(order);
-                        log.info("充值成功,更新主订单状态,更新数量为:"+i );
+                        log.info("充值成功,更新主订单状态为充值成功,更新订单数量为:"+i );
                         //互亿流量充值成功,通知机构
+                        log.info("通知机构充值成功");
                         notifyFeignClient.rechargeNotifyToOrg3Times(order.getOrderNo());
-
                     } else if (3 == queryRes.getStatus()) { //充值失败
                         String orderFailDesc = order.getOrderFailDesc();
                         if (StringUtils.isEmpty(orderFailDesc)) {
@@ -95,9 +98,10 @@ public class IhuyiSchedule {
                         Integer i = orderFeignClient.updateServiceOrder(order);
                         log.info("互亿流量充值失败,更新主订单失败描述,更新数量为:"+i );
                         //互亿流量充值失败,通知机构
+                        log.info("通知机构充值失败");
                         notifyFeignClient.rechargeNotifyToOrg3Times(order.getOrderNo());
                     } else {
-                        log.info("轮询互亿流量充值订单状态，结果为："+JSONObject.toJSONString(queryRes));
+                        log.info("轮询互亿流量充值订单状态,结果为："+JSONObject.toJSONString(queryRes));
                     }
                 }
             }
@@ -105,6 +109,7 @@ public class IhuyiSchedule {
             log.info("互亿订单轮训出现异常...IhuyiOrderGetException" + e.getMessage());
             return;
         }
+        log.info("互亿流量充值订单轮询结束,本次轮训"+timer+"笔订单+*****************************");
     }
 
 
@@ -114,7 +119,8 @@ public class IhuyiSchedule {
      */
     @Scheduled(cron = "0 0/5 * * * ?")
     public void scheduleIhuyiPhoneRecharge() throws Exception {
-        log.info("互亿话费轮询开始********************");
+        log.info("互亿话费充值订单轮询开始**********************************************");
+        int timer = 0;
         try {
             //step1.查询参数:支付状态为处理中,订单子类型为话费充值,订单是互亿的
             Character orderStatus = ModelConstants.ORDER_STATUS_HANDING;         //支付状态为处理中1
@@ -132,19 +138,19 @@ public class IhuyiSchedule {
 
             //step2.获取订单列表
             List<ServiceOrder> orderList = serviceOrderRes.getData().getServiceOrderList();
+
             for (ServiceOrder order : orderList) {
                 //调用互亿订单接口去查询订单
+                timer += 1 ;
                 log.info("订单号:"+order.getOrderNo()+",商户标识:"+order.getSupplierFlag()+",订单子类型:"+order.getOrderSubType());
-                IhuyiOrderQueryRes ihuyiOrderQueryRes = new IhuyiOrderQueryRes();
                 IhuyiOrderQueryRes queryRes = IhuyiUtils.ihuyiRechargeQuery(order,cacheFeignClient);
-
                 log.info("轮询互亿话费订购结果："+JSON.toJSONString(queryRes));
                 if (1 == queryRes.getCode()) { //提交成功
                     //如果商户订单号为空，则更新商户订单号
                     if (StringUtils.isEmpty(order.getSupplierOrderNo())) {
                         order.setSupplierOrderNo(queryRes.getTaskid());
                         Integer  i= orderFeignClient.updateServiceOrder(order);
-                        log.info("主订单更新数量:"+i);
+                        log.info("供应商订单号为空,更新供应商订单号,供应商订单号:"+queryRes.getTaskid());
                     }
                     if (2 == queryRes.getStatus()) { //充值成功
                         order.setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
@@ -169,6 +175,7 @@ public class IhuyiSchedule {
             log.info("互亿订单轮训出现异常...IhuyiOrderGetException" + e.getMessage());
             return;
         }
+        log.info("互亿话费充值订单轮询结束,本次轮训"+timer+"笔订单+*****************************");
     }
 
 
@@ -178,7 +185,8 @@ public class IhuyiSchedule {
      */
     @Scheduled(cron = "0 0/5 * * * ?")
     public void scheduleIhuyiVirtualRecharge() throws Exception {
-        log.info("互亿虚拟充值查询轮询开始********************");
+        log.info("互亿虚拟充值订单轮询开始**********************************************");
+        int timer = 0;
         // 1.查询订单类型为:RECHARGE_*（多种虚拟产品）,订单状态:1（处理中）支付状态2（支付成功）,商户标识为:IHUYI(互亿)的合作商户订单号
         try {
             //查询参数
@@ -198,6 +206,7 @@ public class IhuyiSchedule {
             }
             //获取订单列表
             for (ServiceOrder order : orderList) {
+                timer += 1;
                 //调用互亿订单接口去查询订单
                 log.info("订单号:"+order.getOrderNo()+",商户标识:"+order.getSupplierFlag()+",订单子类型:"+order.getOrderSubType());
                 IhuyiOrderQueryRes ihuyiOrderQueryRes = new IhuyiOrderQueryRes();
@@ -208,7 +217,7 @@ public class IhuyiSchedule {
                     if (StringUtils.isEmpty(order.getSupplierOrderNo())) {
                         order.setSupplierOrderNo(queryRes.getTaskid());
                         Integer  i= orderFeignClient.updateServiceOrder(order);
-                        log.info("主订单更新数量:"+i);
+                        log.info("供应商订单号为空,更新供应商订单号,供应商订单号:"+queryRes.getTaskid());
                     }
                     if (2 == queryRes.getStatus()) { //充值成功
                         order.setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
@@ -236,6 +245,7 @@ public class IhuyiSchedule {
             log.info("互亿订单轮训出现异常...IhuyiOrderGetException" + e.getMessage());
             return;
         }
+        log.info("互亿虚拟充值订单轮询结束,本次轮训"+timer+"笔订单+*****************************");
     }
 
 }

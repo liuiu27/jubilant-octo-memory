@@ -116,6 +116,7 @@ public class QQRechargeUtils {
 			long l1 = System.currentTimeMillis();
 			String resStr = HttpUtil.doGet(checkOpenUrl);
 			long l2 = System.currentTimeMillis();
+			log.info("腾讯鉴权结果:"+resStr);
 			log.info("调用腾讯鉴权接口耗时:"+(l2 - l1)+"ms");
 			res = parseQQCheckOpenXml(resStr);
 		} catch (Exception e) {
