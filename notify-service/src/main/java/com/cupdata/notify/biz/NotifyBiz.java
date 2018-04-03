@@ -1,5 +1,6 @@
 package com.cupdata.notify.biz;
 
+import com.cupdata.commons.model.ServiceOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,22 +57,22 @@ public class NotifyBiz extends BaseBiz<OrderNotifyWait> {
 
     /**
      * 充值业务通知
-     * @param rechargeOrderVo
+     * @param serviceOrder
      * @param orgInfVo
      */
-	public void rechargeNotifyToOrg3Times(RechargeOrderVo rechargeOrderVo, OrgInfVo orgInfVo) {
+	public void rechargeNotifyToOrg3Times(ServiceOrder serviceOrder, OrgInfVo orgInfVo) {
 		String str ="";
 		//发送通知  先发送3次通知
 		for(int i=0;i<3;i++){
-			if(NotifyUtil.rechargeHttpToOrg(rechargeOrderVo,orgInfVo)) {
+			if(NotifyUtil.rechargeHttpToOrg(serviceOrder,orgInfVo)) {
 				//通知成功    初始  OrderNotifyComplete 保存数据库
-				OrderNotifyComplete orderNotifyComplete = NotifyUtil.initOrderNotifyComplete(rechargeOrderVo.getOrder().getOrderNo(),rechargeOrderVo.getOrder().getNotifyUrl());
+				OrderNotifyComplete orderNotifyComplete = NotifyUtil.initOrderNotifyComplete(serviceOrder.getOrderNo(),serviceOrder.getNotifyUrl());
 				orderNotifyCompleteDao.insert(orderNotifyComplete);
 				return;
 			}
 		}
 		//通知失败    初始  OrderNotifyWait 保存数据库
-		OrderNotifyWait orderNotifyWait = NotifyUtil.initOrderNotifyWait(rechargeOrderVo.getOrder().getOrderNo(),rechargeOrderVo.getOrder().getNotifyUrl());
+		OrderNotifyWait orderNotifyWait = NotifyUtil.initOrderNotifyWait(serviceOrder.getOrderNo(),serviceOrder.getNotifyUrl());
 		orderNotifyWaitBiz.insert(orderNotifyWait);
 	}
 

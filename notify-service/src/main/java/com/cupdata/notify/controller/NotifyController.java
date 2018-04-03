@@ -1,6 +1,8 @@
 package com.cupdata.notify.controller;
 
+import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
+import com.cupdata.notify.utils.ServerPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,18 +74,18 @@ public class NotifyController implements INotifyController{
 		log.info("NotifyController rechargeNotifyToOrg is begin.......orderNo is" +  orderNo);
 		try {
 			//根据订单号 查询订单信息 和充值信息
-			BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrderNo(orderNo);
-			if(!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderVo.getResponseCode())) {
+			BaseResponse<ServiceOrder> ServiceOrderRes = orderFeignClient.getServiceOrderByOrderNo(orderNo);
+			if(!ResponseCodeMsg.SUCCESS.getCode().equals(ServiceOrderRes.getResponseCode())) {
 				log.error("order-service getRechargeOrderByOrderNo result is null orderNO is" + orderNo);
 				return;
 			}
 			//根据机构号获取机构信息 秘钥
-			BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(rechargeOrderVo.getData().getOrder().getOrgNo());
+			BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(ServiceOrderRes.getData().getOrgNo());
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
-				log.error("cacher-service getOrgInf result is null orgNo is" + rechargeOrderVo.getData().getOrder().getOrgNo());
+				log.error("cacher-service getOrgInf result is null orgNo is" + ServiceOrderRes.getData().getOrgNo());
 				return;
 			}
-			notifyBiz.rechargeNotifyToOrg3Times(rechargeOrderVo.getData(),orgInf.getData());
+			notifyBiz.rechargeNotifyToOrg3Times(ServiceOrderRes.getData(),orgInf.getData());
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());

@@ -8,6 +8,7 @@ import java.security.PublicKey;
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.TimeConstants;
+import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.utils.HttpUtil;
@@ -28,17 +29,17 @@ public class NotifyUtil {
 	/**
 	 * 充值业务发送通知
 	 * @param orgInfVo
-	 * @param rechargeOrderVo
+	 * @param serviceOrder
 	 * @return
 	 */
-	public static Boolean rechargeHttpToOrg(RechargeOrderVo rechargeOrderVo, OrgInfVo orgInfVo){
+	public static Boolean rechargeHttpToOrg(ServiceOrder serviceOrder, OrgInfVo orgInfVo){
 		Boolean bl = false;
 		try {
 		    //封装充值业务通知vo
             RechargeNotifyToOrgVo rechargeNotifyToOrgVo = new RechargeNotifyToOrgVo();
-            rechargeNotifyToOrgVo.setOrderNo(rechargeOrderVo.getOrder().getOrderNo());            //平台订单号
-            rechargeNotifyToOrgVo.setOrgOrderNo(rechargeOrderVo.getOrder().getOrgOrderNo());      //机构唯一订单号
-            rechargeNotifyToOrgVo.setRechargeStatus(rechargeOrderVo.getOrder().getOrderStatus()); //订单状态
+            rechargeNotifyToOrgVo.setOrderNo(serviceOrder.getOrderNo());            //平台订单号
+            rechargeNotifyToOrgVo.setOrgOrderNo(serviceOrder.getOrgOrderNo());      //机构唯一订单号
+            rechargeNotifyToOrgVo.setRechargeStatus(serviceOrder.getOrderStatus()); //订单状态
 			String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), TimeConstants.DATE_PATTERN_5) + CommonUtils.getCharAndNum(8);
             rechargeNotifyToOrgVo.setTimestamp(timestamp);    //时间戳
 
@@ -54,9 +55,9 @@ public class NotifyUtil {
 			authReqSign = URLEncoder.encode(authReqSign);
 
 			//发送请求
-			log.info("dopost request url is " + rechargeOrderVo.getOrder().getNotifyUrl() + "data is  " +
+			log.info("dopost request url is " + serviceOrder.getNotifyUrl() + "data is  " +
 					reqData + "sign is " + authReqSign);
-			String resStr = HttpUtil.doPost(rechargeOrderVo.getOrder().getNotifyUrl(), "data=" + reqData + "&sign=" + authReqSign ,
+			String resStr = HttpUtil.doPost(serviceOrder.getNotifyUrl(), "data=" + reqData + "&sign=" + authReqSign ,
 					"application/x-www-form-urlencoded;charset=UTF-8");
 			if("SUCCESS".equals(resStr)) {
 				bl = true;
