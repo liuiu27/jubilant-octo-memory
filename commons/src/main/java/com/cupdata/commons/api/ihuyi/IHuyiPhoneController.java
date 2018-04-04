@@ -19,7 +19,6 @@ public interface IHuyiPhoneController extends IRechargeAPI {
 
     /**
      * 互亿话费充值异步通知接口
-     * @param request
      * @param response
      * @throws IOException
      */

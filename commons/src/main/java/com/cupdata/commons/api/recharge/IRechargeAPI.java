@@ -28,14 +28,4 @@ public interface IRechargeAPI {
      */
     @PostMapping("/getRecharge")
     public BaseResponse<RechargeRes> recharge(String org, RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response);
-
-
-    /**
-     * 虚拟充值查询接口
-     * @param org
-     * @param req
-     * @return
-     */
-    @PostMapping("/rechargeQuery")
-    public BaseResponse<RechargeResQuery> rechargeQuery(String org , RechargeQueryReq req);
 }
