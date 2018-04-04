@@ -91,5 +91,4 @@ public class NotifyController implements INotifyController{
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
-    
 }

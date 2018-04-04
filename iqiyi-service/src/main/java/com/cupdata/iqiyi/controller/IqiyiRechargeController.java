@@ -8,9 +8,7 @@ import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
-import com.cupdata.commons.vo.recharge.RechargeReq;
-import com.cupdata.commons.vo.recharge.RechargeRes;
+import com.cupdata.commons.vo.recharge.*;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
 import com.cupdata.iqiyi.constant.IqiyiRechargeResCode;
@@ -163,5 +161,10 @@ public class IqiyiRechargeController implements IQiYiController {
             return rechargeRes;
         }
         return rechargeRes;
+    }
+
+    @Override
+    public BaseResponse<RechargeResQuery> rechargeQuery(String org, RechargeQueryReq req) {
+        return null;
     }
 }

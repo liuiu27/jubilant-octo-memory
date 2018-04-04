@@ -7,10 +7,7 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
-import com.cupdata.commons.vo.recharge.RechargeReq;
-import com.cupdata.commons.vo.recharge.RechargeRes;
-import com.cupdata.commons.vo.recharge.RechargeResQuery;
+import com.cupdata.commons.vo.recharge.*;
 import com.cupdata.tencent.constant.QQRechargeResCode;
 import com.cupdata.tencent.feign.CacheFeignClient;
 import com.cupdata.tencent.feign.OrderFeignClient;
@@ -160,5 +157,10 @@ public class TencentController implements ITencentController{
             return rechargeRes;
         }
         return rechargeRes;
+    }
+
+    @Override
+    public BaseResponse<RechargeResQuery> rechargeQuery(String org, RechargeQueryReq req) {
+        return null;
     }
 }

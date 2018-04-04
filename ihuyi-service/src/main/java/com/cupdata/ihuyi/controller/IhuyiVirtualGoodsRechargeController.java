@@ -8,9 +8,7 @@ import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
-import com.cupdata.commons.vo.recharge.RechargeReq;
-import com.cupdata.commons.vo.recharge.RechargeRes;
+import com.cupdata.commons.vo.recharge.*;
 import com.cupdata.ihuyi.constant.IhuyiRechargeResCode;
 import com.cupdata.ihuyi.feign.CacheFeignClient;
 import com.cupdata.ihuyi.feign.NotifyFeignClient;
@@ -177,6 +175,17 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
             rechargeRes.setResponseCode(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getCode());
             return rechargeRes;
         }
+    }
+
+    /**
+     * 虚拟充值查询controller
+     * @param org
+     * @param req
+     * @return
+     */
+    @Override
+    public BaseResponse<RechargeResQuery> rechargeQuery(String org, RechargeQueryReq req) {
+        return null;
     }
 
     /**

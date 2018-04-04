@@ -7,9 +7,7 @@ import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
-import com.cupdata.commons.vo.recharge.RechargeReq;
-import com.cupdata.commons.vo.recharge.RechargeRes;
+import com.cupdata.commons.vo.recharge.*;
 import com.cupdata.ihuyi.constant.IhuyiRechargeResCode;
 import com.cupdata.ihuyi.feign.CacheFeignClient;
 import com.cupdata.ihuyi.feign.NotifyFeignClient;
@@ -173,6 +171,17 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
             rechargeRes.setResponseCode(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getCode());
             return rechargeRes;
         }
+    }
+
+    /**
+     * 话费充值查询controller
+     * @param org
+     * @param req
+     * @return
+     */
+    @Override
+    public BaseResponse<RechargeResQuery> rechargeQuery(@RequestParam(value="org", required=true) String org, @RequestBody RechargeQueryReq req) {
+        return null;
     }
 
     /**

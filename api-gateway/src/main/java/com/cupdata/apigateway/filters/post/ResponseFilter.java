@@ -198,7 +198,7 @@ public class ResponseFilter extends ZuulFilter {
 	private boolean isIgnorePath(String path) {
 		for (String url : ignoreUrl.split(",")) {
 			if (path.substring(zuulPrefix.length()).startsWith(url)) {
-			    System.out.print("响应发");
+			    System.out.print("忽略响应路由网关");
 				return true;
 			}
 		}
