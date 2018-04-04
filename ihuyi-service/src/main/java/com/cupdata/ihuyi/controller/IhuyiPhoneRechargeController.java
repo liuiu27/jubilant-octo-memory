@@ -15,24 +15,22 @@ import com.cupdata.ihuyi.feign.OrderFeignClient;
 import com.cupdata.ihuyi.feign.ProductFeignClient;
 import com.cupdata.ihuyi.utils.IhuyiUtils;
 import com.cupdata.ihuyi.vo.IhuyiRechargeRes;
+import com.sun.xml.internal.ws.wsdl.writer.document.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: DingCong
@@ -60,7 +58,7 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
      * @param org
      * @param rechargeReq
      * @param request
-     * @param response
+//     * @param response
      * @return
      */
     @Override
@@ -174,17 +172,6 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
     }
 
     /**
-     * 话费充值查询controller
-     * @param org
-     * @param req
-     * @return
-     */
-    @Override
-    public BaseResponse<RechargeResQuery> rechargeQuery(@RequestParam(value="org", required=true) String org, @RequestBody RechargeQueryReq req) {
-        return null;
-    }
-
-    /**
      * 互亿话费订购接口回调(此接口用于互亿调用,以此告知SIP话费充值的最终结果)
      * @param request
      * @param response
@@ -194,31 +181,16 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
     public void ihuyiPhoneRechargeCallBack(HttpServletRequest request,HttpServletResponse response) throws IOException {
         log.info("互亿话费充值结果有新的通知消息...");
         response.setContentType("text/html;charset=utf-8");
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
         PrintWriter writer = response.getWriter();
-        upload.setHeaderEncoding("UTF-8");
         String resultStr = "success";
-        String TASK = request.getParameter("taskid");
-        String order = request.getParameter("orderid");
-
         try {
-            List<?> items = upload.parseRequest(request);
-            Map<String, String> param = new HashMap();
-            for(Object object:items){
-                FileItem fileItem = (FileItem) object;
-                if (fileItem.isFormField()) {
-                    param.put(fileItem.getFieldName(), fileItem.getString("utf-8"));//如果你页面编码是utf-8的
-                }
-            }
-
             //从商户请求体中取出数据
-            String taskid = param.get("taskid");
-            String orderid = param.get("orderid");
-            String mobile = param.get("mobile");
-            String message = param.get("message");
-            String state = param.get("state");
-            String sign = param.get("sign");
+            String taskid = request.getParameter("taskid");
+            String orderid = request.getParameter("orderid");
+            String mobile = request.getParameter("mobile");
+            String message = request.getParameter("message");
+            String state = request.getParameter("state");
+            String sign = request.getParameter("sign");
 
             //封装参数
             Map<String, String> map = new HashMap();
@@ -239,14 +211,14 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                 }
 
                 //如果商户订单号为空，就添加商户订单号
-                if (org.apache.commons.lang.StringUtils.isEmpty(rechargeOrderVo.getData().getOrder().getSupplierNo())) {
+                if (org.apache.commons.lang.StringUtils.isEmpty(rechargeOrderVo.getData().getOrder().getSupplierOrderNo())) {
                     rechargeOrderVo.getData().getOrder().setSupplierOrderNo(taskid);
                     orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData()); //更新商户订单
                 }
 
                 if ("1".equals(state)) {  //充值成功
-                    rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                     if (rechargeOrderVo.getData().getOrder() != null && ModelConstants.ORDER_STATUS_HANDING.equals(rechargeOrderVo.getData().getOrder().getOrderStatus())) {
+                        rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                         orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
                         log.info("互亿推送充值结果...互亿话费充值订单更新成功");
                         writer.print(resultStr);
@@ -273,7 +245,7 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                 resultStr = "fail";
                 writer.print(resultStr);
             }
-        } catch (FileUploadException e) {
+        } catch (Exception e) {
             log.info("",e);
             resultStr = "fail";
             writer.print(resultStr);

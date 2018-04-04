@@ -61,6 +61,7 @@ public class NotifyBiz extends BaseBiz<OrderNotifyWait> {
      * @param orgInfVo
      */
 	public void rechargeNotifyToOrg3Times(ServiceOrder serviceOrder, OrgInfVo orgInfVo) {
+		System.out.print("222222222222");
 		String str ="";
 		//发送通知  先发送3次通知
 		for(int i=0;i<3;i++){

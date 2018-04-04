@@ -178,17 +178,6 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
     }
 
     /**
-     * 虚拟充值查询controller
-     * @param org
-     * @param req
-     * @return
-     */
-    @Override
-    public BaseResponse<RechargeResQuery> rechargeQuery(String org, RechargeQueryReq req) {
-        return null;
-    }
-
-    /**
      * 互亿虚拟商品充值回调函数
      * @param request
      * @param response

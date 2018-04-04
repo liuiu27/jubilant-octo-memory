@@ -162,9 +162,4 @@ public class IqiyiRechargeController implements IQiYiController {
         }
         return rechargeRes;
     }
-
-    @Override
-    public BaseResponse<RechargeResQuery> rechargeQuery(String org, RechargeQueryReq req) {
-        return null;
-    }
 }

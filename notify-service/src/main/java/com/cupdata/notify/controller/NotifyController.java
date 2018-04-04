@@ -71,6 +71,7 @@ public class NotifyController implements INotifyController{
 	 */
 	@Override
 	public void rechargeNotifyToOrg3Times(@PathVariable("orderNo") String orderNo) {
+		System.out.print("1111111111111111");
 		log.info("NotifyController rechargeNotifyToOrg is begin.......orderNo is" +  orderNo);
 		try {
 			//根据订单号 查询订单信息 和充值信息

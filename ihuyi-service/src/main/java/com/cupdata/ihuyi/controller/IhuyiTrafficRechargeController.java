@@ -170,17 +170,6 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
     }
 
     /**
-     * 流量充值查询controller
-     * @param org
-     * @param req
-     * @return
-     */
-    @Override
-    public BaseResponse<RechargeResQuery> rechargeQuery(String org, RechargeQueryReq req) {
-        return null;
-    }
-
-    /**
      * 互亿流量订购接口回调(此接口用于互亿调用,以此告知SIP流量充值的最终结果)
      * @param request
      * @param response
@@ -189,27 +178,15 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
     public void ihuyiTrafficRechargeCallBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.info("互亿流量充值结果有新的推送通知消息...");
         response.setContentType("text/html;charset=utf-8");
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        ServletFileUpload upload = new ServletFileUpload(factory);
         PrintWriter writer = response.getWriter();
-        upload.setHeaderEncoding("UTF-8");
         String resultStr = "success";
-        List<?> items;
         try {
-            items = upload.parseRequest(request);
-            Map<String, String> param = new HashMap();
-            for(Object object:items){
-                FileItem fileItem = (FileItem) object;
-                if (fileItem.isFormField()) {
-                    param.put(fileItem.getFieldName(), fileItem.getString("utf-8"));//如果你页面编码是utf-8的
-                }
-            }
-            String taskid = param.get("taskid");
-            String orderid = param.get("orderid");
-            String mobile = param.get("mobile");
-            String message = param.get("message");
-            String status = param.get("status");
-            String sign = new String(param.get("sign"));
+            String taskid = request.getParameter("taskid");
+            String orderid = request.getParameter("orderid");
+            String mobile = request.getParameter("mobile");
+            String message = request.getParameter("message");
+            String status = request.getParameter("status");
+            String sign = request.getParameter("sign");
             Map<String, String> map = new HashMap();
             map.put("taskid", taskid);
             map.put("mobile", mobile);
@@ -228,14 +205,14 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                 }
 
                 //如果商户订单号为空，就添加商户订单号
-                if (org.apache.commons.lang.StringUtils.isEmpty(rechargeOrderVo.getData().getOrder().getSupplierNo())) {
+                if (org.apache.commons.lang.StringUtils.isEmpty(rechargeOrderVo.getData().getOrder().getSupplierOrderNo())) {
                     rechargeOrderVo.getData().getOrder().setSupplierOrderNo(taskid);
                     orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData()); //更新商户订单
                 }
 
                 if ("1".equals(status)) {  //充值成功
-                    rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                     if (rechargeOrderVo.getData().getOrder() != null && ModelConstants.ORDER_STATUS_HANDING.equals(rechargeOrderVo.getData().getOrder().getOrderStatus())) {
+                        rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                         orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
                         log.info("互亿流量充值状态推送...互亿话费充值订单更新成功");
                         writer.print(resultStr);
@@ -262,7 +239,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                 resultStr = "fail";
                 writer.print(resultStr);
             }
-        } catch (FileUploadException e) {
+        } catch (Exception e) {
             log.info("",e);
             resultStr = "fail";
             writer.print(resultStr);

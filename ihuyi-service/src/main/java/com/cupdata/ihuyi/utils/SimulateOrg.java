@@ -22,7 +22,7 @@ public class SimulateOrg {
     @RequestMapping("/givenOrg")
     public String simulateOrgInterface(HttpServletRequest req) throws Exception {
 
-        String s = "";
+        String s = "fail";
         log.info("本地模拟通机构接口.....");
         String data = req.getParameter("data");
         log.info("请求数据:"+data);
@@ -43,7 +43,7 @@ public class SimulateOrg {
         boolean isPass = RSAUtils.checkSign(dataPlain, sign, PublicKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         log.info("签名数据:"+isPass);
         //验签成功即可完成接受数据
-        if(isPass){
+        if(!isPass){
             s = "SUCCESS";
             log.info("对象："+rechargeNotifyVo);
         }

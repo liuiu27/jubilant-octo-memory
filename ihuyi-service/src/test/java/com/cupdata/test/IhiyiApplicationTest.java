@@ -158,11 +158,9 @@ public class IhiyiApplicationTest {
     public void generateSign(){
         Map<String, String> map = new HashMap();
         map.put("taskid", "EE123");
-        map.put("orderid", "18032916064609801593");
-        map.put("account", "625192155");
-        map.put("status", "2");
-        map.put("return", "11");
-        map.put("money", "12");
+        map.put("mobile", "12552521251");
+        map.put("status", "1");
+        map.put("message", "充值成功");
         String apikeyCache = "6j3ao593wMNQRz4Zo4ao";
         map.put("apikey", apikeyCache);//apiKey
         String[] arr = map.keySet().toArray(new String[0]);
