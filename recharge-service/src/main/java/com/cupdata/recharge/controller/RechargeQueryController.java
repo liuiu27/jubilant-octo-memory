@@ -32,14 +32,16 @@ public class RechargeQueryController implements IRechargeQueryController {
         log.info("虚拟充值结果查询,机构号:"+org+",机构订单唯一编号:"+rechargeQueryReq.getOrgOrderNo());
         BaseResponse<RechargeResQuery> res = new BaseResponse<>();  //定义响应对象
         try {
+            //step1.判断参数是否为空
             if (StringUtils.isBlank(org) || StringUtils.isBlank(rechargeQueryReq.getOrgOrderNo())){
                 log.info("机构号或机构订单号为空");
                 res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
                 res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
                 return res;
             }
-            BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrgNoAndOrgOrderNo(org,rechargeQueryReq.getOrgOrderNo());
 
+            //step2.查询充值订单
+            BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrgNoAndOrgOrderNo(org,rechargeQueryReq.getOrgOrderNo());
             if (CommonUtils.isNullOrEmptyOfObj(rechargeOrderVo.getData())){
                 log.info("查询订单数据为空");
                 res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());

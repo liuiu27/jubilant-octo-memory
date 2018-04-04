@@ -44,9 +44,6 @@ public class RechargeController implements IRechargeController{
     private ProductFeignClient productFeignClient;
 
     @Autowired
-    private OrderFeignClient orderFeignClient;
-
-    @Autowired
     private RestTemplate restTemplate;
 
 	/**
@@ -126,75 +123,4 @@ public class RechargeController implements IRechargeController{
 		}
     }
 
-    /**
-     * 虚拟充值查询接口
-     * @param org
-     * @param req
-     * @return
-     */
-	@Override
-	public BaseResponse<RechargeResQuery> rechargeQuery(@RequestParam(value = "org" ,required = true) String org, @RequestBody RechargeQueryReq req) {
-		log.info("开始访问虚拟充值业务接口...org:"+org+",OrgOrderNo:"+req.getOrgOrderNo());
-        BaseResponse<RechargeResQuery> rechargeResQuery = new BaseResponse<RechargeResQuery>();
-	    try{
-	        //step1.判断请求参数是否合法
-            if (StringUtils.isBlank(org) || CommonUtils.isNullOrEmptyOfObj(req)){
-                rechargeResQuery.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-                rechargeResQuery.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
-                log.error(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
-                return rechargeResQuery;
-            }
-
-            //step2.开始查询订单
-            BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.getRechargeOrderByOrgNoAndOrgOrderNo(org, req.getOrgOrderNo());
-            if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())) {
-                rechargeResQuery.setResponseCode(rechargeOrderRes.getResponseCode());
-                rechargeResQuery.setResponseMsg(rechargeOrderRes.getResponseMsg());
-                log.error("查询充值订单controller,调用订单服务查询充值订单失败");
-                return rechargeResQuery;
-            }
-
-            //step3.根据订单查询产品信息
-            BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(rechargeOrderRes.getData().getRechargeOrder().getProductNo());
-            if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
-                    || CommonUtils.isNullOrEmptyOfObj(productInfRes.getData())) {
-                rechargeResQuery.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-                rechargeResQuery.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
-                log.error("查询服务产品信息失败,ProductNo:" + rechargeOrderRes.getData().getRechargeOrder().getProductNo());
-                return rechargeResQuery;
-            }
-
-            // Step4.判断服务产品是否为充值商品
-            if (!ModelConstants.PRODUCT_TYPE_RECHARGE.equals(productInfRes.getData().getProduct().getProductType())) {
-                rechargeResQuery.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-                rechargeResQuery.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
-                log.error("服务产品类型异常,ProductType:" + productInfRes.getData().getProduct().getProductType());
-                return rechargeResQuery;
-            }
-
-            // Step5.查询服务产品与机构是否关联：验证机构是否有该产品权限
-            BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org, rechargeOrderRes.getData().getRechargeOrder().getProductNo());
-            if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
-                    || CommonUtils.isNullOrEmptyOfObj(orgProductRelRes.getData())) {
-                rechargeResQuery.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
-                rechargeResQuery.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
-                log.error("服务产品与机构关联异常,OrgNo:"+orgProductRelRes.getData().getOrgProductRela().getOrgNo());
-                return rechargeResQuery;
-            }
-
-            // Step6.调用微服务来查询充值订单
-            String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/rechargeQuery?org=" + org;
-            log.info("请求充值查询业务路径为:"+url);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-            HttpEntity<RechargeQueryReq> entity = new HttpEntity<RechargeQueryReq>(req, headers);
-            ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
-            String jsonStr = responseEntity.getBody();
-            BaseResponse<RechargeResQuery> rechargeResult = JSONObject.parseObject(jsonStr, new TypeReference<BaseResponse<RechargeResQuery>>() {});
-            return rechargeResult;
-        }catch (Exception e){
-            log.error("error is " + e.getMessage());
-            throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-        }
-	}
 }
