@@ -50,13 +50,7 @@ public class BestdoServiceTest {
 
     @Test
     public void testMerDetail() {
-        //merItemId
-        //1020125	高尔夫练习场
-        //1020279	羽毛球
-        //1020102	银联数据-健身
-        //1020105	银联数据-网球
-        //1020103	银联数据-游泳
-        //1020107	银联数据-星级酒店游泳
+
         JSONObject json = new JSONObject();
         json.put("source", "CUPD");
         json.put("tradeCode", "VENUElIST");
@@ -151,7 +145,7 @@ public class BestdoServiceTest {
 
         BASE64Decoder b64=new BASE64Decoder();
 
-        log.info(RSAHelper.decipher(Base64.getEncoder().encodeToString(b64.decodeBuffer(ret)),privateKey,256));
+        log.info(RSAHelper.decipher(Base64.getEncoder().encodeToString(b64.decodeBuffer(ret)),privateKey));
 
     }
 

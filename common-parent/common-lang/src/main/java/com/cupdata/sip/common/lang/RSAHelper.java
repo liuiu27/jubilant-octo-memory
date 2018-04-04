@@ -1,5 +1,7 @@
 package com.cupdata.sip.common.lang;
 
+import sun.misc.BASE64Decoder;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -219,6 +221,8 @@ public class RSAHelper {
         return data;
     }
 
+
+
     /**
      * 使用私钥解密
      *
@@ -248,6 +252,31 @@ public class RSAHelper {
             return null;
         }
     }
+
+
+
+    /**
+     * 分段解密
+     *
+     * @param contentBase64 密文
+     * @param key           解密秘钥
+     * @return
+     */
+    @Deprecated
+    public static String decipher(String contentBase64, Key key) {
+        BASE64Decoder b64=new BASE64Decoder();
+        try {
+            contentBase64 =  Base64.getEncoder().encodeToString(b64.decodeBuffer(contentBase64));
+            return  decipher(contentBase64,key,0);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+
+
 
     /**
      * 分段解密
