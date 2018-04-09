@@ -7,6 +7,7 @@ import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -18,7 +19,7 @@ public class LakalaApplicationTest {
 
     @Test
     public void LakalaApplicationTest() throws Exception{
-        String url = "http://localhost:46959/voucher/voucher/getVoucher";
+        /*String url = "http://localhost:46959/voucher/voucher/getVoucher";
         String URL2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
         String URL3 = "http://10.193.17.84:46959/voucher/voucher/getVoucher";
         String org = "2018010200000001";
@@ -42,18 +43,21 @@ public class LakalaApplicationTest {
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
         String res = HttpUtil.doPost(URL3, params, "application/x-www-form-urlencoded;charset=UTF-8");
-        System.out.print("响应数据为" + res);
+        System.out.print("响应数据为" + res);*/
 
 
-      /*  String text = "Qhtcb2ZfMGYJJRW3LulDRKlAlhyvd6dFFNUYJTNf0CB0UaLDHifrer0t759YTVYZUoa53dG4jh635xfJLrumI2HD8uPabCnhg0ptOLG7+h3hQ2lc1Itz1WpgcbPJeJY6COZlwACLfY55vdMrPrGjeG2n3UE2i22F0KVXUbbYYz969BIWMsBuufprOUcLhb5XIpC5YfUIL6PzPuYEbOa3UqNcV1VAIx6TEplpJ4i/CxyOzdGaWJJz5HBIUrWHEzuJNGacFJoC2UnYxrXaAMUWG73sbtyW6echLioTrkdYwZN1QZVR8JdpGYRQHenfKWcNLMqk2B0umpCvL5BgmTfHRQ==";
-        String pub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDU9lc4kI7+HR1fAArR3SzpnVfp9ihj7t6Ta5EeC70hgg7GK2tDZwvvwXwukD+RMGr3e5o9cOXRL/785CHcJYNbU4zmKweBpzEL4097UbI2Yracs6BCej4zH7dUTqVPi2/8EJwsKFpXILFMBCjKLNkhYFwmkqHbf710XC9BE4JLBQIDAQAB";
-        String pri = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBANT2VziQjv4dHV8ACtHdLOmdV+n2KGPu3pNrkR4LvSGCDsYra0NnC+/BfC6QP5Ewavd7mj1w5dEv/vzkIdwlg1tTjOYrB4GnMQvjT3tRsjZitpyzoEJ6PjMft1ROpU+Lb/wQnCwoWlcgsUwEKMos2SFgXCaSodt/vXRcL0ETgksFAgMBAAECgYBPUzkW8UXKItcraU0ecffGRx0VoWLXIoVWvUUPP4kh/5t4NnkcYLhiBJy4jXOYJcRaTficdT6thmbBFUsFgRWlkyPGpe61mGu+lRLYAzJlHWWR0XUY/tCMBLe1TPt8TXejCZ5EH+HihbZ5KXDyVICSkxa7BweVQDSpFw8+XDXzGwJBAPoqeYOVc1rUBzhDamteaX1IMa9bxGYH92TZP1OQUbVwfwZkmgSsqjfXpxHCqIHVvb0M2+fcq60lSuUwumyMvYcCQQDZ7cFNRUAdYO9fCgUqHDIeGbKa3XBIzunMb5TrIjvEPo/FopOETztUolkyKG3hvsSDjA0jT3FQty3TNlJ5rHYTAkBz3saHpupWMIzjh348Gu+7Ynv44AVYyOnSoTlOqDLgWinLuT8JWTxCPzWX6VSJRonqjZExlKlDulk1TNucOZfzAkA4bF5H604WTSqsqKN9q58uO+kKP5r6vte5noon9s0SmkAPI3CeKQVrfD0rx1vrvsCSbohYRBFKnKK4tK/V4NkRAkBFMbBnBbzxyjm7pzxwW2mQFrNFLtt2Ewadb73ZQzyh726d2kQa/iyLkytOw78qiV7l5zQr3LuPCKhYaskcyXGN";
-        String data = URLDecoder.decode(text,"UTF-8");
+        String text = "Qhtcb2ZfMGYJJRW3LulDRKlAlhyvd6dFFNUYJTNf0CB0UaLDHifrer0t759YTVYZUoa53dG4jh635xfJLrumI2HD8uPabCnhg0ptOLG7+h3hQ2lc1Itz1WpgcbPJeJY6COZlwACLfY55vdMrPrGjeG2n3UE2i22F0KVXUbbYYz969BIWMsBuufprOUcLhb5XIpC5YfUIL6PzPuYEbOa3UqNcV1VAIx6TEplpJ4i/CxyOzdGaWJJz5HBIUrWHEzuJNGacFJoC2UnYxrXaAMUWG73sbtyW6echLioTrkdYwZN1QZVR8JdpGYRQHenfKWcNLMqk2B0umpCvL5BgmTfHRQ==";
+        //String pub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDU9lc4kI7+HR1fAArR3SzpnVfp9ihj7t6Ta5EeC70hgg7GK2tDZwvvwXwukD+RMGr3e5o9cOXRL/785CHcJYNbU4zmKweBpzEL4097UbI2Yracs6BCej4zH7dUTqVPi2/8EJwsKFpXILFMBCjKLNkhYFwmkqHbf710XC9BE4JLBQIDAQAB";
+        //String pri = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBANT2VziQjv4dHV8ACtHdLOmdV+n2KGPu3pNrkR4LvSGCDsYra0NnC+/BfC6QP5Ewavd7mj1w5dEv/vzkIdwlg1tTjOYrB4GnMQvjT3tRsjZitpyzoEJ6PjMft1ROpU+Lb/wQnCwoWlcgsUwEKMos2SFgXCaSodt/vXRcL0ETgksFAgMBAAECgYBPUzkW8UXKItcraU0ecffGRx0VoWLXIoVWvUUPP4kh/5t4NnkcYLhiBJy4jXOYJcRaTficdT6thmbBFUsFgRWlkyPGpe61mGu+lRLYAzJlHWWR0XUY/tCMBLe1TPt8TXejCZ5EH+HihbZ5KXDyVICSkxa7BweVQDSpFw8+XDXzGwJBAPoqeYOVc1rUBzhDamteaX1IMa9bxGYH92TZP1OQUbVwfwZkmgSsqjfXpxHCqIHVvb0M2+fcq60lSuUwumyMvYcCQQDZ7cFNRUAdYO9fCgUqHDIeGbKa3XBIzunMb5TrIjvEPo/FopOETztUolkyKG3hvsSDjA0jT3FQty3TNlJ5rHYTAkBz3saHpupWMIzjh348Gu+7Ynv44AVYyOnSoTlOqDLgWinLuT8JWTxCPzWX6VSJRonqjZExlKlDulk1TNucOZfzAkA4bF5H604WTSqsqKN9q58uO+kKP5r6vte5noon9s0SmkAPI3CeKQVrfD0rx1vrvsCSbohYRBFKnKK4tK/V4NkRAkBFMbBnBbzxyjm7pzxwW2mQFrNFLtt2Ewadb73ZQzyh726d2kQa/iyLkytOw78qiV7l5zQr3LuPCKhYaskcyXGN";
+
+        String pub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDT+ShHfnK3NG6RMz81XFOSc7yhEy49ZFk5fCn6IGAtz5TZ3c3vXN6y/6y+GsQbQBNaejVQ1aUbIqJaMEfcUb8ziw2EQ/eJnpMPFhWWJGNL2G8VkiOe3q5PXA1ERzT86LXDOuD+1ttnamByI+QxcKFFrmY0ykNLTNrUK3j15YcWwwIDAQAB";
+        String pri ="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANP5KEd+crc0bpEzPzVcU5JzvKETLj1kWTl8KfogYC3PlNndze9c3rL/rL4axBtAE1p6NVDVpRsiolowR9xRvzOLDYRD94mekw8WFZYkY0vYbxWSI57erk9cDURHNPzotcM64P7W22dqYHIj5DFwoUWuZjTKQ0tM2tQrePXlhxbDAgMBAAECgYAArETshMIxoR5nRCDAPe5sg7QtVUF3N+bPI1SPao+h6340Kc4Lt7I7Zd9xaSlKHDmzgNSNjWeoMt6iBbdtGyelVcOVCJl+o49J2dWn1jRFmW1W+5FoONVVtI5FCb2WFrGyxZoKQTIv6UEiBF1epg360KvBK4PyXGUpEmKCIp5FqQJBAO9VKX3gqvP8/w+MdOYq0x4QJek6VqTfKwnSafd6aZ1Mfyw+iIfIBwuS+YDcsCULeaRz2xKbzALj2X10xNGZEnUCQQDivDryYicAjG0Qqafb+WCN01NPlGFAYJRtddTsdY5Z/EhZy1+ccIAT8xZM3+tvNSPENeXJcxBBrnSJXDWmTm1XAkARyNxKdFV/x/8UIrXVHL2PcFfA2wrxOXwzQKWLNFeAztxsZ0EyBdUwMP3Fa6DTP+UMKWfQHC+uz0usHO87PAq5AkAZ+Lu71fhnvK4lkXlz3h3sQP+zBukY6bc2zp+EMncK4bYb6wrZrZ1OK7MrPR8Hzwt4xz+6Ep8TFvusXE6c7TDjAkEAirpk2Y7dGmzGbuhwf9PA4n30VLBI1I/mdmsvEUgt896DOP2diTfBzU+s7rvA65+hDFr5G3AS+zTUbCNUoAlKeg==";
+        //String data = URLDecoder.decode(text,"UTF-8");
         PublicKey publicKey = RSAUtils.getPublicKeyFromString(pub);
         PrivateKey privateKey = RSAUtils.getPrivateKeyFromString(pri);
         String encrypt = RSAUtils.encrypt("2333", publicKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String decrypt = RSAUtils.decrypt(encrypt, privateKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
-        System.out.print(decrypt);*/
+        System.out.print(decrypt);
     }
 
 }
