@@ -1,4 +1,4 @@
-package com.cupdata.recharge.utils;
+package com.cupdata.recharge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.utils.CommonUtils;
@@ -6,26 +6,28 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.vo.recharge.RechargeQueryReq;
+import com.cupdata.commons.vo.recharge.RechargeReq;
+import org.junit.Test;
+
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Date;
 
-/**
- * @Author: DingCong
- * @Description: 测试类
- * @CreateDate: 2018/3/13 10:41
- */
+public class rechargeQueryTest {
 
-public class TestUtils {
-    public static void main(String[] args) throws Exception {
-
+    /**
+     * 充值查询请求测试类
+     * @throws Exception
+     */
+    @Test
+    public void rechargeTest() throws Exception {
         //充值结果查询网关URL
-        String url = "http://localhost:8040/recharge/query/rechargeQuery";
+        String url = "http://localhost:46959/recharge/query/rechargeQuery";
         //请求参数
         String org = "2018010200000001";
         RechargeQueryReq req = new RechargeQueryReq();
-        req.setOrgOrderNo("IHUYI00322");
+        req.setOrgOrderNo("aiqiyi20180322121");
         req.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         String reqStr = JSONObject.toJSONString(req);
         System.out.print("请求参数json字符串" + reqStr);
@@ -38,8 +40,6 @@ public class TestUtils {
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
         String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
-
-
-
     }
+
 }

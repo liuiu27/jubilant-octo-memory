@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +49,7 @@ public class NotifySchedule {
 	/**
 	 * 每分钟执行通知
 	 */
-	@Scheduled(cron = "0 0/1 * * * ?")
+	@Scheduled(cron = "0 0/100 * * * ?")
 	public void notifyToOrgTask(){
 		log.info("-------------------   start   notifyToOrgTask   "+ DateTimeUtil.getCurrentTime() +" ------------------- ");
 		//获取当前节点
@@ -106,17 +107,18 @@ public class NotifySchedule {
 	}
 
     /**
-     * 充值定时通知业务
+     * 定时通知业务（轮训wait表,轮寻当前服务器节点下的订单,查询出通知订单的结果信息,去通知机构）
      */
-    @Scheduled(cron = "0 0/1 * * * ?")
+    //@Scheduled(cron = "0/5 * * * * ? ")
     public void RechargeNotifyToOrgTask(){
-        log.info("开启充值轮训通知,当前服务器节点:"+CommonUtils.getServerFlag()+",...开始轮训Notify_waite表");
+        log.info("开启充值轮寻通知,当前服务器节点:"+CommonUtils.getHostAddress()+":"+ServerPort.getPort()+",...开始轮寻Notify_waite表");
         //获取当前服务器节点,只轮训当前服务器节点下的订单
-        String nodeName = CommonUtils.getServerFlag();
+        String nodeName = CommonUtils.getHostAddress()+":"+ServerPort.getPort();
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("nodeName", nodeName);
         //查询当前服务器下所有失败的通知
         List<OrderNotifyWait> orderNotifyWaitList = notifyBiz.selectAll(paramMap);
+        log.info("当前服务器节点失败订单数为："+orderNotifyWaitList.size());
         if(null != orderNotifyWaitList && orderNotifyWaitList.size()>0){
             for (OrderNotifyWait orderNotifyWait : orderNotifyWaitList) {
                 //判断通知次数是否>9
@@ -128,20 +130,26 @@ public class NotifySchedule {
                     //删除 orderNotifyWait
                     notifyBiz.delete(Integer.parseInt(orderNotifyWait.getId().toString()));
                 }else {
-                    //获取订单信息
-                    BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrderNo(orderNotifyWait.getOrderNo());
-                    if(!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderVo.getResponseCode())) {
-                        log.error("getRechargeOrderByOrderNo result is null orderNO is" + orderNotifyWait.getOrderNo());
+                    //step1.获取当前订单的订单编号
+                    String orderNo = orderNotifyWait.getOrderNo();
+                    log.info("当前轮训订单编号:"+orderNo);
+
+                    //step2.查询当前订单是充值订单还是券码订单(判断ORDER_TYPE是券码还是充值)
+                    BaseResponse<ServiceOrder> serviceOrderRes = orderFeignClient.getServiceOrderByOrderNo(orderNo);
+                    if (!ResponseCodeMsg.SUCCESS.getCode().equals(serviceOrderRes.getResponseCode())){
+                        log.error("订单查询失败");
                         return;
                     }
+                    log.info("当前订单编号:"+serviceOrderRes.getData().getOrderNo()+",订单描述："+serviceOrderRes.getData().getOrderDesc());
 
-                    //根据机构号获取机构信息 秘钥
-                    BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(rechargeOrderVo.getData().getOrder().getOrgNo());
+                    //step3.根据订单中的机构号来获取机构信息的公钥
+                    BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(serviceOrderRes.getData().getOrgNo());
                     if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
-                        log.error("cacher-service getOrgInf result is null orgNo is" + rechargeOrderVo.getData().getOrder().getOrgNo());
+                        log.error("cacher-service getOrgInf result is null orgNo is" + serviceOrderRes.getData().getOrgNo());
                     }
-                    //发送通知
-                    if(!NotifyUtil.rechargeHttpToOrg(rechargeOrderVo.getData(),orgInf.getData())) {
+
+                    //step4.发送通知
+                    if(!NotifyUtil.rechargeHttpToOrg(serviceOrderRes.getData(),orgInf.getData())) {
                         log.error("FAIL   notify url is " + orderNotifyWait.getNotifyUrl() + "notifyTimes is  " + orderNotifyWait.getNotifyTimes());
                         //通知失败  通知失败次数 +1  下次通知时间修改
                         orderNotifyWait.setNotifyTimes(orderNotifyWait.getNotifyTimes()+1);

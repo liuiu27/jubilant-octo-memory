@@ -27,10 +27,10 @@ public class IqiyiApplicationTest {
         RechargeReq rechargeReq = new RechargeReq();
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
-        rechargeReq.setAccount("707316407");           //充值账号
-        rechargeReq.setOrgOrderNo("60UNIONPAY18"); //机构唯一订单编号
-        rechargeReq.setProductNo("171026R640");        //爱奇艺产品编号
-        rechargeReq.setOrderDesc("AIQIYIRECHARGE");
+        rechargeReq.setAccount("1231"); //充值账号
+        rechargeReq.setOrgOrderNo("test"); //机构唯一订单编号
+        rechargeReq.setProductNo("171026R640");//爱奇艺产品编号
+        rechargeReq.setOrderDesc("test");
         String reqStr = JSONObject.toJSONString(rechargeReq);
         System.out.print("请求参数json字符串" + reqStr);
         String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
@@ -40,7 +40,7 @@ public class IqiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
 
     }

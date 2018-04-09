@@ -7,10 +7,7 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
-import com.cupdata.commons.vo.recharge.RechargeReq;
-import com.cupdata.commons.vo.recharge.RechargeRes;
-import com.cupdata.commons.vo.recharge.RechargeResQuery;
+import com.cupdata.commons.vo.recharge.*;
 import com.cupdata.tencent.constant.QQRechargeResCode;
 import com.cupdata.tencent.feign.CacheFeignClient;
 import com.cupdata.tencent.feign.OrderFeignClient;
@@ -78,10 +75,9 @@ public class TencentController implements ITencentController{
             checkOpenReq.setUin(rechargeReq.getAccount());//需要充值QQ
             checkOpenReq.setServernum(rechargeReq.getMobileNo());//手机号码
             checkOpenReq.setPaytype("1");//支付类型
-            long l1 = System.currentTimeMillis();
             QQCheckOpenRes checkOpenRes = QQRechargeUtils.qqCheckOpen(checkOpenReq,cacheFeignClient);//开通鉴权响应结果
-            long l2 = System.currentTimeMillis();
-            log.info("腾讯充值controller鉴权结果,checkOpenRes:"+checkOpenRes+",时间差"+(l2 - l1));
+
+            log.info("腾讯充值鉴权结果:"+checkOpenRes.getResult());
             if (null == checkOpenRes || !QQRechargeResCode.SUCCESS.getCode().equals(checkOpenRes.getResult())){
                 log.info("腾讯充值controller鉴权失败,SupplierParam:"+productInfo.getData().getProduct().getSupplierParam());
                 //鉴权失败，设置错误状态码和错误信息，给予返回
@@ -100,6 +96,7 @@ public class TencentController implements ITencentController{
             //调用订单服务创建订单
             log.info("腾讯充值controller开始创建服务订单");
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
+
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                     || null == rechargeOrderRes.getData()
                     || null == rechargeOrderRes.getData().getOrder()

@@ -82,7 +82,7 @@ public class HttpUtil {
             log.info("调用HttpUtil.doGet()请求，返回的字符串为" + sb.toString());
             return sb.toString();
         } catch (Exception e) {
-            log.info("调用HttpUtil.doGet()请求出现异常！");
+            log.info("调用HttpUtil.doGet()请求出现异常,异常信息:"+e.getMessage());
             e.printStackTrace();
             throw e;
         }finally{

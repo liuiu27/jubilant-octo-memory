@@ -14,6 +14,7 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 @EnableEurekaClient
 @EnableFeignClients
 public class IqiyiServiceApplication {
+
     public static void main(String[] args){
         SpringApplication.run(IqiyiServiceApplication.class,args);
     }

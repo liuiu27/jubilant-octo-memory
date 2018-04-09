@@ -73,7 +73,7 @@
 		WHERE ID = #{id}
     </update>
     
-    <delete id="delete" parameterType="java.lang.Integer">
+    <delete id="delete" parameterType="java.lang.Long">
 		DELETE
 		FROM
 		order_notify_wait

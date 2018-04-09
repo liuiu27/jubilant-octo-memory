@@ -1,16 +1,18 @@
 package com.cupdata.lakala;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.utils.HttpUtil;
-import com.cupdata.commons.utils.RSAUtils;
+import com.cupdata.commons.constant.SysConfigParaNameEn;
+import com.cupdata.commons.utils.*;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import org.junit.Test;
+import org.springframework.util.StringUtils;
+
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 public class LakalaApplicationTest {
 
@@ -18,13 +20,13 @@ public class LakalaApplicationTest {
     public void LakalaApplicationTest() throws Exception{
         String url = "http://localhost:46959/voucher/voucher/getVoucher";
         String URL2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
-        String URL3 = "http://10.193.17.86:46959/voucher/voucher/getVoucher";
+        String URL3 = "http://10.193.17.84:46959/voucher/voucher/getVoucher";
         String org = "2018010200000001";
         GetVoucherReq getVoucherReq = new GetVoucherReq();
         getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         getVoucherReq.setProductNo("20180105V123");
-        getVoucherReq.setOrgOrderNo("84TestOfLakalaService");
-        getVoucherReq.setOrderDesc("84TestOfLakalaService");
+        getVoucherReq.setOrgOrderNo("lakala040201");
+        getVoucherReq.setOrderDesc("TestOfLakalaService");
         getVoucherReq.setMobileNo("15857128524");
         getVoucherReq.setExpire("20180331");
         String reqStr = JSONObject.toJSONString(getVoucherReq);
@@ -39,7 +41,7 @@ public class LakalaApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(URL2, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(URL3, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
 
 

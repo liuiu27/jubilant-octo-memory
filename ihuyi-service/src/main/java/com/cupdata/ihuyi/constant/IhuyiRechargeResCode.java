@@ -41,7 +41,11 @@ public enum IhuyiRechargeResCode {
     /**
      * 获取互亿api_id失败
      */
-    FAIL_TO_GET_API_ID("100005","获取互亿api_id失败");
+    FAIL_TO_GET_API_ID("100005","获取互亿api_id失败"),
+    /**
+     * 获取互亿api_id失败
+     */
+    FAIL_TO_GET_VIRTUAL_CALLBACK("100006","互亿虚拟充值回调url获取失败");
 
 
 

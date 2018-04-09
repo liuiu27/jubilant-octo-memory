@@ -25,7 +25,7 @@ hystrix:
 # zuul 网关配置
 zuul:
   prefix:
-  ignore-url: /content
+  ignore-url: /content,ihuyi/ihuyiPhoneRecharge/ihuyiPhoneRechargeCallBack
   routes:
     trvok-route:                    # 可以随便写，在zuul上面唯一即可；当这里的值 = service-id时，service-id可以不写。
       path: /trvok/**               # 想要映射到的路径

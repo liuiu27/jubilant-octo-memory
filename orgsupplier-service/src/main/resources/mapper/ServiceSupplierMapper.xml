@@ -11,6 +11,7 @@
 		<result column="SUPPLIER_FLAG" property="supplierFlag" jdbcType="VARCHAR"/>
 		<result column="CONTACTS" property="contacts" jdbcType="VARCHAR"/>
 		<result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR"/>
+		<result column="SUPPLIER_TYPE" property="supplierType" jdbcType="VARCHAR"/>
 		<result column="SUPPLIER_PUB_KEY" property="supplierPubKey" jdbcType="VARCHAR"/>
 		<result column="SIP_PUB_KEY" property="sipPubKey" jdbcType="VARCHAR"/>
 		<result column="SIP_PRI_KEY" property="sipPriKey" jdbcType="VARCHAR"/>
@@ -28,6 +29,7 @@
 	ADDRESS,
 	CONTACTS,
 	MOBILE_NO,
+	SUPPLIER_TYPE,
 	SUPPLIER_FLAG,
 	SUPPLIER_PUB_KEY,
 	SIP_PUB_KEY,
@@ -72,6 +74,9 @@
 		 <if test=" mobileNo != null and mobileNo != ''">
 			 and MOBILE_NO = #{mobileNo}
 		 </if>
+		 <if test=" supplierType != null and supplierType != ''">
+			 and SUPPLIER_TYPE = #{supplierType}
+		 </if>
 		 <if test=" supplierPubKey != null and supplierPubKey != ''">
 			 and SUPPLIER_PUB_KEY = #{supplierPubKey}
 		 </if>
@@ -111,6 +116,9 @@
         </if>
         <if test=" mobileNo != null and mobileNo != ''">
             and MOBILE_NO = #{mobileNo}
+        </if>
+        <if test=" supplierType != null and supplierType != ''">
+            and SUPPLIER_TYPE = #{supplierType}
         </if>
         <if test=" supplierPubKey != null and supplierPubKey != ''">
             and SUPPLIER_PUB_KEY = #{supplierPubKey}

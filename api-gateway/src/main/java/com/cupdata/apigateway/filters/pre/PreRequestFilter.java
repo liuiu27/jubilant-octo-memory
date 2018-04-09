@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 
 import javax.servlet.ServletInputStream;
@@ -59,6 +60,10 @@ public class PreRequestFilter extends ZuulFilter {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 		PreRequestFilter.LOGGER.info(String.format("send %s request to %s", request.getMethod(), request.getRequestURL().toString()));
+
+		if (isIgnorePath(request.getRequestURI())){
+			return null;
+		}
 
 		// Step1：获取请求参数
 		String org = request.getParameter("org"); // 机构编号
@@ -205,5 +210,22 @@ public class PreRequestFilter extends ZuulFilter {
 		ctx.setRequestQueryParams(pa);
 		ctx.getZuulRequestHeaders().put("content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
 		return null;
+	}
+
+
+	@Value("${zuul.ignore-url}")
+	private String ignoreUrl;
+
+	@Value("${zuul.prefix}")
+	private String zuulPrefix;
+
+	private boolean isIgnorePath(String path) {
+		for (String url : ignoreUrl.split(",")) {
+			if (path.substring(zuulPrefix.length()).startsWith(url)) {
+                System.out.print("过滤路径");
+				return true;
+			}
+		}
+		return false;
 	}
 }
