@@ -1,14 +1,23 @@
 package com.cupdata.sip.common.api.bestdo;
 
-import com.cupdata.sip.common.api.BaseResponse;
-import com.cupdata.sip.common.api.bestdo.vo.MerReq;
+import com.cupdata.sip.common.lang.BaseResponse;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author Tony
  * @date 2018/04/04
  */
+@RequestMapping("/bestdo")
 public interface IBestdoApi {
 
-    BaseResponse get(MerReq merReq );
+    @GetMapping("/getMerDetail")
+    BaseResponse getMerDetail(String merItemId);
+
+
+    @GetMapping("getMerLists")
+    BaseResponse getMerLists();
+
+
 
 }

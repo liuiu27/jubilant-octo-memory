@@ -1,4 +1,4 @@
-package com.cupdata.sip.common.api;
+package com.cupdata.sip.common.lang;
 
 
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;

@@ -1,20 +1,29 @@
 package com.cupdata.sip.bestdo;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.cupdata.sip.bestdo.vo.request.BookDateReq;
+import com.cupdata.sip.bestdo.vo.request.MerDetailReq;
+import com.cupdata.sip.bestdo.vo.request.MerItemListReq;
+import com.cupdata.sip.bestdo.vo.response.*;
 import com.cupdata.sip.common.lang.IOHelper;
 import com.cupdata.sip.common.lang.RSAHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import sun.misc.BASE64Decoder;
 
 import java.util.Base64;
+import java.util.List;
 
 /**
  * 测试新赛点
+ *
  * @author Tony
  * @date 2018/03/30
  */
@@ -31,7 +40,6 @@ public class BestdoServiceTest {
     private RestTemplate restTemplate;
 
 
-
     @Before
     public void createRestTemplate() {
         restTemplate = new RestTemplate();
@@ -43,9 +51,34 @@ public class BestdoServiceTest {
     @Test
     public void merLists() {
 
-        String ret =  restTemplate.getForObject("http://test.cupd.bestdo.com/mer/merLists",String.class);
+        BestaResVO<List<MerInfoRes>> MerItemInfo = restTemplate.exchange("http://test.cupd.bestdo.com/mer/merLists",
+                HttpMethod.GET, null, new ParameterizedTypeReference<BestaResVO<List<MerInfoRes>>>() {
+        }).getBody();
 
-        log.info(ret);
+        log.info(MerItemInfo.toString());
+    }
+
+    //{"cityMark":"","currentPage":"1","merid":"1020102","pageSize":"20","rightName":"新赛点高端游泳健身","rightProduct":"300","rtnFlag":"","source":"CUPD","sportType":"108","tradeCode":"VENUElIST","venueName":""}
+    @Test
+    public void testMerItemList() {
+
+        //302	1020279|102
+        //301	1020125|107
+        //301	1020106|107
+        //304	1020105|101
+        //305	1020103|109
+        //300	1020102|108
+
+        MerItemListReq req = new MerItemListReq();
+
+        req.setRightProduct("301");
+        req.setSportType("107");
+
+
+        BestaResVO<List<MerItemRes>> resVO = restTemplate.exchange(TEST_URL + "/mer/item/getMerItemList?merItemList={json}",
+                HttpMethod.GET, null, new ParameterizedTypeReference<BestaResVO<List<MerItemRes>>>() {},JSON.toJSONString(req)).getBody();
+        log.info(resVO.getData().toString());
+
     }
 
     @Test
@@ -56,50 +89,37 @@ public class BestdoServiceTest {
         json.put("tradeCode", "VENUElIST");
         json.put("merItemId", "10201051000013");
 
-        String ret = restTemplate.getForObject(TEST_URL + "/mer/item/detail/merDetail?merItemInfo={merItemInfo}",
-                String.class, json.toJSONString());
-        log.info(ret);
+        MerDetailReq req = new MerDetailReq();
+
+        req.setMerItemId("10201051000013");
+
+        MerDetailResVO ret = restTemplate.getForObject(TEST_URL + "/mer/item/detail/merDetail?merItemInfo={merItemInfo}",
+                MerDetailResVO.class, JSON.toJSONString(req));
+        log.info(ret.toString());
 
     }
 
-    @Test
-    public void testMerItemList() {
-       // restTemplate =new RestTemplate();
-        JSONObject json = new JSONObject();
-        json.put("source", "CUPD");
-        json.put("tradeCode", "VENUElIST");
-        json.put("rightProduct", "304");
-        json.put("rightName", "新赛点网球");
-        json.put("cityMark", "52");
-        json.put("sportType", "101");
-        json.put("merid", "1020105");
-        json.put("venueName", "");
-        json.put("currentPage", "1");
-        json.put("pageSize", "20");
-        json.put("rtnFlag", "");
-
-        String ret = restTemplate.getForObject(TEST_URL + "/mer/item/getMerItemList?merItemList={json}",
-                String.class, json.toJSONString());
-        log.info(ret);
-
-    }
 
     @Test
     public void testGetBookDate() {
-       //
+        //
         JSONObject json = new JSONObject();
         json.put("source", "CUPD");
         json.put("tradeCode", "VENUElIST");
         json.put("rightProduct", "304");
         json.put("venueNo", "1010000753001");
-        json.put("cityMark", "52");
         json.put("sportType", "101");
         json.put("merItemId", "10201051000013");
+        BookDateReq req =new BookDateReq();
 
+        req.setRightProduct("304");
+        req.setSportType("101");
+        req.setMerItemId("10201051000013");
+        req.setVenueNo("1010000753001");
 
-        String ret = restTemplate.getForObject(TEST_URL + "/mer/item/detail/getBookDate?merItemDetails={json}",
-                String.class, json.toJSONString());
-        log.info(ret);
+        BookDateResVO ret = restTemplate.getForObject(TEST_URL + "/mer/item/detail/getBookDate?merItemDetails={json}",
+                BookDateResVO.class, JSON.toJSONString(req));
+        log.info(ret.toString());
 
 
     }
@@ -107,7 +127,7 @@ public class BestdoServiceTest {
     @Test
     public void testCrateOrder() throws Exception {
 
-        String parma ="US81TXBDc044R1QxL3FKWUtqT09GWkJQQnNuY01TcmZEQ3ZvcU9IMnRFT3BZOEN5dWFGaWR2OHRjSGtsNGhLUTRBckNTVUptclFITQ0KMm9CSGFZcStkd0xsS0lPZ1RVODdOSkRReXlFNU1kZU4yY2k1NmRWOU9Qd0NiZzc5TFJ4amF2Q1UwYkY3SzFXWHk5QlQvdXR5UHNKag0KaVYyWmhqNjlML0dPdTFzM24wRXBtSmhBVytaeFBZWjdxd3M3Y3VYQlVFSXFWTXdhSFFXVTlKL1lta1ArakJoQzFuRTFTSHAzVkxYSA0KQUtwaVRVUXVYeElKVzRSUUVHL3RCandJN3E4U3JPVXM0VDNFWUt1SDdTYjJ0cktRYjhpUVJmaStRSTNka2FYVmZ6V0h6Y3kwY1dVNA0KdWQvaWZpSUFVOFp2Qzlja3kxTzhmYmM5MzI3cUlTRXovVlRXWVYrNGkxMGVaS0owaktjNVRQQUJmaGd6dmNOMjM1em9LcFUraGtoRw0KRk5MK2M0U0t6emNHQW13WjlKZmsrSjN2MWpJSlBzTkVVbDJvN014aXhFZHpKOHBjWkp3WlZQc1BCQVNnN0VEeS8rcmhvQ3cxTU1VNg0Kcm1oWnp0MWlZN0p5bWt6QTlMZWtBY2RKQW55Mkx2MnZ5UVVBZ3ZESFIrSmVGeGhhcGx0TFRYa2FuU2YvRm9OTzBwZmZ5cmVCUlJIaQ0KK3ZpSUhENnlnT3h3L0EwQVZLQmZXYUZ1MFZ2MGtGYXVqbmZqZDdmeUYvTjdBN2Foc1NWMEpYQWN6L1RoVXo3YkJyNHFadjdhRDV5Sw0KQmc3NUdFOEg2a3JmS1JPdFlzc1VLbERqV1cxWHdNemt0VmJKbWJBdHlFTkZBd1JsSTczaktMNWl0SDNuUzM4Mjlrc2NCY2tyNXY4PQ==";
+        String parma = "US81TXBDc044R1QxL3FKWUtqT09GWkJQQnNuY01TcmZEQ3ZvcU9IMnRFT3BZOEN5dWFGaWR2OHRjSGtsNGhLUTRBckNTVUptclFITQ0KMm9CSGFZcStkd0xsS0lPZ1RVODdOSkRReXlFNU1kZU4yY2k1NmRWOU9Qd0NiZzc5TFJ4amF2Q1UwYkY3SzFXWHk5QlQvdXR5UHNKag0KaVYyWmhqNjlML0dPdTFzM24wRXBtSmhBVytaeFBZWjdxd3M3Y3VYQlVFSXFWTXdhSFFXVTlKL1lta1ArakJoQzFuRTFTSHAzVkxYSA0KQUtwaVRVUXVYeElKVzRSUUVHL3RCandJN3E4U3JPVXM0VDNFWUt1SDdTYjJ0cktRYjhpUVJmaStRSTNka2FYVmZ6V0h6Y3kwY1dVNA0KdWQvaWZpSUFVOFp2Qzlja3kxTzhmYmM5MzI3cUlTRXovVlRXWVYrNGkxMGVaS0owaktjNVRQQUJmaGd6dmNOMjM1em9LcFUraGtoRw0KRk5MK2M0U0t6emNHQW13WjlKZmsrSjN2MWpJSlBzTkVVbDJvN014aXhFZHpKOHBjWkp3WlZQc1BCQVNnN0VEeS8rcmhvQ3cxTU1VNg0Kcm1oWnp0MWlZN0p5bWt6QTlMZWtBY2RKQW55Mkx2MnZ5UVVBZ3ZESFIrSmVGeGhhcGx0TFRYa2FuU2YvRm9OTzBwZmZ5cmVCUlJIaQ0KK3ZpSUhENnlnT3h3L0EwQVZLQmZXYUZ1MFZ2MGtGYXVqbmZqZDdmeUYvTjdBN2Foc1NWMEpYQWN6L1RoVXo3YkJyNHFadjdhRDV5Sw0KQmc3NUdFOEg2a3JmS1JPdFlzc1VLbERqV1cxWHdNemt0VmJKbWJBdHlFTkZBd1JsSTczaktMNWl0SDNuUzM4Mjlrc2NCY2tyNXY4PQ==";
 
         String ret = restTemplate.getForObject(TEST_URL + "/orders/createOrder?orderInfo={json}",
                 String.class, parma);
@@ -118,7 +138,7 @@ public class BestdoServiceTest {
         String privateKeyFilePath = "D:\\Work\\.sip\\bestdo\\private.key";
 
 
-        String privateKey ="MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI8U/zj1piPd741OtdAMdSZSdBRE" +
+        String privateKey = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI8U/zj1piPd741OtdAMdSZSdBRE" +
                 "+3iq8vURpjs3zwCmiO3chcyR1hW3aIUc3WYkEWga4/Gm7eKlXxaitd5hENTwnjxAOpSuAByOFHPb" +
                 "Q/WIsMuoiRzoYV7gIJy9WekSCIcGL9JW7wLijJCpTf8uhXFLCfAo3CI/gbi46xgSVW77AgMBAAEC" +
                 "gYAElCbvQEktdu14mR2gzUSHAKVMZmQtjd4u9ttlpAHJgCITLRnpBTZCOY7PSpkh5Qt+dvS9EHI9" +
@@ -134,18 +154,14 @@ public class BestdoServiceTest {
         log.info(privateKey);
 
 
-        privateKey = IOHelper.readFileToSting(privateKeyFilePath);
+       // privateKey = IOHelper.readFileToSting(privateKeyFilePath);
 
-        log.info("111");
-        log.info(privateKey);
+        //log.info(privateKey);
 
-        ret =new String(Base64.getDecoder().decode(ret));
+        ret = new String(Base64.getDecoder().decode(ret));
 
-        log.info(ret);
 
-        BASE64Decoder b64=new BASE64Decoder();
-
-        log.info(RSAHelper.decipher(Base64.getEncoder().encodeToString(b64.decodeBuffer(ret)),privateKey));
+        log.info(RSAHelper.oldDecipher(ret, privateKey));
 
     }
 
@@ -153,20 +169,20 @@ public class BestdoServiceTest {
     @Test
     public void test() throws Exception {
 
-       String a ="MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI8U/zj1piPd741OtdAMdSZSdBRE\n" +
-               "+3iq8vURpjs3zwCmiO3chcyR1hW3aIUc3WYkEWga4/Gm7eKlXxaitd5hENTwnjxAOpSuAByOFHPb\n" +
-               "Q/WIsMuoiRzoYV7gIJy9WekSCIcGL9JW7wLijJCpTf8uhXFLCfAo3CI/gbi46xgSVW77AgMBAAEC\n" +
-               "gYAElCbvQEktdu14mR2gzUSHAKVMZmQtjd4u9ttlpAHJgCITLRnpBTZCOY7PSpkh5Qt+dvS9EHI9\n" +
-               "7QI1kxd867dzt6vI1Y4v0PSHIlgRxYqODp0hw/3tjOiK/RvyKU9wleh7FgcxDETepUEMTXDeo647\n" +
-               "tU4TF7J4+GyUJxz9+/eXMQJBAMPTAQVjwQmFiGuUV8BjEWyoFfT+tWPUcqDllz62BAqzQ6hm42D2\n" +
-               "uVDzP+9eg+6Mzhp5NWEqmeADC+etFLIJ1ysCQQC7DOWK3hJwbmIi/GzkwgNVDfksClz2YGz8XPB9\n" +
-               "gc/m7XPMNabQRcxvoTy24o92Wbt3DqRb36LznadeFrDFLd9xAkBcQFkoytezvp6H37h/P6yDvaOq\n" +
-               "aRvWzcy6k65uspyw1ca33NCda13eDto90A7jIJ4vxo4pGkKnT4gaOmWXgh9FAkAzHsAxJqYVciWB\n" +
-               "+EjucBOnEC2UGrTzZMEEa4YSVwLx0t195v/TFfBcZc2JEfwxVS7FyAulTEZlnCWcskjXasURAkBl\n" +
-               "dDc7I28Xq70rVji003hq6qrqNPaKfqr7TwUjHY07BNuA9v+EO4G8TPfPmVCxksetRX69BUn1BMTU\n" +
-               "8asBsgbp";
+        String a = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI8U/zj1piPd741OtdAMdSZSdBRE\n" +
+                "+3iq8vURpjs3zwCmiO3chcyR1hW3aIUc3WYkEWga4/Gm7eKlXxaitd5hENTwnjxAOpSuAByOFHPb\n" +
+                "Q/WIsMuoiRzoYV7gIJy9WekSCIcGL9JW7wLijJCpTf8uhXFLCfAo3CI/gbi46xgSVW77AgMBAAEC\n" +
+                "gYAElCbvQEktdu14mR2gzUSHAKVMZmQtjd4u9ttlpAHJgCITLRnpBTZCOY7PSpkh5Qt+dvS9EHI9\n" +
+                "7QI1kxd867dzt6vI1Y4v0PSHIlgRxYqODp0hw/3tjOiK/RvyKU9wleh7FgcxDETepUEMTXDeo647\n" +
+                "tU4TF7J4+GyUJxz9+/eXMQJBAMPTAQVjwQmFiGuUV8BjEWyoFfT+tWPUcqDllz62BAqzQ6hm42D2\n" +
+                "uVDzP+9eg+6Mzhp5NWEqmeADC+etFLIJ1ysCQQC7DOWK3hJwbmIi/GzkwgNVDfksClz2YGz8XPB9\n" +
+                "gc/m7XPMNabQRcxvoTy24o92Wbt3DqRb36LznadeFrDFLd9xAkBcQFkoytezvp6H37h/P6yDvaOq\n" +
+                "aRvWzcy6k65uspyw1ca33NCda13eDto90A7jIJ4vxo4pGkKnT4gaOmWXgh9FAkAzHsAxJqYVciWB\n" +
+                "+EjucBOnEC2UGrTzZMEEa4YSVwLx0t195v/TFfBcZc2JEfwxVS7FyAulTEZlnCWcskjXasURAkBl\n" +
+                "dDc7I28Xq70rVji003hq6qrqNPaKfqr7TwUjHY07BNuA9v+EO4G8TPfPmVCxksetRX69BUn1BMTU\n" +
+                "8asBsgbp";
 
-       log.info(a.replace(StringUtils.LF,""));
+        log.info(a.replace(StringUtils.LF, ""));
 
     }
 

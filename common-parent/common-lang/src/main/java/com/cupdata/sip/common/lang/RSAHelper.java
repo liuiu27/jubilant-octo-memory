@@ -148,7 +148,7 @@ public class RSAHelper {
             PublicKey publicKey = getPublicKey(publicKeyBase64);
             return encipher(content, publicKey, segmentSize);
         } catch (Exception e) {
-            e.printStackTrace();
+            
             return null;
         }
     }
@@ -180,7 +180,7 @@ public class RSAHelper {
             String base64Str = Base64.getEncoder().encodeToString(resultBytes);
             return base64Str;
         } catch (Exception e) {
-            e.printStackTrace();
+            
             return null;
         }
     }
@@ -222,6 +222,19 @@ public class RSAHelper {
     }
 
 
+    /**
+     * 使用私钥解密
+     *
+     * @param contentBase64    待加密内容,base64 编码
+     * @param privateKeyBase64 私钥 base64 编码
+     * @return
+     * @segmentSize 分段大小
+     */
+    public static String oldDecipher(String contentBase64, String privateKeyBase64) throws IOException {
+        BASE64Decoder b64 = new BASE64Decoder();
+        return decipher(Base64.getEncoder().encodeToString(b64.decodeBuffer(contentBase64)), privateKeyBase64);
+
+    }
 
     /**
      * 使用私钥解密
@@ -234,6 +247,7 @@ public class RSAHelper {
     public static String decipher(String contentBase64, String privateKeyBase64) {
         return decipher(contentBase64, privateKeyBase64, -1);
     }
+
 
     /**
      * 使用私钥解密（分段解密）
@@ -248,7 +262,7 @@ public class RSAHelper {
             PrivateKey privateKey = getPrivateKey(privateKeyBase64);
             return decipher(contentBase64, privateKey, segmentSize);
         } catch (Exception e) {
-            e.printStackTrace();
+            
             return null;
         }
     }
@@ -269,7 +283,7 @@ public class RSAHelper {
             contentBase64 =  Base64.getEncoder().encodeToString(b64.decodeBuffer(contentBase64));
             return  decipher(contentBase64,key,0);
         } catch (IOException e) {
-            e.printStackTrace();
+            
             return null;
         }
 
@@ -303,7 +317,7 @@ public class RSAHelper {
             String decrytStr = new String(decBytes);
             return decrytStr;
         } catch (Exception e) {
-            e.printStackTrace();
+            
             return null;
         }
     }

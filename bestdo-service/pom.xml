@@ -70,6 +70,10 @@
             <groupId>com.cupdata.sip</groupId>
             <artifactId>common-lang</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.cupdata.sip</groupId>
+            <artifactId>common-api</artifactId>
+        </dependency>
 
     </dependencies>
 

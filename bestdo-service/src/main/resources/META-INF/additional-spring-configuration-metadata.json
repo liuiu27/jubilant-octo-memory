@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "bestdo.api-address",
+      "type": "java.lang.String",
+      "defaultValue": "http://test.cupd.bestdo.com",
+      "description": "Description for bestdo.api-address."
+  }
+] }

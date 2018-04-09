@@ -3,6 +3,9 @@ spring:
     name: bestdo-service
   profiles:
     active: dev
+  cache:
+    ehcache:
+      config: ehcache.xml
 server:
    port: 8080         # 指定该实例的端口
 #日志配置
@@ -16,6 +19,8 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 5000
+
+
 
 --- # 开发环境**********************************************************************************************************
 spring:

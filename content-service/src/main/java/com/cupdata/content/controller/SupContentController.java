@@ -1,16 +1,5 @@
 package com.cupdata.content.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -25,8 +14,13 @@ import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.vo.ContentLoginReq;
 import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.content.vo.request.SupVO;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
 * @author 作者: liwei
@@ -48,10 +42,7 @@ public class SupContentController {
 	
 	/**
 	 * 内容引入登录接口   供应商请求
-	 * @param org
-	 * @param contentJumpReq
-	 * @param request
-	 * @param response
+	 * @param contentLoginReq q
 	 * @return
 	 */
 	@PostMapping(path="/contentLogin",produces = "application/json")
