@@ -7,7 +7,9 @@ import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.recharge.*;
+import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
+import com.cupdata.commons.vo.recharge.RechargeReq;
+import com.cupdata.commons.vo.recharge.RechargeRes;
 import com.cupdata.ihuyi.constant.IhuyiRechargeResCode;
 import com.cupdata.ihuyi.feign.CacheFeignClient;
 import com.cupdata.ihuyi.feign.NotifyFeignClient;
@@ -15,22 +17,18 @@ import com.cupdata.ihuyi.feign.OrderFeignClient;
 import com.cupdata.ihuyi.feign.ProductFeignClient;
 import com.cupdata.ihuyi.utils.IhuyiUtils;
 import com.cupdata.ihuyi.vo.IhuyiRechargeRes;
-import com.sun.xml.internal.ws.wsdl.writer.document.Part;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: DingCong
@@ -58,7 +56,7 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
      * @param org
      * @param rechargeReq
      * @param request
-//     * @param response
+     * @param response
      * @return
      */
     @Override
@@ -220,7 +218,7 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                     if (rechargeOrderVo.getData().getOrder() != null && ModelConstants.ORDER_STATUS_HANDING.equals(rechargeOrderVo.getData().getOrder().getOrderStatus())) {
                         rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                         orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
-                        log.info("互亿推送充值结果...互亿话费充值订单更新成功");
+                        log.info("互亿推送充值结果...互亿话费充值订单更新成功,调用通知服务通知机构");
                         writer.print(resultStr);
                         //向机构通知订购成功消息
                         notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderVo.getData().getOrder().getOrderNo());
@@ -232,7 +230,7 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                         writer.print(resultStr);
                     }
                 } else { //充值失败
-                    log.info("互亿推送充值结果...话费充值失败,订单状态更新为失败");
+                    log.info("互亿推送充值结果...话费充值失败,订单状态更新为失败,调用通知服务通知机构");
                     rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);
                     orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
                     resultStr = "fail";

@@ -46,7 +46,6 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
     @Autowired
     private NotifyFeignClient notifyFeignClient;
 
-
     @Autowired
     private CacheFeignClient cacheFeignClient ;
 
@@ -211,7 +210,7 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
             BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrderNo(orderid);
 
             //如果商户订单号为空，就添加商户订单号
-            if (StringUtils.isEmpty(rechargeOrderVo.getData().getOrder().getSupplierNo())) {
+            if (StringUtils.isEmpty(rechargeOrderVo.getData().getOrder().getSupplierOrderNo())) {
                 rechargeOrderVo.getData().getOrder().setSupplierOrderNo(taskid);
                 orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新商户订单号
             }

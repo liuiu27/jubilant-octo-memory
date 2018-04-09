@@ -49,7 +49,6 @@ public class IhuyiUtils {
         //step1.获取互亿话费充值url
         String domain = null;
         if (CommonUtils.isWindows()) {
-            //domain = "https://api.ihuyi.com/f/phone";
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData())) {
                 //打印错误日志:获取url失败
@@ -71,7 +70,6 @@ public class IhuyiUtils {
         //step2.互亿api_id
         String username = null;
         if (CommonUtils.isWindows()) {
-           // username = "cf_testapi";
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
                 //设置错误码:获取api_id失败

@@ -6,6 +6,7 @@ import com.cupdata.commons.constant.SysConfigParaNameEn;
 import com.cupdata.commons.utils.*;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
+import com.cupdata.ihuyi.feign.CacheFeignClient;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
 
@@ -159,10 +160,43 @@ public class IhiyiApplicationTest {
         Map<String, String> map = new HashMap();
         map.put("taskid", "EE123");
         map.put("mobile", "12552521251");
-        map.put("status", "1");
+        map.put("state", "1");
         map.put("message", "充值成功");
         String apikeyCache = "6j3ao593wMNQRz4Zo4ao";
         map.put("apikey", apikeyCache);//apiKey
+        String[] arr = map.keySet().toArray(new String[0]);
+        Arrays.sort(arr);
+        StringBuilder sb = new StringBuilder();
+        if (null != arr && arr.length > 0) {
+            for (int i = 0; i < arr.length; i++) {
+                String values = map.get(arr[i]);
+                sb.append(arr[i]).append("=").append(StringUtils.isEmpty(values) ? "" : values);
+                if (i < arr.length - 1) {
+                    sb.append("&");
+                }
+            }
+        }
+        String sign = MD5Util.encode(sb.toString());
+        System.out.print(sign);
+    }
+
+    @Test
+    public void getSign() {
+        Map<String, String> map = new HashMap<>();
+        map.put("taskid", "virtual111");
+        map.put("orderid", "18040413393187792279");
+        map.put("account", "1234556");
+        map.put("status", "2");
+        map.put("return", "");
+        map.put("money", "12");
+        String apikey = map.get("apikey");
+        if (StringUtils.isEmpty(apikey)) {
+            String apikeyCache = "";
+            if (CommonUtils.isWindows()) {
+                apikeyCache = "6j3ao593wMNQRz4Zo4ao";
+            }
+            map.put("apikey", apikeyCache);
+        }
         String[] arr = map.keySet().toArray(new String[0]);
         Arrays.sort(arr);
         StringBuilder sb = new StringBuilder();

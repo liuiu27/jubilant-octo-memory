@@ -71,6 +71,7 @@ public class LocalVoucherController implements ILocalVoucherController {
 
             //step2.根据产品编号查询商品类型(供应商参数)
             Long categoryId = Long.valueOf(productInfo.getData().getProduct().getSupplierParam());
+            log.info("券码类别id:"+categoryId);
 
             //step3.根据券码类型获得券码状态是否有效
             ElectronicVoucherCategory electronicVoucherCategory = voucherCategoryBiz.checkVoucherValidStatusByCategoryId(categoryId);

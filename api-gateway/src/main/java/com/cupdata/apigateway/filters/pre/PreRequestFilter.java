@@ -222,7 +222,7 @@ public class PreRequestFilter extends ZuulFilter {
 	private boolean isIgnorePath(String path) {
 		for (String url : ignoreUrl.split(",")) {
 			if (path.substring(zuulPrefix.length()).startsWith(url)) {
-                System.out.print("过滤路径");
+                System.out.print("忽略请求路由网关");
 				return true;
 			}
 		}

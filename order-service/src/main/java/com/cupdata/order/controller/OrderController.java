@@ -99,6 +99,7 @@ public class OrderController implements IOrderController {
 			BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
 			if (!ResponseCodeMsg.SUCCESS.getCode().equals(SupplierInfVo.getResponseCode())
 					|| null == SupplierInfVo.getData()){
+				log.error("找不到商户标识,请在系统字典中配置商户标识");
 				voucherOrderRes.setResponseCode(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getCode());
 				voucherOrderRes.setResponseMsg(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getMsg());
 				return voucherOrderRes;
@@ -288,6 +289,7 @@ public class OrderController implements IOrderController {
             BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
 	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(SupplierInfVo.getResponseCode())
 					|| null == SupplierInfVo.getData()){
+				log.error("找不到商户标识,请在系统字典中配置商户标识");
 				rechargeOrderRes.setResponseCode(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getCode());
 				rechargeOrderRes.setResponseMsg(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getMsg());
 				return rechargeOrderRes;

@@ -41,7 +41,6 @@ public class IhuyiSchedule {
     @Autowired
     private NotifyFeignClient notifyFeignClient;
 
-
     /**
      * 互亿流量充值轮询（每5分钟去循环查询）
      * @throws Exception
@@ -109,7 +108,7 @@ public class IhuyiSchedule {
             log.info("互亿订单轮训出现异常...IhuyiOrderGetException" + e.getMessage());
             return;
         }
-        log.info("互亿流量充值订单轮询结束,本次轮训"+timer+"笔订单+*****************************");
+        log.info("互亿流量充值订单轮询结束,本次轮训"+timer+"笔订单*****************************");
     }
 
 
@@ -175,7 +174,7 @@ public class IhuyiSchedule {
             log.info("互亿订单轮训出现异常...IhuyiOrderGetException" + e.getMessage());
             return;
         }
-        log.info("互亿话费充值订单轮询结束,本次轮训"+timer+"笔订单+*****************************");
+        log.info("互亿话费充值订单轮询结束,本次轮训"+timer+"笔订单*****************************");
     }
 
 
@@ -245,7 +244,7 @@ public class IhuyiSchedule {
             log.info("互亿订单轮训出现异常...IhuyiOrderGetException" + e.getMessage());
             return;
         }
-        log.info("互亿虚拟充值订单轮询结束,本次轮训"+timer+"笔订单+*****************************");
+        log.info("互亿虚拟充值订单轮询结束,本次轮训"+timer+"笔订单*****************************");
     }
 
 }

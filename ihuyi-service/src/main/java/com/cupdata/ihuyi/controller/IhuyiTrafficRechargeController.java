@@ -7,7 +7,9 @@ import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.recharge.*;
+import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
+import com.cupdata.commons.vo.recharge.RechargeReq;
+import com.cupdata.commons.vo.recharge.RechargeRes;
 import com.cupdata.ihuyi.constant.IhuyiRechargeResCode;
 import com.cupdata.ihuyi.feign.CacheFeignClient;
 import com.cupdata.ihuyi.feign.NotifyFeignClient;
@@ -16,10 +18,6 @@ import com.cupdata.ihuyi.feign.ProductFeignClient;
 import com.cupdata.ihuyi.utils.IhuyiUtils;
 import com.cupdata.ihuyi.vo.IhuyiRechargeRes;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,7 +47,6 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
 
     @Autowired
     private NotifyFeignClient notifyFeignClient;
-
 
     @Autowired
     private CacheFeignClient cacheFeignClient ;

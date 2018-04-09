@@ -173,7 +173,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
             voucherRes.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
             voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
             getVoucherRes.setData(voucherRes);
-            log.info("响应结果");
+            log.info("响应结果:decodeNo:"+decodeNo);
             return getVoucherRes;
         }catch (Exception e){
             log.error("IhuyiVoucherExchangeController getVoucher error is",e);

@@ -71,8 +71,7 @@ public class NotifyController implements INotifyController{
 	 */
 	@Override
 	public void rechargeNotifyToOrg3Times(@PathVariable("orderNo") String orderNo) {
-		System.out.print("1111111111111111");
-		log.info("NotifyController rechargeNotifyToOrg is begin.......orderNo is" +  orderNo);
+		log.info("NotifyController rechargeNotifyToOrg is begin.......orderNo：" +  orderNo);
 		try {
 			//根据订单号 查询订单信息 和充值信息
 			BaseResponse<ServiceOrder> ServiceOrderRes = orderFeignClient.getServiceOrderByOrderNo(orderNo);
@@ -80,12 +79,17 @@ public class NotifyController implements INotifyController{
 				log.error("order-service getRechargeOrderByOrderNo result is null orderNO is" + orderNo);
 				return;
 			}
+			log.info("根据订单号查询订单信息和充值信息,OrgOrderNo:"+ServiceOrderRes.getData().getOrgOrderNo()+",OrderDesc:"+ServiceOrderRes.getData().getOrderDesc());
+
 			//根据机构号获取机构信息 秘钥
 			BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(ServiceOrderRes.getData().getOrgNo());
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
 				log.error("cacher-service getOrgInf result is null orgNo is" + ServiceOrderRes.getData().getOrgNo());
 				return;
 			}
+			log.info("根据机构号获取机构信息,OrgName:"+orgInf.getData().getOrgInf().getOrgName());
+
+			log.info("开始通知机构充值结果信息");
 			notifyBiz.rechargeNotifyToOrg3Times(ServiceOrderRes.getData(),orgInf.getData());
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());

@@ -58,6 +58,7 @@ public class TencentController implements ITencentController{
         BaseResponse<RechargeRes> rechargeRes = new BaseResponse<RechargeRes>();
         try {
             //根据服务产品编号查询对应的服务产品
+            log.info("根据服务产品编号查询对应的服务产品");
             BaseResponse<ProductInfVo> productInfo = productFeignClient.findByProductNo(rechargeReq.getProductNo());
             //产品信息响应码失败,返回错误信息参数
             if (productInfo == null || !ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())){
@@ -69,6 +70,7 @@ public class TencentController implements ITencentController{
             }
 
             //腾讯充值鉴权
+            log.info("腾讯充值鉴权");
             QQCheckOpenReq checkOpenReq = new QQCheckOpenReq();
             checkOpenReq.setAmount(String.valueOf(productInfo.getData().getProduct().getRechargeDuration()));//开通时长
             checkOpenReq.setServiceid(productInfo.getData().getProduct().getSupplierParam());//充值业务类型

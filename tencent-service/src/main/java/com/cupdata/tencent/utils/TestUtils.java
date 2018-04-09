@@ -34,7 +34,7 @@ public class TestUtils {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("625192155");
-        rechargeReq.setOrgOrderNo("tencent040201");
+        rechargeReq.setOrgOrderNo("tencent0408");
         rechargeReq.setProductNo("170810R001");
         rechargeReq.setOrderDesc("30Test");
 
