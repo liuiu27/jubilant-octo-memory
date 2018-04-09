@@ -1,5 +1,6 @@
 package com.cupdata.sip.common.lang;
 
+import org.apache.commons.lang3.StringUtils;
 import sun.misc.BASE64Decoder;
 
 import javax.crypto.BadPaddingException;
@@ -322,6 +323,42 @@ public class RSAHelper {
         }
     }
 
+    public static PrivateKey getPemPrivateKey(String contentBase64) {
+        try {
+            String privKeyPEM = contentBase64.replace("-----BEGIN PRIVATE KEY-----\n", "");
+            privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "");
+            //System.out.println("Private key\n"+privKeyPEM);
+            privKeyPEM = privKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "");
+
+            byte[] decoded = Base64.getDecoder().decode(privKeyPEM);
+
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
+            KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
+
+            return kf.generatePrivate(spec);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static PublicKey getPemPublicKey(String contentBase64) {
+        try {
+            String publicKeyPEM = contentBase64.replace("-----BEGIN PUBLIC KEY-----\n", "");
+            publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
+            publicKeyPEM = publicKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "");
+
+
+            byte[] decoded = Base64.getDecoder().decode(publicKeyPEM);
+
+            X509EncodedKeySpec spec =
+                    new X509EncodedKeySpec(decoded);
+            KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
+            return kf.generatePublic(spec);
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
 
     /**
      * 用私钥对信息生成数字签名

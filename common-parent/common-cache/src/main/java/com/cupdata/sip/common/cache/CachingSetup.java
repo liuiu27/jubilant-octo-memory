@@ -7,8 +7,7 @@ import javax.cache.CacheManager;
 import javax.cache.configuration.MutableConfiguration;
 import javax.cache.expiry.Duration;
 import javax.cache.expiry.TouchedExpiryPolicy;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
+import java.util.concurrent.TimeUnit;
 /**
  * @author Tony
  * @date 2018/04/09
@@ -19,8 +18,9 @@ public class CachingSetup implements JCacheManagerCustomizer {
     @Override
     public void customize(CacheManager cacheManager) {
         cacheManager.createCache("ehcache", new MutableConfiguration<>()
-                .setExpiryPolicyFactory(TouchedExpiryPolicy.factoryOf(new Duration(SECONDS, 10)))
+                .setExpiryPolicyFactory(TouchedExpiryPolicy.factoryOf(new Duration(TimeUnit.MINUTES, 10)))
                 .setStoreByValue(false)
+                .setManagementEnabled(true)
                 .setStatisticsEnabled(true));
     }
 }

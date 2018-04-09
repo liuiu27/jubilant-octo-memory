@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import sun.misc.BASE64Decoder;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.Base64;
 import java.util.List;
 
@@ -94,21 +95,16 @@ public class BestdoBiz {
 
     public String crateBestdoOrder(String parma){
 
+        String publickey ="";
+
+        PublicKey publicKey = RSAHelper.getPemPublicKey(publickey);
+
+        parma = RSAHelper.encipher(parma,publicKey,8);
+
         String ret = restTemplate.getForObject(apiAddress + "/orders/createOrder?orderInfo={json}",
                 String.class, parma);
 
-        String privateKey = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAI8U/zj1piPd741OtdAMdSZSdBRE" +
-                "+3iq8vURpjs3zwCmiO3chcyR1hW3aIUc3WYkEWga4/Gm7eKlXxaitd5hENTwnjxAOpSuAByOFHPb" +
-                "Q/WIsMuoiRzoYV7gIJy9WekSCIcGL9JW7wLijJCpTf8uhXFLCfAo3CI/gbi46xgSVW77AgMBAAEC" +
-                "gYAElCbvQEktdu14mR2gzUSHAKVMZmQtjd4u9ttlpAHJgCITLRnpBTZCOY7PSpkh5Qt+dvS9EHI9" +
-                "7QI1kxd867dzt6vI1Y4v0PSHIlgRxYqODp0hw/3tjOiK/RvyKU9wleh7FgcxDETepUEMTXDeo647" +
-                "tU4TF7J4+GyUJxz9+/eXMQJBAMPTAQVjwQmFiGuUV8BjEWyoFfT+tWPUcqDllz62BAqzQ6hm42D2" +
-                "uVDzP+9eg+6Mzhp5NWEqmeADC+etFLIJ1ysCQQC7DOWK3hJwbmIi/GzkwgNVDfksClz2YGz8XPB9" +
-                "gc/m7XPMNabQRcxvoTy24o92Wbt3DqRb36LznadeFrDFLd9xAkBcQFkoytezvp6H37h/P6yDvaOq" +
-                "aRvWzcy6k65uspyw1ca33NCda13eDto90A7jIJ4vxo4pGkKnT4gaOmWXgh9FAkAzHsAxJqYVciWB" +
-                "+EjucBOnEC2UGrTzZMEEa4YSVwLx0t195v/TFfBcZc2JEfwxVS7FyAulTEZlnCWcskjXasURAkBl" +
-                "dDc7I28Xq70rVji003hq6qrqNPaKfqr7TwUjHY07BNuA9v+EO4G8TPfPmVCxksetRX69BUn1BMTU" +
-                "8asBsgbp";
+        String privateKey = "";
 
         log.info(privateKey);
 
