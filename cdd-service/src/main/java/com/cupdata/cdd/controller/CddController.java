@@ -173,7 +173,7 @@ public class CddController implements ICddController{
 		        return res;
 		    } 
 			cddCodeReq.setSn(voucherOrderRes.getData().getOrder().getOrderNo());//订单 流水号
-			cddCodeReq.setOpenCode("ZJ");//城市机构代码   //TODO  暂时无用字段
+//			cddCodeReq.setOpenCode("ZJ");//城市机构代码   //TODO  暂时无用字段
 			
 			//获取券码
 			BaseResponse<CddCodeRes> cddCodeRes = cddBiz.getVoucherCode(cddCodeReq, cddUrl);
