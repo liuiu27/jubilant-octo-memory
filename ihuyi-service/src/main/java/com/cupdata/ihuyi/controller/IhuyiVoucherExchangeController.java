@@ -103,7 +103,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
                 return getVoucherRes;
             }
 
-            //券码列表获是否为空
+            //券码列表获取是否为空
             List<IhuyiVoucherRes.IhuyiGiftCardInfo> cardInfoList = ihuyiVoucherRes.getCards();
             if(CollectionUtils.isEmpty(cardInfoList) || StringUtils.isEmpty(cardInfoList.get(0).getNo()) || StringUtils.isEmpty(cardInfoList.get(0).getPwd())){
                 log.info("互亿券码列表为空");
@@ -126,6 +126,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
                 }
                 apikey = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIKEY").getData().getSysConfig().getParaValue();
             }
+            log.info("互亿apikey:"+apikey);
 
             //获取券码
             String key = DESUtil.append(apikey, apikey.length(),24);

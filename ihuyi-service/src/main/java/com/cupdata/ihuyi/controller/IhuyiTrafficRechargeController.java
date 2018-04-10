@@ -134,8 +134,10 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                 return rechargeRes;
             } else {
                 //下单失败响应结果,并通知机构
-                log.info("互亿话费充值下单失败");
+                log.info("互亿流量充值下单失败,调用通知服务通知机构......");
                 rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL); //订单失败
+                rechargeOrderRes.getData().getOrder().setOrderFailDesc("互亿流量充值下单失败");
+
                 //调用订单服务更新订单
                 rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
@@ -158,6 +160,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                 return rechargeRes;
             }
         }catch (Exception e){
+            log.info("互亿流量充值出现异常,异常信息:"+e.getMessage());
             e.printStackTrace();
             rechargeRes.setResponseMsg(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getMsg());
             rechargeRes.setResponseCode(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getCode());
@@ -191,7 +194,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
             String validateSign = IhuyiUtils.getSign(map,cacheFeignClient);
             map.put("orderid",orderid);
             map.put("sign",sign);
-            log.info("互亿流量充值回调，互亿请求数据:" + JSONObject.toJSONString(map));
+            log.info("互亿流量充值回调，互亿回调请求数据:" + JSONObject.toJSONString(map));
             if (validateSign.equals(sign)) {
                 log.info("互亿流量充值回调，验签通过");
                 BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrderNo(orderid);
@@ -207,22 +210,23 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                 }
 
                 if ("1".equals(status)) {  //充值成功
+                    log.info("充值成功");
                     if (rechargeOrderVo.getData().getOrder() != null && ModelConstants.ORDER_STATUS_HANDING.equals(rechargeOrderVo.getData().getOrder().getOrderStatus())) {
                         rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                         orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
-                        log.info("互亿流量充值状态推送...互亿话费充值订单更新成功");
+                        log.info("互亿推送流量充值结果:互亿流量充值订单更新成功,调用通知服务通知机构......");
                         writer.print(resultStr);
                         //互亿流量充值成功,通知机构
                         notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderVo.getData().getOrder().getOrderNo());
                     } else if (rechargeOrderVo.getData().getOrder() == null){
-                        log.info("互亿流量充值状态推送...互亿话费订购状态的订单号不存在");
+                        log.info("互亿推送流量充值结果:互亿流量订购的订单号不存在！");
                         writer.print(resultStr);
                     } else {
-                        log.info("互亿流量充值状态推送...互亿话费流量订购,状态已处理");
+                        log.info("互亿推送流量充值结果:互亿流量订购,该订单状态已处理");
                         writer.print(resultStr);
                     }
                 } else { //充值失败
-                    log.info("互亿流量充值状态推送...话费充值失败,订单状态更新为失败");
+                    log.info("互亿推送流量充值结果:流量充值失败,订单状态更新为失败,调用通知服务通知机构......");
                     rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);
                     orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
                     resultStr = "fail";
@@ -231,7 +235,7 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
                     notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderVo.getData().getOrder().getOrderNo());
                 }
             } else {
-                log.info("互亿流量充值状态推送...互亿流量充值回调，验签失败");
+                log.info("互亿推送流量充值结果:互亿流量充值回调，验签失败");
                 resultStr = "fail";
                 writer.print(resultStr);
             }
@@ -240,6 +244,6 @@ public class IhuyiTrafficRechargeController implements IHuyiTrafficController {
             resultStr = "fail";
             writer.print(resultStr);
         }
-        log.info("互亿流量充值状态推送...互亿流量充值回调返回字符：" + resultStr);
+        log.info("互亿推送流量充值结果:互亿流量充值回调返回字符：" + resultStr);
     }
 }

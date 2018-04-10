@@ -173,6 +173,23 @@ public class LocalVoucherController implements ILocalVoucherController {
             ElectronicVoucherLib electronicVoucherLib = voucherLibGetBiz.selectVoucherByCategoryId(categoryId);
             if (CommonUtils.isNullOrEmptyOfObj(electronicVoucherLib)) {
                 log.info("券码列表没有可用券码,categoryId:"+categoryId);
+
+                //更新订单状态
+                voucherOrderRes.getData().getOrder().setOrderFailDesc("券码列表没有可用券码");
+                voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);
+
+                //调用订单服务更新订单
+                voucherOrderRes = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
+                if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())
+                        || null == voucherOrderRes.getData()
+                        || null == voucherOrderRes.getData().getOrder()
+                        || null == voucherOrderRes.getData().getVoucherOrder()) {
+                    getVoucherRes.setResponseCode(ResponseCodeMsg.ORDER_UPDATE_ERROR.getCode());
+                    getVoucherRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getMsg());
+                    return getVoucherRes;
+                }
+
+                //响应结果
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getMsg());
                 getVoucherRes.setResponseCode(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getCode());
                 return getVoucherRes;

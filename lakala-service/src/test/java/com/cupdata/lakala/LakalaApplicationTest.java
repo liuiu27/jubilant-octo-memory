@@ -19,7 +19,7 @@ public class LakalaApplicationTest {
 
     @Test
     public void LakalaApplicationTest() throws Exception{
-        /*String url = "http://localhost:46959/voucher/voucher/getVoucher";
+        String url = "http://localhost:46959/voucher/voucher/getVoucher";
         String URL2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
         String URL3 = "http://10.193.17.84:46959/voucher/voucher/getVoucher";
         String org = "2018010200000001";
@@ -42,11 +42,11 @@ public class LakalaApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(URL3, params, "application/x-www-form-urlencoded;charset=UTF-8");
-        System.out.print("响应数据为" + res);*/
+        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        System.out.print("响应数据为" + res);
 
 
-        String text = "Qhtcb2ZfMGYJJRW3LulDRKlAlhyvd6dFFNUYJTNf0CB0UaLDHifrer0t759YTVYZUoa53dG4jh635xfJLrumI2HD8uPabCnhg0ptOLG7+h3hQ2lc1Itz1WpgcbPJeJY6COZlwACLfY55vdMrPrGjeG2n3UE2i22F0KVXUbbYYz969BIWMsBuufprOUcLhb5XIpC5YfUIL6PzPuYEbOa3UqNcV1VAIx6TEplpJ4i/CxyOzdGaWJJz5HBIUrWHEzuJNGacFJoC2UnYxrXaAMUWG73sbtyW6echLioTrkdYwZN1QZVR8JdpGYRQHenfKWcNLMqk2B0umpCvL5BgmTfHRQ==";
+        /*String text = "Qhtcb2ZfMGYJJRW3LulDRKlAlhyvd6dFFNUYJTNf0CB0UaLDHifrer0t759YTVYZUoa53dG4jh635xfJLrumI2HD8uPabCnhg0ptOLG7+h3hQ2lc1Itz1WpgcbPJeJY6COZlwACLfY55vdMrPrGjeG2n3UE2i22F0KVXUbbYYz969BIWMsBuufprOUcLhb5XIpC5YfUIL6PzPuYEbOa3UqNcV1VAIx6TEplpJ4i/CxyOzdGaWJJz5HBIUrWHEzuJNGacFJoC2UnYxrXaAMUWG73sbtyW6echLioTrkdYwZN1QZVR8JdpGYRQHenfKWcNLMqk2B0umpCvL5BgmTfHRQ==";
         //String pub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDU9lc4kI7+HR1fAArR3SzpnVfp9ihj7t6Ta5EeC70hgg7GK2tDZwvvwXwukD+RMGr3e5o9cOXRL/785CHcJYNbU4zmKweBpzEL4097UbI2Yracs6BCej4zH7dUTqVPi2/8EJwsKFpXILFMBCjKLNkhYFwmkqHbf710XC9BE4JLBQIDAQAB";
         //String pri = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBANT2VziQjv4dHV8ACtHdLOmdV+n2KGPu3pNrkR4LvSGCDsYra0NnC+/BfC6QP5Ewavd7mj1w5dEv/vzkIdwlg1tTjOYrB4GnMQvjT3tRsjZitpyzoEJ6PjMft1ROpU+Lb/wQnCwoWlcgsUwEKMos2SFgXCaSodt/vXRcL0ETgksFAgMBAAECgYBPUzkW8UXKItcraU0ecffGRx0VoWLXIoVWvUUPP4kh/5t4NnkcYLhiBJy4jXOYJcRaTficdT6thmbBFUsFgRWlkyPGpe61mGu+lRLYAzJlHWWR0XUY/tCMBLe1TPt8TXejCZ5EH+HihbZ5KXDyVICSkxa7BweVQDSpFw8+XDXzGwJBAPoqeYOVc1rUBzhDamteaX1IMa9bxGYH92TZP1OQUbVwfwZkmgSsqjfXpxHCqIHVvb0M2+fcq60lSuUwumyMvYcCQQDZ7cFNRUAdYO9fCgUqHDIeGbKa3XBIzunMb5TrIjvEPo/FopOETztUolkyKG3hvsSDjA0jT3FQty3TNlJ5rHYTAkBz3saHpupWMIzjh348Gu+7Ynv44AVYyOnSoTlOqDLgWinLuT8JWTxCPzWX6VSJRonqjZExlKlDulk1TNucOZfzAkA4bF5H604WTSqsqKN9q58uO+kKP5r6vte5noon9s0SmkAPI3CeKQVrfD0rx1vrvsCSbohYRBFKnKK4tK/V4NkRAkBFMbBnBbzxyjm7pzxwW2mQFrNFLtt2Ewadb73ZQzyh726d2kQa/iyLkytOw78qiV7l5zQr3LuPCKhYaskcyXGN";
 
@@ -57,7 +57,7 @@ public class LakalaApplicationTest {
         PrivateKey privateKey = RSAUtils.getPrivateKeyFromString(pri);
         String encrypt = RSAUtils.encrypt("2333", publicKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String decrypt = RSAUtils.decrypt(encrypt, privateKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
-        System.out.print(decrypt);
+        System.out.print(decrypt);*/
     }
 
 }

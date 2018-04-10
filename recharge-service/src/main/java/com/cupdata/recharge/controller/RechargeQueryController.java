@@ -41,6 +41,7 @@ public class RechargeQueryController implements IRechargeQueryController {
             }
 
             //step2.查询充值订单
+            log.info("开始查询充值订单");
             BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrgNoAndOrgOrderNo(org,rechargeQueryReq.getOrgOrderNo());
             if (CommonUtils.isNullOrEmptyOfObj(rechargeOrderVo.getData())){
                 log.info("查询订单数据为空");

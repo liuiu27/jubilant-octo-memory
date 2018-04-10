@@ -123,7 +123,24 @@ public class TencentController implements ITencentController{
             QQOpenRes openRes = QQRechargeUtils.qqOpen(openReq,cacheFeignClient);//充值业务办理响应结果
             log.info("腾讯充值controller调用充值接口充值结果,openRes:"+openRes.getResult());
             if (null==openRes || !QQRechargeResCode.SUCCESS.getCode().equals(openRes.getResult())){
-                log.error("调用腾讯充值接口失败");
+                log.error("调用腾讯接口充值失败");
+                //更新订单状态
+                rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);    //订单失败
+                rechargeOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_NO);            //不通知机构
+                rechargeOrderRes.getData().getOrder().setOrderFailDesc("腾讯充值失败");
+
+                //调用订单服务更新订单
+                log.info("腾讯充值controller充值失败,更新服务订单OrderNo:"+rechargeOrderRes.getData().getOrder().getOrderNo());
+                rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
+                if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
+                        || null == rechargeOrderRes.getData()
+                        || null == rechargeOrderRes.getData().getOrder()
+                        || null == rechargeOrderRes.getData().getRechargeOrder()){
+                    rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getMsg());
+                    rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getCode());
+                    return rechargeRes;
+                }
+
                 //QQ会员充值失败，设置错误状态码和错误信息，给予返回
                 rechargeRes.setResponseCode(QQRechargeResCode.QQMEMBER_RECHARGE_FAIL.getCode());
                 rechargeRes.setResponseMsg(QQRechargeResCode.QQMEMBER_RECHARGE_FAIL.getMsg());

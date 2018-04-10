@@ -291,7 +291,7 @@ public class IhuyiUtils {
      * @return
      */
     public static IhuyiVoucherRes ihuyiGiftCardBuy(VoucherOrderVo orderVo, String productid, GetVoucherReq voucherReq, CacheFeignClient cacheFeignClient) {
-        log.info("互亿虚拟充值工具类...");
+        log.info("互亿礼品券购买工具类...");
         IhuyiVoucherRes voucherRes = new IhuyiVoucherRes();
         //step1.获取互亿礼品卡购买的url
         String domain = null;
