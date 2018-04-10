@@ -23,9 +23,11 @@
      最多使用500m内存
      -->
     <cache alias="ehcache" uses-template="heap-cache">
+        <key-type>String</key-type>
         <expiry>
             <!--在缓存级别，再次使用预定义的生存时间。-->
-           <none/> <!--永不过期-->
+            <ttl unit="hours">1</ttl>
+            <!--  <none/>永不过期-->
         </expiry>
     </cache>
 

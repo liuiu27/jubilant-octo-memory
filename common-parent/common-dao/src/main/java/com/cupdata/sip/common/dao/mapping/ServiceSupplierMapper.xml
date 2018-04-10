@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cupdata.sip.common.dao.mapper.ServiceSupplierMapper">
+    <resultMap id="BaseResultMap" type="com.cupdata.sip.common.dao.entity.ServiceSupplier">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="SUPPLIER_NO" jdbcType="VARCHAR" property="supplierNo"/>
+        <result column="SUPPLIER_NAME" jdbcType="VARCHAR" property="supplierName"/>
+        <result column="SUPPLIER_DESC" jdbcType="VARCHAR" property="supplierDesc"/>
+        <result column="ADDRESS" jdbcType="VARCHAR" property="address"/>
+        <result column="CONTACTS" jdbcType="VARCHAR" property="contacts"/>
+        <result column="MOBILE_NO" jdbcType="VARCHAR" property="mobileNo"/>
+        <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy"/>
+        <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="SUPPLIER_PUB_KEY" jdbcType="VARCHAR" property="supplierPubKey"/>
+        <result column="SIP_PUB_KEY" jdbcType="VARCHAR" property="sipPubKey"/>
+        <result column="SIP_PRI_KEY" jdbcType="VARCHAR" property="sipPriKey"/>
+        <result column="SUPPLIER_FLAG" jdbcType="VARCHAR" property="supplierFlag"/>
+        <result column="SUPPLIER_TYPE" jdbcType="VARCHAR" property="supplierType"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ID,
+        SUPPLIER_NO,
+        SUPPLIER_NAME,
+        SUPPLIER_DESC,
+        ADDRESS,
+        CONTACTS,
+        MOBILE_NO,
+        SUPPLIER_TYPE,
+        SUPPLIER_FLAG,
+        SUPPLIER_PUB_KEY,
+        SIP_PUB_KEY,
+        SIP_PRI_KEY,
+        CREATE_BY,
+        CREATE_DATE,
+        UPDATE_BY,
+        UPDATE_DATE
+    </sql>
+
+    <select id="findSupByNo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from SERVICE_SUPPLIER
+        where 1=1
+        and SUPPLIER_NO = #{supplierNo}
+
+    </select>
+</mapper>

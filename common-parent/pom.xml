@@ -16,7 +16,7 @@
         <module>common-api</module>
         <module>common-cache</module>
         <module>common-lang</module>
-        <module>boot-config</module>
+        <module>common-dao</module>
     </modules>
 
 </project>

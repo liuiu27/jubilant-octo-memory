@@ -1,0 +1,4 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.cupdata.sip.common.lang.exception.GlobalExceptionHandler,\
+com.cupdata.sip.common.lang.config.WebLogAspect

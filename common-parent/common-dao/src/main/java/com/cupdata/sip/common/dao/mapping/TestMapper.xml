@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cupdata.sip.common.dao.TestMapper">
+  <resultMap id="BaseResultMap" type="com.cupdata.sip.common.dao.entity.Test">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="createBy" jdbcType="VARCHAR" property="createby" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="updateBy" jdbcType="VARCHAR" property="updateby" />
+    <result column="updateDate" jdbcType="TIMESTAMP" property="updatedate" />
+  </resultMap>
+</mapper>

@@ -9,6 +9,7 @@ import com.cupdata.sip.common.lang.RSAHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import sun.misc.BASE64Decoder;
 
+import javax.cache.annotation.CacheKey;
 import java.io.IOException;
 import java.security.PublicKey;
 import java.util.Base64;
@@ -27,6 +29,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@CacheConfig(cacheNames = "ehcache")
 public class BestdoBiz {
 
 
@@ -37,7 +40,7 @@ public class BestdoBiz {
     private RestTemplate restTemplate;
 
 
-    @Cacheable(cacheNames = "ehcache")
+    @Cacheable(cacheNames = "ehcache" ,key = "#resCode")
     public  BestaResVO<List<MerInfoRes>> getMerLists() {
 
         BestaResVO<List<MerInfoRes>> MerItemInfo = restTemplate.exchange(apiAddress+"/mer/merLists",
@@ -63,8 +66,8 @@ public class BestdoBiz {
     }
 
 
-    @Cacheable
-    public BestaResVO getMerDetail(String merItemId){
+    @Cacheable(key = "#merItemId")
+    public BestaResVO getMerDetail(@CacheKey String merItemId){
 
         MerDetailReq req = new MerDetailReq();
 
