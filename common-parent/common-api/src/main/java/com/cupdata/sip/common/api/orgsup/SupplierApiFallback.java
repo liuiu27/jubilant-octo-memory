@@ -1,7 +1,7 @@
 package com.cupdata.sip.common.api.orgsup;
 
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
-import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 
 import java.util.List;

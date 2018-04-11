@@ -1,6 +1,6 @@
 package com.cupdata.sip.common.api.bestdo;
 
-import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.api.BaseResponse;
 
 /**
  * @author Tony

@@ -26,9 +26,10 @@ public class BankInfBiz {
     public BankInfoVo findBankByBankCode(String bankCode) {
 
         BankInf bankInf = bankInfDao.findBankByBankCode(bankCode);
+        BankInfoVo bankInfoVo =new BankInfoVo();
+        BeanCopierUtils.copyProperties(bankInf,bankInfoVo);
 
-
-        return null;
+        return bankInfoVo;
     }
 
     public List<BankInfoVo> selectAll() {

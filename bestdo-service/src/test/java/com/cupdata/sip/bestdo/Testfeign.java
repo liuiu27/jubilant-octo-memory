@@ -2,7 +2,7 @@ package com.cupdata.sip.bestdo;
 
 import com.cupdata.sip.bestdo.feign.SupplierFeignClient;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
-import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.api.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

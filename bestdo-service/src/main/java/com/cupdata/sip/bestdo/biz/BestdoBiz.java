@@ -7,7 +7,7 @@ import com.cupdata.sip.bestdo.vo.request.MerDetailReq;
 import com.cupdata.sip.bestdo.vo.request.MerItemListReq;
 import com.cupdata.sip.bestdo.vo.response.*;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
-import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.lang.RSAHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

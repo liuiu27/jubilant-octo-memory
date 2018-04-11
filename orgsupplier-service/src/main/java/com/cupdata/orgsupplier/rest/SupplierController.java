@@ -3,7 +3,7 @@ package com.cupdata.orgsupplier.rest;
 import com.cupdata.orgsupplier.biz.ServiceSupplierBiz;
 import com.cupdata.sip.common.api.orgsup.ISupplierApi;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
-import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.api.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

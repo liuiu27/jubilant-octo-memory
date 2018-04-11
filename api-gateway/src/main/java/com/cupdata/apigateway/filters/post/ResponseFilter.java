@@ -5,7 +5,8 @@ import com.cupdata.apigateway.feign.OrgFeignClient;
 import com.cupdata.apigateway.feign.SupplierFeignClient;
 import com.cupdata.apigateway.util.GatewayUtils;
 import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
-import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
 import com.cupdata.sip.common.lang.RSAUtils;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.netflix.zuul.ZuulFilter;
@@ -113,7 +114,7 @@ public class ResponseFilter extends ZuulFilter {
             }
 
             if (StringUtils.isNotBlank(sup)){//如果为供应商请求
-                com.cupdata.sip.common.lang.BaseResponse<com.cupdata.sip.common.api.orgsup.response.SupplierInfVo> supplierResponse = supplierFeignClient.findSupByNo(sup);
+                BaseResponse<SupplierInfVo> supplierResponse = supplierFeignClient.findSupByNo(sup);
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(supplierResponse.getResponseCode()) || null == supplierResponse.getData()){
                     log.error("根据服务供应商编号" + sup + "，获取服务供应商信息失败");
                     ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由

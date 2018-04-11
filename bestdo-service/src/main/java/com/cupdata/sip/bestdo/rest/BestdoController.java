@@ -2,7 +2,7 @@ package com.cupdata.sip.bestdo.rest;
 
 import com.cupdata.sip.bestdo.biz.BestdoBiz;
 import com.cupdata.sip.bestdo.vo.response.*;
-import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.bestdo.IBestdoApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
