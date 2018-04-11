@@ -359,13 +359,13 @@ public class HttpUtil {
 //		req.setTimestamp(timestamp);
 
 		//获取空港券码请求参数
-		GetVoucherReq req = new GetVoucherReq();
-		req.setTimestamp(timestamp);
-		req.setExpire("20180327");
-		req.setProductNo("20180108V124");
-		req.setOrgOrderNo("14112231");
-		req.setOrderDesc("空港测试");
-		
+//		GetVoucherReq req = new GetVoucherReq();
+//		req.setTimestamp(timestamp);
+//		req.setExpire("20180327");
+//		req.setProductNo("20180108V124");
+//		req.setOrgOrderNo("14112231");
+//		req.setOrderDesc("空港测试");
+//		
 		//空港禁用券码请求参数
 //		DisableVoucherReq req =  new DisableVoucherReq();
 //		req.setDisableDesc("禁用测试");
@@ -375,15 +375,15 @@ public class HttpUtil {
 		
 		//空港核销券码请求参数
 		
-//		WriteOffVoucherReq req =  new WriteOffVoucherReq();
-//		req.setTimestamp(timestamp);
-//		req.setSupplierOrderNo("6666111111");
-//		req.setUsePlace("shanghai");
-//		req.setUserMobileNo("13911111111");
-//		req.setUserName("ceshi");
-//		req.setUseTime("2018/3/29");
-//		req.setVoucherCode("240867194");
-//		req.setWriteOffDesc("核销测试");
+		WriteOffVoucherReq req =  new WriteOffVoucherReq();
+		req.setTimestamp(timestamp);
+		req.setSupplierOrderNo("EO2018041000007982578");
+		req.setUsePlace("shanghai");
+		req.setUserMobileNo("13911111111");
+		req.setUserName("ceshi");
+		req.setUseTime("2018/04/11");
+		req.setVoucherCode("247200780");
+		req.setWriteOffDesc("核销测试");
 		
 		//获取车点点券码请求参数
 //		GetVoucherReq req = new GetVoucherReq();
@@ -422,19 +422,19 @@ public class HttpUtil {
 //				"application/x-www-form-urlencoded;charset=UTF-8");
 		
 		//获取券码URL
-		String data =  doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
-				"&sign=" + authReqSign ,
-				"application/x-www-form-urlencoded;charset=UTF-8");
-		
+//		String data =  doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+//		
 		//禁用券码URL
 //		String data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/disableVoucher", "org=20180208O21995540&data=" + reqData + 
 //				"&sign=" + authReqSign ,
 //				"application/x-www-form-urlencoded;charset=UTF-8");
 		
 		//核销券码测试
-//		String data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/writeOffVoucher", "sup=2018010800001235&data=" + reqData + 
-//				"&sign=" + authReqSign ,
-//				"application/x-www-form-urlencoded;charset=UTF-8");
+		String data = doPost("http://localhost:46959/voucher/voucher/writeOffVoucher", "sup=2018010800001235&data=" + reqData + 
+				"&sign=" + authReqSign ,
+				"application/x-www-form-urlencoded;charset=UTF-8");
 			
 
         String [] a =	data.split("&sign=");

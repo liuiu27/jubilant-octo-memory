@@ -214,9 +214,7 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder>{
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
 			return res;
     	}
-		paramMap.clear();
-		paramMap.put("id", voucherOrder.getOrderId());
-    	ServiceOrder order = orderDao.selectSingle(paramMap);
+    	ServiceOrder order = orderDao.select(voucherOrder.getOrderId().intValue());
     	if(null == order) {
     		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());

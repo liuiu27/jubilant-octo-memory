@@ -1,44 +1,36 @@
 spring:
   application:
-    name: content-service
+    name: ehCache-service
   profiles:
-    active: dev
+     active: dev
+
 server:
-   port: 46922         # 指定该实例的端口
+   port: 46911         # 指定该实例的端口
 #mybatis相关配置
 mybatis:
     type-aliases-package: com.cupdata.commons.model
     mapper-locations: classpath:mapper/*.xml
 
-#配置Hystrix的超时时间为10秒，解决Feign/Ribbon第一次请求失败的问题
-#hystrix:
-#  command:
-#      default:
-#        execution:
-#          isolation:
-#            thread:
-#              timeoutInMilliseconds: 5000
 #日志配置
 logging:
   config: classpath:logback-spring.xml
-  
+
+#配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
 jasypt:
   encryptor:
     password: cupdata
-    
-feign:
-  hystrix:
-    enabled: true   
 
 --- # 开发环境**********************************************************************************************************
 spring:
   profiles: dev
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
-    username: resdb
-    password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
-    type: com.alibaba.druid.pool.DruidDataSource
 
 eureka:
   client:
@@ -77,12 +69,6 @@ hystrix:
 --- # 测试环境**********************************************************************************************************
 spring:
   profiles: test
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
-    username: resdb
-    password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
-    type: com.alibaba.druid.pool.DruidDataSource
 
 eureka:
   client:
@@ -121,12 +107,6 @@ hystrix:
 --- # 生产环境**********************************************************************************************************
 spring:
   profiles: prd
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.150.9.22:3306/sip?useUnicode=true&characterEncoding=UTF-8
-    username: sip
-    password: ENC(7eaGzJhB0t+ZjmzjELKw0QjoNwE573Mr)
-    type: com.alibaba.druid.pool.DruidDataSource
 
 eureka:
   client:
@@ -150,7 +130,7 @@ ribbon:
   eager-load:
     enabled: true
   ConnectTimeout: 1000 # 设置连接超时时间
-  ReadTimeout: 10000
+  ReadTimeout: 15000
   OkToRetryOnAllOperations: false # 对所有操作请求都进行重试
   MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
   MaxAutoRetries: 1 # 对当前实例的重试次数
