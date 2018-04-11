@@ -14,10 +14,16 @@ public interface IBestdoApi {
     @GetMapping("/getMerDetail")
     BaseResponse getMerDetail(String merItemId);
 
+    @GetMapping("getMerItemList")
+    BaseResponse getMerItemList(String rightproduct,String sporttype);
 
     @GetMapping("getMerLists")
     BaseResponse getMerLists();
 
+    @GetMapping("getBookDate")
+    BaseResponse getBookDate(String rightproduct,String sporttype,String setMerItemId,String setVenueNo);
 
+    @GetMapping("crateBestdoOrder")
+    BaseResponse crateBestdoOrder(String parma);
 
 }

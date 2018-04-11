@@ -6,6 +6,7 @@ import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
 import com.cupdata.sip.common.lang.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,10 +31,14 @@ public class SupplierController implements ISupplierApi {
 		List<SupplierInfVo> supplierInfVos = ServiceSupplierBiz.selectAll();
 		supplierInfListVoRes.setData(supplierInfVos);
 		return supplierInfListVoRes;
+
 	}
 
 	@Override
-	public BaseResponse<SupplierInfVo> findSupByNo(String supplierNo) {
+	public BaseResponse<SupplierInfVo> findSupByNo(@PathVariable("supplierNo") String supplierNo) {
+
+		log.info("query supplierNo ,"+ supplierNo);
+
 		BaseResponse<SupplierInfVo> supplierInfVoBaseResponse =new BaseResponse<>();
 		SupplierInfVo supplierInfVo =ServiceSupplierBiz.findSupByNo(supplierNo);
 		supplierInfVoBaseResponse.setData(supplierInfVo);

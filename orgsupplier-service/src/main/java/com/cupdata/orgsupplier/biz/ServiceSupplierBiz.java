@@ -12,9 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Auth: LinYong
- * @Description:
- * @Date: 20:20 2017/12/14
+ * @author junliang
+ * @date 2018/04/11
  */
 
 @Slf4j
@@ -28,8 +27,6 @@ public class ServiceSupplierBiz  {
     public List<SupplierInfVo> selectAll(){
 
         List<ServiceSupplier> serviceSuppliers = serviceSupplierDao.selectAll();
-
-
 
         List<SupplierInfVo> supplierInfVos = new ArrayList<>(serviceSuppliers.size());
 

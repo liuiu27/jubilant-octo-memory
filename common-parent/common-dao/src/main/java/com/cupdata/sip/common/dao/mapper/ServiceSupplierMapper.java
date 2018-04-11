@@ -7,4 +7,5 @@ import tk.mybatis.mapper.common.Mapper;
 public interface ServiceSupplierMapper extends Mapper<ServiceSupplier> {
 
     ServiceSupplier findSupByNo(@Param("supplierNo") String supplierNo);
+
 }

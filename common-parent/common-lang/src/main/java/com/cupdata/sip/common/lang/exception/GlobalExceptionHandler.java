@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
         return new BaseResponse(ResponseCodeMsg.PARAM_INVALID.getCode(),ResponseCodeMsg.PARAM_INVALID.getMsg(),invalids);
     }
     @ExceptionHandler(value = JSONException.class)
-    public BaseResponse<?> JSONExceptionHandler(HttpServletRequest request,JSONException exception) {
+    public BaseResponse JSONExceptionHandler(HttpServletRequest request,JSONException exception) {
 
         return new BaseResponse(ResponseCodeMsg.PARAM_INVALID.getCode(),ResponseCodeMsg.PARAM_INVALID.getMsg(),exception.getMessage());
     }
@@ -46,22 +46,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {Exception.class})
     public BaseResponse handle(HttpServletRequest request, Exception ex) {
 
-        return new BaseResponse(ResponseCodeMsg.PARAM_INVALID.getCode(),ResponseCodeMsg.PARAM_INVALID.getMsg(),ex.getMessage());
+        return new BaseResponse(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg(),ex.getMessage());
     }
-
-    @ExceptionHandler(value = {BizException.class})
-    public BaseResponse handle(HttpServletRequest request, BizException ex) {
-
-
-        return new BaseResponse();
-    }
-    @ExceptionHandler(value = {ErrorException.class})
-    public BaseResponse handle(HttpServletRequest request, ErrorException ex) {
-        return new BaseResponse(ResponseCodeMsg.REQUEST_TIMEOUT.getCode(),ResponseCodeMsg.REQUEST_TIMEOUT.getMsg(),ex.getCause());
-    }
-
-
-
 
 
 }

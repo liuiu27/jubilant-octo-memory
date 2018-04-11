@@ -1,11 +1,12 @@
-package com.cupdata.commons.api.orgsupplier;
+package com.cupdata.sip.common.api.orgsup;
 
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
-import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
+import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
+import com.cupdata.sip.common.lang.BaseResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 /**
  * @Auth: LinYong
@@ -19,13 +20,13 @@ public interface IOrgController {
      * @return
      */
 	@GetMapping("/findOrgByNo/{orgNo}")
-    BaseResponse<OrgInfVo> findOrgByNo(@PathVariable("orgNo") String orgNo);
-
+	BaseResponse<OrgInfoVo> findOrgByNo(@PathVariable("orgNo") String orgNo);
+    
 	/**
 	 *  查询所有机构信息
 	 * @return
 	 */
     @GetMapping("/selectAll")
-    BaseResponse<OrgInfListVo> selectAll();
+    BaseResponse<List<OrgInfoVo>> selectAll();
 
 }

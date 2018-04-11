@@ -1,15 +1,5 @@
 package com.cupdata.order.controller;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.api.order.IOrderController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -32,8 +22,15 @@ import com.cupdata.order.biz.ServiceOrderBiz;
 import com.cupdata.order.biz.ServiceOrderContentBiz;
 import com.cupdata.order.feign.ProductFeignClient;
 import com.cupdata.order.feign.SupplierFeignClient;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -372,7 +369,7 @@ public class OrderController implements IOrderController {
 	 */
 	@Override
 	public BaseResponse<ServiceOrderList> getServiceOrderListByParam(@PathVariable Character orderStatus, @PathVariable String orderSubType, @PathVariable String supplierFlag) {
-		log.info("getServiceOrderListByParam controller is begin...,orderStatus"+orderStatus+",orderSubType"+orderSubType+",supplierFlag"+supplierFlag);
+		log.info("getServiceOrderListByParam rest is begin...,orderStatus"+orderStatus+",orderSubType"+orderSubType+",supplierFlag"+supplierFlag);
 		try {
 			//设置响应结果
 			BaseResponse<ServiceOrderList> res = new BaseResponse<ServiceOrderList>();

@@ -9,7 +9,7 @@ import org.springframework.cloud.netflix.feign.FeignClient;
  * @date 2018/04/10
  */
 @FeignClient(name = "orgsupplier-service", fallback = SupplierApiFallback.class)
-public interface OrgSupFeignClient extends ISupplierApi {
+public interface SupplierFeignClient extends ISupplierApi {
 
 
 }

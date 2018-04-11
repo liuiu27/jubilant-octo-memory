@@ -4,16 +4,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.cupdata.apigateway.feign.OrgFeignClient;
 import com.cupdata.apigateway.feign.SupplierFeignClient;
 import com.cupdata.apigateway.util.GatewayUtils;
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.utils.RSAUtils;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
-import com.cupdata.commons.vo.orgsupplier.SupplierInfVo;
+import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
+import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.lang.RSAUtils;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -37,9 +35,10 @@ import static org.springframework.util.ReflectionUtils.rethrowRuntimeException;
 /**
  * 响应过滤器
  */
+@Slf4j
 @Component
 public class ResponseFilter extends ZuulFilter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResponseFilter.class);
+
 
 	@Autowired
 	private OrgFeignClient orgFeignClient;
@@ -75,8 +74,8 @@ public class ResponseFilter extends ZuulFilter {
             InputStream stream = ctx.getResponseDataStream();
             if(null == stream) return null;
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
-            LOGGER.info("响应信息明文为" + body);
-            body = body.replaceAll(":null,", ":\"\","); 
+            log.info("响应信息明文为" + body);
+            body = body.replaceAll(":null,", ":\"\",");
             //Step1：转换响应参数json格式，原始json格式为{"responseCode":"","responseMsg":"","data":{}}
             JSONObject jsonObj = JSONObject.parseObject(body);//原始json对象
             JSONObject resultJsonObj = new JSONObject();//返回结果json对象
@@ -100,30 +99,30 @@ public class ResponseFilter extends ZuulFilter {
             String sipPriKeyStr = null;//平台私钥字符串
 
             if (StringUtils.isNotBlank(org)) {//如果为机构请求
-                BaseResponse<OrgInfVo> orgResponse = orgFeignClient.findOrgByNo(org);
+                BaseResponse<OrgInfoVo> orgResponse = orgFeignClient.findOrgByNo(org);
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgResponse.getResponseCode()) || null == orgResponse.getData()){
-                    LOGGER.error("根据机构编号" + org + "，获取机构信息失败");
+                    log.error("根据机构编号" + org + "，获取机构信息失败");
                     ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
                     ctx.setResponseStatusCode(401);// 返回错误码
                     ctx.setResponseBody(ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());// 返回错误内容
                     return null;
                 }else {
-                    sipPriKeyStr = orgResponse.getData().getOrgInf().getSipPriKey();
-                    orgOrSupPubKeyStr = orgResponse.getData().getOrgInf().getOrgPubKey();
+                    sipPriKeyStr = orgResponse.getData().getSipPriKey();
+                    orgOrSupPubKeyStr = orgResponse.getData().getOrgPubKey();
                 }
             }
 
             if (StringUtils.isNotBlank(sup)){//如果为供应商请求
-                BaseResponse<SupplierInfVo> supplierResponse = supplierFeignClient.findSupByNo(sup);
+                com.cupdata.sip.common.lang.BaseResponse<com.cupdata.sip.common.api.orgsup.response.SupplierInfVo> supplierResponse = supplierFeignClient.findSupByNo(sup);
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(supplierResponse.getResponseCode()) || null == supplierResponse.getData()){
-                    LOGGER.error("根据服务供应商编号" + sup + "，获取服务供应商信息失败");
+                    log.error("根据服务供应商编号" + sup + "，获取服务供应商信息失败");
                     ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
                     ctx.setResponseStatusCode(401);// 返回错误码
                     ctx.setResponseBody(ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());// 返回错误内容
                     return null;
                 }else {
-                    sipPriKeyStr = supplierResponse.getData().getSuppliersInf().getSipPriKey();
-                    orgOrSupPubKeyStr = supplierResponse.getData().getSuppliersInf().getSupplierPubKey();
+                    sipPriKeyStr = supplierResponse.getData().getSipPriKey();
+                    orgOrSupPubKeyStr = supplierResponse.getData().getSupplierPubKey();
                 }
             }
 
@@ -134,7 +133,7 @@ public class ResponseFilter extends ZuulFilter {
                 sipPriKey = RSAUtils.getPrivateKeyFromString(sipPriKeyStr);
                 orgOrSupPubKey = RSAUtils.getPublicKeyFromString(orgOrSupPubKeyStr);
             }catch (Exception e){
-                LOGGER.error("根据公钥、私钥字符串，获取公钥、私钥出现异常");
+                log.error("根据公钥、私钥字符串，获取公钥、私钥出现异常");
                 ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
                 ctx.setResponseStatusCode(401);// 返回错误码
                 ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
@@ -152,7 +151,7 @@ public class ResponseFilter extends ZuulFilter {
                 //加密明文数据
                 encryptedResponseData = RSAUtils.encrypt(resultJsonStr, orgOrSupPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
             } catch (Exception e) {
-                LOGGER.error("平台响应报文的明文加密失败！");
+                log.error("平台响应报文的明文加密失败！");
                 ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
                 ctx.setResponseStatusCode(401);// 返回错误码
                 ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
@@ -165,7 +164,7 @@ public class ResponseFilter extends ZuulFilter {
                 //明文数据生成签名
                 responseDataSign = RSAUtils.sign(resultJsonStr, sipPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
             } catch (Exception e) {
-                LOGGER.error("平台响应报文的明文签名失败！");
+                log.error("平台响应报文的明文签名失败！");
                 ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
                 ctx.setResponseStatusCode(401);// 返回错误码
                 ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
@@ -175,7 +174,7 @@ public class ResponseFilter extends ZuulFilter {
 
             String resData = URLEncoder.encode(encryptedResponseData, "utf-8");
             String resSign = URLEncoder.encode(responseDataSign, "utf-8");
-            LOGGER.info("响应数据密文为data=" + resData + "&sign=" + resSign);
+            log.info("响应数据密文为data=" + resData + "&sign=" + resSign);
 
             //生成新的body数据
             ctx.setResponseBody("data=" + resData + "&sign=" + resSign);

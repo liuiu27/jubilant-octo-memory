@@ -232,8 +232,8 @@ public class RSAHelper {
      * @segmentSize 分段大小
      */
     public static String oldDecipher(String contentBase64, String privateKeyBase64) throws IOException {
-        BASE64Decoder b64 = new BASE64Decoder();
-        return decipher(Base64.getEncoder().encodeToString(b64.decodeBuffer(contentBase64)), privateKeyBase64);
+
+        return decipher(Base64.getEncoder().encodeToString(Base64.getDecoder().decode(contentBase64)), privateKeyBase64);
 
     }
 

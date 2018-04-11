@@ -1,9 +1,9 @@
 package com.cupdata.apigateway.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.utils.RSAUtils;
-import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.lang.RSAUtils;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

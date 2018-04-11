@@ -1,15 +1,16 @@
 package com.cupdata.apigateway.filters.pre;
 
+
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.apigateway.feign.OrgFeignClient;
 import com.cupdata.apigateway.feign.SupplierFeignClient;
 import com.cupdata.apigateway.util.GatewayUtils;
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.utils.RSAUtils;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
-import com.cupdata.commons.vo.orgsupplier.SupplierInfVo;
+import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
+import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
+import com.cupdata.sip.common.lang.BaseResponse;
+import com.cupdata.sip.common.lang.DateTimeUtil;
+import com.cupdata.sip.common.lang.RSAUtils;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
@@ -71,7 +72,7 @@ public class PreRequestFilter extends ZuulFilter {
 		String sipPriKeyStr = null;//平台私钥字符串
 		String orgOrSupPubKeyStr = null;//机构或者商户公钥字符串
 		if (StringUtils.isNotBlank(org)){//如果为机构请求
-			BaseResponse<OrgInfVo> orgResponse = orgFeignClient.findOrgByNo(org);
+			BaseResponse<OrgInfoVo> orgResponse = orgFeignClient.findOrgByNo(org);
 			if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgResponse.getResponseCode()) || null == orgResponse.getData()){
 				LOGGER.error("根据机构编号" + org + "，获取机构信息失败");
 				ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
@@ -79,13 +80,13 @@ public class PreRequestFilter extends ZuulFilter {
 				ctx.setResponseBody(ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());// 返回错误内容
 				return null;
 			}else {
-				sipPriKeyStr = orgResponse.getData().getOrgInf().getSipPriKey();
-				orgOrSupPubKeyStr = orgResponse.getData().getOrgInf().getOrgPubKey();
+				sipPriKeyStr = orgResponse.getData().getSipPriKey();
+				orgOrSupPubKeyStr = orgResponse.getData().getOrgPubKey();
 			}
 		}
 
 		if (StringUtils.isNotBlank(sup)){//如果为供应商请求
-			BaseResponse<SupplierInfVo> supplierResponse = supplierFeignClient.findSupByNo(sup);
+			com.cupdata.sip.common.lang.BaseResponse<SupplierInfVo> supplierResponse = supplierFeignClient.findSupByNo(sup);
 			if (!ResponseCodeMsg.SUCCESS.getCode().equals(supplierResponse.getResponseCode()) || null == supplierResponse.getData()){
 				LOGGER.error("根据服务供应商编号" + sup + "，获取服务供应商信息失败");
 				ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
@@ -93,8 +94,8 @@ public class PreRequestFilter extends ZuulFilter {
 				ctx.setResponseBody(ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());// 返回错误内容
 				return null;
 			}else {
-				sipPriKeyStr = supplierResponse.getData().getSuppliersInf().getSipPriKey();
-				orgOrSupPubKeyStr = supplierResponse.getData().getSuppliersInf().getSupplierPubKey();
+				sipPriKeyStr = supplierResponse.getData().getSipPriKey();
+				orgOrSupPubKeyStr = supplierResponse.getData().getSupplierPubKey();
 			}
 		}
 

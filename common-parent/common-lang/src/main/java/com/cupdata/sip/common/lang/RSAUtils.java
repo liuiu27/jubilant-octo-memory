@@ -1,4 +1,4 @@
-package com.cupdata.commons.utils;
+package com.cupdata.sip.common.lang;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
