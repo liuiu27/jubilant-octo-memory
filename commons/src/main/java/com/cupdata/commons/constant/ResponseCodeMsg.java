@@ -85,7 +85,7 @@ public enum ResponseCodeMsg {
     /**
      * 查询结果为空
      */
-    RESULT_QUERY_EMPTY("999998","查询结果为空"),
+    RESULT_QUERY_EMPTY("999998","机构订单不存在"),
     
     /**
      * 999999 - 查询机构信息失败

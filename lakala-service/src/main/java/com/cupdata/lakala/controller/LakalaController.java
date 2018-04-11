@@ -83,6 +83,24 @@ public class LakalaController implements ILakalaController{
             //对返回数据进行异常处理
             if (null == lakalaVoucherRes || !lakalaVoucherRes.getRes()){
                 log.info("lakala获取券码controller:券码获取失败");
+
+                //修改订单状态
+                voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);
+                voucherOrderRes.getData().getOrder().setOrderFailDesc("拉卡拉获取券码失败");
+
+                //调用订单服务更新订单
+                log.info("lakala获取券码controller更新券码订单");
+                voucherOrderRes = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
+                if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())
+                        || null == voucherOrderRes.getData()
+                        || null == voucherOrderRes.getData().getOrder()
+                        || null == voucherOrderRes.getData().getVoucherOrder()) {
+                    getVoucherRes.setResponseCode(ResponseCodeMsg.ORDER_UPDATE_ERROR.getCode());
+                    getVoucherRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getMsg());
+                    return getVoucherRes;
+                }
+
+                //响应用户
                 getVoucherRes.setResponseCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.FAILED_TO_GET.getMsg());
                 return getVoucherRes;

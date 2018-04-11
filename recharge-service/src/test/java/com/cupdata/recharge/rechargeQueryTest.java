@@ -9,6 +9,7 @@ import com.cupdata.commons.vo.recharge.RechargeQueryReq;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import org.junit.Test;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -24,10 +25,11 @@ public class rechargeQueryTest {
     public void rechargeTest() throws Exception {
         //充值结果查询网关URL
         String url = "http://localhost:46959/recharge/query/rechargeQuery";
+        String url2 = "http://cvpa.leagpoint.com/sipService/recharge/query/rechargeQuery";
         //请求参数
-        String org = "2018010200000001";
+        String org = "20180409O75853744";
         RechargeQueryReq req = new RechargeQueryReq();
-        req.setOrgOrderNo("aiqiyi20180322121");
+        req.setOrgOrderNo("180410AD054578");
         req.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         String reqStr = JSONObject.toJSONString(req);
         System.out.print("请求参数json字符串" + reqStr);
@@ -38,8 +40,23 @@ public class rechargeQueryTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
+
+        PublicKey pubKey = RSAUtils.getPublicKeyFromString(sipPubKeyStr);
+        PrivateKey priKey = RSAUtils.getPrivateKeyFromString(orgPriKeyStr);
+        String datas = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+        String signs = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
+        String param = "org=" + org + "&data=" + URLEncoder.encode(datas, "utf-8") + "&sign=" + URLEncoder.encode(signs, "utf-8");
+        String re = HttpUtil.doPost(url2, param, "application/x-www-form-urlencoded;charset=UTF-8");
+        System.out.println("响应数据为:" + re);
+        String[] split = re.split("&sign=");
+        String s1 = (String)split[0].replace("data=","");
+
+        //解密数据
+        String s = URLDecoder.decode(s1,"utf-8");
+        String plain = RSAUtils.decrypt(s,orgPriKey,RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+        System.out.print("响应明文:"+plain);
     }
 
 }

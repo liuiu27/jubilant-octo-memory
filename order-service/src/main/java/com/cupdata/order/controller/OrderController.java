@@ -64,6 +64,7 @@ public class OrderController implements IOrderController {
         BaseResponse<ServiceOrder> serviceOrderRes = new BaseResponse();
 	    try {
 	        if (StringUtils.isBlank(orderNo)){
+	        	log.info("订单号为空");
                 serviceOrderRes.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
                 serviceOrderRes.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
                 return serviceOrderRes;

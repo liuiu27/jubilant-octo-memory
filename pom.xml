@@ -38,9 +38,12 @@
 		<module>tencent-service</module>
 		<module>content-service</module>
 		<module>ihuyi-service</module>
+<<<<<<< HEAD
 		<module>shengda-service</module>
 		<module>ikang-service</module>
 		<module>ehCache-service</module>
+=======
+>>>>>>> b0af90a31876a7e86d352415bd10756a83dd52c2
 	</modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->
