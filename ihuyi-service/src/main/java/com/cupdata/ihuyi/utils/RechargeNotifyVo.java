@@ -6,7 +6,7 @@ import lombok.Data;
  * 机构充值结果接收vo
  */
 @Data
-public class rechargeNotifyVo {
+public class RechargeNotifyVo {
 
     /**
      * 平台订单编号

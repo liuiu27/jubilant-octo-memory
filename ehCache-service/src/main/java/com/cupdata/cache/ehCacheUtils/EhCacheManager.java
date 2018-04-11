@@ -2,7 +2,6 @@ package com.cupdata.cache.ehCacheUtils;
 
 import java.net.URL;
 import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ehcache.Cache;
@@ -13,7 +12,6 @@ import org.ehcache.xml.XmlConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.cupdata.cache.fegin.ConfigFeignClient;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.model.SysConfig;

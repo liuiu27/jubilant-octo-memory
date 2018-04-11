@@ -4,18 +4,24 @@ import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.api.ihuyi.IHuyiPhoneController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.notify.OrderNotifyComplete;
+import com.cupdata.commons.vo.notify.OrderNotifyWait;
+import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
 import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.recharge.RechargeRes;
+import com.cupdata.ihuyi.biz.NotifyBiz;
 import com.cupdata.ihuyi.constant.IhuyiRechargeResCode;
 import com.cupdata.ihuyi.feign.CacheFeignClient;
 import com.cupdata.ihuyi.feign.NotifyFeignClient;
 import com.cupdata.ihuyi.feign.OrderFeignClient;
 import com.cupdata.ihuyi.feign.ProductFeignClient;
 import com.cupdata.ihuyi.utils.IhuyiUtils;
+import com.cupdata.ihuyi.utils.NotifyUtil;
 import com.cupdata.ihuyi.vo.IhuyiRechargeRes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +56,10 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
 
     @Autowired
     private  CacheFeignClient cacheFeignClient ;
+
+    @Autowired
+    private NotifyBiz notifyBiz;
+
 
     /**
      * 互亿话费充值
@@ -135,7 +145,7 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                 return rechargeRes;
             } else {
                 //充值订购失败直接响应失败结果,并通知机构
-                log.info("互亿话费充值订购失败,调用通知服务通知机构...");
+                log.info("互亿话费充值订购失败");
                 rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL); //订单失败
                 rechargeOrderRes.getData().getOrder().setOrderFailDesc("互亿话费充值下单失败");
 
@@ -150,8 +160,26 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                     return rechargeRes;
                 }
 
-                //充值失败,通知机构下单失败
-                notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderRes.getData().getOrder().getOrderNo());
+                //订购失败,通知机构下单失败
+                log.info("封装通知请求数据：订单状态失败");
+                ServiceOrder serviceOrder = new ServiceOrder();
+                serviceOrder.setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);   //订单状态失败
+                serviceOrder.setOrgOrderNo(rechargeReq.getOrgOrderNo()); //机构订单号
+                serviceOrder.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo()); //订单号
+                serviceOrder.setNotifyUrl(rechargeOrderRes.getData().getOrder().getNotifyUrl());//异步通知地址
+
+                //查询机构信息
+                BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(org);
+                if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
+                    log.error("互亿话费充值通知,合作机构信息获取失败");
+                    rechargeRes.setResponseCode(ResponseCodeMsg.ILLEGAL_PARTNER.getCode());
+                    rechargeRes.setResponseMsg(ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());
+                    return rechargeRes;
+                }
+
+                //通知机构
+                log.info("开始通知机构...");
+                notifyToOrg(serviceOrder,orgInf.getData());
 
                 //设置响应结果
                 rechargeRes.setResponseMsg(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getMsg());
@@ -202,6 +230,8 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
             log.info("互亿话费充值回调，互亿回调请求数据:" + JSONObject.toJSONString(map));
             if (validateSign.equals(sign)) {
                 log.info("互亿话费充值回调，验签通过");
+
+                //查询互亿通知本笔订单信息
                 BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrderNo(orderid);
                 if (null != rechargeOrderVo.getData().getOrder() && !ModelConstants.ORDER_MERCHANT_FLAG_IHUYI.equals(rechargeOrderVo.getData().getOrder().getSupplierFlag())) {
                     writer.print(resultStr);
@@ -214,15 +244,33 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                     orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData()); //更新商户订单
                 }
 
-                if ("1".equals(state)) {  //充值成功
+                //查询机构信息
+                BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(rechargeOrderVo.getData().getOrder().getOrgNo());
+                if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
+                    log.error("互亿话费通知,查询机构信息失败");
+                    return;
+                }
+
+                //充值成功
+                if ("1".equals(state)) {
                     log.info("充值成功");
                     if (rechargeOrderVo.getData().getOrder() != null && ModelConstants.ORDER_STATUS_HANDING.equals(rechargeOrderVo.getData().getOrder().getOrderStatus())) {
                         rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
                         orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
-                        log.info("互亿推送充值结果:互亿话费充值订单更新成功,调用通知服务通知机构......");
+                        log.info("互亿推送充值结果:互亿话费充值订单更新成功");
                         writer.print(resultStr);
-                        //向机构通知订购成功消息
-                        notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderVo.getData().getOrder().getOrderNo());
+
+                        //向机构通知成功消息(平台订单号，机构订单号，订单状态，机构信息)
+                        log.info("封装通知请求数据：订单状态成功");
+                        ServiceOrder serviceOrder = new ServiceOrder();
+                        serviceOrder.setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);   //订单状态成功
+                        serviceOrder.setOrgOrderNo(rechargeOrderVo.getData().getOrder().getOrgOrderNo()); //机构订单号
+                        serviceOrder.setOrderNo(rechargeOrderVo.getData().getOrder().getOrderNo()); //订单号
+                        serviceOrder.setNotifyUrl(rechargeOrderVo.getData().getOrder().getNotifyUrl());//异步通知地址
+
+                        //通知机构（订单数据，机构信息）
+                        log.info("开始通知机构...");
+                        notifyToOrg(serviceOrder,orgInf.getData());
                     } else if (rechargeOrderVo.getData().getOrder() == null){
                         log.info("互亿推送充值结果:互亿话费订购的订单号不存在!");
                         writer.print(resultStr);
@@ -231,13 +279,23 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
                         writer.print(resultStr);
                     }
                 } else { //充值失败
-                    log.info("互亿推送充值结果:话费充值失败,订单状态更新为失败,调用通知服务通知机构......");
+                    log.info("互亿推送充值结果:话费充值失败,订单状态更新为失败");
                     rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);
                     orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
                     resultStr = "fail";
                     writer.print(resultStr);
+
+                    //向机构通知失败消息(平台订单号，机构订单号，订单状态，机构信息)
+                    log.info("封装通知请求数据：订单状态失败");
+                    ServiceOrder serviceOrder = new ServiceOrder();
+                    serviceOrder.setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);   //订单状态失败
+                    serviceOrder.setOrgOrderNo(rechargeOrderVo.getData().getOrder().getOrgOrderNo()); //机构订单号
+                    serviceOrder.setOrderNo(rechargeOrderVo.getData().getOrder().getOrderNo()); //订单号
+                    serviceOrder.setNotifyUrl(rechargeOrderVo.getData().getOrder().getNotifyUrl());//异步通知地址
+
                     //充值失败,通知机构
-                    notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderVo.getData().getOrder().getOrderNo());
+                    log.info("开始通知机构...");
+                    notifyToOrg(serviceOrder,orgInf.getData());
                 }
             } else {
                 log.info("互亿推送充值结果:互亿话费充值回调,验签失败");
@@ -250,5 +308,30 @@ public class IhuyiPhoneRechargeController implements IHuyiPhoneController {
             writer.print(resultStr);
         }
         log.info("互亿推送充值结果:互亿话费充值回调返回字符：" + resultStr);
+    }
+
+    /**
+     * 通知机构：进行三次循环通知机构
+     * @param serviceOrder
+     * @param orgInfVo
+     */
+    public void notifyToOrg(ServiceOrder serviceOrder, OrgInfVo orgInfVo){
+        log.info("互亿话费充值开始通知机构,OrgOrderNo:"+serviceOrder.getOrgOrderNo()+",OrderNo:"+serviceOrder.getOrderNo()+",NotifyUrl:"+serviceOrder.getNotifyUrl());
+
+        //开始通知,向机构连续通知三次,三次成功放入Complete表,失败则放入wait表
+        for(int i = 0;i < 3;i++){
+            log.info("第"+i+"次通知");
+            if(NotifyUtil.httpToOrg(serviceOrder,orgInfVo)){
+                log.info("话费充值通知成功,放入notify_complete表");
+                OrderNotifyComplete orderNotifyComplete = NotifyUtil.initOrderNotifyComplete(serviceOrder.getOrderNo(),serviceOrder.getNotifyUrl());
+                notifyBiz.addNotifyComplete(orderNotifyComplete);
+                return;
+            }
+        }
+
+        //通知失败,放入OrderNotifyWait,等待通知服务的轮询
+        log.info("话费充值通知失败,放入notify_wait表");
+        OrderNotifyWait orderNotifyWait = NotifyUtil.initOrderNotifyWait(serviceOrder.getOrderNo(),serviceOrder.getNotifyUrl());
+        notifyBiz.addNotifyWait(orderNotifyWait);
     }
 }

@@ -35,7 +35,7 @@ public class SimulateOrg {
         //解密密文数据
         String dataPlain = RSAUtils.decrypt(data, privateKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         log.info("明文数据:"+dataPlain);
-        rechargeNotifyVo rechargeNotifyVo = JSONObject.parseObject(dataPlain, rechargeNotifyVo.class);
+        RechargeNotifyVo rechargeNotifyVo = JSONObject.parseObject(dataPlain, RechargeNotifyVo.class);
 
         //sip的公钥进行验验签
         String sipPubKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
@@ -45,7 +45,7 @@ public class SimulateOrg {
         //验签成功即可完成接受数据
         if(isPass){
             s = "SUCCESS";
-            log.info("对象："+rechargeNotifyVo);
+            log.info("对象："+ rechargeNotifyVo);
         }
         return s;
     }

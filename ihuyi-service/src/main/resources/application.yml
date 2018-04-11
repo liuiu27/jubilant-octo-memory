@@ -5,6 +5,10 @@ spring:
      active: dev
 server:
   port: 9030
+#mybatis相关配置
+mybatis:
+    type-aliases-package: com.cupdata.commons.model
+    mapper-locations: classpath:mapper/*.xml
 #日志配置
 logging:
   config: classpath:logback-spring.xml
@@ -16,9 +20,18 @@ hystrix:
           isolation:
             thread:
               timeoutInMilliseconds: 10000
+jasypt:
+  encryptor:
+    password: cupdata
 --- # 开发环境**********************************************************************************************************
 spring:
   profiles: dev
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+      username: resdb
+      password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
+      type: com.alibaba.druid.pool.DruidDataSource
 
 eureka:
   client:

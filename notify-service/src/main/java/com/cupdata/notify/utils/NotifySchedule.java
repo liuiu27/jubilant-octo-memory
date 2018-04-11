@@ -109,12 +109,11 @@ public class NotifySchedule {
     /**
      * 定时通知业务（轮训wait表,轮寻当前服务器节点下的订单,查询出通知订单的结果信息,去通知机构）
      */
-
-    @Scheduled(cron = "0 0/100 * * * ?")
+    @Scheduled(cron = "0/5 * * * * ?")
     public void RechargeNotifyToOrgTask(){
-        log.info("开启充值轮寻通知,当前服务器节点:"+CommonUtils.getHostAddress()+":"+ServerPort.getPort()+",...开始轮寻Notify_waite表");
+        log.info("开启充值轮寻通知,当前服务器节点:"+CommonUtils.getHostAddress()+",...开始轮寻Notify_waite表");
         //获取当前服务器节点,只轮训当前服务器节点下的订单
-        String nodeName = CommonUtils.getHostAddress()+":"+ServerPort.getPort();
+        String nodeName = CommonUtils.getHostAddress();
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("nodeName", nodeName);
         //查询当前服务器下所有失败的通知
@@ -122,14 +121,19 @@ public class NotifySchedule {
         log.info("当前服务器节点失败订单数为："+orderNotifyWaitList.size());
         if(null != orderNotifyWaitList && orderNotifyWaitList.size()>0){
             for (OrderNotifyWait orderNotifyWait : orderNotifyWaitList) {
-                //判断通知次数是否>9
+                //判断通知次数是否大于等于9次
                 if(orderNotifyWait.getNotifyTimes() >= 9) {
                     //初始化  orderNotifyComplete
+                    log.info("初始化  orderNotifyComplete");
                     OrderNotifyComplete orderNotifyComplete	= NotifyUtil.copyOrderNotifyComplete(orderNotifyWait,ModelConstants.NOTIFY_STATUS_FAIL);
+
                     //移动到  orderNotifyComplete
+                    log.info("移动到  orderNotifyComplete");
                     notifyBiz.orderNotifyCompleteInsert(orderNotifyComplete);
+
                     //删除 orderNotifyWait
-                    notifyBiz.delete(Integer.parseInt(orderNotifyWait.getId().toString()));
+                    log.info("删除 orderNotifyWait");
+                    notifyBiz.delete(Long.valueOf(orderNotifyWait.getId()));
                 }else {
                     //step1.获取当前订单的订单编号
                     String orderNo = orderNotifyWait.getOrderNo();
@@ -151,20 +155,30 @@ public class NotifySchedule {
 
                     //step4.发送通知
                     if(!NotifyUtil.rechargeHttpToOrg(serviceOrderRes.getData(),orgInf.getData())) {
-                        log.error("FAIL   notify url is " + orderNotifyWait.getNotifyUrl() + "notifyTimes is  " + orderNotifyWait.getNotifyTimes());
+                        log.error("本次通知失败，NotifyUrl：" + orderNotifyWait.getNotifyUrl() + "notifyTimes is： " + orderNotifyWait.getNotifyTimes());
+
                         //通知失败  通知失败次数 +1  下次通知时间修改
+                        log.info("通知次数+1");
                         orderNotifyWait.setNotifyTimes(orderNotifyWait.getNotifyTimes()+1);
+
                         //通知时间修改
+                        log.info("修改通知时间");
                         orderNotifyWait.setNextNotifyDate(NotifyNextTime.GetNextTime(orderNotifyWait.getNotifyTimes(), orderNotifyWait.getNextNotifyDate()));
                         notifyBiz.update(orderNotifyWait);
                     }else {
-                        log.info("SUCCESS  notify url is " + orderNotifyWait.getNotifyUrl() + "notifyTimes is " + orderNotifyWait.getNotifyTimes());
-                        //通知成功  删除 wait表
-                        notifyBiz.delete(orderNotifyWait.getId());
+                        log.info("本次通知成功，NotifyUrl： " + orderNotifyWait.getNotifyUrl() + "notifyTimes is：" + orderNotifyWait.getNotifyTimes());
+
                         //初始化  orderNotifyComplete
+                        log.info("初始化  orderNotifyComplete");
                         OrderNotifyComplete orderNotifyComplete	= NotifyUtil.copyOrderNotifyComplete(orderNotifyWait,ModelConstants.NOTIFY_STATUS_SUCCESS);
+
                         //移动到  orderNotifyComplete
+                        log.info("移动到  orderNotifyComplete");
                         notifyBiz.orderNotifyCompleteInsert(orderNotifyComplete);
+
+                        //通知成功  删除 wait表
+                        log.info("删除 orderNotifyWait");
+                        notifyBiz.delete(Long.valueOf(orderNotifyWait.getId()));
                     }
                 }
             }

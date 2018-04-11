@@ -60,6 +60,7 @@ public class LocalVoucherController implements ILocalVoucherController {
         BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse<>();// 默认为成功
         try {
             //step1.获取产品信息,如果不存在此产品,直接返回错误状态码和信息
+            log.info("根据产品编号获取产品信息");
             BaseResponse<ProductInfVo> productInfo = productFeignClient.findByProductNo(voucherReq.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())) {
                 //设置状态码和错误信息,给予返回
@@ -83,6 +84,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             }
 
             //step4.判断券码列表是否存在有效券码,获取有效券码
+            log.info("券码类型有效，开始获取券码");
             ElectronicVoucherLib electronicVoucherLib = voucherLibGetBiz.selectVoucherByCategoryId(categoryId);
             if (CommonUtils.isNullOrEmptyOfObj(electronicVoucherLib)) {
                 log.info("券码列表没有可用券码");

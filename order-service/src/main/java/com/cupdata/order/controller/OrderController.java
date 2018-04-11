@@ -81,6 +81,11 @@ public class OrderController implements IOrderController {
 		return serviceOrderRes;
 	}
 
+	/**
+	 * 创建券码订单
+	 * @param createVoucherOrderVo 创建券码订单参数vo
+	 * @return
+	 */
 	@Override
 	public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody CreateVoucherOrderVo createVoucherOrderVo) {
 		log.info("OrderController createVoucherOrder is begin params is" + createVoucherOrderVo.toString());

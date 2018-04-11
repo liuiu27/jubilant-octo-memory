@@ -38,10 +38,10 @@ public class IhiyiApplicationTest {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("15737317830");           //充值账号
-        rechargeReq.setOrgOrderNo("IHUYIphoneRecharge");           //唯一订单编号
+        rechargeReq.setOrgOrderNo("PH123456");           //唯一订单编号
         rechargeReq.setProductNo("171114R304");          //互亿话费充值产品编号
         rechargeReq.setOrderDesc("互亿话费充值");
-        rechargeReq.setNotifyUrl("http://10.152.0.24:8040/huyi/ihuyiRecharge/orgTest"); //通知地址
+        rechargeReq.setNotifyUrl("http://10.152.0.166:9030/givenOrg"); //通知地址
         rechargeReq.setRechargeAmt(20l); //话费充值
         String reqStr = JSONObject.toJSONString(rechargeReq);
         System.out.print("请求参数json字符串" + reqStr);
@@ -52,7 +52,7 @@ public class IhiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url3, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("互亿话费充值响应数据为" + res);
     }
 
@@ -72,10 +72,10 @@ public class IhiyiApplicationTest {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("15737317830");           //充值账号
-        rechargeReq.setOrgOrderNo("IHUYItrafficRecharge");           //唯一订单编号
+        rechargeReq.setOrgOrderNo("HT123456");//唯一订单编号
         rechargeReq.setProductNo("171114R602");          //互亿流量充值产品编号
         rechargeReq.setOrderDesc("互亿流量充值");
-        rechargeReq.setNotifyUrl("http://10.152.0.24:8040/huyi/ihuyiTraffic/orgTest"); //通知地址
+        rechargeReq.setNotifyUrl("http://10.152.0.166:9030/givenOrg"); //通知地址
         rechargeReq.setRechargeTraffic(30L); //流量充值
         String reqStr = JSONObject.toJSONString(rechargeReq);
         System.out.print("请求参数json字符串" + reqStr);
@@ -86,7 +86,7 @@ public class IhiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("互亿话费充值响应数据为" + res);
     }
 
@@ -103,13 +103,13 @@ public class IhiyiApplicationTest {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");        //手机号
         rechargeReq.setAccount("625192155");           //充值账号
-        rechargeReq.setOrgOrderNo("TestVirtual");         //唯一订单编号
+        rechargeReq.setOrgOrderNo("HV123456");         //唯一订单编号
         rechargeReq.setProductNo("171130R475");        //互亿虚拟充值产品编号
         rechargeReq.setOrderDesc("互亿英雄联盟虚拟充值");      //充值描述
         rechargeReq.setGameRegion("绯红之刃");         //游戏大区
         rechargeReq.setGameServer("华北电信");         //服务器名称
         rechargeReq.setRechargeNumber(2l);             //充值件数
-        rechargeReq.setNotifyUrl("http://10.152.0.24:8040/huyi/ihuyiVirtual/orgTest"); //通知地址
+        rechargeReq.setNotifyUrl("http://10.152.0.166:9030/givenOrg"); //通知地址
         String reqStr = JSONObject.toJSONString(rechargeReq);
         System.out.print("请求参数json字符串" + reqStr);
         String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
@@ -119,7 +119,7 @@ public class IhiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("互亿虚拟充值响应数据为" + res);
     }
 
@@ -158,9 +158,9 @@ public class IhiyiApplicationTest {
     @Test
     public void generateSign(){
         Map<String, String> map = new HashMap();
-        map.put("taskid", "EE123");
-        map.put("mobile", "12552521251");
-        map.put("state", "1");
+        map.put("taskid", "NEW123T");
+        map.put("mobile", "15857128524");
+        map.put("status", "1");
         map.put("message", "充值成功");
         String apikeyCache = "6j3ao593wMNQRz4Zo4ao";
         map.put("apikey", apikeyCache);//apiKey
@@ -183,8 +183,8 @@ public class IhiyiApplicationTest {
     @Test
     public void getSign() {
         Map<String, String> map = new HashMap<>();
-        map.put("taskid", "virtual111");
-        map.put("orderid", "18040413393187792279");
+        map.put("taskid", "NEW123V");
+        map.put("orderid", "18041114593207376617");
         map.put("account", "1234556");
         map.put("status", "2");
         map.put("return", "");

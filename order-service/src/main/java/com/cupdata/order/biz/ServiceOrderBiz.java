@@ -177,6 +177,12 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder>{
     	return res;
 	}
 
+    /**
+     * 根据机构编号和机构订单号来查询订单信息
+     * @param orgNo
+     * @param orgOrderNo
+     * @return
+     */
 	public BaseResponse<RechargeOrderVo> getRechargeOrderByOrgNoAndOrgOrderNo(String orgNo , String orgOrderNo){
         BaseResponse<RechargeOrderVo> res = new BaseResponse<>();
         RechargeOrderVo rechargeOrderVo = new RechargeOrderVo();

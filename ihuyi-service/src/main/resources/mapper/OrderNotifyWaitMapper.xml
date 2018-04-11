@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.cupdata.notify.dao.OrderNotifyWaitDao">
+<mapper namespace="com.cupdata.ihuyi.dao.OrderNotifyWaitDao">
 
     <resultMap id="BaseResultMap" type="com.cupdata.commons.vo.notify.OrderNotifyWait">
         <result column="ID" property="id" jdbcType="INTEGER"/>
@@ -122,7 +122,7 @@
     
      <select id="selectAll" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from order_notify_wait
-        where 1 = 1
+        where NEXT_NOTIFY_DATE &lt;=  NOW() 
         <if test=" id != null and id != ''">
 			 and ID = #{id}
 		</if>
