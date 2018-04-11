@@ -49,11 +49,7 @@ public class NotifySchedule {
 	/**
 	 * 每分钟执行通知
 	 */
-<<<<<<< HEAD
 	@Scheduled(cron = "0 0/10 * * * ?")
-=======
-	//@Scheduled(cron = "0 0/100 * * * ?")
->>>>>>> b0af90a31876a7e86d352415bd10756a83dd52c2
 	public void notifyToOrgTask(){
 		log.info("-------------------   start   notifyToOrgTask   "+ DateTimeUtil.getCurrentTime() +" ------------------- ");
 		//获取当前节点
@@ -113,11 +109,8 @@ public class NotifySchedule {
     /**
      * 定时通知业务（轮训wait表,轮寻当前服务器节点下的订单,查询出通知订单的结果信息,去通知机构）
      */
-<<<<<<< HEAD
+
     @Scheduled(cron = "0 0/100 * * * ?")
-=======
-    //@Scheduled(cron = "0 0/10 * * * ?")
->>>>>>> b0af90a31876a7e86d352415bd10756a83dd52c2
     public void RechargeNotifyToOrgTask(){
         log.info("开启充值轮寻通知,当前服务器节点:"+CommonUtils.getHostAddress()+":"+ServerPort.getPort()+",...开始轮寻Notify_waite表");
         //获取当前服务器节点,只轮训当前服务器节点下的订单

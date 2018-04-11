@@ -5,7 +5,6 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.TimeConstants;
 import com.cupdata.commons.model.ServiceOrder;
