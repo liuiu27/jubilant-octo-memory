@@ -77,6 +77,7 @@ public class IqiyiRechargeController implements IQiYiController {
             createRechargeOrderVo.setOrgNo(org);
             createRechargeOrderVo.setOrgOrderNo(rechargeReq.getOrgOrderNo());
             createRechargeOrderVo.setProductNo(rechargeReq.getProductNo());
+            createRechargeOrderVo.setAccountNumber(rechargeReq.getAccount());
 
             //调用订单服务创建订单
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
@@ -105,7 +106,6 @@ public class IqiyiRechargeController implements IQiYiController {
                 log.info("爱奇艺会员充值controller激活码获取结果 : "+IqiyiVoucherGetRes.getData().getVoucherCode());
             }
 
-
             //对返回数据处理，判断是否存在可用券码
             if(!"000000".equals(IqiyiVoucherGetRes.getResponseCode())){
                 log.info("爱奇艺会员充值controller从本地获取券码失败 : 券码列表没有可用券码");
@@ -113,7 +113,6 @@ public class IqiyiRechargeController implements IQiYiController {
                 rechargeRes.setResponseMsg(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getMsg());
                 return rechargeRes;
             }
-
 
             //封装请求参数,调用爱奇艺充值工具类来进行充值业务
             IqiyiRechargeReq req = new IqiyiRechargeReq();
@@ -134,10 +133,12 @@ public class IqiyiRechargeController implements IQiYiController {
             }
 
             //会员充值成功,修改订单状态
-            rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
-            rechargeOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_NO);
-            rechargeOrderRes.getData().getRechargeOrder().setProductNo(rechargeReq.getProductNo());
-            rechargeOrderRes.getData().getRechargeOrder().setAccountNumber(rechargeReq.getAccount());
+            rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS); //订单状态成功
+            rechargeOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_NO);            //不通知
+            rechargeOrderRes.getData().getRechargeOrder().setProductNo(rechargeReq.getProductNo());    //产品编号
+            rechargeOrderRes.getData().getRechargeOrder().setAccountNumber(rechargeReq.getAccount());  //充值账号
+            rechargeOrderRes.getData().getRechargeOrder().setRechargeAmt(rechargeReq.getRechargeAmt());//充值金额
+
             //调用订单服务更新订单
             log.info("爱奇艺会员充值controller,更新充值订单OrderNo : "+rechargeOrderRes.getData().getOrder().getOrderNo());
             rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());

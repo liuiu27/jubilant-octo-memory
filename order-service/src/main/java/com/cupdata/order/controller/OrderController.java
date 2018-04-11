@@ -63,9 +63,15 @@ public class OrderController implements IOrderController {
 				return voucherOrderRes;
 			}
 
-			//查询商户标识
-            BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
-            String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
+			//获取商户标识
+			BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
+			if (!ResponseCodeMsg.SUCCESS.getCode().equals(SupplierInfVo.getResponseCode())
+					|| null == SupplierInfVo.getData()){
+				voucherOrderRes.setResponseCode(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getCode());
+				voucherOrderRes.setResponseMsg(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getMsg());
+				return voucherOrderRes;
+			}
+			String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
 
 			// 查询机构、商品关系记录
 			BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createVoucherOrderVo.getOrgNo(),
@@ -230,11 +236,12 @@ public class OrderController implements IOrderController {
      */
 	@Override
 	public BaseResponse<RechargeOrderVo> createRechargeOrder(@RequestBody CreateRechargeOrderVo createRechargeOrderVo) {
-		log.info("OrderController createRechargeOrder is begin params is" + createRechargeOrderVo.toString());
+		log.info("OrderController createRechargeOrder is begin...OrgOrderNo:" + createRechargeOrderVo.getOrgOrderNo()+",ProductNo:"+createRechargeOrderVo.getProductNo());
 		try {
 			//设置响应信息
 		    BaseResponse<RechargeOrderVo> rechargeOrderRes = new BaseResponse<RechargeOrderVo>();
-			 // 根据产品编号，查询服务产品信息
+
+		    //根据产品编号，查询服务产品信息
 	        BaseResponse<ProductInfVo> productInfRes = productFeignClient
 	                .findByProductNo(createRechargeOrderVo.getProductNo());
 	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
@@ -243,10 +250,18 @@ public class OrderController implements IOrderController {
 	            rechargeOrderRes.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
 	            return rechargeOrderRes;
 	        }
+	        log.info("get productInfRes...ProductName:"+productInfRes.getData().getProduct().getProductName()+",ProductType:"+productInfRes.getData().getProduct().getProductType()+",ProductDesc:"+productInfRes.getData().getProduct().getProductDesc());
 
 	        //获取商户标识
             BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
-            String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
+	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(SupplierInfVo.getResponseCode())
+					|| null == SupplierInfVo.getData()){
+				rechargeOrderRes.setResponseCode(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getCode());
+				rechargeOrderRes.setResponseMsg(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getMsg());
+				return rechargeOrderRes;
+			}
+	        String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
+            log.info("get supplierFlag from supplierInfVo:"+supplierFlag);
 
 	        // 查询机构、商品关系记录
 	        BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createRechargeOrderVo.getOrgNo(),

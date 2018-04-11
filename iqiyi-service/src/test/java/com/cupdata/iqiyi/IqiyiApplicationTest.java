@@ -1,5 +1,4 @@
-package com.cupdata.iqiyi.utils;
-
+package com.cupdata.iqiyi;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.utils.CommonUtils;
@@ -7,25 +6,21 @@ import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.vo.recharge.RechargeReq;
-
+import org.junit.Test;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Date;
 
+public class IqiyiApplicationTest {
 
-/**
- * @Author: DingCong
- * @Description: 爱奇艺测试工具类
- * @CreateDate: 2018/3/1 9:51
- */
 
-public class TestUtils {
-
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void iqiyiRecharge() throws Exception{
         //爱奇艺获取券码充值网关URL
-        String url = "http://localhost:8040/recharge/recharge/getRecharge";
+        String url = "http://localhost:46959/recharge/recharge/getRecharge";
         String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
+        String url3 = "http://10.193.17.86:46959/recharge/recharge/getRecharge";
         //花积分机构编号
         String org = "2018010200000001";
         //请求参数
@@ -33,9 +28,9 @@ public class TestUtils {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("707316407");           //充值账号
-        rechargeReq.setOrgOrderNo("test"); //机构唯一订单编号
+        rechargeReq.setOrgOrderNo("60UNIONPAY18"); //机构唯一订单编号
         rechargeReq.setProductNo("171026R640");        //爱奇艺产品编号
-        rechargeReq.setOrderDesc("爱奇艺会员充值");
+        rechargeReq.setOrderDesc("AIQIYIRECHARGE");
         String reqStr = JSONObject.toJSONString(rechargeReq);
         System.out.print("请求参数json字符串" + reqStr);
         String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
@@ -47,5 +42,7 @@ public class TestUtils {
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
         String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
+
     }
+
 }

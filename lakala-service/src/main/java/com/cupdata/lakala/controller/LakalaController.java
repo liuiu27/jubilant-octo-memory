@@ -32,7 +32,7 @@ public class LakalaController implements ILakalaController{
     private ProductFeignClient productFeignClient ;
 
     @Autowired
-    private  CacheFeignClient cacheFeignClient ;
+    private CacheFeignClient cacheFeignClient ;
 
     @Autowired
     private OrderFeignClient orderFeignClient;
