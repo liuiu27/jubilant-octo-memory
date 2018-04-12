@@ -45,7 +45,7 @@ public class IhuyiSchedule {
      * 互亿流量充值轮询（每5分钟去循环查询）
      * @throws Exception
      */
-    //@Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     public void scheduleIhuyiTrafficRecharge() throws Exception {
         log.info("互亿流量充值订单轮询开始**********************************************");
         int timer = 0;
@@ -116,7 +116,7 @@ public class IhuyiSchedule {
      * 互亿话费充值轮询（每5分钟去循环查询）
      * @throws Exception
      */
-    //@Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     public void scheduleIhuyiPhoneRecharge() throws Exception {
         log.info("互亿话费充值订单轮询开始**********************************************");
         int timer = 0;
@@ -182,7 +182,7 @@ public class IhuyiSchedule {
      * 互亿虚拟充值轮询（每5分钟去循环查询）
      * @throws Exception
      */
-    //@Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     public void scheduleIhuyiVirtualRecharge() throws Exception {
         log.info("互亿虚拟充值订单轮询开始**********************************************");
         int timer = 0;
