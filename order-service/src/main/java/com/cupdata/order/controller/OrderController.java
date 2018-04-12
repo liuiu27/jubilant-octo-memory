@@ -1,6 +1,9 @@
 package com.cupdata.order.controller;
 
 
+import com.cupdata.order.biz.ServiceOrderBiz;
+import com.cupdata.order.feign.ProductFeignClient;
+import com.cupdata.order.feign.SupplierFeignClient;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.order.IOrderController;
 import com.cupdata.sip.common.api.order.request.CreateRechargeOrderVo;
@@ -9,12 +12,15 @@ import com.cupdata.sip.common.api.order.response.OrderInfoVo;
 import com.cupdata.sip.common.api.order.response.RechargeOrderVo;
 import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
+import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
+import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.exception.ErrorException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -25,6 +31,14 @@ import java.util.List;
 @RestController
 public class OrderController implements IOrderController {
 
+    @Resource
+    private SupplierFeignClient supplierClient;
+
+    @Resource
+    private ProductFeignClient productFeignClient;
+
+
+    private ServiceOrderBiz orderBiz;
 
     @Override
     public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody CreateVoucherOrderVo createVoucherOrderVo) {
@@ -32,7 +46,7 @@ public class OrderController implements IOrderController {
         try {
             BaseResponse<VoucherOrderVo> voucherOrderRes = new BaseResponse();
             // 根据产品编号,查询服务产品信息
-            BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(createVoucherOrderVo.getProductNo());
+            BaseResponse<ProductInfoVo> productInfRes = productFeignClient.findByProductNo(createVoucherOrderVo.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
                     || null == productInfRes.getData()) {// 如果查询失败
                 log.error("product-service findByProductNo is error ProductNo is " + createVoucherOrderVo.getProductNo());
@@ -42,14 +56,14 @@ public class OrderController implements IOrderController {
             }
 
             //获取商户标识
-            BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
+            BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getSupplierNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(SupplierInfVo.getResponseCode())
                     || null == SupplierInfVo.getData()){
                 voucherOrderRes.setResponseCode(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getCode());
                 voucherOrderRes.setResponseMsg(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getMsg());
                 return voucherOrderRes;
             }
-            String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
+            String supplierFlag = SupplierInfVo.getData().getSupplierFlag();
 
             // 查询机构、商品关系记录
             BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createVoucherOrderVo.getOrgNo(),
@@ -62,35 +76,17 @@ public class OrderController implements IOrderController {
                 voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
                 return voucherOrderRes;
             }
-
-            ServiceOrderVoucher voucherOrder = orderBiz.createVoucherOrder(supplierFlag , createVoucherOrderVo.getOrgNo(),
+            //开始创建订单
+            VoucherOrderVo voucherOrderVo = orderBiz.createVoucherOrder(supplierFlag , createVoucherOrderVo.getOrgNo(),
                     createVoucherOrderVo.getOrgOrderNo(), createVoucherOrderVo.getOrderDesc(),
-                    productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
-            if (null == voucherOrder) {// 创建券码订单失败
-                log.error("order-service createVoucherOrder is error findRel is " + createVoucherOrderVo.getProductNo()
-                        + "orgNo is" + createVoucherOrderVo.getOrgNo());
-                voucherOrderRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
-                voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
-                return voucherOrderRes;
-            }
-            ServiceOrder order = orderBiz.select(Integer.parseInt(voucherOrder.getOrderId().toString()));
-            if (null == order) {
-                log.error("order-service select is error id is" + voucherOrder.getOrderId());
-                voucherOrderRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
-                voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
-                return voucherOrderRes;
-            }
-            VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
-            voucherOrderVo.setOrder(order);
-            voucherOrderVo.setVoucherOrder(voucherOrder);
+                    productInfRes.getData(), orgProductRelRes.getData());
+
             voucherOrderRes.setData(voucherOrderVo);
             return voucherOrderRes;
         } catch (Exception e) {
             log.error("error is " + e.getMessage());
             throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
         }
-
-        return null;
     }
 
     @Override

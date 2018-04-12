@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.cupdata.commons.vo.product.ProductInfVo;
+import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
+import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
+import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +37,7 @@ import com.cupdata.order.util.OrderUtils;
  * @Date: 20:20 2017/12/14
  */
 @Service
-public class ServiceOrderBiz extends BaseBiz<ServiceOrder>{
+public class ServiceOrderBiz {
 
     @Autowired
     private ServiceOrderDao orderDao;
@@ -92,7 +95,7 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder>{
 
 
     //创建券码订单
-    public ServiceOrderVoucher createVoucherOrder(String supplierFlag, String orgNo, String orgOrderNo, String orderDesc, ServiceProduct voucherProduct, OrgProductRela orgProductRela){
+    public VoucherOrderVo createVoucherOrder(String supplierFlag, String orgNo, String orgOrderNo, String orderDesc, ProductInfoVo voucherProduct, OrgProductRelVo orgProductRela){
         //初始化主订单记录
         ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,orgNo, orgOrderNo, orderDesc, voucherProduct, orgProductRela);
         orderDao.insert(order);//插入主订单

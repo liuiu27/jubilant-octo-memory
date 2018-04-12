@@ -11,6 +11,7 @@ import lombok.Data;
  */
 @Data
 public class OrgProductRelVo extends BaseData{
+
     /**
      *
      */

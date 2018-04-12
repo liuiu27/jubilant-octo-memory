@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cupdata.sip.common.dao.mapper.ServiceProductMapper">
+  <resultMap id="BaseResultMap" type="com.cupdata.sip.common.dao.entity.ServiceProduct">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="PRODUCT_TYPE" jdbcType="VARCHAR" property="productType" />
+    <result column="SUPPLIER_NO" jdbcType="VARCHAR" property="supplierNo" />
+    <result column="PRODUCT_NO" jdbcType="VARCHAR" property="productNo" />
+    <result column="PRODUCT_NAME" jdbcType="VARCHAR" property="productName" />
+    <result column="PRODUCT_DESC" jdbcType="VARCHAR" property="productDesc" />
+    <result column="SUPPLIER_PRICE" jdbcType="INTEGER" property="supplierPrice" />
+    <result column="RECHARGE_DURATION" jdbcType="INTEGER" property="rechargeDuration" />
+    <result column="RECHARGE_AMT" jdbcType="INTEGER" property="rechargeAmt" />
+    <result column="RECHARGE_TRAFFIC" jdbcType="INTEGER" property="rechargeTraffic" />
+    <result column="RECHARGE_NUMBER" jdbcType="INTEGER" property="rechargeNumber" />
+    <result column="SUPPLIER_PARAM" jdbcType="VARCHAR" property="supplierParam" />
+    <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="SERVICE_APPLICATION_PATH" jdbcType="VARCHAR" property="serviceApplicationPath" />
+    <result column="PRODUCT_SUB_TYPE" jdbcType="VARCHAR" property="productSubType" />
+    <result column="CONTENT_INDEX_URL" jdbcType="VARCHAR" property="contentIndexUrl" />
+  </resultMap>
+</mapper>

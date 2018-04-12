@@ -12,8 +12,7 @@ public class ServerPort implements ApplicationListener<EmbeddedServletContainerI
     @Override
     public void onApplicationEvent(EmbeddedServletContainerInitializedEvent event) {
         serverPort = String.valueOf(event.getEmbeddedServletContainer().getPort());
-        System.out.println(serverPort);
-  
+
     }
 
     public static String getPort() {

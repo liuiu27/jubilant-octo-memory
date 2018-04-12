@@ -1,18 +1,16 @@
 package com.cupdata.order.util;
 
 import com.cupdata.commons.constant.ModelConstants;
-import com.cupdata.commons.model.*;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.content.CreateContentOrderVo;
 import com.cupdata.commons.vo.content.ServiceOrderContent;
-
 import com.cupdata.commons.vo.product.ProductInfVo;
-import com.cupdata.order.feign.OrgSupplierClient;
+import com.cupdata.sip.common.dao.entity.OrgProductRela;
+import com.cupdata.sip.common.dao.entity.ServiceProduct;
+import com.cupdata.sip.common.lang.CommonUtils;
+import com.cupdata.sip.common.lang.DateTimeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Auth: LinYong
@@ -21,20 +19,17 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class OrderUtils {
 
-
-
-    private static final Logger logger = LoggerFactory.getLogger(OrderUtils.class);
-
     /**
      * 初始化订单
-     * @param orgNo 机构编号
-     * @param OrgOrderNo 机构订单编号
-     * @param orderDesc 订单描述
-     * @param product 服务商品
+     *
+     * @param orgNo          机构编号
+     * @param OrgOrderNo     机构订单编号
+     * @param orderDesc      订单描述
+     * @param product        服务商品
      * @param orgProductRela 机构、商品关系记录
      * @return
      */
-    public static ServiceOrder initServiceOrder(String supplierFlag , String orgNo, String OrgOrderNo, String orderDesc, ServiceProduct product, OrgProductRela orgProductRela){
+    public static ServiceOrder initServiceOrder(String supplierFlag, String orgNo, String OrgOrderNo, String orderDesc, ServiceProduct product, OrgProductRela orgProductRela) {
         ServiceOrder order = new ServiceOrder();
         order.setOrgNo(orgNo);
         order.setOrderSubType(product.getProductSubType());
@@ -50,14 +45,14 @@ public class OrderUtils {
         order.setOrderDesc(orderDesc);
         order.setOrderFailDesc(null);
         order.setSupplierFlag(supplierFlag);
-        order.setNodeName(CommonUtils.getHostAddress()+":"+ServerPort.getPort());
-        if (ModelConstants.PRODUCT_TYPE_VOUCHER.equals(product.getProductType())){//如果是券码商品
-        	if(StringUtils.isBlank(order.getNotifyUrl())) {
-        		 order.setIsNotify(ModelConstants.IS_NOTIFY_NO);
-        	}else {
-        		order.setIsNotify(ModelConstants.IS_NOTIFY_YES);
-        	}
-        } else if(ModelConstants.PRODUCT_TYPE_RECHARGE.equals(product.getProductType())){//如果是充值商品
+        order.setNodeName(CommonUtils.getHostAddress() + ":" + ServerPort.getPort());
+        if (ModelConstants.PRODUCT_TYPE_VOUCHER.equals(product.getProductType())) {//如果是券码商品
+            if (StringUtils.isBlank(order.getNotifyUrl())) {
+                order.setIsNotify(ModelConstants.IS_NOTIFY_NO);
+            } else {
+                order.setIsNotify(ModelConstants.IS_NOTIFY_YES);
+            }
+        } else if (ModelConstants.PRODUCT_TYPE_RECHARGE.equals(product.getProductType())) {//如果是充值商品
             order.setIsNotify(ModelConstants.IS_NOTIFY_YES);
         }
         order.setNotifyUrl(null);
@@ -66,11 +61,12 @@ public class OrderUtils {
 
     /**
      * 初始化券码订单
-     * @param order 主订单
+     *
+     * @param order     主订单
      * @param productNo 商品编号
      * @return
      */
-    public static ServiceOrderVoucher initVoucherOrder(ServiceOrder order, String productNo){
+    public static ServiceOrderVoucher initVoucherOrder(ServiceOrder order, String productNo) {
         ServiceOrderVoucher voucherOrder = new ServiceOrderVoucher();
         voucherOrder.setOrderId(order.getId());
         voucherOrder.setProductNo(productNo);
@@ -78,38 +74,38 @@ public class OrderUtils {
         voucherOrder.setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
         return voucherOrder;
     }
-    
+
     /**
      * 初始化内容引入订单
+     *
      * @param order
      * @param createContentOrderVo
      * @return
      */
-	public static ServiceOrderContent initContentOrder(ServiceOrder order,CreateContentOrderVo createContentOrderVo) {
-		ServiceOrderContent orderContent = new ServiceOrderContent();
-		orderContent.setOrderId(order.getId());
-		orderContent.setProductNo(createContentOrderVo.getProductNo());
-		orderContent.setOrgNo(createContentOrderVo.getOrgNo());
-		//TODO  获取供应商编号
-		orderContent.setSupNo("");
-		orderContent.setMobileNo(createContentOrderVo.getContentJumpReq().getMobileNo());
-		orderContent.setUserId(createContentOrderVo.getContentJumpReq().getUserId());
-		orderContent.setUserName(createContentOrderVo.getContentJumpReq().getUserName());
-		//供应商订单号
-		
-		
-		
-		
-		return null;
-	}
+    public static ServiceOrderContent initContentOrder(ServiceOrder order, CreateContentOrderVo createContentOrderVo) {
+        ServiceOrderContent orderContent = new ServiceOrderContent();
+        orderContent.setOrderId(order.getId());
+        orderContent.setProductNo(createContentOrderVo.getProductNo());
+        orderContent.setOrgNo(createContentOrderVo.getOrgNo());
+        //TODO  获取供应商编号
+        orderContent.setSupNo("");
+        orderContent.setMobileNo(createContentOrderVo.getContentJumpReq().getMobileNo());
+        orderContent.setUserId(createContentOrderVo.getContentJumpReq().getUserId());
+        orderContent.setUserName(createContentOrderVo.getContentJumpReq().getUserName());
+        //供应商订单号
+
+
+        return null;
+    }
 
     /**
      * 初始化充值订单
-     * @param order 主订单
+     *
+     * @param order     主订单
      * @param productNo 商品编号
      * @return
      */
-    public static ServiceOrderRecharge initRechargeOrder(String accountNumber,ProductInfVo productInfVo,ServiceOrder order, String productNo){
+    public static ServiceOrderRecharge initRechargeOrder(String accountNumber, ProductInfVo productInfVo, ServiceOrder order, String productNo) {
         ServiceOrderRecharge rechargeOrder = new ServiceOrderRecharge();
         rechargeOrder.setOrderId(order.getId());      //订单id
         rechargeOrder.setAccountNumber(accountNumber);//充值账号
@@ -123,14 +119,14 @@ public class OrderUtils {
     }
 
 
-
-        /**
+    /**
      * 生成订单编号
+     *
      * @return
      */
-    public static String generateOrderNo(){
+    private static String generateOrderNo() {
         return DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyMMddHHmmss") + CommonUtils.getRandomNum(8);
     }
 
-	
+
 }
