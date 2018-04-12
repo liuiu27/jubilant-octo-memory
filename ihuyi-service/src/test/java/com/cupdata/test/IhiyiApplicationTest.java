@@ -40,8 +40,8 @@ public class IhiyiApplicationTest {
         rechargeReq.setAccount("15737317830");           //充值账号
         rechargeReq.setOrgOrderNo("11111PH123456");           //唯一订单编号
         rechargeReq.setProductNo("171114R304");          //互亿话费充值产品编号
-        rechargeReq.setOrderDesc("互亿话费充值");
-        rechargeReq.setNotifyUrl("http://10.152.0.166:9030/givenOrg"); //通知地址
+        rechargeReq.setOrderDesc("互亿话费充值测试通知");
+        rechargeReq.setNotifyUrl("http://10.193.17.86:9030/givenOrg"); //通知地址
         rechargeReq.setRechargeAmt(20l); //话费充值
         String reqStr = JSONObject.toJSONString(rechargeReq);
         System.out.print("请求参数json字符串" + reqStr);
@@ -52,7 +52,7 @@ public class IhiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url3, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("互亿话费充值响应数据为" + res);
     }
 

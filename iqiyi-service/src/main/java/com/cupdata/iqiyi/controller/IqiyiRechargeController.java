@@ -151,7 +151,7 @@ public class IqiyiRechargeController implements IQiYiController {
             IqiyiRechargeRes res = IqiyiRechargeUtils.iqiyiRecharge(req,cacheFeignClient);
             long l2 = System.currentTimeMillis();
             log.info("爱奇艺会员充值工具类充值结果 : "+res.toString()+",调用爱奇艺充值接口时间:"+(l2-l1));
-            if(null == res || "A00000".equals(res.getCode())) {
+            if(null == res || !"A00000".equals(res.getCode())) {
                 log.error("爱奇艺会员充值失败，返回报文结果result非A00000-爱奇艺会员充值失败"+res);
 
                 //修改订单状态

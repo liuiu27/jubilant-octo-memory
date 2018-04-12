@@ -50,7 +50,7 @@ public class OrderUtils {
         order.setOrderDesc(orderDesc);
         order.setOrderFailDesc(null);
         order.setSupplierFlag(supplierFlag);
-        order.setNodeName(CommonUtils.getHostAddress()+":"+ServerPort.getPort());
+        order.setNodeName(CommonUtils.getHostAddress());
         if (ModelConstants.PRODUCT_TYPE_VOUCHER.equals(product.getProductType())){//如果是券码商品
         	if(StringUtils.isBlank(order.getNotifyUrl())) {
         		 order.setIsNotify(ModelConstants.IS_NOTIFY_NO);

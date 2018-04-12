@@ -72,6 +72,12 @@ logging:
 --- # 测试环境**********************************************************************************************************
 spring:
   profiles: test
+  datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+        username: resdb
+        password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
+        type: com.alibaba.druid.pool.DruidDataSource
 
 eureka:
   client:
@@ -108,6 +114,12 @@ hystrix:
 --- # 生产环境**********************************************************************************************************
 spring:
   profiles: prd
+  datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.100.249:3306/cupdresdb?useUnicode=true&characterEncoding=UTF-8
+        username: resdb
+        password: ENC(LwpHSjmwXgVYHjU1M9aZuA==)
+        type: com.alibaba.druid.pool.DruidDataSource
 
 eureka:
   client:
