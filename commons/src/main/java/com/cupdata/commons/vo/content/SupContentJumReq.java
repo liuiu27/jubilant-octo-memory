@@ -1,26 +1,23 @@
 package com.cupdata.commons.vo.content;
 
-import com.cupdata.commons.vo.BaseRequest;
-
-/**
- * @author liwei
- * @date   2018/3/8
- */
- 
 import lombok.Data;
 
+/**
+* @author 作者: liwei
+* @createDate 创建时间：2018年4月11日 下午6:18:41
+*/
 @Data
-public class ContentJumpReq extends BaseRequest{
+public class SupContentJumReq {
 	
-	/**
+	/***
 	 * 流水号
 	 */
 	private String sipTranNo;
 	
 	/**
-	 * 服务产品编号
+	 * 时间戳  
 	 */
-	private String productNo;
+	 private String timestamp;
 	
 	/**
 	 * 手机号码
@@ -51,5 +48,4 @@ public class ContentJumpReq extends BaseRequest{
 	 * 支付URL
 	 */
 	private String payUrl;
-	
 }

@@ -92,11 +92,11 @@ public class NotifyUtil {
 			PublicKey uppPubKey = RSAUtils.getPublicKeyFromString(pubKeyStr);
 			String reqStr = JSONObject.toJSONString(notifyToOrgVo);
 			String reqData = RSAUtils.encrypt(reqStr, uppPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
-			reqData = URLEncoder.encode(reqData);
+			reqData = URLEncoder.encode(reqData,"utf-8");
 			String merchantPriKeyStr = orgInfVo.getOrgInf().getSipPriKey();
 			PrivateKey merchantPriKey = RSAUtils.getPrivateKeyFromString(merchantPriKeyStr);
 			String authReqSign = RSAUtils.sign(reqStr, merchantPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
-			authReqSign = URLEncoder.encode(authReqSign);
+			authReqSign = URLEncoder.encode(authReqSign,"utf-8");
 			// 发送请求
 			log.info("dopost request url is " + voucherOrderVo.getOrder().getNotifyUrl() + "data is  " +  
 					reqData + "sign is " + authReqSign);
