@@ -1,35 +1,33 @@
 package com.cupdata.order.biz;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.cupdata.commons.vo.product.ProductInfVo;
-import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
-import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
-import com.cupdata.sip.common.api.product.response.ProductInfoVo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.cupdata.commons.biz.BaseBiz;
 import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.dao.BaseDao;
 import com.cupdata.commons.model.OrgProductRela;
-import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.model.ServiceOrderRecharge;
-import com.cupdata.commons.model.ServiceOrderVoucher;
 import com.cupdata.commons.model.ServiceProduct;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.content.CreateContentOrderVo;
 import com.cupdata.commons.vo.content.ServiceOrderContent;
 import com.cupdata.commons.vo.order.ServiceOrderList;
+import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.product.VoucherOrderVo;
-import com.cupdata.order.dao.ServiceOrderDao;
-import com.cupdata.order.dao.ServiceOrderRechargeDao;
-import com.cupdata.order.dao.ServiceOrderVoucherDao;
 import com.cupdata.order.util.OrderUtils;
+import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
+import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
+import com.cupdata.sip.common.api.product.response.ProductInfoVo;
+import com.cupdata.sip.common.dao.entity.ServiceOrder;
+import com.cupdata.sip.common.dao.entity.ServiceOrderVoucher;
+import com.cupdata.sip.common.dao.mapper.ServiceOrderMapper;
+import com.cupdata.sip.common.dao.mapper.ServiceOrderRechargeMapper;
+import com.cupdata.sip.common.dao.mapper.ServiceOrderVoucherMapper;
+import com.cupdata.sip.common.lang.BeanCopierUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Auth: LinYong
@@ -40,18 +38,13 @@ import com.cupdata.order.util.OrderUtils;
 public class ServiceOrderBiz {
 
     @Autowired
-    private ServiceOrderDao orderDao;
+    private ServiceOrderMapper orderDao;
 
     @Autowired
-    private ServiceOrderVoucherDao orderVoucherDao;
+    private ServiceOrderVoucherMapper orderVoucherDao;
 
     @Autowired
-	private ServiceOrderRechargeDao orderRechargeDao;
-
-    @Override
-    public BaseDao<ServiceOrder> getBaseDao() {
-        return orderDao;
-    }
+	private ServiceOrderRechargeMapper orderRechargeDao;
 
     /**
      * 根据订单状态、订单子类型列表、商户标识查询服务订单列表
@@ -94,8 +87,20 @@ public class ServiceOrderBiz {
     }
 
 
-    //创建券码订单
+    /**
+     * 创建券码订单
+     * @param supplierFlag
+     * @param orgNo
+     * @param orgOrderNo
+     * @param orderDesc
+     * @param voucherProduct
+     * @param orgProductRela
+     * @return
+     */
+    @Transactional
     public VoucherOrderVo createVoucherOrder(String supplierFlag, String orgNo, String orgOrderNo, String orderDesc, ProductInfoVo voucherProduct, OrgProductRelVo orgProductRela){
+        VoucherOrderVo voucherOrderVo =new VoucherOrderVo();
+
         //初始化主订单记录
         ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,orgNo, orgOrderNo, orderDesc, voucherProduct, orgProductRela);
         orderDao.insert(order);//插入主订单
@@ -103,7 +108,11 @@ public class ServiceOrderBiz {
         //初始化券码订单
         ServiceOrderVoucher voucherOrder = OrderUtils.initVoucherOrder(order, voucherProduct.getProductNo());
         orderVoucherDao.insert(voucherOrder);//插入券码订单
-        return voucherOrder;
+
+        BeanCopierUtils.copyProperties(order,voucherOrderVo);
+        BeanCopierUtils.copyProperties(voucherOrder,voucherOrderVo);
+
+        return voucherOrderVo;
     }
 
 
@@ -154,21 +163,21 @@ public class ServiceOrderBiz {
     }
 
 
-	public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
-		BaseResponse<VoucherOrderVo> res = new BaseResponse<>();
-		VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
-		Map<String, Object> paramMap = new HashMap<String,Object>();
-		paramMap.put("orgNo", orgNo);
-		paramMap.put("orgOrderNo", orgOrderNo);
-    	ServiceOrder order = orderDao.selectSingle(paramMap);
-    	if(null == order) {
-    		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
-			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
-			return res;
-    	}
+	public VoucherOrderVo getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
+        VoucherOrderVo voucherOrderVo = new VoucherOrderVo();
+
+        ServiceOrder serviceOrder =new ServiceOrder();
+        serviceOrder.setOrgNo(orgNo);
+        serviceOrder.setOrgOrderNo(orgOrderNo);
+
+        serviceOrder = orderDao.selectOne(serviceOrder);
+
     	paramMap.clear();
     	paramMap.put("orderId", order.getId());
-    	ServiceOrderVoucher voucherOrder =  orderVoucherDao.selectSingle(paramMap);
+    	ServiceOrderVoucher voucherOrder =  new ServiceOrderVoucher();
+        voucherOrder.setOrderId(serviceOrder.getId());
+
+                orderVoucherDao.selectSingle(paramMap);
     	if(null == voucherOrder) {
     		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());

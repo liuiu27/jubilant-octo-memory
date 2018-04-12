@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cupdata.sip.common.dao.mapper.ServiceOrderVoucherMapper">
+  <resultMap id="BaseResultMap" type="com.cupdata.sip.common.dao.entity.ServiceOrderVoucher">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="ORDER_ID" jdbcType="VARCHAR" property="orderId" />
+    <result column="PRODUCT_NO" jdbcType="VARCHAR" property="productNo" />
+    <result column="VOUCHER_CODE" jdbcType="VARCHAR" property="voucherCode" />
+    <result column="VOUCHER_PASSWORD" jdbcType="VARCHAR" property="voucherPassword" />
+    <result column="QR_CODE_URL" jdbcType="VARCHAR" property="qrCodeUrl" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="USER_MOBILE_NO" jdbcType="VARCHAR" property="userMobileNo" />
+    <result column="USE_TIME" jdbcType="TIMESTAMP" property="useTime" />
+    <result column="USE_PLACE" jdbcType="VARCHAR" property="usePlace" />
+    <result column="USE_STATUS" jdbcType="CHAR" property="useStatus" />
+    <result column="EFF_STATUS" jdbcType="CHAR" property="effStatus" />
+    <result column="START_DATE" jdbcType="VARCHAR" property="startDate" />
+    <result column="END_DATE" jdbcType="VARCHAR" property="endDate" />
+    <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+</mapper>

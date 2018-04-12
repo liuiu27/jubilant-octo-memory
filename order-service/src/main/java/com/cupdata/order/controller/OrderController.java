@@ -17,6 +17,8 @@ import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.exception.ErrorException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +39,7 @@ public class OrderController implements IOrderController {
     @Resource
     private ProductFeignClient productFeignClient;
 
-
+    @Resource
     private ServiceOrderBiz orderBiz;
 
     @Override
@@ -105,8 +107,23 @@ public class OrderController implements IOrderController {
     }
 
     @Override
-    public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
-        return null;
+    public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(@PathVariable("orgNo") String orgNo, @PathVariable("orgOrderNo") String orgOrderNo) {
+        log.info("OrderController getVoucherOrderByOrgNoAndOrgOrderNo is begin orgNo is" + orgNo + "orgOrderNo is" + orgOrderNo);
+        try {
+            BaseResponse<VoucherOrderVo> response = new BaseResponse<>();
+            if (StringUtils.isBlank(orgNo) || StringUtils.isBlank(orgOrderNo)) {
+                response.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
+                response.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
+                return response;
+            }
+            VoucherOrderVo voucherOrderVo = orderBiz.getVoucherOrderByOrgNoAndOrgOrderNo(orgNo, orgOrderNo);
+            response.setData(voucherOrderVo);
+            return response;
+        } catch (Exception e) {
+            log.error("error is " + e.getMessage());
+            throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+        }
+
     }
 
     @Override

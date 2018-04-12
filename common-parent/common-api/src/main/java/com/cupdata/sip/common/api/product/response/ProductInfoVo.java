@@ -44,7 +44,7 @@ public class ProductInfoVo {
      *供应商价格
      * 单位：人民币-分
      */
-    private Long supplierPrice;
+    private Integer supplierPrice;
 
     /**
      *充值开通时长

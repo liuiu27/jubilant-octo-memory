@@ -1,16 +1,17 @@
 package com.cupdata.order.util;
 
-import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.vo.content.CreateContentOrderVo;
 import com.cupdata.commons.vo.content.ServiceOrderContent;
 import com.cupdata.commons.vo.product.ProductInfVo;
-import com.cupdata.sip.common.dao.entity.OrgProductRela;
-import com.cupdata.sip.common.dao.entity.ServiceProduct;
+import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
+import com.cupdata.sip.common.api.product.response.ProductInfoVo;
+import com.cupdata.sip.common.dao.entity.ServiceOrder;
+import com.cupdata.sip.common.dao.entity.ServiceOrderRecharge;
+import com.cupdata.sip.common.dao.entity.ServiceOrderVoucher;
 import com.cupdata.sip.common.lang.CommonUtils;
 import com.cupdata.sip.common.lang.DateTimeUtil;
+import com.cupdata.sip.common.lang.constant.ModelConstants;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @Auth: LinYong
@@ -29,7 +30,7 @@ public class OrderUtils {
      * @param orgProductRela 机构、商品关系记录
      * @return
      */
-    public static ServiceOrder initServiceOrder(String supplierFlag, String orgNo, String OrgOrderNo, String orderDesc, ServiceProduct product, OrgProductRela orgProductRela) {
+    public static ServiceOrder initServiceOrder(String supplierFlag, String orgNo, String OrgOrderNo, String orderDesc, ProductInfoVo product, OrgProductRelVo orgProductRela) {
         ServiceOrder order = new ServiceOrder();
         order.setOrgNo(orgNo);
         order.setOrderSubType(product.getProductSubType());
@@ -40,7 +41,7 @@ public class OrderUtils {
         order.setOrgPrice(orgProductRela.getOrgPrice());
         order.setSupplierPrice(product.getSupplierPrice());
         order.setSettleDate(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMdd"));
-        order.setOrderStatus(ModelConstants.ORDER_STATUS_INITIAL);
+        order.setOrderStatus(ModelConstants.ORDER_STATUS_INITIAL.toString());
         order.setOrderType(product.getProductType());
         order.setOrderDesc(orderDesc);
         order.setOrderFailDesc(null);
@@ -48,12 +49,12 @@ public class OrderUtils {
         order.setNodeName(CommonUtils.getHostAddress() + ":" + ServerPort.getPort());
         if (ModelConstants.PRODUCT_TYPE_VOUCHER.equals(product.getProductType())) {//如果是券码商品
             if (StringUtils.isBlank(order.getNotifyUrl())) {
-                order.setIsNotify(ModelConstants.IS_NOTIFY_NO);
+                order.setIsNotify(String.valueOf(ModelConstants.IS_NOTIFY_NO));
             } else {
-                order.setIsNotify(ModelConstants.IS_NOTIFY_YES);
+                order.setIsNotify(String.valueOf(ModelConstants.IS_NOTIFY_YES));
             }
         } else if (ModelConstants.PRODUCT_TYPE_RECHARGE.equals(product.getProductType())) {//如果是充值商品
-            order.setIsNotify(ModelConstants.IS_NOTIFY_YES);
+            order.setIsNotify(String.valueOf(ModelConstants.IS_NOTIFY_YES));
         }
         order.setNotifyUrl(null);
         return order;

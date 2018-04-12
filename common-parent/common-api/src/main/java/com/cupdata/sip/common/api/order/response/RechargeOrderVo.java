@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2018/04/11
  */
 @Data
-public class RechargeOrderVo extends OrderInfoVo {
+public class RechargeOrderVo {
 
     /**
      * 主订单ID
@@ -54,5 +54,10 @@ public class RechargeOrderVo extends OrderInfoVo {
      */
     private String gameServer;
 
+    /**
+     *
+     * 主订单信息
+     */
+    private OrderInfoVo orderInfoVo;
 
 }

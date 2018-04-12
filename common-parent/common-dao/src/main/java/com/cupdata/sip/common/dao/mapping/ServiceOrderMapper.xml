@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cupdata.sip.common.dao.mapper.ServiceOrderMapper">
+  <resultMap id="BaseResultMap" type="com.cupdata.sip.common.dao.entity.ServiceOrder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="ORG_NO" jdbcType="VARCHAR" property="orgNo" />
+    <result column="SUPPLIER_NO" jdbcType="VARCHAR" property="supplierNo" />
+    <result column="ORDER_NO" jdbcType="VARCHAR" property="orderNo" />
+    <result column="ORG_ORDER_NO" jdbcType="VARCHAR" property="orgOrderNo" />
+    <result column="SUPPLIER_ORDER_NO" jdbcType="VARCHAR" property="supplierOrderNo" />
+    <result column="ORG_PRICE" jdbcType="INTEGER" property="orgPrice" />
+    <result column="SUPPLIER_PRICE" jdbcType="INTEGER" property="supplierPrice" />
+    <result column="SETTLE_DATE" jdbcType="VARCHAR" property="settleDate" />
+    <result column="ORDER_STATUS" jdbcType="CHAR" property="orderStatus" />
+    <result column="ORDER_TYPE" jdbcType="VARCHAR" property="orderType" />
+    <result column="ORDER_DESC" jdbcType="VARCHAR" property="orderDesc" />
+    <result column="ORDER_FAIL_DESC" jdbcType="VARCHAR" property="orderFailDesc" />
+    <result column="IS_NOTIFY" jdbcType="CHAR" property="isNotify" />
+    <result column="NOTIFY_URL" jdbcType="VARCHAR" property="notifyUrl" />
+    <result column="NODE_NAME" jdbcType="VARCHAR" property="nodeName" />
+    <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy" />
+    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy" />
+    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="ORDER_SUB_TYPE" jdbcType="VARCHAR" property="orderSubType" />
+    <result column="SUPPLIER_FLAG" jdbcType="VARCHAR" property="supplierFlag" />
+  </resultMap>
+
+
+    <select id="selectMainOrderList" resultMap="BaseResultMap" parameterType="map">
+
+
+    </select>
+</mapper>

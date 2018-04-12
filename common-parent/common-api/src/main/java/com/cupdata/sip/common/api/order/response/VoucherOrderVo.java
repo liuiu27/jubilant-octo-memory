@@ -9,7 +9,7 @@ import java.util.Date;
  * @date 2018/04/11
  */
 @Data
-public class VoucherOrderVo extends OrderInfoVo {
+public class VoucherOrderVo {
 
     /**
      * 主订单id
@@ -75,4 +75,10 @@ public class VoucherOrderVo extends OrderInfoVo {
      * 结束时间
      */
     private String endDate;
+
+    /**
+     *
+     * 主订单信息
+     */
+    private OrderInfoVo orderInfoVo;
 }
