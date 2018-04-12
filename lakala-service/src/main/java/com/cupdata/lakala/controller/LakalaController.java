@@ -78,8 +78,10 @@ public class LakalaController implements ILakalaController{
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
                 return getVoucherRes;
             }
+
             //调用拉卡拉券码工具类获取券码,从请求体中获取需要传递的参数：手机号，订单号，业务参数，订单描述
             LakalaVoucherRes lakalaVoucherRes = LakalaVoucherUtil.obtainvValidTicketNo(voucherReq.getMobileNo(),voucherOrderRes.getData().getOrder().getOrderNo(),productInfo.getData().getProduct().getSupplierParam(),voucherReq.getOrderDesc(),cacheFeignClient);
+
             //对返回数据进行异常处理
             if (null == lakalaVoucherRes || !lakalaVoucherRes.getRes()){
                 log.info("lakala获取券码controller:券码获取失败");

@@ -56,6 +56,7 @@ public class TencentController implements ITencentController{
        log.info("调用腾讯充值controller......org:"+org+",Account:"+rechargeReq.getAccount()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo()+",ProductNo:"+rechargeReq.getProductNo()+",MobileNo:"+rechargeReq.getMobileNo());
         //设置响应结果
         BaseResponse<RechargeRes> rechargeRes = new BaseResponse<RechargeRes>();
+        RechargeRes res = new RechargeRes();
         try {
             //根据服务产品编号查询对应的服务产品
             log.info("根据服务产品编号查询对应的服务产品");
@@ -144,6 +145,12 @@ public class TencentController implements ITencentController{
                 //QQ会员充值失败，设置错误状态码和错误信息，给予返回
                 rechargeRes.setResponseCode(QQRechargeResCode.QQMEMBER_RECHARGE_FAIL.getCode());
                 rechargeRes.setResponseMsg(QQRechargeResCode.QQMEMBER_RECHARGE_FAIL.getMsg());
+
+                //封装返回数据
+                log.error("腾讯充值失败");
+                res.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo());  //平台单号
+                res.setRechargeStatus(ModelConstants.RECHARGE_FIAL); //充值状态:F
+                rechargeRes.setData(res);
                 return rechargeRes;
             }
 
@@ -165,16 +172,16 @@ public class TencentController implements ITencentController{
 
             //充值成功,响应用户
             log.info("腾讯充值controller充值成功,响应用户");
-            RechargeRes res = new RechargeRes();
             res.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo()); //平台单号
-            res.setRechargeStatus(ModelConstants.RECHARGE_SUCCESS);             //充值状态
+            res.setRechargeStatus(ModelConstants.RECHARGE_SUCCESS);             //充值状态:S
             rechargeRes.setData(res);
+            return rechargeRes;
         }catch (Exception e){
             log.info("腾讯充值业务出现异常"+e.getMessage());
             rechargeRes.setResponseCode(QQRechargeResCode.QQRECHARGE_EXCEPTION.getCode());
             rechargeRes.setResponseMsg(QQRechargeResCode.QQRECHARGE_EXCEPTION.getMsg());
             return rechargeRes;
         }
-        return rechargeRes;
+
     }
 }

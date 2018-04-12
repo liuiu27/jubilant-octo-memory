@@ -64,7 +64,6 @@ public class ServiceOrderBiz extends BaseBiz<ServiceOrder>{
         paramMap.put("orderSubType", orderSubType);
         List<ServiceOrder> orderList = orderDao.selectMainOrderList(paramMap);
         return orderList;
-
     }
 
     /**

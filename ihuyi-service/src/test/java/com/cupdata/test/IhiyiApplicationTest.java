@@ -38,7 +38,7 @@ public class IhiyiApplicationTest {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("15737317830");           //充值账号
-        rechargeReq.setOrgOrderNo("PH123456");           //唯一订单编号
+        rechargeReq.setOrgOrderNo("11111PH123456");           //唯一订单编号
         rechargeReq.setProductNo("171114R304");          //互亿话费充值产品编号
         rechargeReq.setOrderDesc("互亿话费充值");
         rechargeReq.setNotifyUrl("http://10.152.0.166:9030/givenOrg"); //通知地址

@@ -1,17 +1,5 @@
 package com.cupdata.order.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.api.order.IOrderController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -19,6 +7,7 @@ import com.cupdata.commons.exception.ErrorException;
 import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.model.ServiceOrderRecharge;
 import com.cupdata.commons.model.ServiceOrderVoucher;
+import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.content.ContentQueryOrderReq;
 import com.cupdata.commons.vo.content.ContentQueryOrderRes;
@@ -34,8 +23,17 @@ import com.cupdata.order.biz.ServiceOrderBiz;
 import com.cupdata.order.biz.ServiceOrderContentBiz;
 import com.cupdata.order.feign.ProductFeignClient;
 import com.cupdata.order.feign.SupplierFeignClient;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -281,10 +279,10 @@ public class OrderController implements IOrderController {
 		    BaseResponse<RechargeOrderVo> rechargeOrderRes = new BaseResponse<RechargeOrderVo>();
 
 		    //根据产品编号，查询服务产品信息
-	        BaseResponse<ProductInfVo> productInfRes = productFeignClient
-	                .findByProductNo(createRechargeOrderVo.getProductNo());
+	        BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(createRechargeOrderVo.getProductNo());
 	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
-	                || null == productInfRes.getData()) {// 如果查询失败
+	                || null == productInfRes.getData()) {
+	        	log.error("根据产品编号查询服务产品信息失败");
 	            rechargeOrderRes.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
 	            rechargeOrderRes.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
 	            return rechargeOrderRes;
@@ -293,21 +291,22 @@ public class OrderController implements IOrderController {
 
 	        //获取商户标识
             BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getProduct().getSupplierNo());
-	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(SupplierInfVo.getResponseCode())
-					|| null == SupplierInfVo.getData()){
+	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(SupplierInfVo.getResponseCode()) || null == SupplierInfVo.getData()
+                    || CommonUtils.isNullOrEmptyOfObj(SupplierInfVo.getData().getSuppliersInf().getSupplierFlag())){
 				log.error("找不到商户标识,请在系统字典中配置商户标识");
 				rechargeOrderRes.setResponseCode(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getCode());
 				rechargeOrderRes.setResponseMsg(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getMsg());
 				return rechargeOrderRes;
 			}
-	        String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
+            String supplierFlag = SupplierInfVo.getData().getSuppliersInf().getSupplierFlag();
             log.info("get supplierFlag from supplierInfVo:"+supplierFlag);
 
-	        // 查询机构、商品关系记录
+	        //查询机构、商品关系记录
 	        BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createRechargeOrderVo.getOrgNo(),
 	                createRechargeOrderVo.getProductNo());
 	        if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
 	                || null == orgProductRelRes.getData()) {// 如果查询失败
+                log.error("机构商品关系查询失败");
 	            rechargeOrderRes.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
 	            rechargeOrderRes.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
 	            return rechargeOrderRes;
@@ -317,7 +316,8 @@ public class OrderController implements IOrderController {
 	        ServiceOrderRecharge rechargeOrder = orderBiz.createRechargeOrder(createRechargeOrderVo.getAccountNumber(),productInfRes.getData(),supplierFlag,createRechargeOrderVo.getOrgNo(),
 	                createRechargeOrderVo.getOrgOrderNo(), createRechargeOrderVo.getOrderDesc(),
 	                productInfRes.getData().getProduct(), orgProductRelRes.getData().getOrgProductRela());
-	        if (null == rechargeOrder) {// 创建券码订单失败
+	        if (null == rechargeOrder) {
+                log.error("充值订单创建失败");
 	            rechargeOrderRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
 	            rechargeOrderRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
 	            return rechargeOrderRes;

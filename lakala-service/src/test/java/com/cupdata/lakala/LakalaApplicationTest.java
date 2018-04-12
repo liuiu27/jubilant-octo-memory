@@ -45,6 +45,14 @@ public class LakalaApplicationTest {
         String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
 
+        String[] split = res.split("&sign=");
+        String s1 = (String)split[0].replace("data=","");
+
+        //解密数据
+        String s = URLDecoder.decode(s1,"utf-8");
+        String plain = RSAUtils.decrypt(s,orgPriKey,RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+        System.out.print("响应明文:"+plain);
+
 
         /*String text = "Qhtcb2ZfMGYJJRW3LulDRKlAlhyvd6dFFNUYJTNf0CB0UaLDHifrer0t759YTVYZUoa53dG4jh635xfJLrumI2HD8uPabCnhg0ptOLG7+h3hQ2lc1Itz1WpgcbPJeJY6COZlwACLfY55vdMrPrGjeG2n3UE2i22F0KVXUbbYYz969BIWMsBuufprOUcLhb5XIpC5YfUIL6PzPuYEbOa3UqNcV1VAIx6TEplpJ4i/CxyOzdGaWJJz5HBIUrWHEzuJNGacFJoC2UnYxrXaAMUWG73sbtyW6echLioTrkdYwZN1QZVR8JdpGYRQHenfKWcNLMqk2B0umpCvL5BgmTfHRQ==";
         //String pub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDU9lc4kI7+HR1fAArR3SzpnVfp9ihj7t6Ta5EeC70hgg7GK2tDZwvvwXwukD+RMGr3e5o9cOXRL/785CHcJYNbU4zmKweBpzEL4097UbI2Yracs6BCej4zH7dUTqVPi2/8EJwsKFpXILFMBCjKLNkhYFwmkqHbf710XC9BE4JLBQIDAQAB";
