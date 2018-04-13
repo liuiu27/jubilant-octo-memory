@@ -2,9 +2,10 @@ package com.cupdata.sip.common.lang.utils;
 
 import com.cupdata.sip.common.lang.constant.TimeConstants;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.lang3.StringUtils;
-
 import javax.servlet.http.HttpServletRequest;
+import java.beans.PropertyDescriptor;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -562,5 +563,80 @@ public class CommonUtils {
 		log.info("timestamp : "+timestamp);
 		return timestamp;
 	}
+
+    /**
+     * 将javabean转为map类型，然后返回一个map类型的值
+     * @param obj
+     * @return
+     */
+    public static Map<String, Object> beanToMap(Object obj) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        try {
+            PropertyUtilsBean propertyUtilsBean = new PropertyUtilsBean();
+            PropertyDescriptor[] descriptors = propertyUtilsBean.getPropertyDescriptors(obj);
+            for (int i = 0; i < descriptors.length; i++) {
+                String name = descriptors[i].getName();
+                if (!StringUtils.equals(name, "class")) {
+                    params.put(name, propertyUtilsBean.getNestedProperty(obj, name));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
+    /**
+     * 将javabean转为字符串，javabean中的属性仅支持java基本类型
+     * 举例：如果bean的属性包括：(long)id、(String)name、(int)age、(String)sex、(String)remark，属性值分别为1001、lion、26、male（其中remark属性的值为空）
+     * kvSqp为=，sep为|，order为asc，isFilterNull为true，ignoreKey为id
+     * 则最终生成的字符串为age=26|name=lion|sex=male
+     * @param obj bean对象
+     * @param kvSep key（属性名）和value（属性值）之间的分隔符，可以为空字符串或者null
+     * @param sep 分隔符，可以为空，可以为空字符串或者null
+     * @param order 排序标识，支持asc升序以及desc降序，根据key（属性名）字母进行排序，如果为null，则不保证按照一定顺序排列
+     * @param isFilterNull 是否过滤属性值为null的属性，如果为true则进行过滤空值，否则不进行过滤
+     * @param ignoreKeys 忽略的key（属性名）数组，可以为空
+     * @return
+     */
+    public static String beanToString(Object[] objs, String kvSep, String sep, String order, boolean isFilterNull, String[] ignoreKeys){
+        //如果kvSep或者sep为null，则转换成空字符串
+        if(kvSep == null){
+            kvSep = "";
+        }
+        if(sep == null){
+            sep = "";
+        }
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        if(objs == null || objs.length == 0){
+            return null;
+        }
+        for(Object obj : objs){
+            if(obj != null){
+                params.putAll(beanToMap(obj));
+            }
+        }
+        Map<String, Object> beanSortedMap = sortMapByKey(params, order);
+        StringBuffer beanString = new StringBuffer();//bean转化成的字符串
+        for(Map.Entry<String, Object> entry : beanSortedMap.entrySet()){
+            //判断key是否在忽略的key数组中，如果不在，才能进行字符串拼接
+            if(!isStrArrayContainsStr(ignoreKeys, entry.getKey())){
+                if(!isNullOrEmptyOfObj(entry.getValue())){//如果value不为null
+                    beanString.append(entry.getKey() + kvSep + String.valueOf(entry.getValue()) + sep);
+                }else if(isNullOrEmptyOfObj(entry.getValue()) && !isFilterNull){//如果value为空以及isFilterNull为true
+                    beanString.append(entry.getKey() + kvSep + sep);
+                }
+            }
+        }
+        //去除字符串结尾多余的一个sep
+        if(beanString.length() > 0){
+            beanString.delete(beanString.length() - sep.length(), beanString.length());
+        }
+        log.info("将bean对象转换成字符串为" + beanString.toString());
+        return beanString.toString();
+    }
+
+
 
 }

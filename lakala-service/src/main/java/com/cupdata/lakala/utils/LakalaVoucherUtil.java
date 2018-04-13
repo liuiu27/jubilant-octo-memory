@@ -12,8 +12,6 @@ import com.cupdata.sip.common.lang.utils.DateTimeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.log4j.Logger;
-import org.bouncycastle.jcajce.provider.asymmetric.util.DESUtil;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,14 +46,14 @@ public class LakalaVoucherUtil {
 				partner_id = "unionpay";
 			}else{
 				//判空处理
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_VOUCHER_PARTNER").getData())){
+				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_VOUCHER_PARTNER"))){
 					//打印日志并设置响应结果:合作商户信息获取失败
 					log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
 					lakalaVoucherRes.setRes(false);
 					return lakalaVoucherRes;
 				}
 				//从配置信息表中根据银行号和合作方参数来获得指定的合作商户信息
-				partner_id = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_VOUCHER_PARTNER").getData().getSysConfig().getParaValue();
+				partner_id = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_VOUCHER_PARTNER").getParaValue();
 			}
 			
 			Long time = CommonUtils.getLongValue((DateTimeUtil.getCurrentTime().getTime() / 1000 / 600) * 600);
