@@ -124,8 +124,8 @@ public class OrgContentController{
 
 				//不为空查询数据库
 				Map<String, Object> paramMap = new HashMap<String,Object>();
-				paramMap.put("TRAN_NO", sipTranNo);
-				paramMap.put("TRAN_TYPE", ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+				paramMap.put("tranNo", sipTranNo);
+				paramMap.put("tranType", ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 				ContentTransaction contentTransaction = contentBiz.selectSingle(paramMap);
 				if (null != contentTransaction) {
 					// 查到数据判断时间戳是否超时
