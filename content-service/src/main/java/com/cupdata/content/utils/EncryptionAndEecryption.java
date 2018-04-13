@@ -26,9 +26,9 @@ public class EncryptionAndEecryption {
 			String authReqSign = RSAUtils.sign(reqStr, merchantPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
 			authReqSign = URLEncoder.encode(authReqSign);
 			if(url.indexOf("?") == -1) {
-				url += url + "?";
+				url = url + "?";
 			}else {
-				url += url + "&";
+				url = url + "&";
 			}
 			url = url + "data=" + reqData + "&sign=" + authReqSign;
 		} catch (Exception e) {
