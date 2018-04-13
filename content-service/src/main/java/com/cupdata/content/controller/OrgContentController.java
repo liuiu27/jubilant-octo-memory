@@ -104,7 +104,7 @@ public class OrgContentController{
 //				res.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
 //				res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
 //			}
-//			
+			String supUrl = "https://test.wantu.cn/v2/m/?channel=rongshu";
 //			//Step5 :   判断流水号  如果为空创建 新的
 			String sipTranNo = contentJumpReq.getSipTranNo();
 			if(StringUtils.isBlank(sipTranNo)){
@@ -142,6 +142,15 @@ public class OrgContentController{
 						String requestInfo = JSONObject.toJSONString(contentJumpReq);
 						contentTransaction.setRequestInfo(requestInfo);
 						contentBiz.update(contentTransaction);
+						//查询是否存在callback地址
+						paramMap.clear();
+						paramMap.put("tranNo", sipTranNo);
+						paramMap.put("tranType", ModelConstants.CONTENT_TYPE_TO_LOGGED);
+						contentTransaction = contentBiz.selectSingle(paramMap);
+						if(null != contentTransaction) {
+							JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
+							supUrl = resJson.getString("callBackUrl");
+						}
 					} else {
 						// 超时 抛出异常
 						res.setResponseCode(ResponseCodeMsg.TIMESTAMP_TIMEOUT.getCode());
@@ -169,8 +178,8 @@ public class OrgContentController{
 			jumReq.setTimestamp(timestamp);
 			jumReq.setUserId(contentJumpReq.getUserId());
 			jumReq.setUserName(contentJumpReq.getUserName());
-			String url = EncryptionAndEecryption.Encryption(jumReq, "https://test.wantu.cn/v2/m/?channel=rongshu");
-			StringBuffer ret = new StringBuffer("redirect:" + url);
+			
+			StringBuffer ret = new StringBuffer("redirect:" + supUrl);
 		    return ret.toString();
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
