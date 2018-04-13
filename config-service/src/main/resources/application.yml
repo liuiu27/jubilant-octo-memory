@@ -11,8 +11,19 @@ logging:
 
 #mybatis相关配置
 mybatis:
-    type-aliases-package: com.cupdata.commons.model
-    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: com.cupdata.sip.common.dao.entity
+    mapper-locations: com/cupdata/sip/common/dao/mapping/*.xml
+mapper:
+    mappers:
+        - tk.mybatis.mapper.common.Mapper
+    not-empty: false
+    identity: MYSQL
+    before: true
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
 
 jasypt:
   encryptor:

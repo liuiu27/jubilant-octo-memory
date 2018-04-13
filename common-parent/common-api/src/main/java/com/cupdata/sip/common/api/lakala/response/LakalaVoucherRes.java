@@ -7,8 +7,6 @@
  */
 package com.cupdata.sip.common.api.lakala.response;
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.util.List;
 
 /**
@@ -200,10 +198,4 @@ public class LakalaVoucherRes {
         }
     }
 
-
-    public static void main(String[] args) {
-        String jsonStr = "{\"res\":true,\"data\":{\"order_id\":\"123123123123\",\"voucherList\":[{\"voucher_num\":\"123213213\",\"price\":\"20.00\",\"end_time\":\"2017-05-04\"}]},\"message\":{\"code\":\"001\",\"mes\":\"支付失败-用户取消\"}}";
-        LakalaVoucherRes voucherRes = JSONObject.parseObject(jsonStr, LakalaVoucherRes.class);
-        System.out.println(voucherRes.getRes() + "   " + voucherRes.getData().getOrder_id());
-    }
 }
