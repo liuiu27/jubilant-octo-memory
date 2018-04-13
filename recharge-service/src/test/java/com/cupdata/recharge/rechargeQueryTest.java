@@ -24,36 +24,34 @@ public class rechargeQueryTest {
     @Test
     public void rechargeTest() throws Exception {
         //充值结果查询网关URL
-        String url = "http://localhost:46959/recharge/query/rechargeQuery";
+        String url1 = "http://localhost:46959/recharge/query/rechargeQuery";
         String url2 = "http://cvpa.leagpoint.com/sipService/recharge/query/rechargeQuery";
+        String url3 = "https://onlinepay.cupdata.com/sipService/recharge/query/rechargeQuery";
+
         //请求参数
-        String org = "20180409O75853744";
+        String org = "20180412O86740479";
         RechargeQueryReq req = new RechargeQueryReq();
         req.setOrgOrderNo("180410AD054578");
         req.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         String reqStr = JSONObject.toJSONString(req);
         System.out.print("请求参数json字符串" + reqStr);
-        String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
-        String orgPriKeyStr = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALrk2X2VGzNigTxGoSuyoN33Mi2/7UIePZIZVkyFgMT/bJiXyQa5FE5+pN5y/CugDdNWYyp7jpLPxczzBd8t7DuyXo5rPD6GxSJhLTaXfdJYmAnxdW2s30X+RDy0dKqxc2oPyCOmAfR9JnV+qgNbd9aOvdlHWkO8cIvwWVScQRwRAgMBAAECgYA5SGFc+3Gd20hPKDrIAPULc3O+z/+xb0Fh4UAxLg4c00j+sC8eT2Xo9SolQEsIOANkziqQ39QALYyr16TqFdI8pywmHFICisiyjKf7nIiqUfi9rVoUCiCxXrhwSmBwkGELcUcBhNupc7Bgqo7uCK+l1g8Qzj+oNtBMfv7sZrj8rQJBAPB0uIyV9ilF0QBFlQ4AaLuhKhqY9oX/vkMTspTpBkpaOv8QeOc6T+9DJAoLjkLlkXEfsLC14AHb4LdZV/kjdyMCQQDG+byuNLe3kqWqo1ecrf8mUw9tIquUkarWU0FuO9ysGjfrLdMLlsn3wlsxddU7rIelYwnLKBYBqdIkCuQiRq07AkEA1Fceyfd75EKlKEpKMI0n79mIpuhBe1+2kuGIKHwHdA1uX+QaAIe8Ixv1bXF69ZRo9a74h3R1Fu8m6ILbb0VkZQJARBcUPV0m/Xf+n000Xxaf+OJ1pfg2VSogFyX4fxuXIYH7XsyYqx+Xz+Q/xsY3CSu6Y5tnr5DxLvKJSfI8LYqYHwJBAIaXJcKpCQSsQQ+Eu8ib861dJWV4vP1jAt9xyeU90nyz5GMwWrWkQ/DkHedDVhyCURpxZTaqKpGnr9iIDIjVrD0=";
+
+        //秘钥
+        String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8gw6++UfAuEH7jwdL0zj6vGWi2WhS3mOyQpED/DSOWIetSVW5UJ22EvWzfBl38nDMxRgfkqqEA3fBunhJHl2TdoWFcNV8z3wSdSaqEi+2u49JZbGP5oy8wOnLLD1MKp8cHb3NFwXEIta5UDuSFy92SK8pqvy0xitQCLoV4WUNMwIDAQAB";
+        String orgPriKeyStr = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALyDDr75R8C4QfuPB0vTOPq8ZaLZaFLeY7JCkQP8NI5Yh61JVblQnbYS9bN8GXfycMzFGB+SqoQDd8G6eEkeXZN2hYVw1XzPfBJ1JqoSL7a7j0llsY/mjLzA6cssPUwqnxwdvc0XBcQi1rlQO5IXL3ZIrymq/LTGK1AIuhXhZQ0zAgMBAAECgYAvpjr0d8M0yf5XrUQNXQMikbtpCeYuSCtQFDZemQHZ1zPYT9icwm1S6AD2ENDJOl1bzRf3ZxW1z8CWFeGwrb2+CIF32yJCM2fOlNDKVUi8tLjpDLBMGso5gF3ko2iFFXFjw2FROUCnV6q2J78Vj9LhfQmeioQueTLrl2ikQDqmkQJBAO57wuefb0qYQ6iml8MDU+AwVnU11MYVVK7/0WQJzkdreE7J1zkXgSnt0NpaqFDvezxfBTYJCw95Pb7rZgqPGSMCQQDKW6zIfiHEzoM+R+j8EchXudIlFycvqvql3NMO0JpcmXgzimDgLl7IwUGfMMv/ERTNmY/toIt476SDzUksgWSxAkBO4mUwFI7Nj9whdymP+hPOfm66ypmdBAVE9Z2fh5bSDPx4o08rtVimM+H3uDEgxHZxG8UvgIJGFgaUlmzkZT0dAkEAmWGRfsq0N+O8cRm6jE3CSFRN59U725LCt7PAuor9ZdDh3lc2BNbA+3QYlFw9U9GTrh+Gi7xT20/xqAGTREuzkQJBAKx/hqlyPzp9ZGVzaT1I+gFHUMgcjPc9PLrKtzHwriSTILcsiEx47TzFTQy/PQT4gisfdewZWvDRP33+Se6NhG8=";
         PublicKey sipPubKey = RSAUtils.getPublicKeyFromString(sipPubKeyStr);
         PrivateKey orgPriKey = RSAUtils.getPrivateKeyFromString(orgPriKeyStr);
-        String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+
+        //加密参数
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
+        String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url3, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
 
-        PublicKey pubKey = RSAUtils.getPublicKeyFromString(sipPubKeyStr);
-        PrivateKey priKey = RSAUtils.getPrivateKeyFromString(orgPriKeyStr);
-        String datas = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
-        String signs = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
-        String param = "org=" + org + "&data=" + URLEncoder.encode(datas, "utf-8") + "&sign=" + URLEncoder.encode(signs, "utf-8");
-        String re = HttpUtil.doPost(url2, param, "application/x-www-form-urlencoded;charset=UTF-8");
-        System.out.println("响应数据为:" + re);
-        String[] split = re.split("&sign=");
-        String s1 = (String)split[0].replace("data=","");
-
         //解密数据
+        String[] split = res.split("&sign=");
+        String s1 = (String)split[0].replace("data=","");
         String s = URLDecoder.decode(s1,"utf-8");
         String plain = RSAUtils.decrypt(s,orgPriKey,RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         System.out.print("响应明文:"+plain);

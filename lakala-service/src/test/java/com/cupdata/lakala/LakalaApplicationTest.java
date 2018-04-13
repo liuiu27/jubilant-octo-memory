@@ -1,10 +1,18 @@
 package com.cupdata.lakala;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.cupdata.commons.constant.SysConfigParaNameEn;
 import com.cupdata.commons.utils.*;
+import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.recharge.RechargeReq;
+import com.cupdata.commons.vo.recharge.RechargeRes;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import org.junit.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
 import java.net.URLDecoder;
@@ -19,53 +27,62 @@ public class LakalaApplicationTest {
 
     @Test
     public void LakalaApplicationTest() throws Exception{
-        String url = "http://localhost:46959/voucher/voucher/getVoucher";
-        String URL2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
-        String URL3 = "http://10.193.17.84:46959/voucher/voucher/getVoucher";
-        String org = "2018010200000001";
+        //请求URL
+        String url1 = "http://localhost:46959/voucher/voucher/getVoucher";
+        String url2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
+        String url3 = "http://10.193.17.84:46959/voucher/voucher/getVoucher";
+        String url4 = "https://onlinepay.cupdata.com/sipService/voucher/voucher/getVoucher";
+
+        //请求参数
+        String org = "20180413O35342627";
         GetVoucherReq getVoucherReq = new GetVoucherReq();
         getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
-        getVoucherReq.setProductNo("20180105V123");
-        getVoucherReq.setOrgOrderNo("lakala040201");
-        getVoucherReq.setOrderDesc("TestOfLakalaService");
+        getVoucherReq.setProductNo("20180413VOUCHER6198");
+        getVoucherReq.setOrgOrderNo("T2018041301");
+        getVoucherReq.setOrderDesc("LAKALATEST");
         getVoucherReq.setMobileNo("15857128524");
-        getVoucherReq.setExpire("20180331");
+        getVoucherReq.setExpire("20180820");
         String reqStr = JSONObject.toJSONString(getVoucherReq);
         System.out.print("请求参数json字符串" + reqStr);
-        String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
-        //String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDO7B1rs4jss/QeA+16BeJrXWntHfZFhFinwAWgxsbYKnKS4cUijWGgZF+qEVJfu2CU7SMqZANv0i4RFcjnXr0euYdKM5UP/FQr5unTUIM/cDt5kYJHkHt9v1TbLfYC8coHZRH3+moWzJSAYTiTsJ7dsWPOP+/xtZFy+48Smu0uQQIDAQAB";
 
+        //秘钥
+        String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
         String orgPriKeyStr = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALrk2X2VGzNigTxGoSuyoN33Mi2/7UIePZIZVkyFgMT/bJiXyQa5FE5+pN5y/CugDdNWYyp7jpLPxczzBd8t7DuyXo5rPD6GxSJhLTaXfdJYmAnxdW2s30X+RDy0dKqxc2oPyCOmAfR9JnV+qgNbd9aOvdlHWkO8cIvwWVScQRwRAgMBAAECgYA5SGFc+3Gd20hPKDrIAPULc3O+z/+xb0Fh4UAxLg4c00j+sC8eT2Xo9SolQEsIOANkziqQ39QALYyr16TqFdI8pywmHFICisiyjKf7nIiqUfi9rVoUCiCxXrhwSmBwkGELcUcBhNupc7Bgqo7uCK+l1g8Qzj+oNtBMfv7sZrj8rQJBAPB0uIyV9ilF0QBFlQ4AaLuhKhqY9oX/vkMTspTpBkpaOv8QeOc6T+9DJAoLjkLlkXEfsLC14AHb4LdZV/kjdyMCQQDG+byuNLe3kqWqo1ecrf8mUw9tIquUkarWU0FuO9ysGjfrLdMLlsn3wlsxddU7rIelYwnLKBYBqdIkCuQiRq07AkEA1Fceyfd75EKlKEpKMI0n79mIpuhBe1+2kuGIKHwHdA1uX+QaAIe8Ixv1bXF69ZRo9a74h3R1Fu8m6ILbb0VkZQJARBcUPV0m/Xf+n000Xxaf+OJ1pfg2VSogFyX4fxuXIYH7XsyYqx+Xz+Q/xsY3CSu6Y5tnr5DxLvKJSfI8LYqYHwJBAIaXJcKpCQSsQQ+Eu8ib861dJWV4vP1jAt9xyeU90nyz5GMwWrWkQ/DkHedDVhyCURpxZTaqKpGnr9iIDIjVrD0=";
-        //String orgPriKeyStr = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAK8c9UtWeruB1hTYN0rfPJbQvrTu3/XOgYkwnfTWEhuWZr3e5HQRg2lXihkR6VcUW3vSaQJUMdfwOgwphP0M1+9ZsbsBoJzkBW04e4ajnkEJAyrnfkrpwzMb3bymcOE89cif7RliLDXWOVhKIu+SZdiLsVUfI6R8mZDO6BWEjck/AgMBAAECgYAV3AKO3gPCJmoH/hmg4g8ZMIOt6GfSsm2fJ4+AQbzO7s5yg0F3b7w8yS23BXJgaW0mHtT28nWqZBWK8R/lytWlmM+G/uYNdu6//rKGsJB164YAk5OVA424BNUtd0Ph+VyUMI5bnBP+nIeM+WGmA9w+rO1uO5yzxidIcAnUFyvReQJBAPZjWfF2RnlDF0A4PcpaFT/BXf6kBr/wg7HK2lFUF9SXzQxBggS7Ih3/7AHYugykUV3ZKOJ8GFuZkBtHrC/dZ0sCQQC18crJGYW7JEA1NBCFLhBP8Lg9Hfa2HQxln8hgpfal9rusn8n7WoZzeH3u5oATUBvnlyyccP5JZW7W6mm81OldAkALelNdUUI1Me/qWPRf8dRdlPd4/lEmLeEkrit/cGhvyeaOdJrG96S+OwbWiy8XmawEsDIcYuWLltrEupEF5c2DAkAd2Y1rcMR/73KZR/Ft6CDE/Lk9Ta0sM5fVFGHLeW79y3z+1ThOBIwKZbpDd42LnZj2Zdbr053kbL/CgrLWSBgBAkEA5ZsJCcQtbOOHUmH0Hn7bkwIhEpiumHdDUOucMZ62tN0S3dYnXn0LbrkEa+AnyKbZbWATSzaZcfcOib8esSU1WA==";
         PublicKey sipPubKey = RSAUtils.getPublicKeyFromString(sipPubKeyStr);
         PrivateKey orgPriKey = RSAUtils.getPrivateKeyFromString(orgPriKeyStr);
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
+
+        //打印加密数据
+        System.out.println("加密请求数据:"+data);
+        System.out.println("加密请求签名:"+sign);
+        System.out.println("URLEncoder请求数据:"+URLEncoder.encode(data, "utf-8"));
+        System.out.println("URLEncoder请求签名:"+URLEncoder.encode(sign, "utf-8"));
+
+        //请求
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(URL2, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url4, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.print("响应数据为" + res);
 
+        //解密数据
         String[] split = res.split("&sign=");
         String s1 = (String)split[0].replace("data=","");
-
-        //解密数据
         String s = URLDecoder.decode(s1,"utf-8");
         String plain = RSAUtils.decrypt(s,orgPriKey,RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
-        System.out.print("响应明文:"+plain);
-
-
-        /*String text = "Qhtcb2ZfMGYJJRW3LulDRKlAlhyvd6dFFNUYJTNf0CB0UaLDHifrer0t759YTVYZUoa53dG4jh635xfJLrumI2HD8uPabCnhg0ptOLG7+h3hQ2lc1Itz1WpgcbPJeJY6COZlwACLfY55vdMrPrGjeG2n3UE2i22F0KVXUbbYYz969BIWMsBuufprOUcLhb5XIpC5YfUIL6PzPuYEbOa3UqNcV1VAIx6TEplpJ4i/CxyOzdGaWJJz5HBIUrWHEzuJNGacFJoC2UnYxrXaAMUWG73sbtyW6echLioTrkdYwZN1QZVR8JdpGYRQHenfKWcNLMqk2B0umpCvL5BgmTfHRQ==";
-        //String pub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDU9lc4kI7+HR1fAArR3SzpnVfp9ihj7t6Ta5EeC70hgg7GK2tDZwvvwXwukD+RMGr3e5o9cOXRL/785CHcJYNbU4zmKweBpzEL4097UbI2Yracs6BCej4zH7dUTqVPi2/8EJwsKFpXILFMBCjKLNkhYFwmkqHbf710XC9BE4JLBQIDAQAB";
-        //String pri = "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBANT2VziQjv4dHV8ACtHdLOmdV+n2KGPu3pNrkR4LvSGCDsYra0NnC+/BfC6QP5Ewavd7mj1w5dEv/vzkIdwlg1tTjOYrB4GnMQvjT3tRsjZitpyzoEJ6PjMft1ROpU+Lb/wQnCwoWlcgsUwEKMos2SFgXCaSodt/vXRcL0ETgksFAgMBAAECgYBPUzkW8UXKItcraU0ecffGRx0VoWLXIoVWvUUPP4kh/5t4NnkcYLhiBJy4jXOYJcRaTficdT6thmbBFUsFgRWlkyPGpe61mGu+lRLYAzJlHWWR0XUY/tCMBLe1TPt8TXejCZ5EH+HihbZ5KXDyVICSkxa7BweVQDSpFw8+XDXzGwJBAPoqeYOVc1rUBzhDamteaX1IMa9bxGYH92TZP1OQUbVwfwZkmgSsqjfXpxHCqIHVvb0M2+fcq60lSuUwumyMvYcCQQDZ7cFNRUAdYO9fCgUqHDIeGbKa3XBIzunMb5TrIjvEPo/FopOETztUolkyKG3hvsSDjA0jT3FQty3TNlJ5rHYTAkBz3saHpupWMIzjh348Gu+7Ynv44AVYyOnSoTlOqDLgWinLuT8JWTxCPzWX6VSJRonqjZExlKlDulk1TNucOZfzAkA4bF5H604WTSqsqKN9q58uO+kKP5r6vte5noon9s0SmkAPI3CeKQVrfD0rx1vrvsCSbohYRBFKnKK4tK/V4NkRAkBFMbBnBbzxyjm7pzxwW2mQFrNFLtt2Ewadb73ZQzyh726d2kQa/iyLkytOw78qiV7l5zQr3LuPCKhYaskcyXGN";
-
-        String pub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDT+ShHfnK3NG6RMz81XFOSc7yhEy49ZFk5fCn6IGAtz5TZ3c3vXN6y/6y+GsQbQBNaejVQ1aUbIqJaMEfcUb8ziw2EQ/eJnpMPFhWWJGNL2G8VkiOe3q5PXA1ERzT86LXDOuD+1ttnamByI+QxcKFFrmY0ykNLTNrUK3j15YcWwwIDAQAB";
-        String pri ="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANP5KEd+crc0bpEzPzVcU5JzvKETLj1kWTl8KfogYC3PlNndze9c3rL/rL4axBtAE1p6NVDVpRsiolowR9xRvzOLDYRD94mekw8WFZYkY0vYbxWSI57erk9cDURHNPzotcM64P7W22dqYHIj5DFwoUWuZjTKQ0tM2tQrePXlhxbDAgMBAAECgYAArETshMIxoR5nRCDAPe5sg7QtVUF3N+bPI1SPao+h6340Kc4Lt7I7Zd9xaSlKHDmzgNSNjWeoMt6iBbdtGyelVcOVCJl+o49J2dWn1jRFmW1W+5FoONVVtI5FCb2WFrGyxZoKQTIv6UEiBF1epg360KvBK4PyXGUpEmKCIp5FqQJBAO9VKX3gqvP8/w+MdOYq0x4QJek6VqTfKwnSafd6aZ1Mfyw+iIfIBwuS+YDcsCULeaRz2xKbzALj2X10xNGZEnUCQQDivDryYicAjG0Qqafb+WCN01NPlGFAYJRtddTsdY5Z/EhZy1+ccIAT8xZM3+tvNSPENeXJcxBBrnSJXDWmTm1XAkARyNxKdFV/x/8UIrXVHL2PcFfA2wrxOXwzQKWLNFeAztxsZ0EyBdUwMP3Fa6DTP+UMKWfQHC+uz0usHO87PAq5AkAZ+Lu71fhnvK4lkXlz3h3sQP+zBukY6bc2zp+EMncK4bYb6wrZrZ1OK7MrPR8Hzwt4xz+6Ep8TFvusXE6c7TDjAkEAirpk2Y7dGmzGbuhwf9PA4n30VLBI1I/mdmsvEUgt896DOP2diTfBzU+s7rvA65+hDFr5G3AS+zTUbCNUoAlKeg==";
-        //String data = URLDecoder.decode(text,"UTF-8");
-        PublicKey publicKey = RSAUtils.getPublicKeyFromString(pub);
-        PrivateKey privateKey = RSAUtils.getPrivateKeyFromString(pri);
-        String encrypt = RSAUtils.encrypt("2333", publicKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
-        String decrypt = RSAUtils.decrypt(encrypt, privateKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
-        System.out.print(decrypt);*/
+        System.out.println("响应明文:"+plain);
     }
 
-}
+    @Test
+    public  void checkKeyPair()throws Exception{
+
+        String pub = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDRxT504szbX+yi5ejT2M5xe7ArET6DXUNKXUhWn+acfdkRLTgzvayQtyN4qtkkrVZEiBEpra1/J4R1EZ2G6wyB/9vkj1c8wCTu1tcV7DMhBfWin8Q5lXQOUjBCg81i93EwO/IF42QPw/Tm24oqTC4QuB1uTI2m56llmfy6fa6H7wIDAQAB";
+        String pri = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBANHFPnTizNtf7KLl6NPYznF7sCsRPoNdQ0pdSFaf5px92REtODO9rJC3I3iq2SStVkSIESmtrX8nhHURnYbrDIH/2+SPVzzAJO7W1xXsMyEF9aKfxDmVdA5SMEKDzWL3cTA78gXjZA/D9ObbiipMLhC4HW5MjabnqWWZ/Lp9rofvAgMBAAECgYAY7Ejz5UB2rgp0/kDv7pn0lMAFFerp+6oziyq9lAj3veIM7uT3DMmUdhXiT9Y1y9xsjwgO/iIXcfAEYr/nGEUnc85e5sPUZSurD1wLB9emScYmxro03PFYEmJ3xqdiZOIchrIUC37Zxrebq/zKfp6VQ4qixxEZYgTOiOWemlx3jQJBAPCcbpAIDfWn3OF8q362OnRB9r3NOWPEyUTImsz0qxXBudV7YtFFjc28VRhVDgi702G/SB/KfC9xJSaNk+BgqYsCQQDfL9qQmnu1KlwDjYb8SPdr3KbGM0+4Oom5y9w3KW5G1SSbimNvIgALYaMNi2XUYj+ie3ccxYTubajMEQ5AwH+tAkBzd+8LSgJBAOTchXLbpWIaBsn9vi4rdfXM/6RidYxhLY4cKFF88q8hq57+xVqt0E2aHCzlrMu6DMdyYAE2bc0PAkEAjz/XuRhubklR5bXg/eyXYdOt92jXshdgbrA6F+2vqicD6BFa4OmhvaxdS0Q9h6PH1DIKsZzVRXN88/2+eDEVwQJBAJsfm96s5JUjyRZBTPjYA1keKG0CAGBFDPvbodwrTdmobNRCxTUyeMcz7u5E94U2fg/BNGdLn+l8eHEvWvhV+Gw=";
+        PublicKey publicKey = RSAUtils.getPublicKeyFromString(pub);
+        PrivateKey privateKey = RSAUtils.getPrivateKeyFromString(pri);
+        String encrypt = RSAUtils.encrypt("验证秘钥成功", publicKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+        String decrypt = RSAUtils.decrypt(encrypt, privateKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+        System.out.print(decrypt);
+
+    }
+    }
+
