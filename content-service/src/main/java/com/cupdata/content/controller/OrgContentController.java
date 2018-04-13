@@ -132,9 +132,8 @@ public class OrgContentController{
 					Date timestamp = DateTimeUtil.getDateByString(contentJumpReq.getTimestamp().substring(0, 17),
 							"yyyyMMddHHmmssSSS");
 					// 时间戳超时
-					if (!DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -60 * 1000L, 3000 * 1000L)) {
+					if (DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -60 * 1000L, 3000 * 1000L)) {
 						// 合法更新数据
-						contentTransaction = new ContentTransaction();
 						contentTransaction.setSipTranNo(sipTranNo);
 						contentTransaction.setProductNo(contentJumpReq.getProductNo());
 						contentTransaction.setTranType(ModelConstants.CONTENT_TYPE_NOT_LOGGED);
