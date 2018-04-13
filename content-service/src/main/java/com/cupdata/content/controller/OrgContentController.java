@@ -176,8 +176,8 @@ public class OrgContentController{
 			jumReq.setTimestamp(timestamp);
 			jumReq.setUserId(contentJumpReq.getUserId());
 			jumReq.setUserName(contentJumpReq.getUserName());
-			
-			StringBuffer ret = new StringBuffer("redirect:" + supUrl);
+			String url = EncryptionAndEecryption.Encryption(jumReq, supUrl);
+			StringBuffer ret = new StringBuffer("redirect:" + url);
 		    return ret.toString();
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
