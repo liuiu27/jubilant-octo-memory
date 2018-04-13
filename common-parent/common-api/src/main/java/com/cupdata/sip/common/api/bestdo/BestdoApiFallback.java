@@ -1,6 +1,7 @@
 package com.cupdata.sip.common.api.bestdo;
 
 import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.bestdo.vo.OrderCreateReqVO;
 
 /**
  * @author Tony
@@ -29,7 +30,8 @@ public class BestdoApiFallback implements IBestdoApi {
     }
 
     @Override
-    public BaseResponse crateBestdoOrder(String parma) {
+    public BaseResponse crateBestdoOrder(OrderCreateReqVO orderCreateReqVO) {
         return null;
     }
+
 }

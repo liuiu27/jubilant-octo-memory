@@ -9,7 +9,7 @@
         <!--<jsr107:defaults>
             <jsr107:cache name="ehcache" template="heap-cache"/>
         </jsr107:defaults>-->
-        <jsr107:defaults enable-management="true" enable-statistics="true"/>
+        <jsr107:defaults enable-management="true" enable-statistics="true" default-template="heap-cache"/>
     </service>
 
     <thread-pools>
@@ -45,6 +45,7 @@
                 <events-to-fire-on>EVICTED</events-to-fire-on>
             </listener>
         </listeners>
+
         <resources>
             <heap unit="entries">2000</heap>
             <offheap unit="MB">100</offheap> <!-- unit of measure is case sensitive! -->

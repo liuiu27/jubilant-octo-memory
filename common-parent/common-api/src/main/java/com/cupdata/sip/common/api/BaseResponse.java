@@ -1,7 +1,6 @@
 package com.cupdata.sip.common.api;
 
 
-import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import lombok.Data;
 
 /**
@@ -12,26 +11,22 @@ import lombok.Data;
 @Data
 public class BaseResponse<T> {
 
-    private String responseCode;
-
-    private String responseMsg;
+    private String responseCode ="000000";
+    private String responseMsg = "SUCCESS!";
 
     private T data;
 
     public BaseResponse(){
-        responseCode = ResponseCodeMsg.SUCCESS.getCode();
-        responseMsg = ResponseCodeMsg.SUCCESS.getMsg();
+
     }
 
     public BaseResponse(T data){
-        responseCode = ResponseCodeMsg.SUCCESS.getCode();
-        responseMsg = ResponseCodeMsg.SUCCESS.getMsg();
         this.data = data;
     }
     
     public BaseResponse(String responseCode, String responseMsg){
-        responseCode =responseCode;
-        responseMsg = responseMsg;
+        this.responseCode =responseCode;
+        this.responseMsg = responseMsg;
     }
     public BaseResponse(String responseCode, String responseMsg, T data){
         this.responseCode =responseCode;

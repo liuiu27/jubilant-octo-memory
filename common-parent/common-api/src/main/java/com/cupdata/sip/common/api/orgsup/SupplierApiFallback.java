@@ -1,8 +1,7 @@
 package com.cupdata.sip.common.api.orgsup;
 
-import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
 import com.cupdata.sip.common.api.BaseResponse;
-import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
 
 import java.util.List;
 
@@ -15,11 +14,11 @@ public class SupplierApiFallback implements ISupplierApi {
 
     @Override
     public BaseResponse<List<SupplierInfVo>> selectAll() {
-        return new BaseResponse(ResponseCodeMsg.FAIL.getCode(),ResponseCodeMsg.FAIL.getMsg());
+        return null;
     }
 
     @Override
     public BaseResponse<SupplierInfVo> findSupByNo(String supplierNo) {
-        return new BaseResponse(ResponseCodeMsg.FAIL.getCode(),ResponseCodeMsg.FAIL.getMsg());
+        return null;
     }
 }

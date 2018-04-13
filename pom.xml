@@ -57,6 +57,7 @@
 		<jasypt.version>1.16</jasypt.version>
 		<httpclient.version>4.5.3</httpclient.version>
 		<mybatis-tool.version>1.2.3</mybatis-tool.version>
+		<swagger.version>2.7.0</swagger.version>
 		<target.dir>D:\${revision}</target.dir>
 	</properties>
 

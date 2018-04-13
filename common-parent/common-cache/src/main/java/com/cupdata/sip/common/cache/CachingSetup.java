@@ -17,7 +17,7 @@ public class CachingSetup implements JCacheManagerCustomizer {
 
     @Override
     public void customize(CacheManager cacheManager) {
-        cacheManager.createCache("ehcache", new MutableConfiguration<>()
+        cacheManager.createCache("cache", new MutableConfiguration<>()
                 .setExpiryPolicyFactory(TouchedExpiryPolicy.factoryOf(new Duration(TimeUnit.MINUTES, 10)))
                 .setStoreByValue(false)
                 .setManagementEnabled(true)

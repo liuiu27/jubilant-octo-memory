@@ -1,12 +1,19 @@
 package com.cupdata.sip.bestdo.rest;
 
 import com.cupdata.sip.bestdo.biz.BestdoBiz;
+import com.cupdata.sip.common.api.bestdo.vo.OrderCreateReqVO;
 import com.cupdata.sip.bestdo.vo.response.*;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.bestdo.IBestdoApi;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import java.util.List;
 
 /**
@@ -53,10 +60,53 @@ public class BestdoController implements IBestdoApi {
     }
 
     @Override
-    public BaseResponse crateBestdoOrder(String parma) {
+    public BaseResponse crateBestdoOrder(@RequestBody @Validated OrderCreateReqVO orderCreateReqVO) {
 
 
         return new BaseResponse("哈哈啊哈哈哈");
+    }
+
+
+    @GetMapping("test")
+    public String test(String p){
+
+         User user=   getuser(p);
+
+        return user.toString();
+    }
+
+    @CacheResult
+   public User getuser(@CacheKey String name){
+
+        if (name.equals("a")){
+            return new User(name);
+        }
+        if (name.equals("bb")){
+            return new User(name);
+        }
+        if (name.equals("ccc")){
+            return new User(name);
+        }
+        if (name.equals("dddd")){
+            return new User(name);
+        }
+        if (name.equals("eeee")){
+            return new User(name);
+        }
+
+       return null;
+    }
+
+    @Data
+    class User{
+        String name;
+
+        Integer age;
+
+        User(String name){
+            this.name =name;
+            this.age = name.length();
+        }
     }
 
 

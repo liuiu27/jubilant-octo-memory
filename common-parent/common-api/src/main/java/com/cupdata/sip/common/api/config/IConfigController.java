@@ -1,11 +1,13 @@
 package com.cupdata.sip.common.api.config;
 
-import com.cupdata.commons.model.SysConfig;
 import com.cupdata.sip.common.api.BaseResponse;
-import com.cupdata.sip.common.api.config.response.SysConfigListVo;
+import com.cupdata.sip.common.api.config.response.SysConfigVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+
 
 /**
  * @Auth: LinYong
@@ -20,7 +22,7 @@ public interface IConfigController {
      * @return
      */
 	@GetMapping("/selectAll")
-	public BaseResponse<SysConfigListVo> selectAll();
+	BaseResponse<List<SysConfigVO>> selectAll();
 
     /**
      * 根据银行号和参数名获取系统配置信息
@@ -28,6 +30,6 @@ public interface IConfigController {
      * @param paraName
      * @return
      */
-	@GetMapping("/getSysConfig")
-	SysConfig getSysConfig(@PathVariable("bankCode") String bankCode, @PathVariable("paraName") String paraName);
+	@GetMapping("private/getSysConfig/{bankCode}/{paraName}")
+	SysConfigVO getSysConfig(@PathVariable("paraName") String paraName,@PathVariable("bankCode") String bankCode);
 }

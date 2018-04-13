@@ -19,13 +19,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.cupdata.sip</groupId>
-            <artifactId>common-lang</artifactId>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.cupdata.sip</groupId>
-            <artifactId>commons</artifactId>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
         </dependency>
-
     </dependencies>
 </project>
