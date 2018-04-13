@@ -170,7 +170,7 @@ public class OrgContentController{
 			jumReq.setTimestamp(timestamp);
 			jumReq.setUserId(contentJumpReq.getUserId());
 			jumReq.setUserName(contentJumpReq.getUserName());
-			String url = EncryptionAndEecryption.Encryption(jumReq, "https://test.wantu.cn/v2/m/?channel=rongshu?");
+			String url = EncryptionAndEecryption.Encryption(jumReq, "https://test.wantu.cn/v2/m/?channel=rongshu");
 			StringBuffer ret = new StringBuffer("redirect:" + url);
 		    return ret.toString();
 		} catch (Exception e) {

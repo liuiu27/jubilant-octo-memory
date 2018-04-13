@@ -25,6 +25,11 @@ public class EncryptionAndEecryption {
 			PrivateKey merchantPriKey = RSAUtils.getPrivateKeyFromString(merchantPriKeyStr);
 			String authReqSign = RSAUtils.sign(reqStr, merchantPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
 			authReqSign = URLEncoder.encode(authReqSign);
+			if(url.indexOf("?") == -1) {
+				url += url + "?";
+			}else {
+				url += url + "&";
+			}
 			url = url + "data=" + reqData + "&sign=" + authReqSign;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
