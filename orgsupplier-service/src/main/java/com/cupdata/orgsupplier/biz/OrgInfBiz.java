@@ -7,7 +7,8 @@ import com.cupdata.sip.common.lang.BeanCopierUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class OrgInfBiz {
     @Autowired
     private OrgInfMapper orgInfMapper;
 
-
-    public OrgInfoVo findOrgByNo(String orgNo) {
+    @CacheResult(cacheName = "ehcache")
+    public OrgInfoVo findOrgByNo(@CacheKey String orgNo) {
 
         OrgInf org = orgInfMapper.findOrgByNo(orgNo);
         OrgInfoVo orgInfoVo =new OrgInfoVo();

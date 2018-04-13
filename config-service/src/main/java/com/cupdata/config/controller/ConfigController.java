@@ -38,4 +38,28 @@ public class ConfigController implements IConfigController{
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
+
+	/**
+	 * 获取系统配置信息
+	 * @return
+	 */
+	public SysConfig getSysConfig(String bankCode, String paraName) {
+		if(StringUtils.isBlank(paraName)) {
+			log.error("paraName is null");
+			return null;
+		}
+		List<SysConfig> list = (List<SysConfig>) getCache(CacheConstants.CACHE_TYPE_SYS_CONFIG);
+		if (CollectionUtils.isNotEmpty(list)) {
+			if (StringUtils.isBlank(bankCode)) {
+				bankCode = "CUPD";
+			}
+			for (SysConfig config : list) {
+				if (bankCode.equals(config.getBankCode()) && paraName.equals(config.getParaNameEn())) {
+					return config;
+				}
+			}
+		}
+		log.error("getSysConfig result is null  bankCode is " + bankCode + "paraName is " + paraName);
+		return null;
+	}
 }

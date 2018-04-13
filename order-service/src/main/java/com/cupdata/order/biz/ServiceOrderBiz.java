@@ -109,7 +109,7 @@ public class ServiceOrderBiz {
         ServiceOrderVoucher voucherOrder = OrderUtils.initVoucherOrder(order, voucherProduct.getProductNo());
         orderVoucherDao.insert(voucherOrder);//插入券码订单
 
-        BeanCopierUtils.copyProperties(order,voucherOrderVo);
+        BeanCopierUtils.copyProperties(order,voucherOrderVo.getOrderInfoVo());
         BeanCopierUtils.copyProperties(voucherOrder,voucherOrderVo);
 
         return voucherOrderVo;

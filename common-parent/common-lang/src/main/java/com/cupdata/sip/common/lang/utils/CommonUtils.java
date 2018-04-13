@@ -561,6 +561,6 @@ public class CommonUtils {
 		String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), TimeConstants.DATE_PATTERN_5) + CommonUtils.getCharAndNum(8);
 		log.info("timestamp : "+timestamp);
 		return timestamp;
-	} 
+	}
 
 }
