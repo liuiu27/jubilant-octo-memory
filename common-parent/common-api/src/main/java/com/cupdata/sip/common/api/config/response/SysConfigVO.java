@@ -3,7 +3,7 @@ package com.cupdata.sip.common.api.config.response;
 import lombok.Data;
 
 @Data
-public class SysConfigVo{
+public class SysConfigVO{
 	/**
 	 * 
 	 */
