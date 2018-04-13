@@ -87,23 +87,26 @@ public class ContentBiz extends BaseBiz<ContentTransaction> {
 	
 	/**
 	 * 生成新的流水号并保存
-	 * @param contentJumpReq
-	 * @param productInfRes
-	 * @return
+	 * @param sipTranNo
+	 * @param org
+	 * @param supplierNo
+	 * @param requestInfo
+	 * @param productNo
+	 * @param tranType
 	 */
-	public void insertContentTransaction(String tranNo,String org,String requestInfo,ProductInfVo productInfRes) {
+	public void insertContentTransaction(String sipTranNo,
+			String org,
+			String supplierNo,
+			String requestInfo,
+			String productNo,String tranType) {
 		//保存数据库
 		ContentTransaction contentTransaction =  new  ContentTransaction();
-		contentTransaction.setTranNo(tranNo);
-		contentTransaction.setTranType(ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+		contentTransaction.setSipTranNo(sipTranNo);
+		contentTransaction.setTranType(tranType);
 		contentTransaction.setOrgNo(org);
 		contentTransaction.setRequestInfo(requestInfo);
-		if(null != productInfRes) {
-			contentTransaction.setProductNo(productInfRes.getProduct().getProductNo());
-			contentTransaction.setSupNo(productInfRes.getProduct().getSupplierNo());
-		}
-		
-		
+		contentTransaction.setProductNo(productNo);
+		contentTransaction.setSupNo(supplierNo);
 		contentDao.insert(contentTransaction);
 	}
 	
@@ -137,13 +140,11 @@ public class ContentBiz extends BaseBiz<ContentTransaction> {
 	 * @param type
 	 * @return
 	 */
-	public ContentTransaction queryContentTransactionByTranNo(String tranNo,String type) {
-		log.info("ContentBiz queryContentTransactionByTranNo tranNo is" + tranNo + "type" + type);
+	public ContentTransaction queryContentTransactionByTranNo(String sipTranNo,String type) {
+		log.info("ContentBiz queryContentTransactionByTranNo tranNo is" + sipTranNo + "type" + type);
 		Map<String, Object> paramMap = new HashMap<String,Object>();
-		paramMap.put("TRAN_NO", tranNo);
-		if(StringUtils.isBlank(type)) {
-			paramMap.put("TRAN_TYPE", type);
-		}
+		paramMap.put("sipTranNo", sipTranNo);
+		paramMap.put("tranType", type);
 		ContentTransaction contentTransaction = contentDao.selectSingle(paramMap);
 		return contentTransaction;
 	}

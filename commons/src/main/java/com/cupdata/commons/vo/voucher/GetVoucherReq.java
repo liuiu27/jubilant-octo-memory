@@ -36,5 +36,10 @@ public class GetVoucherReq extends BaseRequest {
      *订单描述
      */
     private String orderDesc;
+    
+    /**
+     * 异步通知
+     */
+    private String notifyUrl;
 
 }

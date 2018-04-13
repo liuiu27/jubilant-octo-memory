@@ -1,5 +1,20 @@
 package com.cupdata.content.controller;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -10,27 +25,12 @@ import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.content.ContentJumpReq;
 import com.cupdata.commons.vo.content.ContentTransaction;
 import com.cupdata.commons.vo.content.SupContentJumReq;
-import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.utils.EncryptionAndEecryption;
-import com.cupdata.content.vo.request.OrgVO;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
 * @author 作者: liwei
@@ -106,13 +106,13 @@ public class OrgContentController{
 //			}
 //			
 //			//Step5 :   判断流水号  如果为空创建 新的
-			String tranNo = contentJumpReq.getSipTranNo();
-			if(StringUtils.isBlank(tranNo)){
+			String sipTranNo = contentJumpReq.getSipTranNo();
+			if(StringUtils.isBlank(sipTranNo)){
 				//生成新的流水号
-				tranNo = CommonUtils.serialNumber();
+				sipTranNo = CommonUtils.serialNumber();
 				//保存数据库
 				ContentTransaction contentTransaction =  new  ContentTransaction();
-				contentTransaction.setTranNo(tranNo);
+				contentTransaction.setSipTranNo(sipTranNo);
 				contentTransaction.setProductNo(contentJumpReq.getProductNo());
 				contentTransaction.setTranType(ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 				contentTransaction.setOrgNo(org);
@@ -124,7 +124,7 @@ public class OrgContentController{
 
 				//不为空查询数据库
 				Map<String, Object> paramMap = new HashMap<String,Object>();
-				paramMap.put("TRAN_NO", tranNo);
+				paramMap.put("TRAN_NO", sipTranNo);
 				paramMap.put("TRAN_TYPE", ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 				ContentTransaction contentTransaction = contentBiz.selectSingle(paramMap);
 				if (null != contentTransaction) {
@@ -135,7 +135,7 @@ public class OrgContentController{
 					if (!DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -60 * 1000L, 3000 * 1000L)) {
 						// 合法更新数据
 						contentTransaction = new ContentTransaction();
-						contentTransaction.setTranNo(tranNo);
+						contentTransaction.setSipTranNo(sipTranNo);
 						contentTransaction.setProductNo(contentJumpReq.getProductNo());
 						contentTransaction.setTranType(ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 						contentTransaction.setOrgNo(org);
@@ -160,10 +160,10 @@ public class OrgContentController{
 			
 			//获取SIP的跳转URL 
 //			jumReq.setLoginUrl(contentJumpReq.getLoginUrl() + "?tranNo=" + tranNo);
-			jumReq.setLoginUrl("http://cvpa.leagpoint.com/sipService/content/SupContent/contentLogin" + "?tranNo=" + tranNo);
+			jumReq.setLoginUrl("http://cvpa.leagpoint.com/sipService/content/SupContent/contentLogin" + "?tranNo=" + sipTranNo);
 			
 			
-			jumReq.setPayUrl(contentJumpReq.getPayUrl() + "?tranNo=" + tranNo);
+			jumReq.setPayUrl(contentJumpReq.getPayUrl() + "?tranNo=" + sipTranNo);
 			
 			jumReq.setMobileNo(contentJumpReq.getMobileNo());
 			String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);

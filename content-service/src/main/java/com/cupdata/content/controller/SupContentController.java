@@ -26,6 +26,7 @@ import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.utils.EncryptionAndEecryption;
 import com.cupdata.content.vo.ContentLoginReq;
+import com.cupdata.content.vo.ContentToLoginReq;
 import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.content.vo.request.SupVO;
 
@@ -107,7 +108,6 @@ public class SupContentController {
 		try {
 			//查询数据库中是否存在此流水号
 			ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getSipTranNo(),ModelConstants.CONTENT_TYPE_NOT_LOGGED);
-			
 			//验证流水号
 			if(null == contentTransaction) {
 				log.error("query result is null");
@@ -115,16 +115,24 @@ public class SupContentController {
 			}
 			//获取机构登录地址
 			JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
-			String url = EncryptionAndEecryption.Encryption(contentLoginReq, resJson.getString("loginUrl"));
+			ContentToLoginReq contentToLoginReq = new ContentToLoginReq();
+			contentToLoginReq.setProductNo(contentTransaction.getProductNo());
+			contentToLoginReq.setSipTranNo(contentLoginReq.getSipTranNo());
+			
+			
+			String url = EncryptionAndEecryption.Encryption(contentToLoginReq, resJson.getString("loginUrl"));
 			
 			//查询数据中是否存在此交易类型的流水号
-			contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getSipTranNo(),ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+			contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getSipTranNo(),ModelConstants.CONTENT_TYPE_TO_LOGGED);
 			if(null == contentTransaction) {
 				//保持新的流水记录
-				contentBiz.insertContentTransaction(contentLoginReq.getSipTranNo(), 
+				contentBiz.insertContentTransaction(
+						contentLoginReq.getSipTranNo(), 
+						null,
 						sup, 
 						JSONObject.toJSONString(contentLoginReq), 
-						null);
+						null, 
+						ModelConstants.CONTENT_TYPE_TO_LOGGED);
 			}else {
 				//更新流水表
 				contentBiz.updateContentTransaction(contentTransaction, 
