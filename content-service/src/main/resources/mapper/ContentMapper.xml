@@ -4,7 +4,7 @@
 
   <resultMap id="BaseResultMap" type="com.cupdata.commons.vo.content.ContentTransaction">
         <result column="ID" property="id" jdbcType="INTEGER"/>
-		<result column="TRAN_NO" property="tranNo" jdbcType="VARCHAR"/>
+		<result column="TRAN_NO" property="sipTranNo" jdbcType="VARCHAR"/>
 		<result column="PRODUCT_NO" property="productNo" jdbcType="VARCHAR"/>
 		<result column="TRAN_TYPE" property="tranType" jdbcType="VARCHAR"/>
 		<result column="TRAN_DESC" property="tranDesc" jdbcType="VARCHAR"/>
@@ -40,8 +40,8 @@
 		<if test=" id != null and id != ''">
 			 and ID = #{id}
 		</if>
-		<if test=" tranNo != null and tranNo != ''">
-			 and TRAN_NO = #{tranNo}
+		<if test=" sipTranNo != null and sipTranNo != ''">
+			 and TRAN_NO = #{sipTranNo}
 		</if>
 		<if test=" productNo != null and productNo != ''">
 			 and PRODUCT_NO = #{productNo}
@@ -50,7 +50,7 @@
 			 and TRAN_TYPE = #{tranType}
 		</if>
 		<if test=" tranDesc != null and tranDesc != ''">
-			 and TRAN_DESC = #{tranType}
+			 and TRAN_DESC = #{tranDesc}
 		</if>
 		<if test=" orgNo != null and orgNo != ''">
 			 and ORG_NO = #{orgNo}
@@ -83,8 +83,8 @@
 		<if test=" id != null and id != ''">
 			 and ID = #{id}
 		</if>
-		<if test=" tranNo != null and tranNo != ''">
-			 and TRAN_NO = #{tranNo}
+		<if test=" sipTranNo != null and sipTranNo != ''">
+			 and TRAN_NO = #{sipTranNo}
 		</if>
 		<if test=" productNo != null and productNo != ''">
 			 and PRODUCT_NO = #{productNo}
@@ -133,7 +133,7 @@
 			) 
 			VALUES
 			  (
-			    #{tranNo},
+			    #{sipTranNo},
 			    #{productNo},
 			    #{tranType},
 			    #{tranDesc},
@@ -151,7 +151,7 @@
 		update 
 	  	service_content_transaction_log
 		set
-		  TRAN_NO= #{tranNo},
+		  TRAN_NO= #{sipTranNo},
 		  PRODUCT_NO= #{productNo},
 		  TRAN_TYPE= #{tranType},
 		  TRAN_DESC= #{tranDesc},

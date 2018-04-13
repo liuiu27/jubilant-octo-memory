@@ -7,8 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSONObject;
@@ -22,7 +24,9 @@ import com.cupdata.commons.vo.content.ContentTransaction;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
+import com.cupdata.content.utils.EncryptionAndEecryption;
 import com.cupdata.content.vo.ContentLoginReq;
+import com.cupdata.content.vo.ContentToLoginReq;
 import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.content.vo.request.SupVO;
 
@@ -34,6 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 */
 @Slf4j
 @Controller
+@RequestMapping("/supContent")
 public class SupContentController {
 	
 	
@@ -54,36 +59,91 @@ public class SupContentController {
 	 * @param response
 	 * @return
 	 */
-	@PostMapping(path="/contentLogin",produces = "application/json")
-	public String contentLogin(@RequestBody @Validated SupVO<ContentLoginReq> contentLoginReq){
+//	@PostMapping(path="/contentLogin",produces = "application/json")
+//	public String contentLogin(@RequestBody @Validated SupVO<ContentLoginReq> contentLoginReq){
+//		log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
+//		try {
+//			//查询数据库中是否存在此流水号
+//			ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getTranNo(),null);
+//			//验证流水号
+//			if(null == contentTransaction) {
+//				log.error("query result is null");
+//				throw new ErrorException(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode(),ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
+//			}
+//			//查询数据中是否存在此交易类型的流水号
+//			contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getTranNo(),ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+//			if(null == contentTransaction) {
+//				//保持新的流水记录
+//				contentBiz.insertContentTransaction(contentLoginReq.getTranNo(), 
+//						contentLoginReq.getSup(), 
+//						JSONObject.toJSONString(contentLoginReq), 
+//						null);
+//			}else {
+//				//更新流水表
+//				contentBiz.updateContentTransaction(contentTransaction, 
+//						null, 
+//						ModelConstants.CONTENT_TYPE_NOT_LOGGED, 
+//						null, 
+//						contentLoginReq.getSup(), 
+//						JSONObject.toJSONString(contentLoginReq));
+//			}
+//			//组装参数 跳转
+//			return null;
+//		} catch (Exception e) {
+//			log.error("error is " + e.getMessage());
+//			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+//		}
+//	}
+//	
+	@GetMapping(path="/contentJump")
+	public String contentJump(@RequestParam(value = "sup", required = true) String sup,
+			@RequestBody ContentLoginReq contentLoginReq,	HttpServletRequest request, HttpServletResponse response){
 		log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
+		
+		if(StringUtils.isBlank(contentLoginReq.getSipTranNo())) {
+			log.error("prams tranNo  is  null");
+			throw new ErrorException(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode(),ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
+		}
+		
 		try {
 			//查询数据库中是否存在此流水号
-			ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getTranNo(),null);
+			ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getSipTranNo(),ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 			//验证流水号
 			if(null == contentTransaction) {
 				log.error("query result is null");
 				throw new ErrorException(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode(),ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
 			}
+			//获取机构登录地址
+			JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
+			ContentToLoginReq contentToLoginReq = new ContentToLoginReq();
+			contentToLoginReq.setProductNo(contentTransaction.getProductNo());
+			contentToLoginReq.setSipTranNo(contentLoginReq.getSipTranNo());
+			
+			
+			String url = EncryptionAndEecryption.Encryption(contentToLoginReq, resJson.getString("loginUrl"));
+			
 			//查询数据中是否存在此交易类型的流水号
-			contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getTranNo(),ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+			contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getSipTranNo(),ModelConstants.CONTENT_TYPE_TO_LOGGED);
 			if(null == contentTransaction) {
 				//保持新的流水记录
-				contentBiz.insertContentTransaction(contentLoginReq.getTranNo(), 
-						contentLoginReq.getSup(), 
+				contentBiz.insertContentTransaction(
+						contentLoginReq.getSipTranNo(), 
+						null,
+						sup, 
 						JSONObject.toJSONString(contentLoginReq), 
-						null);
+						null, 
+						ModelConstants.CONTENT_TYPE_TO_LOGGED);
 			}else {
 				//更新流水表
 				contentBiz.updateContentTransaction(contentTransaction, 
+						contentTransaction.getProductNo(), 
+						ModelConstants.CONTENT_TYPE_TO_LOGGED, 
 						null, 
-						ModelConstants.CONTENT_TYPE_NOT_LOGGED, 
-						null, 
-						contentLoginReq.getSup(), 
+						sup, 
 						JSONObject.toJSONString(contentLoginReq));
 			}
-			//组装参数 跳转
-			return null;
+			StringBuffer ret = new StringBuffer("redirect:" + url);
+		    return ret.toString();
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
@@ -103,9 +163,6 @@ public class SupContentController {
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
-
-	
-
 
 	/**
 	 * 支付请求接口

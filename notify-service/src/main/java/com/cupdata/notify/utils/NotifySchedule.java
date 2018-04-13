@@ -49,7 +49,7 @@ public class NotifySchedule {
 	/**
 	 * 每分钟执行通知
 	 */
-	@Scheduled(cron = "0 0/10 * * * ?")
+	@Scheduled(cron = "0/5 * * * * ?")
 	public void notifyToOrgTask(){
 		log.info("-------------------   start   notifyToOrgTask   "+ DateTimeUtil.getCurrentTime() +" ------------------- ");
 		//获取当前节点
@@ -64,40 +64,40 @@ public class NotifySchedule {
         	for (OrderNotifyWait orderNotifyWait : orderNotifyWaitList) { 
         		//判断通知次数是否>9
         		if(orderNotifyWait.getNotifyTimes() >= 9) {
-        			//初始化  orderNotifyComplete 
+        			log.info("初始化  orderNotifyComplete ");
         			OrderNotifyComplete orderNotifyComplete	= NotifyUtil.copyOrderNotifyComplete(orderNotifyWait,ModelConstants.NOTIFY_STATUS_FAIL);
-        			//移动到  orderNotifyComplete
+        			log.info("移动到  orderNotifyComplete");
         			notifyBiz.orderNotifyCompleteInsert(orderNotifyComplete);
-        			//删除 orderNotifyWait 
+        			log.info("删除 orderNotifyWait");
         			notifyBiz.delete(Integer.parseInt(orderNotifyWait.getId().toString()));
         		}else {
-        			//获取订单信息
+        			log.info("获取订单信息");
         			BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByOrderNo(orderNotifyWait.getOrderNo());
         			if(!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
         				log.error("getVoucherOrderByOrderNo result is null orderNO is" + orderNotifyWait.getOrderNo());
         				return;
         			}
         			
-        			//根据机构号获取机构信息 秘钥
+        			log.info("根据机构号获取机构信息 秘钥");
         			BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(voucherOrderVo.getData().getOrder().getOrgNo());
         			if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
         				log.error("cacher-service getOrgInf result is null orgNo is" + voucherOrderVo.getData().getOrder().getOrgNo());
         			}
-        			//发送通知
+        			log.info("发送通知 ");
         			if(!NotifyUtil.httpToOrg(voucherOrderVo.getData(),orgInf.getData())) {
         				log.error("FAIL   notify url is " + orderNotifyWait.getNotifyUrl() + "notifyTimes is  " + orderNotifyWait.getNotifyTimes());
-        				//通知失败  通知失败次数 +1  下次通知时间修改
+        				log.info("通知失败  通知失败次数 +1  下次通知时间修改   ");
         				orderNotifyWait.setNotifyTimes(orderNotifyWait.getNotifyTimes()+1);
-        				//通知时间修改
+        				log.info("通知时间修改");
         				orderNotifyWait.setNextNotifyDate(NotifyNextTime.GetNextTime(orderNotifyWait.getNotifyTimes(), orderNotifyWait.getNextNotifyDate()));
         				notifyBiz.update(orderNotifyWait);
         			}else {
         				log.info("SUCCESS  notify url is " + orderNotifyWait.getNotifyUrl() + "notifyTimes is " + orderNotifyWait.getNotifyTimes());
-        				 //通知成功  删除 wait表 
+        				log.info("通知成功  删除 wait表"); 
         				notifyBiz.delete(orderNotifyWait.getId());
-        				//初始化  orderNotifyComplete 
+        				log.info("初始化  orderNotifyComplete");
             			OrderNotifyComplete orderNotifyComplete	= NotifyUtil.copyOrderNotifyComplete(orderNotifyWait,ModelConstants.NOTIFY_STATUS_SUCCESS);
-            			//移动到  orderNotifyComplete
+            			log.info("移动到  orderNotifyComplete");
             			notifyBiz.orderNotifyCompleteInsert(orderNotifyComplete);
         			}
         		}

@@ -61,9 +61,9 @@ public class PreRequestFilter extends ZuulFilter {
 		HttpServletRequest request = ctx.getRequest();
 		PreRequestFilter.log.info(String.format("send %s request to %s", request.getMethod(), request.getRequestURL().toString()));
 
-		if (isIgnorePath(request.getRequestURI())){
-			return null;
-		}
+//		if (isIgnorePath(request.getRequestURI())){
+//			return null;
+//		}
 
 		// Step1：获取请求参数
 		String org = request.getParameter("org"); // 机构编号
@@ -212,6 +212,7 @@ public class PreRequestFilter extends ZuulFilter {
 			p.add(sup);
 			pa.put("sup", p);
 		}
+		
 		ctx.setRequestQueryParams(pa);
 		ctx.getZuulRequestHeaders().put("content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
 		return null;
