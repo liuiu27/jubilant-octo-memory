@@ -168,10 +168,8 @@ public class OrgContentController{
 			
 			//获取SIP的跳转URL 
 //			jumReq.setLoginUrl(contentJumpReq.getLoginUrl() + "?tranNo=" + tranNo);
-			jumReq.setLoginUrl("http://cvpa.leagpoint.com/sipService/content/SupContent/contentLogin" + "?tranNo=" + sipTranNo);
-			
-			
-			jumReq.setPayUrl(contentJumpReq.getPayUrl() + "?tranNo=" + sipTranNo);
+//			jumReq.setLoginUrl("http://cvpa.leagpoint.com/sipService/content/SupContent/contentLogin" + "?tranNo=" + sipTranNo);
+//			jumReq.setPayUrl(contentJumpReq.getPayUrl() + "?tranNo=" + sipTranNo);
 			
 			jumReq.setMobileNo(contentJumpReq.getMobileNo());
 			String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);
