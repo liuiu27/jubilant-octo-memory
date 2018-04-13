@@ -7,19 +7,17 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @ConditionalOnClass({JSON.class, FastJsonHttpMessageConverter.class})//1
-@ConditionalOnProperty(//2
-        name = {"spring.http.converters.preferred-json-mapper"},
-        havingValue = "fastjson",
-        matchIfMissing = true
-)
 public class FastJsonAutoConfiguration {
 
     @Bean
@@ -47,11 +45,10 @@ public class FastJsonAutoConfiguration {
         };
         fastJsonConfig.setSerializeFilters(valueFilter);
 
-        //TODO 2018/3/16
-        //处理中文乱码问题 已经在配置文件中强制转换utf-8.
-        //List<MediaType> fastMediaTypes = new ArrayList<>();
-        //fastMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
-        //converter.setSupportedMediaTypes(fastMediaTypes);
+        //处理中文乱码问题
+        List<MediaType> fastMediaTypes = new ArrayList<>();
+        fastMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+        converter.setSupportedMediaTypes(fastMediaTypes);
 
         converter.setFastJsonConfig(fastJsonConfig);
 

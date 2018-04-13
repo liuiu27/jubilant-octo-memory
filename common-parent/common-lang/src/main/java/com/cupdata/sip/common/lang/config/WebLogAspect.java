@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -25,17 +25,17 @@ import java.util.Arrays;
  */
 
 @Aspect
-@Component
+@Configuration
 @Slf4j
 public class WebLogAspect {
     ThreadLocal<Long> startTime = new ThreadLocal<>();
 
-    @Pointcut("execution(public * com.cupdata.*.*(..))")
+    //所有public 任意返回值 sip下的所有子包下以Controller结尾 的所有方法，可以为任意参数
+    @Pointcut("execution(public * com.cupdata.sip..*Controller.*(..))")
     public void logPointcut(){}
-    @org.aspectj.lang.annotation.Around("logPointcut()")
 
     @Before("logPointcut()")
-    public void doBefore(JoinPoint joinPoint) throws Throwable {
+    public void doBefore(JoinPoint point) {
         startTime.set(System.currentTimeMillis());
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -44,13 +44,14 @@ public class WebLogAspect {
         log.info("Request URL : " + request.getRequestURL().toString());
         log.info("http-method : " + request.getMethod());
         log.info("Request IP : " + request.getRemoteAddr());
-        log.info("class.method() : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        log.info("args[] : " + Arrays.toString(joinPoint.getArgs()));
+        log.debug("class.method() : " + point.getSignature().getDeclaringTypeName() + "." + point.getSignature().getName());
+        log.debug("args[] : " + Arrays.toString(point.getArgs()));
     }
     @AfterReturning(returning = "ret", pointcut = "logPointcut()")
-    public void doAfterReturning(Object ret) throws Throwable {
+    public void doAfterReturning(Object ret){
         // 处理完请求，返回内容
         log.info("Response result : " + ret);
-        log.info("total time : " + (System.currentTimeMillis() - startTime.get()));
+        log.debug("total time : " + (System.currentTimeMillis() - startTime.get()));
     }
+
 }

@@ -1,8 +1,8 @@
 package com.cupdata.sip.common.lang.exception;
 
 import com.alibaba.fastjson.JSONException;
-import com.cupdata.sip.common.lang.BaseResponse;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -42,6 +42,12 @@ public class GlobalExceptionHandler {
         return new BaseResponse(ResponseCodeMsg.PARAM_INVALID.getCode(),ResponseCodeMsg.PARAM_INVALID.getMsg(),exception.getMessage());
     }
 
+    @ExceptionHandler(value = BestdoException.class)
+    public BaseResponse exceptionHandler(HttpServletRequest request,BestdoException exception) {
+
+        return new BaseResponse(exception.getCode(),exception.getMessage());
+    }
+
 
     @ExceptionHandler(value = {Exception.class})
     public BaseResponse handle(HttpServletRequest request, Exception ex) {
@@ -49,5 +55,38 @@ public class GlobalExceptionHandler {
         return new BaseResponse(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg(),ex.getMessage());
     }
 
+
+    @Data
+    class BaseResponse<T>{
+
+        private String responseCode;
+
+        private String responseMsg;
+
+        private T data;
+
+        public BaseResponse(){
+            responseCode = ResponseCodeMsg.SUCCESS.getCode();
+            responseMsg = ResponseCodeMsg.SUCCESS.getMsg();
+        }
+
+        public BaseResponse(T data){
+            responseCode = ResponseCodeMsg.SUCCESS.getCode();
+            responseMsg = ResponseCodeMsg.SUCCESS.getMsg();
+            this.data = data;
+        }
+
+        public BaseResponse(String responseCode, String responseMsg){
+            this.responseCode =responseCode;
+            this.responseMsg = responseMsg;
+        }
+        public BaseResponse(String responseCode, String responseMsg, T data){
+            this.responseCode =responseCode;
+            this.responseMsg = responseMsg;
+            this.data =data;
+        }
+
+
+    }
 
 }

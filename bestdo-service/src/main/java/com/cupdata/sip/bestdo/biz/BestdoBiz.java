@@ -117,7 +117,7 @@ public class BestdoBiz {
 
         ret = new String(Base64.getDecoder().decode(ret));
 
-        log.info(ret);
+        log.info("response result, "+ret);
 
         BASE64Decoder b64 = new BASE64Decoder();
         try {
@@ -126,6 +126,7 @@ public class BestdoBiz {
         } catch (IOException e) {
             log.error("解析错误！！！");
         }
+
         return null;
 
     }

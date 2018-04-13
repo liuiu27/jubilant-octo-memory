@@ -233,7 +233,7 @@ public class RSAHelper {
      */
     public static String oldDecipher(String contentBase64, String privateKeyBase64) throws IOException {
 
-        return decipher(Base64.getEncoder().encodeToString(Base64.getDecoder().decode(contentBase64)), privateKeyBase64);
+        return decipher(Base64.getEncoder().encodeToString(org.apache.commons.codec.binary.Base64.decodeBase64(contentBase64)), privateKeyBase64);
 
     }
 
@@ -349,7 +349,7 @@ public class RSAHelper {
 
 
             byte[] decoded = Base64.getDecoder().decode(publicKeyPEM);
-
+       
             X509EncodedKeySpec spec =
                     new X509EncodedKeySpec(decoded);
             KeyFactory kf = KeyFactory.getInstance(ALGORITHM);

@@ -46,6 +46,7 @@ public class BestdoController implements IBestdoApi {
 
     @Override
     public BaseResponse getBookDate(String rightproduct, String sporttype, String setMerItemId, String setVenueNo) {
+
         BookDateResVO bookDate = bestdoBiz.getBookDate(rightproduct, sporttype, setMerItemId, setVenueNo);
 
         return new BaseResponse(bookDate.getData());
@@ -53,7 +54,11 @@ public class BestdoController implements IBestdoApi {
 
     @Override
     public BaseResponse crateBestdoOrder(String parma) {
-        return null;
+
+
+        return new BaseResponse("哈哈啊哈哈哈");
+        //bestdoBiz.crateBestdoOrder(parma);
+        //throw new BestdoException("000","1231232");
     }
 
 
