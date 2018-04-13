@@ -235,6 +235,10 @@ public class TrvokController implements ITrvokController{
 			
 			//修改订单状态 保存券码
 			voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
+			if(StringUtils.isNoneBlank(voucherReq.getNotifyUrl())) {
+				voucherOrderRes.getData().getOrder().setNotifyUrl(voucherReq.getNotifyUrl());
+				voucherOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_YES);
+			}
 			voucherOrderRes.getData().getVoucherOrder().setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED);
 			voucherOrderRes.getData().getVoucherOrder().setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
 			voucherOrderRes.getData().getVoucherOrder().setVoucherCode(baseResponse.getData().getVerifyCode());
