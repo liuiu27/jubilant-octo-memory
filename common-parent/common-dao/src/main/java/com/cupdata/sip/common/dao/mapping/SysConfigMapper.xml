@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cupdata.sip.common.dao.mapper.SysConfigMapper">
-  <resultMap id="BaseResultMap" type="com.cupdata.sip.common.dao.entity.SysConfig">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="ID" jdbcType="BIGINT" property="id" />
-    <result column="BANK_CODE" jdbcType="VARCHAR" property="bankCode" />
-    <result column="PARA_NAME_EN" jdbcType="VARCHAR" property="paraNameEn" />
-    <result column="PARA_NAME_CN" jdbcType="VARCHAR" property="paraNameCn" />
-    <result column="PARA_VALUE" jdbcType="VARCHAR" property="paraValue" />
-    <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy" />
-    <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy" />
-    <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.cupdata.sip.common.dao.entity.SysConfig">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="BANK_CODE" jdbcType="VARCHAR" property="bankCode"/>
+        <result column="PARA_NAME_EN" jdbcType="VARCHAR" property="paraNameEn"/>
+        <result column="PARA_NAME_CN" jdbcType="VARCHAR" property="paraNameCn"/>
+        <result column="PARA_VALUE" jdbcType="VARCHAR" property="paraValue"/>
+        <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy"/>
+        <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate"/>
+    </resultMap>
+    <select id="getSysConfig" resultMap="BaseResultMap">
+
+        SELECT
+        ID,
+        BANK_CODE,
+        PARA_NAME_EN,
+        PARA_NAME_CN,
+        PARA_VALUE,
+        CREATE_BY,
+        CREATE_DATE,
+        UPDATE_BY,
+        UPDATE_DATE
+        FROM
+        sys_config
+        WHERE
+        1 = 1
+        AND BANK_CODE = #{bankCode}
+        AND PARA_NAME_EN =#{paraName}
+
+    </select>
 </mapper>

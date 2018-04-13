@@ -2,8 +2,10 @@ package com.cupdata.sip.common.api.config.response;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class SysConfigVO{
+public class SysConfigVO implements Serializable{
 	/**
 	 * 
 	 */

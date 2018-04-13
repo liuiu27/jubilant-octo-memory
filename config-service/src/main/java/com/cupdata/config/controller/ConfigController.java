@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -45,7 +44,7 @@ public class ConfigController implements IConfigController {
      *
      * @return
      */
-    public SysConfigVO getSysConfig(@NotBlank @PathVariable("paraName") String paraName, @PathVariable("bankCode") String bankCode) {
+    public SysConfigVO getSysConfig(@NotBlank String paraName, String bankCode) {
 
         bankCode = StringUtils.isBlank(bankCode) ? defaultBankCode : bankCode;
 

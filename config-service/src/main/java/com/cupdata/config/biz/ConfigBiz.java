@@ -6,24 +6,31 @@ import com.cupdata.sip.common.dao.mapper.SysConfigMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.cache.annotation.CacheDefaults;
+import javax.cache.annotation.CacheResult;
 import java.util.ArrayList;
 import java.util.List;
 
+@CacheDefaults(cacheName = "config")
 @Service
 public class ConfigBiz {
 
 	@Autowired
 	private SysConfigMapper sysConfigMapper;
 
+	@CacheResult
 	public SysConfigVO getSysConfig(String paraName, String bankCode) {
 
 		SysConfigVO sysConfigVO =new SysConfigVO();
-		SysConfig sysConfig =new SysConfig();
+
+		SysConfig sysConfig = new SysConfig();
 		sysConfig.setBankCode(bankCode);
 		sysConfig.setParaNameEn(paraName);
 
+		//sysConfigMapper.getSysConfig(paraName,bankCode);
 		sysConfig = sysConfigMapper.selectOne(sysConfig);
-
+		if (null != sysConfig)
 		BeanCopierUtils.copyProperties(sysConfig,sysConfigVO);
 
 		return sysConfigVO;

@@ -15,9 +15,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class CachingSetup implements JCacheManagerCustomizer {
 
+    private final static String CONFIG ="config";
+
+
     @Override
     public void customize(CacheManager cacheManager) {
-        cacheManager.createCache("cache", new MutableConfiguration<>()
+        cacheManager.createCache("config", new MutableConfiguration<>()
                 .setExpiryPolicyFactory(TouchedExpiryPolicy.factoryOf(new Duration(TimeUnit.MINUTES, 10)))
                 .setStoreByValue(false)
                 .setManagementEnabled(true)
