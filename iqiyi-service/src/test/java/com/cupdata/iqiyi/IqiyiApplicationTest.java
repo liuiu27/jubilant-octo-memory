@@ -94,7 +94,7 @@ public class IqiyiApplicationTest {
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
         System.out.println(data);
         System.out.println(sign);
-        String res = "data=N4bqXT3EiDgqsBqAVyvg1SShjAq9pQ1Hj6wI%2FBhOoXN68EJIIYnml8lYoBXSBG%2FHki7tLgg1EYahRNpXiaplh59WtPfsqetMC168mnmtNljPGCTZWMqEf%2BzxVdmy%2FGzLgpnNfPhZoZNM3Sole7ka%2FAkKjxz%2BiubSzvfbq5u9Msg%3D&sign=rSk1T2CFPDFysMTHbL6M6rVM07Hes72AMuwabxNIdycCEvV1kMUxFpmVPKqjvgWz1BV9BG0UhgfWTZPQGcR0SL%2B0At1iSbHSs%2FHxNm%2BwjxCkZqq2uPDd8X39ka9oG176bGmTA0l84cOvVHaql1fPeEvK8nUG%2FBC8SSZqpjNYwDk%3D";
+        String res = "data=FQNbxDd6oQAhrfYl4zr5iTs1n6dU9KiTVyLAt2%2F9JxMkJ0CEyX9Kn7%2FlWeapbecpGtfNFJyaNqLJAIpIq8MthtdtvpAbEzljBD4F03SV8KaxkErKuyxDrA1SQmUQvKXig8KJB3sWAeCxsxLocZM540so4ylZvfW0H8RGLSYYAH8f5bh2ryqSU8piDycRopJu40NCT%2BSZxKm0hnapmPlvTHwowXQuk3z9dX2aCvEavQE9fJxuwfhX3ji7gzHPX8FlJ3CFdndALQJQqXuKvJ2unHrKD%2F6OUc6BVO%2BpKFTotK6tm8Jzbf96NUiGjkv61MBCeXj5IXrPiLUHZeZLrKmw%2Fg%3D%3D&sign=t01sE5v9GLpPWbaIBDMI%2FA%2Fj8lY4K%2BkCBfpGUGC%2FU8s4RY8CvCr%2FgsVUIEr%2FE0dlDESObT1VgxWawfU3XjmZ0Km5g8hWhZnbFjw0VI5PjbeTBRqOB63R0TFCOvMJNyJN3o3qd79aZyUWi6rYtXa7v%2FaHuOT0kC9QdhGq4y0FZN0%3D";
 
         System.out.println("响应数据为:" + res);
 
