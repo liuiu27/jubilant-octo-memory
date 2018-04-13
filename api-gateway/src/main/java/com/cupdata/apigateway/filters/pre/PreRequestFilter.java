@@ -8,9 +8,9 @@ import com.cupdata.apigateway.util.GatewayUtils;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.utils.DateTimeUtil;
 import com.cupdata.sip.common.lang.utils.RSAUtils;
-import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
@@ -23,7 +23,6 @@ import org.springframework.http.MediaType;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.*;
@@ -176,7 +175,7 @@ public class PreRequestFilter extends ZuulFilter {
 				return MediaType.APPLICATION_JSON_UTF8_VALUE;
 			}
 			@Override
-			public ServletInputStream getInputStream() throws IOException {
+			public ServletInputStream getInputStream(){
 				return new ServletInputStreamWrapper(reqBodyBytes);
 			}
 
