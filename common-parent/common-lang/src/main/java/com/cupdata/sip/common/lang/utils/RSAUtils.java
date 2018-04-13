@@ -1,4 +1,4 @@
-package com.cupdata.sip.common.lang;
+package com.cupdata.sip.common.lang.utils;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -41,6 +41,7 @@ import java.util.Map;
  * @date 2016-2-15 下午04:23:16 
  *
  */
+@Deprecated
 public class RSAUtils {
 	/**
 	 * log日志

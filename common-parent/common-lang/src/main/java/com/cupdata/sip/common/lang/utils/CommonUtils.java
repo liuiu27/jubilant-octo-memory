@@ -1,4 +1,4 @@
-package com.cupdata.sip.common.lang;
+package com.cupdata.sip.common.lang.utils;
 
 import com.cupdata.sip.common.lang.constant.TimeConstants;
 import lombok.extern.slf4j.Slf4j;

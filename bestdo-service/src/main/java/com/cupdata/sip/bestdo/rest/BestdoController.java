@@ -57,8 +57,6 @@ public class BestdoController implements IBestdoApi {
 
 
         return new BaseResponse("哈哈啊哈哈哈");
-        //bestdoBiz.crateBestdoOrder(parma);
-        //throw new BestdoException("000","1231232");
     }
 
 

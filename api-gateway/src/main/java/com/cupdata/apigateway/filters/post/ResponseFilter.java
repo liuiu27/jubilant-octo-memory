@@ -7,7 +7,7 @@ import com.cupdata.apigateway.util.GatewayUtils;
 import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
-import com.cupdata.sip.common.lang.RSAUtils;
+import com.cupdata.sip.common.lang.utils.RSAUtils;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;

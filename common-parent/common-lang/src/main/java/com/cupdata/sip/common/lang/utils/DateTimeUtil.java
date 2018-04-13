@@ -1,4 +1,4 @@
-package com.cupdata.sip.common.lang;
+package com.cupdata.sip.common.lang.utils;
 
 import org.apache.log4j.Logger;
 
