@@ -26,6 +26,8 @@ public class ConfigController implements IConfigController {
     @Autowired
     private ConfigBiz configBiz;
 
+    private final static String defaultBankCode="CUPD";
+
     @Override
     public BaseResponse<List<SysConfigVO>> selectAll() {
         log.info("ConfigController selectAll is begin...");
@@ -45,7 +47,7 @@ public class ConfigController implements IConfigController {
      */
     public SysConfigVO getSysConfig(@NotBlank @PathVariable("paraName") String paraName, @PathVariable("bankCode") String bankCode) {
 
-        bankCode = StringUtils.isBlank(bankCode) ? "CUPD" : bankCode;
+        bankCode = StringUtils.isBlank(bankCode) ? defaultBankCode : bankCode;
 
         return configBiz.getSysConfig(paraName, bankCode);
     }
