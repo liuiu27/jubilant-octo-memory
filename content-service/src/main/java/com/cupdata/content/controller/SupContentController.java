@@ -101,16 +101,18 @@ public class SupContentController {
 	/**
 	 * 支付请求接口
 	 * @param sup 供应商号
-	 * @param tranNo 流水号
 	 * @param payPageVO 请求参数
 	 * @return
 	 */
 	public String payRequest(@RequestParam(value = "sup", required = true) String sup,
-								   @RequestParam(value = "tranNo", required = true) String tranNo,
 								   @RequestBody @Validated PayPageVO payPageVO ){
 	    //Step1 验证本流水是否有效
+        payPageVO.getSipTranNo();
+
 	    //Step2 验证是否有对应交易订单。并对其进行检验。
 	    //Step3 创建交易订单，并保存参数
+        
+
 	    //Step4 获取对应的支付接口。
 	    //Step5 拼接参数。
 

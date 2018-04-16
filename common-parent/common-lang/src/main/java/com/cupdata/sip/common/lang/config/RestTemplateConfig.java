@@ -16,9 +16,9 @@ import org.apache.http.ssl.SSLContexts;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
@@ -44,8 +44,8 @@ public class RestTemplateConfig {
         return restTemplate;
     }
 
+    @Primary
     @Bean("restTemplate")
-    @ConditionalOnMissingBean({ RestOperations.class, RestTemplate.class })
     public RestTemplate restTemplate(){
 
         //http://rensanning.iteye.com/?page=3
