@@ -48,7 +48,9 @@ eureka:
   instance:
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
     prefer-ip-address: true     #表示将ip注册到Eureka server
-
+#mybatis相关配置
+mybatis:
+   config-location: classpath:mybatis.xml
 
 --- # 测试环境**********************************************************************************************************
 spring:
