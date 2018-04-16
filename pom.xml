@@ -39,7 +39,8 @@
 		<module>ihuyi-service</module>
 		<module>common-parent</module>
 		<module>bestdo-service</module>
-	</modules>
+        <module>content-Introduce</module>
+    </modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->
 	<properties>

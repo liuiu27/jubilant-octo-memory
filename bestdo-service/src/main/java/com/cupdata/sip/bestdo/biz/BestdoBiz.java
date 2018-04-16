@@ -105,15 +105,24 @@ public class BestdoBiz {
 
     public SaidianOrderRes crateBestdoOrder(String parma){
 
-        BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo("2018010500001234");
+        BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo("20180409S23333376");
+        if (!supByNo.getResponseCode().equals( ResponseCodeMsg.SUCCESS.getCode())){
+            log.error("获取供应商密钥失败");
+            throw new BestdoException("20180409S23333376","获取供应商密钥失败");
+        }
+
         SupplierInfVo supplierInfVo = supByNo.getData();
 
         String supPublickey =supplierInfVo.getSupplierPubKey();
 
         PublicKey publicKey = RSAHelper.getPemPublicKey(supPublickey);
 
+        if (null == publicKey){
+            log.error("无法解析供应商密钥，info："+supPublickey);
+            throw new BestdoException("20180409S23333376","无法解析供应商密钥");
+        }
         parma = RSAHelper.encipher(parma,publicKey,8);
-
+        parma = Base64.getEncoder().encodeToString(parma.getBytes());
         String ret = restTemplate.getForObject(apiAddress + "/orders/createOrder?orderInfo={json}",
                 String.class, parma);
 
@@ -130,7 +139,7 @@ public class BestdoBiz {
             ret = RSAHelper.decipher(Base64.getEncoder().encodeToString(b64.decodeBuffer(ret)), privateKey);
 
             SaidianOrderRes saidianOrderRes = JSONObject.parseObject(ret,SaidianOrderRes.class);
-            if (saidianOrderRes.getResCode().equals("EEE"))
+            if (saidianOrderRes.getResCode().equals("EEEE"))
                 throw new BestdoException(ResponseCodeMsg.FAIL.getCode(),saidianOrderRes.getResInfo());
             return saidianOrderRes;
         } catch (IOException e) {

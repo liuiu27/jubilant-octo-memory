@@ -343,9 +343,9 @@ public class RSAHelper {
 
     public static PublicKey getPemPublicKey(String contentBase64) {
         try {
-            String publicKeyPEM = contentBase64.replace("-----BEGIN PUBLIC KEY-----\n", "");
+            String publicKeyPEM = contentBase64.replace("-----BEGIN PUBLIC KEY-----", "");
             publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
-            publicKeyPEM = publicKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "");
+            publicKeyPEM = publicKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "").replace(" ","").trim();
 
 
             byte[] decoded = Base64.getDecoder().decode(publicKeyPEM);

@@ -13,10 +13,10 @@ import lombok.Setter;
 public class BestaResVO<T> {
 
     @JSONField(serialize=false)
-    String resCode;
+    transient String resCode;
 
     @JSONField(serialize=false)
-    String resInfo;
+    transient String resInfo;
 
     T data;
 

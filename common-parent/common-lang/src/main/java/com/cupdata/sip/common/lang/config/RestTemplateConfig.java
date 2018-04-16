@@ -16,7 +16,6 @@ import org.apache.http.ssl.SSLContexts;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -36,18 +35,9 @@ import java.security.cert.CertificateException;
 @Configuration
 public class RestTemplateConfig {
 
-    @Bean("serverRest")
-    public RestTemplate serverRest(){
-        //http://www.jianshu.com/p/c9644755dd5e
-        RestTemplate  restTemplate=	 new RestTemplate();
-        restTemplate.getMessageConverters().add(new FastJsonHttpMessageConverter());
-        return restTemplate;
-    }
 
-    @Primary
-    @Bean("restTemplate")
+    @Bean(name="restTemplate")
     public RestTemplate restTemplate(){
-
         //http://rensanning.iteye.com/?page=3
         RestTemplate  restTemplate=	 new RestTemplate(simpleClientHttpRequestFactory());
         restTemplate.getMessageConverters().add(new FastJsonHttpMessageConverter());
