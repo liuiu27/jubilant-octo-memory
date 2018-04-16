@@ -1,4 +1,4 @@
-package com.cupdata.sip.common.api.lakala;
+package com.cupdata.sip.common.api.voucher;
 
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.voucher.request.DisableVoucherReq;
@@ -8,15 +8,24 @@ import com.cupdata.sip.common.api.voucher.response.DisableVoucherRes;
 import com.cupdata.sip.common.api.voucher.response.GetVoucherRes;
 import com.cupdata.sip.common.api.voucher.response.WriteOffVoucherRes;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * @Auth: LinYong
- * @Description:拉卡拉服务请求接口
- * @Date: 16:22 2017/12/19
+ * @Author: DingCong
+ * @Description: 本地数据库获取券码接口
+ * @CreateDate: 2018/3/1 19:24
  */
-@RequestMapping("/lakala")
-public interface ILakalaController{
+@RequestMapping("/localVoucher")
+public interface ILocalVoucherController {
+
+    /**
+     * SIP根据券码类型id从本地券码库获取一条券码
+     * @return
+     */
+    @PostMapping("/getLocalVoucher")
+    public BaseResponse<GetVoucherRes> getLocalVoucher(@RequestParam(value = "org", required = true) String org, @RequestBody GetVoucherReq voucherReq);
 
     /**
      * 获取券码接口方法
@@ -25,7 +34,7 @@ public interface ILakalaController{
      * @return
      */
     @PostMapping("/getVoucher")
-    public BaseResponse<GetVoucherRes> getVoucher(String org, GetVoucherReq voucherReq);
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value = "org", required = true) String org, @RequestBody GetVoucherReq voucherReq);
 
     /**
      * 禁用券码接口方法
@@ -34,7 +43,7 @@ public interface ILakalaController{
      * @return
      */
     @PostMapping("/disableVoucher")
-    public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq);
+    public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value = "org", required = true) String org, @RequestBody DisableVoucherReq disableVoucherReq);
 
     /**
      * 核销券码接口方法
@@ -43,7 +52,6 @@ public interface ILakalaController{
      * @return
      */
     @PostMapping("/writeOffVoucher")
-    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq);
-
+    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value = "sup", required = true) String sup, @RequestBody WriteOffVoucherReq writeOffVoucherReq);
 
 }

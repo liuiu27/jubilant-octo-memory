@@ -5,7 +5,7 @@
 * @date 2017年11月15日 下午4:01:42 
 * @version V1.0   
 */
-package com.cupdata.sip.common.api.lakala.request;
+package com.cupdata.sip.common.api.voucher.request;
 
 /** 
  * @ClassName: LakalaVoucherReq 
