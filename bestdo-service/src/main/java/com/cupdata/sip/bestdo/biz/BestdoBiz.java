@@ -1,6 +1,7 @@
 package com.cupdata.sip.bestdo.biz;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.cupdata.sip.bestdo.feign.SupplierFeignClient;
 import com.cupdata.sip.bestdo.vo.request.BookDateReq;
 import com.cupdata.sip.bestdo.vo.request.MerDetailReq;
@@ -9,6 +10,8 @@ import com.cupdata.sip.bestdo.vo.response.*;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
 import com.cupdata.sip.common.lang.RSAHelper;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+import com.cupdata.sip.common.lang.exception.BestdoException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -100,7 +103,7 @@ public class BestdoBiz {
 
     }
 
-    public String crateBestdoOrder(String parma){
+    public SaidianOrderRes crateBestdoOrder(String parma){
 
         BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo("2018010500001234");
         SupplierInfVo supplierInfVo = supByNo.getData();
@@ -125,7 +128,11 @@ public class BestdoBiz {
         BASE64Decoder b64 = new BASE64Decoder();
         try {
             ret = RSAHelper.decipher(Base64.getEncoder().encodeToString(b64.decodeBuffer(ret)), privateKey);
-            return ret;
+
+            SaidianOrderRes saidianOrderRes = JSONObject.parseObject(ret,SaidianOrderRes.class);
+            if (saidianOrderRes.getResCode().equals("EEE"))
+                throw new BestdoException(ResponseCodeMsg.FAIL.getCode(),saidianOrderRes.getResInfo());
+            return saidianOrderRes;
         } catch (IOException e) {
             log.error("解析错误！！！");
         }

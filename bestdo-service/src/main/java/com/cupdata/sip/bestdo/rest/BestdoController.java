@@ -1,5 +1,6 @@
 package com.cupdata.sip.bestdo.rest;
 
+import com.alibaba.fastjson.JSON;
 import com.cupdata.sip.bestdo.biz.BestdoBiz;
 import com.cupdata.sip.common.api.bestdo.vo.OrderCreateReqVO;
 import com.cupdata.sip.bestdo.vo.response.*;
@@ -61,9 +62,9 @@ public class BestdoController implements IBestdoApi {
 
     @Override
     public BaseResponse crateBestdoOrder(@RequestBody @Validated OrderCreateReqVO orderCreateReqVO) {
+        SaidianOrderRes saidianOrderRes = bestdoBiz.crateBestdoOrder(JSON.toJSONString(orderCreateReqVO));
 
-
-        return new BaseResponse("哈哈啊哈哈哈");
+        return new BaseResponse(saidianOrderRes);
     }
 
 
@@ -75,7 +76,7 @@ public class BestdoController implements IBestdoApi {
         return user.toString();
     }
 
-    @CacheResult
+  @CacheResult
    public User getuser(@CacheKey String name){
 
         if (name.equals("a")){

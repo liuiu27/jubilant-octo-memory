@@ -5,7 +5,7 @@ spring:
     active: dev
   cache:
     jcache:
-      config: ehcache3.xml
+      config: com/cupdata/sip/common/cache/ehcache3.xml
 server:
    port: 46966         # 指定该实例的端口
 #日志配置

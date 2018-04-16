@@ -27,6 +27,7 @@ public class OrderCreateReqVO {
     private String bookDay;
     @NotBlank
     private String bookPhone;
+
     private String note;
     @NotBlank
     private String rightProduct;
