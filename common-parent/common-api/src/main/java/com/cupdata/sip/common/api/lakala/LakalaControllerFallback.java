@@ -1,12 +1,12 @@
 package com.cupdata.sip.common.api.lakala;
 
 import com.cupdata.sip.common.api.BaseResponse;
-import com.cupdata.sip.common.api.lakala.request.DisableVoucherReq;
-import com.cupdata.sip.common.api.lakala.request.GetVoucherReq;
-import com.cupdata.sip.common.api.lakala.request.WriteOffVoucherReq;
-import com.cupdata.sip.common.api.lakala.response.DisableVoucherRes;
-import com.cupdata.sip.common.api.lakala.response.GetVoucherRes;
-import com.cupdata.sip.common.api.lakala.response.WriteOffVoucherRes;
+import com.cupdata.sip.common.api.voucher.request.DisableVoucherReq;
+import com.cupdata.sip.common.api.voucher.request.GetVoucherReq;
+import com.cupdata.sip.common.api.voucher.request.WriteOffVoucherReq;
+import com.cupdata.sip.common.api.voucher.response.DisableVoucherRes;
+import com.cupdata.sip.common.api.voucher.response.GetVoucherRes;
+import com.cupdata.sip.common.api.voucher.response.WriteOffVoucherRes;
 
 /**
  * @Auther: DingCong

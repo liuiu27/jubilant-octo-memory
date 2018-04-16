@@ -5,7 +5,7 @@
  * @date 2017年11月15日 下午4:22:43
  * @version V1.0
  */
-package com.cupdata.sip.common.api.lakala.response;
+package com.cupdata.sip.common.api.voucher.response;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.cupdata.sip.common.api.lakala.response;
+package com.cupdata.sip.common.api.voucher.response;
 
 import lombok.Data;
 

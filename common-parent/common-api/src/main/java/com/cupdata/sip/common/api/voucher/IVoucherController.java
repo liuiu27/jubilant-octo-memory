@@ -1,4 +1,4 @@
-package com.cupdata.sip.common.api.lakala;
+package com.cupdata.sip.common.api.voucher;
 
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.voucher.request.DisableVoucherReq;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @Auth: LinYong
- * @Description:拉卡拉服务请求接口
- * @Date: 16:22 2017/12/19
+ * @Description:券码服务接口
+ * @Date: 13:06 2017/12/14
  */
-@RequestMapping("/lakala")
-public interface ILakalaController{
+@RequestMapping("/voucher")
+public interface IVoucherController {
 
     /**
      * 获取券码接口方法
