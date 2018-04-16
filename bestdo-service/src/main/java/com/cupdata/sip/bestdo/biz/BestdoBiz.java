@@ -6,20 +6,21 @@ import com.cupdata.sip.bestdo.vo.request.BookDateReq;
 import com.cupdata.sip.bestdo.vo.request.MerDetailReq;
 import com.cupdata.sip.bestdo.vo.request.MerItemListReq;
 import com.cupdata.sip.bestdo.vo.response.*;
-import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
 import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
 import com.cupdata.sip.common.lang.RSAHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import sun.misc.BASE64Decoder;
 
+import javax.cache.annotation.CacheDefaults;
 import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import java.io.IOException;
 import java.security.PublicKey;
 import java.util.Base64;
@@ -31,7 +32,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-@CacheConfig(cacheNames = "ehcache")
+@CacheDefaults(cacheName = "ehcache")
 public class BestdoBiz {
 
 
@@ -54,6 +55,7 @@ public class BestdoBiz {
     }
 
 
+    @CacheResult
     public BestaResVO<List<MerItemRes>> getMerItemList(String rightproduct,String sporttype){
 
         MerItemListReq req = new MerItemListReq();
@@ -68,6 +70,7 @@ public class BestdoBiz {
         return resVO;
     }
 
+    @CacheResult
     public MerDetailResVO getMerDetail(@CacheKey String merItemId){
 
         MerDetailReq req = new MerDetailReq();

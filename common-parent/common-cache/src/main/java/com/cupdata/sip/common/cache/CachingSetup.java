@@ -15,15 +15,18 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class CachingSetup implements JCacheManagerCustomizer {
 
-    private final static String CONFIG ="config";
+    private final static String  DEFAULT_CACHE ="ehcache";
 
 
     @Override
     public void customize(CacheManager cacheManager) {
-        cacheManager.createCache("config", new MutableConfiguration<>()
+        //配置默认缓存
+        cacheManager.createCache(DEFAULT_CACHE, new MutableConfiguration<>()
                 .setExpiryPolicyFactory(TouchedExpiryPolicy.factoryOf(new Duration(TimeUnit.MINUTES, 10)))
                 .setStoreByValue(false)
                 .setManagementEnabled(true)
                 .setStatisticsEnabled(true));
+
+        //TODO 2018/4/16  可根据需要 配置多个缓存 对象。
     }
 }

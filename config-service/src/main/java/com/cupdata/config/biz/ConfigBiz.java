@@ -12,7 +12,7 @@ import javax.cache.annotation.CacheResult;
 import java.util.ArrayList;
 import java.util.List;
 
-@CacheDefaults(cacheName = "config")
+@CacheDefaults(cacheName = "ehcache")
 @Service
 public class ConfigBiz {
 
