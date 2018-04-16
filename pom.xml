@@ -194,16 +194,6 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
-			<!-- 打包排除生成目录 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/generator/**</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
 			<!-- 对发布的POM进行精简  -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
