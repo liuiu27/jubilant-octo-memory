@@ -125,11 +125,11 @@
 				<artifactId>httpclient</artifactId>
 				<version>${httpclient.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>com.cupdata.sip</groupId>
-				<artifactId>commons</artifactId>
-				<version>${revision}</version>
-			</dependency>
+			<!--<dependency>-->
+				<!--<groupId>com.cupdata.sip</groupId>-->
+				<!--<artifactId>commons</artifactId>-->
+				<!--<version>${revision}</version>-->
+			<!--</dependency>-->
 			<dependency>
 				<groupId>com.cupdata.sip</groupId>
 				<artifactId>common-cache</artifactId>
