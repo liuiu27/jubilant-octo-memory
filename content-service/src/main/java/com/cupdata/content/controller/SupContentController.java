@@ -205,6 +205,7 @@ public class SupContentController {
         req.put("notifyUrl",payPageVO.getNotifyUrl());
         req.put("productNum","1");
         req.put("orderShow","1");
+        req.put("userId","110440");
 
         JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
         String url = EncryptionAndEecryption.Encryption(req, resJson.getString("payUrl"));
@@ -213,6 +214,8 @@ public class SupContentController {
         return ret.toString();
 
 	}
+
+
 
 
 }

@@ -1,20 +1,5 @@
 package com.cupdata.content.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -29,8 +14,18 @@ import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.utils.EncryptionAndEecryption;
-
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
 * @author 作者: liwei
@@ -260,8 +255,41 @@ public class OrgContentController{
 
 
 
+	@ResponseBody
+	@GetMapping("payNotify")
+	public String payNotify(@RequestParam(value = "org") String org,@RequestBody NotifyVO notifyVO) {
+		RestTemplate restTemplate = new RestTemplate();
+
+		String notifyurl = "https://test.wantu.cn/payGate/payNotify?method=rongshupay_app";
+		Map<String, String> param = new HashMap<>();
+
+		param.put("resultCode", notifyVO.getResultCode());
+		param.put("supOrderNo", notifyVO.getSipOrderNo());//TODO 2018/4/17
+		param.put("orderAmt", notifyVO.getOrderAmt());
+		param.put("sipOrderNo", notifyVO.getOrgOrderNo());
+
+		String forObject = restTemplate.getForObject(notifyurl, String.class, param);
+
+		return forObject;
+	}
 
 
+
+
+	@Data
+ 	static class NotifyVO {
+
+		String resultCode;
+
+		String sipOrderNo;
+
+		String orderAmt;
+
+		String orgOrderNo;
+
+		String payTime;
+
+	}
 
 
 
