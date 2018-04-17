@@ -325,10 +325,10 @@ public class RSAHelper {
 
     public static PrivateKey getPemPrivateKey(String contentBase64) {
         try {
-            String privKeyPEM = contentBase64.replace("-----BEGIN PRIVATE KEY-----\n", "");
+            String privKeyPEM = contentBase64.replace("-----BEGIN PRIVATE KEY-----", "");
             privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "");
             //System.out.println("Private key\n"+privKeyPEM);
-            privKeyPEM = privKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "");
+            privKeyPEM = privKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "").replace(" ","").trim();
 
             byte[] decoded = Base64.getDecoder().decode(privKeyPEM);
 
@@ -346,7 +346,6 @@ public class RSAHelper {
             String publicKeyPEM = contentBase64.replace("-----BEGIN PUBLIC KEY-----", "");
             publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
             publicKeyPEM = publicKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "").replace(" ","").trim();
-
 
             byte[] decoded = Base64.getDecoder().decode(publicKeyPEM);
        
@@ -370,7 +369,7 @@ public class RSAHelper {
      * @throws Exception
      */
     public static String sign(String data, PrivateKey privateKey) throws Exception {
-        byte[] decode = Base64.getDecoder().decode(data);
+        byte[] decode = data.getBytes();
         // 用私钥对信息生成数字签名
         Signature signature = Signature.getInstance("MD5withRSA");
         signature.initSign(privateKey);
@@ -390,7 +389,7 @@ public class RSAHelper {
      */
     public static boolean verify(String data, PublicKey publicKey, String sign)
             throws Exception {
-        byte[] dData = Base64.getDecoder().decode(data);
+        byte[] dData = data.getBytes();
         Signature signature = Signature.getInstance("MD5withRSA");
         signature.initVerify(publicKey);
         signature.update(dData);

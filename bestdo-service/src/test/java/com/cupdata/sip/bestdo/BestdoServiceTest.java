@@ -7,16 +7,13 @@ import com.cupdata.sip.bestdo.vo.request.BookDateReq;
 import com.cupdata.sip.bestdo.vo.request.MerDetailReq;
 import com.cupdata.sip.bestdo.vo.request.MerItemListReq;
 import com.cupdata.sip.bestdo.vo.response.*;
-import com.cupdata.sip.common.lang.IOHelper;
 import com.cupdata.sip.common.lang.RSAHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
-import sun.misc.BASE64Decoder;
 
 import java.io.IOException;
 import java.security.PublicKey;
