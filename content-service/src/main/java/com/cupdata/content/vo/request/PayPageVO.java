@@ -55,4 +55,20 @@ public class PayPageVO {
      */
     @NotBlank
     String notifyUrl;
+
+    /**
+     * 商品数量
+     */
+    @NotBlank
+    String productNum;
+
+    /**
+     * 订单页面需展示信息
+     */
+    String orderShow;
+
+    /**
+     * 交易流水号
+     */
+    String sipTranNo;
 }

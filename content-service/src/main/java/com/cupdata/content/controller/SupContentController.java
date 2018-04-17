@@ -32,6 +32,9 @@ import com.cupdata.content.vo.request.SupVO;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
 * @author 作者: liwei
 * @createDate 创建时间：2018年3月12日 下午15:42:31
@@ -171,17 +174,30 @@ public class SupContentController {
 	 * @param payPageVO 请求参数
 	 * @return
 	 */
-	public String payRequest(@RequestParam(value = "sup", required = true) String sup,
-								   @RequestParam(value = "tranNo", required = true) String tranNo,
+	@GetMapping("payRequest")
+	public String payRequest(@RequestParam(value = "sup") String sup,
 								   @RequestBody @Validated PayPageVO payPageVO ){
 	    //Step1 验证本流水是否有效
+        //查询数据库中是否存在此流水号
+        ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(payPageVO.getSipTranNo(),ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+        //验证流水号
+        if(null == contentTransaction) {
+            log.error("query result is null");
+            throw new ErrorException(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode(),ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
+        }
 	    //Step2 验证是否有对应交易订单。并对其进行检验。
 	    //Step3 创建交易订单，并保存参数
 	    //Step4 获取对应的支付接口。
 	    //Step5 拼接参数。
+        //获取机构登录地址
 
-        StringBuffer ret = new StringBuffer("redirect:");
+        Map req = new HashMap();
 
+
+        JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
+        String url = EncryptionAndEecryption.Encryption(req, resJson.getString("payUrl"));
+
+        StringBuffer ret = new StringBuffer("redirect:"+url);
         return ret.toString();
 
 	}
