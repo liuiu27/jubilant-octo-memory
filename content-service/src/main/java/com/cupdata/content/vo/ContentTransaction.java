@@ -8,7 +8,7 @@ import com.cupdata.commons.model.BaseModel;
  * @author liwei
  * @date   2018/3/8
  */
- 
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

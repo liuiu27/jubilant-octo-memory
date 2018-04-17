@@ -1,10 +1,8 @@
-package com.cupdata.content.vo;
+package com.cupdata.content.vo.request;
 
-import org.hibernate.validator.constraints.NotBlank;
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
 * @author 作者: liwei
@@ -17,11 +15,13 @@ public class ContentLoginReq {
 	/**
 	 * 流水号
 	 */
+	@NotBlank
 	private String sipTranNo;
 	
 	/**
 	 * 供应商回跳地址
 	 */
+	@NotBlank
 	private String callBackUrl;
 	
 }

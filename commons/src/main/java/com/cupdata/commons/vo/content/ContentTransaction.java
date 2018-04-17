@@ -10,7 +10,7 @@ import com.cupdata.commons.model.BaseModel;
 import lombok.Data;
 
 @Data
-public class ContentTransaction extends BaseModel{
+public class ContentTransactionVO{
 	
 	/**
 	 * 时间戳

@@ -40,15 +40,15 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/content")
 public class OrgContentController{
-	
-	
+
+
 	@Autowired
 	private ProductFeignClient productFeignClient;
-	
-	
+
+
 	@Autowired
 	private ContentBiz contentBiz;
-	
+
 	/**
 	 * 内容引入跳转接口   机构请求
 	 * @param org
@@ -75,7 +75,7 @@ public class OrgContentController{
 				res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
 				res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
 			}
-//			
+//
 			// Step2：查询服务产品信息
 			BaseResponse<ProductInfVo> productInfRes = productFeignClient.findByProductNo(contentJumpReq.getProductNo());
 			if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
@@ -85,7 +85,7 @@ public class OrgContentController{
 				res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
 				res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
 			}
-//			
+//
 //			// Step3：判断服务产品是否为内容 引入商品
 //			if (!ModelConstants.PRODUCT_TYPE_CONTENT.equals(productInfRes.getData().getProduct().getProductType())) {
 //				log.error("Not a content product.....poductType is" + productInfRes.getData().getProduct().getProductType()
@@ -93,7 +93,7 @@ public class OrgContentController{
 //				res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
 //				res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
 //			}
-//	
+//
 //			// Step4：查询服务产品与机构是否关联
 //			BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org, contentJumpReq.getProductNo());
 //			if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
@@ -162,15 +162,15 @@ public class OrgContentController{
 					res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
 				}
 			}
-			// 组装参数 发送请求 
+			// 组装参数 发送请求
 			SupContentJumReq jumReq = new SupContentJumReq();
 			jumReq.setLoginFlag(contentJumpReq.getLoginFlag());
-			
-			//获取SIP的跳转URL 
+
+			//获取SIP的跳转URL
 //			jumReq.setLoginUrl(contentJumpReq.getLoginUrl() + "?tranNo=" + tranNo);
 //			jumReq.setLoginUrl("http://cvpa.leagpoint.com/sipService/content/SupContent/contentLogin" + "?tranNo=" + sipTranNo);
 //			jumReq.setPayUrl(contentJumpReq.getPayUrl() + "?tranNo=" + sipTranNo);
-			
+
 			jumReq.setMobileNo(contentJumpReq.getMobileNo());
 			String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);
 			jumReq.setTimestamp(timestamp);
@@ -184,78 +184,6 @@ public class OrgContentController{
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
-
-	/***
-	 * 新   内容引入跳转接口   机构请求
-	 * @param contentJumpReq
-	 * @return
-	 */
-//	@PostMapping(path="/contentJump",produces = "application/json")
-//	public String contentJump1(@RequestBody @Validated OrgVO<ContentJumpReq> contentJumpReq){
-//		log.info("contentJump is begin params  is" + contentJumpReq.toString());
-//		try {
-//			// Step1：查询服务产品信息
-////			ProductInfVo productInfRes = contentBiz.findByProductNo(contentJumpReq.getData().getProductNo());
-//			
-////		    BaseResponse<ProductInfVo> productInfRes1 = productFeignClient.findByProductNo(contentJumpReq.getData().getProductNo());
-////			if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes1.getResponseCode())
-////					|| null == productInfRes1.getData()) {// 如果查询失败
-////				log.error("procduct-service  findByProductNo result is null......  productNo is" + contentJumpReq.getData().getProductNo()
-////						+ " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-////				throw new ErrorException(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode(),ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
-////			}
-////			ProductInfVo productInfRes = productInfRes1.getData();
-////			
-////			
-////			
-////			
-////			// Step2：判断服务产品是否为内容 引入商品 是否与机构相关连
-////			contentBiz.validatedProductNo(contentJumpReq.getOrg(), productInfRes.getProduct().getProductType(), productInfRes.getProduct().getProductType());
-////			//Step3 :   判断流水号
-////			if(StringUtils.isBlank(contentJumpReq.getTranNo())){
-////				//生成新的流水号
-////				String tranNo = CommonUtils.serialNumber();
-////				//如果为空创建 新的 并保持数据库
-////				contentBiz.insertContentTransaction(tranNo,
-////						contentJumpReq.getOrg(),
-////						JSONObject.toJSONString(contentJumpReq),
-////						productInfRes);
-////			}else {
-////				//不为空查询流水表
-////				ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(contentJumpReq.getTranNo(), ModelConstants.CONTENT_TYPE_NOT_LOGGED);
-////				//验证流水号
-////				if(null == contentTransaction) {
-////					log.error("query result is null");
-////					throw new ErrorException(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode(),ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
-////				}
-////				//验证时间戳
-////				contentBiz.validatedtimestamp(contentJumpReq.getData().getTimestamp());
-////				// 合法更新数据
-////				contentBiz.updateContentTransaction(contentTransaction,
-////						productInfRes.getProduct().getProductNo(),
-////						ModelConstants.CONTENT_TYPE_NOT_LOGGED,
-////						contentJumpReq.getOrg(),
-////						null,
-////						JSONObject.toJSONString(contentJumpReq));
-////			}
-//			SupContentJumReq jumReq = new SupContentJumReq();
-//			jumReq.setLoginFlag(contentJumpReq.getData().getLoginFlag());
-//			jumReq.setLoginUrl(contentJumpReq.getData().getLoginUrl());
-//			jumReq.setMobileNo(contentJumpReq.getData().getMobileNo());
-//			jumReq.setPayUrl(contentJumpReq.getData().getPayUrl());
-//			String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);
-//			jumReq.setTimestamp(timestamp);
-//			jumReq.setUserId(contentJumpReq.getData().getUserId());
-//			jumReq.setUserName(contentJumpReq.getData().getUserName());
-//			EncryptionAndEecryption encryptionAndEecryption = new EncryptionAndEecryption();
-//			String  url = encryptionAndEecryption.Encryption(jumReq, "https://test.wantu.cn/v2/m/?channel=rongshu");
-//			StringBuffer ret = new StringBuffer("redirect:" + url);
-//		    return ret.toString();
-//		} catch (Exception e) {
-//			log.error("error is " + e.getMessage());
-//			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-//		}
-//	}
 
 
 
