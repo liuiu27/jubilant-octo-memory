@@ -198,13 +198,13 @@ public class SupContentController {
         req.put("orderAmt",payPageVO.getOrderAmt());
         req.put("sipOrderNo", payPageVO.getSupOrderNo());
         req.put("sipOrderTime",payPageVO.getSupOrderTime());
-        req.put("orderTitle","");
-        req.put("orderInfo","");
-        req.put("timeOut","");
-        req.put("payBackUrl","");
-        req.put("notifyUrl","");
-        req.put("productNum","");
-        req.put("orderShow","");
+        req.put("orderTitle","1");
+        req.put("orderInfo","1");
+        req.put("timeOut","30");
+        req.put("payBackUrl",payPageVO.getPayBackUrl());
+        req.put("notifyUrl",payPageVO.getNotifyUrl());
+        req.put("productNum","1");
+        req.put("orderShow","1");
 
         JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
         String url = EncryptionAndEecryption.Encryption(req, resJson.getString("payUrl"));
