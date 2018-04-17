@@ -174,6 +174,7 @@ public class OrgContentController{
 			jumReq.setMobileNo(contentJumpReq.getMobileNo());
 			String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);
 			jumReq.setTimestamp(timestamp);
+			jumReq.setSipTranNo(sipTranNo);
 			jumReq.setUserId(contentJumpReq.getUserId());
 			jumReq.setUserName(contentJumpReq.getUserName());
 			String url = EncryptionAndEecryption.Encryption(jumReq, supUrl);
