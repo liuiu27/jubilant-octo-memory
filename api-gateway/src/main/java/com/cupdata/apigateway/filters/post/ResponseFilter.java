@@ -70,8 +70,7 @@ public class ResponseFilter extends ZuulFilter {
             HttpServletRequest request = ctx.getRequest();
             String org = request.getParameter("org"); // 机构编号
             String sup = request.getParameter("sup"); // 供应商编号
-            if (isIgnorePath(request.getRequestURI()))
-                return null;
+            if (isIgnorePath(request.getRequestURI())) return null;
             InputStream stream = ctx.getResponseDataStream();
             if(null == stream) return null;
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
@@ -199,6 +198,7 @@ public class ResponseFilter extends ZuulFilter {
 	private boolean isIgnorePath(String path) {
 		for (String url : ignoreUrl.split(",")) {
 			if (path.substring(zuulPrefix.length()).startsWith(url)) {
+			    System.out.print("忽略响应路由网关");
 				return true;
 			}
 		}

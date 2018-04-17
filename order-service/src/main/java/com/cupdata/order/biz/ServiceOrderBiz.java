@@ -60,7 +60,6 @@ public class ServiceOrderBiz {
         paramMap.put("orderSubType", orderSubType);
         List<ServiceOrder> orderList = orderDao.selectMainOrderList(paramMap);
         return orderList;
-
     }
 
     /**
@@ -189,6 +188,12 @@ public class ServiceOrderBiz {
     	return res;
 	}
 
+    /**
+     * 根据机构编号和机构订单号来查询订单信息
+     * @param orgNo
+     * @param orgOrderNo
+     * @return
+     */
 	public BaseResponse<RechargeOrderVo> getRechargeOrderByOrgNoAndOrgOrderNo(String orgNo , String orgOrderNo){
         BaseResponse<RechargeOrderVo> res = new BaseResponse<>();
         RechargeOrderVo rechargeOrderVo = new RechargeOrderVo();
@@ -226,9 +231,7 @@ public class ServiceOrderBiz {
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
 			return res;
     	}
-		paramMap.clear();
-		paramMap.put("id", voucherOrder.getOrderId());
-    	ServiceOrder order = orderDao.selectSingle(paramMap);
+    	ServiceOrder order = orderDao.select(voucherOrder.getOrderId().intValue());
     	if(null == order) {
     		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());

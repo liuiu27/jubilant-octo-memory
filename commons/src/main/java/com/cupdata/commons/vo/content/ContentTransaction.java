@@ -20,7 +20,7 @@ public class ContentTransaction extends BaseModel{
 	/**
 	 * 交易流水编号
 	 */
-	private String tranNo;
+	private String sipTranNo;
 	
 	/**
 	 * 商品编号

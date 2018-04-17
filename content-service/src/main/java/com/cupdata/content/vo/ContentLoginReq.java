@@ -13,9 +13,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ContentLoginReq {
+	
+	/**
+	 * 流水号
+	 */
+	private String sipTranNo;
+	
 	/**
 	 * 供应商回跳地址
 	 */
-	@NotBlank
 	private String callBackUrl;
+	
 }

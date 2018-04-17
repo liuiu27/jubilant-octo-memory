@@ -20,6 +20,13 @@ import java.util.List;
  */
 @RequestMapping("/order")
 public interface IOrderController {
+
+    /**
+     * 根据订单编号获取主订单
+     * @return
+     */
+    @PostMapping("/getServiceOrderByOrderNo/{orderNo}")
+    public BaseResponse<ServiceOrder> getServiceOrderByOrderNo(@PathVariable("orderNo") String orderNo);
     /**
      * 根据券码产品等信息，创建券码订单
      * @param createVoucherOrderVo 创建券码订单参数vo

@@ -73,7 +73,7 @@
 		WHERE ID = #{id}
     </update>
     
-    <delete id="delete" parameterType="java.lang.Integer">
+    <delete id="delete" parameterType="java.lang.Long">
 		DELETE
 		FROM
 		order_notify_wait
@@ -122,7 +122,7 @@
     
      <select id="selectAll" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/> from order_notify_wait
-        where NEXT_NOTIFY_DATE &lt;=  NOW() 
+        where 1 = 1
         <if test=" id != null and id != ''">
 			 and ID = #{id}
 		</if>

@@ -61,6 +61,7 @@ public class QQRechargeUtils {
 			}
 			checkOpenUrl = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getData().getSysConfig().getParaValue();
 		}
+		log.info("QQ会员开通鉴权url:"+checkOpenUrl);
 
 		//会员充值key获取
 		String key = null;
@@ -83,6 +84,7 @@ public class QQRechargeUtils {
 			}
 			key = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getData().getSysConfig().getParaValue();
 		}
+		log.info("QQ会员开通key:"+key);
 
 		//QQ会员充值source
 		if(StringUtils.isBlank(req.getSource())){
@@ -105,6 +107,7 @@ public class QQRechargeUtils {
 				req.setSource(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getData().getSysConfig().getParaValue());
 			}
 		}
+		log.info("QQ会员充值source:"+req.getSource());
 			
 		String sign = MD5Util.sign(req.getServernum() + req.getServiceid() + req.getUin() + req.getAmount() + req.getSource() + req.getPaytype(), key, "utf-8").toUpperCase();
 		req.setSign(sign);
@@ -116,6 +119,7 @@ public class QQRechargeUtils {
 			long l1 = System.currentTimeMillis();
 			String resStr = HttpUtil.doGet(checkOpenUrl);
 			long l2 = System.currentTimeMillis();
+			log.info("腾讯鉴权结果:"+resStr);
 			log.info("调用腾讯鉴权接口耗时:"+(l2 - l1)+"ms");
 			res = parseQQCheckOpenXml(resStr);
 		} catch (Exception e) {

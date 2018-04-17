@@ -85,7 +85,7 @@ public enum ResponseCodeMsg {
     /**
      * 查询结果为空
      */
-    RESULT_QUERY_EMPTY("999998","查询结果为空"),
+    RESULT_QUERY_EMPTY("999998","机构订单不存在"),
     
     /**
      * 999999 - 查询机构信息失败
@@ -145,7 +145,12 @@ public enum ResponseCodeMsg {
     /**
      * 800009 - 根据商户编号获取商户失败
      */
-    GET_SUPPLIER_FAIL_BY_NO("800009","根据商户编号获取商户失败");
+    GET_SUPPLIER_FAIL_BY_NO("800009","根据商户编号获取商户失败"),
+
+    /**
+     * 700001 - 充值失败
+     */
+    RECHARGE_FAIL("700001","充值失败");
 
 
 

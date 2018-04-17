@@ -40,7 +40,9 @@
 		<module>common-parent</module>
 		<module>bestdo-service</module>
         <module>content-Introduce</module>
-    </modules>
+		<module>shengda-service</module>
+		<module>ikang-service</module>
+	</modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->
 	<properties>
@@ -115,7 +117,6 @@
 				<artifactId>fastjson</artifactId>
 				<version>${fastjson.version}</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>

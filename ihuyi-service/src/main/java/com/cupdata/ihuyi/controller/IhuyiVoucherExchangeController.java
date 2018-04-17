@@ -54,7 +54,8 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
      */
     @Override
     public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value="org" ,required = true) String org, @RequestBody GetVoucherReq voucherReq) {
-        log.info("进入获取互亿礼品券controller...orderNo:" + voucherReq.getOrgOrderNo() + ",OrderDesc:" + voucherReq.getOrderDesc() + ",org:" + org + ",mobileNo:" + voucherReq.getMobileNo());
+        log.info("互亿礼品券购买**********************************************");
+        log.info("进入获取互亿礼品券controller...orderNo:" + voucherReq.getOrgOrderNo() +",org:" + org + ",mobileNo:" + voucherReq.getMobileNo()+",OrderDesc:" + voucherReq.getOrderDesc());
         //设置响应数据结果
         BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse<GetVoucherRes>();
         try {
@@ -76,7 +77,6 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
             createvoucherOrderVo.setProductNo(voucherReq.getProductNo());
             createvoucherOrderVo.setOrgOrderNo(voucherReq.getOrgOrderNo());
             //调用创建订单服务
-            log.info("开始创建订单...");
             BaseResponse<VoucherOrderVo> voucherOrderRes = orderFeignClient.createVoucherOrder(createvoucherOrderVo);
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())
                     || null == voucherOrderRes.getData()
@@ -88,9 +88,12 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
                 return getVoucherRes;
             }
+            log.info("创建订单成功,订单编号:"+voucherOrderRes.getData().getOrder().getOrderNo());
 
             //调用互亿电子券码接口获取礼品券码
+            log.info("调用互亿工具类获取券码");
             IhuyiVoucherRes ihuyiVoucherRes = IhuyiUtils.ihuyiGiftCardBuy(voucherOrderRes.getData(),productInfo.getData().getProduct().getSupplierParam(),voucherReq,cacheFeignClient);
+            log.info("互亿获取电子券码结果状态码:"+ihuyiVoucherRes.getCode());
 
             //互亿获取券码是否成功
             if(ihuyiVoucherRes.getCode() != 1){
@@ -100,7 +103,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
                 return getVoucherRes;
             }
 
-            //券码列表获是否为空
+            //券码列表获取是否为空
             List<IhuyiVoucherRes.IhuyiGiftCardInfo> cardInfoList = ihuyiVoucherRes.getCards();
             if(CollectionUtils.isEmpty(cardInfoList) || StringUtils.isEmpty(cardInfoList.get(0).getNo()) || StringUtils.isEmpty(cardInfoList.get(0).getPwd())){
                 log.info("互亿券码列表为空");
@@ -123,6 +126,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
                 }
                 apikey = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIKEY").getData().getSysConfig().getParaValue();
             }
+            log.info("互亿apikey:"+apikey);
 
             //获取券码
             String key = DESUtil.append(apikey, apikey.length(),24);
@@ -151,7 +155,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
             voucherOrderRes.getData().getVoucherOrder().setQrCodeUrl(other);
             voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
             //更新订单信息
-            log.info("更新订单信息");
+            log.info("互亿券码获取成功更新订单,订单编号:"+voucherOrderRes.getData().getOrder().getOrderNo());
             voucherOrderRes = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())
                     || null == voucherOrderRes.getData()
@@ -170,7 +174,7 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController {
             voucherRes.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
             voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
             getVoucherRes.setData(voucherRes);
-            log.info("响应结果");
+            log.info("响应结果:decodeNo:"+decodeNo);
             return getVoucherRes;
         }catch (Exception e){
             log.error("IhuyiVoucherExchangeController getVoucher error is",e);

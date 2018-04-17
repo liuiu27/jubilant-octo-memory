@@ -39,7 +39,6 @@ public class IhuyiUtils {
 
     /**
      * 互亿话费充值工具类
-     *
      * @param orderVo
      * @param rechargeReq
      * @return
@@ -50,30 +49,44 @@ public class IhuyiUtils {
         //step1.获取互亿话费充值url
         String domain = null;
         if (CommonUtils.isWindows()) {
-            domain = "https://api.ihuyi.com/f/phone";
+            //如果获取数据信息为空
+            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData())) {
+                //打印错误日志:获取url失败
+                log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
+                return rechargeRes;
+            }
+            domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData().getSysConfig().getParaValue();
         } else {
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData())) {
-                //设置错误码:获取url失败
-                rechargeRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
+                //打印错误日志:获取url失败
+                log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
                 return rechargeRes;
             }
             domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData().getSysConfig().getParaValue();
         }
+        log.info("互亿话费充值url："+domain);
 
         //step2.互亿api_id
         String username = null;
         if (CommonUtils.isWindows()) {
-            username = "cf_testapi";
+            //如果获取数据信息为空
+            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
+                //设置错误码:获取api_id失败
+                log.error(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
+                return rechargeRes;
+            }
+            username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
         } else {
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
                 //设置错误码:获取api_id失败
-                rechargeRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
+                log.error(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
                 return rechargeRes;
             }
             username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
         }
+        log.info("互亿话费充值api_id："+username);
 
         //step3.封装请求参数
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -90,10 +103,14 @@ public class IhuyiUtils {
 
         //step4.获取签名数据
         String sign = IhuyiUtils.getSign(map, cacheFeignClient);
+        log.info("验证签名正确");
         String url = domain + "?action=" + action + "&username=" + username + "&mobile=" + mobile + "&orderid=" + orderid + "&package=" + packag + "&timestamp=" + timestamp + "&sign=" + sign;
         try {
-            log.info("互亿话费充值订购，get请求url为：" + url);
+            log.info("开始请求互亿话费充值接口");
+            long l1 = System.currentTimeMillis();
             String str = HttpUtil.doGet(url);
+            long l2 = System.currentTimeMillis();
+            log.info("调用互亿话费充值接口耗时:"+(l2 - l1)+"ms");
             if (!StringUtils.isEmpty(str)) {
                 rechargeRes = JSON.parseObject(str, IhuyiRechargeRes.class);
                 log.info("互亿话费充值订购，返回数据:" + str);
@@ -124,11 +141,12 @@ public class IhuyiUtils {
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getData())) {
                 //设置错误码:获取url失败
-                rechargeRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
+                log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
                 return rechargeRes;
             }
             domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getData().getSysConfig().getParaValue();
         }
+        log.info("互亿流量充值url："+domain);
 
         //step2.互亿api_id
         String username = null;
@@ -138,11 +156,12 @@ public class IhuyiUtils {
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
                 //设置错误码:获取api_id失败
-                rechargeRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
+                log.error(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
                 return rechargeRes;
             }
             username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
         }
+        log.info("互亿流量充值api_id："+username);
 
         //step3.封装请求参数
         String mobile = rechargeReq.getAccount();
@@ -156,13 +175,16 @@ public class IhuyiUtils {
         map.put("timestamp", timestamp);
         map.put("username", username);
         String sign = IhuyiUtils.getSign(map, cacheFeignClient);
+        log.info("验证签名正确");
         String url = domain + "?action=" + action + "&username=" + username + "&mobile=" + mobile + "&orderid=" + orderid + "&package=" + packag + "&timestamp=" + timestamp + "&sign=" + sign;
         try {
-            log.info("互亿流量充值订购，get请求url为：" + url);
+            long l1 = System.currentTimeMillis();
             String str = HttpUtil.doGet(url);
+            long l2 = System.currentTimeMillis();
+            log.info("调用互亿流量充值接口耗时:"+(l2 - l1)+"ms");
             if (!StringUtils.isEmpty(str)) {
                 rechargeRes = JSON.parseObject(str, IhuyiRechargeRes.class);
-                log.info("互亿流量充值订购，返回数据:" + str);
+                log.info("互亿流量充值订购,返回数据:" + str);
             }
         } catch (Exception e) {
             log.error("", e);
@@ -190,11 +212,12 @@ public class IhuyiUtils {
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL").getData())) {
                 //设置错误码:获取url失败
-                rechargeRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
+                log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
                 return rechargeRes;
             }
             domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL").getData().getSysConfig().getParaValue();
         }
+        log.info("互亿虚拟充值url:"+domain);
 
         //step2.互亿api_id
         String username = null;
@@ -209,6 +232,7 @@ public class IhuyiUtils {
             }
             username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
         }
+        log.info("互亿api_id:"+username);
 
         //step2.互亿虚拟充值回调url
         String callback = null;
@@ -218,11 +242,12 @@ public class IhuyiUtils {
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_RECHARGE_CALLBACK_URL"))) {
                 //设置错误码:获取api_id失败
-                rechargeRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
+                rechargeRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_VIRTUAL_CALLBACK.getMsg());
                 return rechargeRes;
             }
             callback = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_RECHARGE_CALLBACK_URL").getData().getSysConfig().getParaValue();
         }
+        log.info("互亿虚拟充值回调url:"+callback);
 
         String action = "buy";
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -245,11 +270,13 @@ public class IhuyiUtils {
                 "&productid=" + productid + "&quantity=" + quantity + "&extend=" + extend +
                 "&return=" + return_ + "&callback=" + callback + "&buyerip=" + buyerip + "&sign=" + sign;
         try {
-            log.info("互亿购买虚拟商品，get请求url为：" + url);
+            long l1 = System.currentTimeMillis();
             String str = HttpUtil.doGet(url);
+            long l2 = System.currentTimeMillis();
+            log.info("调用互亿虚拟充值接口耗时:"+(l2 - l1)+"ms");
             if (!StringUtils.isEmpty(str)) {
                 rechargeRes = JSON.parseObject(str, IhuyiRechargeRes.class);
-                log.info("订购互亿虚拟商品返回结果：" + JSON.toJSONString(rechargeRes));
+                log.info("互亿虚拟商品订购结果：" + JSON.toJSONString(rechargeRes));
             }
         } catch (Exception e) {
             log.error("", e);
@@ -264,7 +291,7 @@ public class IhuyiUtils {
      * @return
      */
     public static IhuyiVoucherRes ihuyiGiftCardBuy(VoucherOrderVo orderVo, String productid, GetVoucherReq voucherReq, CacheFeignClient cacheFeignClient) {
-        log.info("互亿虚拟充值工具类...");
+        log.info("互亿礼品券购买工具类...");
         IhuyiVoucherRes voucherRes = new IhuyiVoucherRes();
         //step1.获取互亿礼品卡购买的url
         String domain = null;
@@ -274,11 +301,12 @@ public class IhuyiUtils {
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VOUCHER_EXCHANGE_URL").getData())) {
                 //设置错误码:获取url失败
-                voucherRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
+                log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
                 return voucherRes;
             }
             domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VOUCHER_EXCHANGE_URL").getData().getSysConfig().getParaValue();
         }
+        log.info("互亿礼券url:"+domain);
 
         //step2.互亿api_id
         String username = null;
@@ -288,11 +316,12 @@ public class IhuyiUtils {
             //如果获取数据信息为空
             if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
                 //设置错误码:获取api_id失败
-                voucherRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
+                log.error(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
                 return voucherRes;
             }
             username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
         }
+        log.info("互亿api_id:"+username);
 
         //step3.封装请求参数
         String action = "buy";
@@ -310,9 +339,12 @@ public class IhuyiUtils {
         String sign = getSign(map, cacheFeignClient);
         String url = domain + "?action=" + action + "&username=" + username + "&mobile=" + mobile + "&orderid=" + orderid + "&timestamp=" + timestamp + "&productid=" + productid + "&buynum=" + buynum + "&sign=" + sign;
         try {
-            log.info("互亿购买卡密，get请求url为：" + url);
+            long l1 = System.currentTimeMillis();
             String str = HttpUtil.doGet(url);
+            long l2 = System.currentTimeMillis();
+            log.info("调用互亿卡券接口耗时:"+(l2 - l1)+"ms");
             if (!StringUtils.isEmpty(str)) {
+                log.info("互亿里礼品卡券结果为:"+str);
                 voucherRes = JSON.parseObject(str, IhuyiVoucherRes.class);
             }
         } catch (Exception e) {
@@ -325,7 +357,6 @@ public class IhuyiUtils {
 
     /**
      * 互亿流量/话费查询
-     *
      * @return
      */
     public static IhuyiOrderQueryRes ihuyiRechargeQuery(ServiceOrder serviceOrder, CacheFeignClient cacheFeignClient) {
@@ -345,6 +376,8 @@ public class IhuyiUtils {
                 username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
             }
         }
+        log.info("互亿api_id:"+username);
+
         Map<String, String> map = new HashMap();
         map.put("orderid", orderid);
         map.put("username", username);
@@ -371,7 +404,11 @@ public class IhuyiUtils {
         url = url + "?action=" + action + "&orderid=" + orderid + "&username=" + username + "&timestamp=" + timestamp + "&sign=" + sign;
         try {
             log.info("互亿流量/话费查询，get请求url为：" + url);
-            String str = HttpUtil.doGet(url);//todo 修改url,判断是 流量充值/话费充值
+            long l1 = System.currentTimeMillis();
+            String str = HttpUtil.doGet(url);
+            long l2 = System.currentTimeMillis();
+            log.info("调用互亿话费流量查询接口耗时:"+(l2 - l1)+"ms");
+            log.info("互亿流量话费查询工具类查询结果为:"+str);
             if (!StringUtils.isEmpty(str)) {
                 res = JSON.parseObject(str, IhuyiOrderQueryRes.class);
                 JSONObject object = JSON.parseObject(str);
@@ -424,7 +461,10 @@ public class IhuyiUtils {
         }
         url = url + "?action=" + action + "&orderid=" + orderid + "&username=" + username + "&timestamp=" + timestamp + "&sign=" + sign;
         try {
+            long l1 = System.currentTimeMillis();
             String str = HttpUtil.doGet(url);
+            long l2 = System.currentTimeMillis();
+            log.info("调用互亿虚拟充值接口耗时:"+(l2 - l1)+"ms");
             if (!StringUtils.isEmpty(str)) {
                 res = JSON.parseObject(str, IhuyiVirtualOrderQueryRes.class);
                 JSONObject object = JSON.parseObject(str);

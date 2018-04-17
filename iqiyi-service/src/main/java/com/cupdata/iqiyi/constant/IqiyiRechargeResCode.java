@@ -11,12 +11,12 @@ public enum IqiyiRechargeResCode {
     /**
      * 成功
      */
-    SUCCESS("0","充值成功"),
+    SUCCESS("S","充值成功"),
 
     /**
      * 充值出现异常
      */
-    RECHARGE_EXCEPTION("-1","账号充值出现异常");
+    FAIL("F","充值失败");
 
 
     /**

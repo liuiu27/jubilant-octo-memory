@@ -488,7 +488,7 @@ public class RSAUtils {
 
 	/**
 	 * 读取文件内容并生成私钥
-	 * @param file 文件路径
+	 * @param filePath 文件路径
 	 * @return 私钥
 	 * @throws Exception
 	 */
@@ -522,7 +522,7 @@ public class RSAUtils {
 	
 	/**
 	 * 读取文件内容并生成公钥
-	 * @param file 文件路径
+	 * @param filePath 文件路径
 	 * @return 公钥
 	 * @throws Exception
 	 */
@@ -699,7 +699,7 @@ public class RSAUtils {
 	 * @param content 待签名数据
 	 * @param privateKey 私钥
 	 * @param signAlgorithm 签名算法
-	 * @param charsetName 字符集编码
+	 * @param encode 字符集编码
 	 * @return 经过BASE64编码之后的签名值
 	 */
 	public static String sign(String content, PrivateKey privateKey, String signAlgorithm, String charsetName) throws Exception{
@@ -728,7 +728,7 @@ public class RSAUtils {
 	 * @param sign 经过BASE64编码之后的签名值
 	 * @param publicKey 公钥
 	 * @param signAlgorithm 签名算法
-	 * @param charsetName 字符集编码
+	 * @param encode 字符集编码
 	 * @return 布尔值，true表示签名一致，false表示签名不一致
 	 */
 	public static boolean checkSign(String content, String sign, PublicKey publicKey, String signAlgorithm, String charsetName) throws Exception{
@@ -778,7 +778,7 @@ public class RSAUtils {
 	
 	/**
 	 * 通过PEM格式的私钥文件，生成私钥对（公钥和私钥）
-	 * @param privateKeyFilePath 私钥文件路径
+	 * @param filePath 私钥文件路径
 	 * @param passwordFinder 可以为null
 	 * @return
 	 */

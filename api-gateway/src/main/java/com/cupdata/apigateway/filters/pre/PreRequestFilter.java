@@ -14,15 +14,17 @@ import com.cupdata.sip.common.lang.utils.RSAUtils;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.*;
@@ -30,8 +32,8 @@ import java.util.*;
 /**
  * 请求过滤器
  */
+@Slf4j
 public class PreRequestFilter extends ZuulFilter {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PreRequestFilter.class);
 
 	@Autowired
 	private OrgFeignClient orgFeignClient;//机构Feign
@@ -58,14 +60,18 @@ public class PreRequestFilter extends ZuulFilter {
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
-		PreRequestFilter.LOGGER.info(String.format("send %s request to %s", request.getMethod(), request.getRequestURL().toString()));
+		PreRequestFilter.log.info(String.format("send %s request to %s", request.getMethod(), request.getRequestURL().toString()));
+
+//		if (isIgnorePath(request.getRequestURI())){
+//			return null;
+//		}
 
 		// Step1：获取请求参数
 		String org = request.getParameter("org"); // 机构编号
 		String sup = request.getParameter("sup");//供应商编号
 		String data = request.getParameter("data"); // 请求参数密文
 		String sign = request.getParameter("sign");// 请求参数签名
-		LOGGER.info("供应商编号" + sup + "，机构编号" + org + "，请求密文" + data + "，签名" + sign);
+		log.info("供应商编号" + sup + "，机构编号" + org + "，请求密文" + data + "，签名" + sign);
 
 		//Step2：根据供应商编号或者机构编号，获取秘钥
 		String sipPriKeyStr = null;//平台私钥字符串
@@ -73,7 +79,7 @@ public class PreRequestFilter extends ZuulFilter {
 		if (StringUtils.isNotBlank(org)){//如果为机构请求
 			BaseResponse<OrgInfoVo> orgResponse = orgFeignClient.findOrgByNo(org);
 			if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgResponse.getResponseCode()) || null == orgResponse.getData()){
-				LOGGER.error("根据机构编号" + org + "，获取机构信息失败");
+				log.error("根据机构编号" + org + "，获取机构信息失败");
 				ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
 				ctx.setResponseStatusCode(401);// 返回错误码
 				ctx.setResponseBody(ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());// 返回错误内容
@@ -87,7 +93,7 @@ public class PreRequestFilter extends ZuulFilter {
 		if (StringUtils.isNotBlank(sup)){//如果为供应商请求
 			BaseResponse<SupplierInfVo> supplierResponse = supplierFeignClient.findSupByNo(sup);
 			if (!ResponseCodeMsg.SUCCESS.getCode().equals(supplierResponse.getResponseCode()) || null == supplierResponse.getData()){
-				LOGGER.error("根据服务供应商编号" + sup + "，获取服务供应商信息失败");
+				log.error("根据服务供应商编号" + sup + "，获取服务供应商信息失败");
 				ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
 				ctx.setResponseStatusCode(401);// 返回错误码
 				ctx.setResponseBody(ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());// 返回错误内容
@@ -105,7 +111,7 @@ public class PreRequestFilter extends ZuulFilter {
 			sipPriKey = RSAUtils.getPrivateKeyFromString(sipPriKeyStr);
 			orgOrSupPubKey = RSAUtils.getPublicKeyFromString(orgOrSupPubKeyStr);
 		}catch (Exception e){
-			LOGGER.error("根据公钥、私钥字符串，获取公钥、私钥出现异常");
+			log.error("根据公钥、私钥字符串，获取公钥、私钥出现异常");
 			ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
 			ctx.setResponseStatusCode(401);// 返回错误码
 			ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
@@ -117,9 +123,9 @@ public class PreRequestFilter extends ZuulFilter {
 		String dataPlain = null;// 请求参数明文
 		try {
 			dataPlain = RSAUtils.decrypt(data, sipPriKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
-			LOGGER.info("解密明文為 " + dataPlain);
+			log.info("解密明文為 " + dataPlain);
 		} catch (Exception e) {
-			LOGGER.error("请求报文的密文解密失败");
+			log.error("请求报文的密文解密失败");
 			ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
 			ctx.setResponseStatusCode(401);// 返回错误码
 			ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
@@ -134,7 +140,7 @@ public class PreRequestFilter extends ZuulFilter {
 				throw new Exception(ResponseCodeMsg.ILLEGAL_SIGN.getMsg());
 			}
 		} catch (Exception e) {
-			LOGGER.error("请求报文验签失败");
+			log.error("请求报文验签失败");
 			ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
 			ctx.setResponseStatusCode(401);// 返回错误码
 			ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
@@ -149,7 +155,7 @@ public class PreRequestFilter extends ZuulFilter {
 			Date timestamp = DateTimeUtil.getDateByString(timestampStr.substring(0, 17), "yyyyMMddHHmmssSSS");
 			//时间戳超时
 			if (!DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -60 * 1000L, 120 * 1000L)){
-				LOGGER.info("请求报文，时间戳超时");
+				log.info("请求报文，时间戳超时");
 				ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
 				ctx.setResponseStatusCode(401);// 返回错误码
 				ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
@@ -157,8 +163,8 @@ public class PreRequestFilter extends ZuulFilter {
 				return null;
 			}
 		}catch (Exception e){
-			LOGGER.error("", e);
-			LOGGER.error("机构请求报文验签失败！");
+			log.error("", e);
+			log.error("机构请求报文验签失败！");
 			ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
 			ctx.setResponseStatusCode(401);// 返回错误码
 			ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
@@ -166,9 +172,12 @@ public class PreRequestFilter extends ZuulFilter {
 			return null;
 		}
 
-		// Step4：重置解密之后的请求参数
-		final byte[] reqBodyBytes = dataPlain.getBytes();
-		ctx.setRequest(new HttpServletRequestWrapper(request) {
+
+
+			// Step4：重置解密之后的请求参数
+			final byte[] reqBodyBytes = dataPlain.getBytes();
+
+			ctx.setRequest(new HttpServletRequestWrapper(request) {
 
 			@Override
 			public String getContentType() {
@@ -190,6 +199,7 @@ public class PreRequestFilter extends ZuulFilter {
 			}
 		});
 
+
 		Map<String, List<String>> pa = ctx.getRequestQueryParams();
 		if (null == pa){
 			pa = new HashMap<>();
@@ -202,8 +212,26 @@ public class PreRequestFilter extends ZuulFilter {
 			p.add(sup);
 			pa.put("sup", p);
 		}
+
 		ctx.setRequestQueryParams(pa);
 		ctx.getZuulRequestHeaders().put("content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
 		return null;
+	}
+
+
+	@Value("${zuul.ignore-url}")
+	private String ignoreUrl;
+
+	@Value("${zuul.prefix}")
+	private String zuulPrefix;
+
+	private boolean isIgnorePath(String path) {
+		for (String url : ignoreUrl.split(",")) {
+			if (path.substring(zuulPrefix.length()).startsWith(url)) {
+
+				return true;
+			}
+		}
+		return false;
 	}
 }

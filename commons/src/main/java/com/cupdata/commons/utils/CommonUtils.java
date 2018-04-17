@@ -1,12 +1,13 @@
 package com.cupdata.commons.utils;
 
-import com.cupdata.commons.constant.TimeConstants;
-import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
+import com.cupdata.commons.constant.TimeConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import java.beans.PropertyDescriptor;

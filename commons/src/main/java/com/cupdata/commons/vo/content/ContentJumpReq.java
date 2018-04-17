@@ -13,6 +13,11 @@ import lombok.Data;
 public class ContentJumpReq extends BaseRequest{
 	
 	/**
+	 * 流水号
+	 */
+	private String sipTranNo;
+	
+	/**
 	 * 服务产品编号
 	 */
 	private String productNo;

@@ -1,15 +1,19 @@
 package com.cupdata.tencent.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.utils.HttpUtil;
-import com.cupdata.commons.utils.RSAUtils;
+import com.cupdata.commons.constant.SysConfigParaNameEn;
+import com.cupdata.commons.utils.*;
 import com.cupdata.commons.vo.recharge.RechargeReq;
+import org.springframework.util.StringUtils;
+
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: DingCong
@@ -17,7 +21,8 @@ import java.util.Date;
  * @CreateDate: 2018/2/2 17:53
  */
 public class TestUtils {
-    public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
+
         //腾讯QQ充值网关URL
         String url = "http://localhost:46959/recharge/recharge/getRecharge";
         String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
@@ -30,9 +35,9 @@ public class TestUtils {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("625192155");
-        rechargeReq.setOrgOrderNo("001TencentService");
+        rechargeReq.setOrgOrderNo("tencent0408");
         rechargeReq.setProductNo("170810R001");
-        rechargeReq.setOrderDesc("TestOfTencentService");
+        rechargeReq.setOrderDesc("30Test");
 
         //请求参数转化为字符串
         String reqStr = JSONObject.toJSONString(rechargeReq);
@@ -49,8 +54,16 @@ public class TestUtils {
         //签名
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
-        String res = HttpUtil.doPost(url, params, "application/x-www-form-urlencoded;charset=UTF-8");
-        System.out.print("腾讯QQ充值响应数据为" + res);
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        System.out.println("腾讯QQ充值响应数据为" + res);
+        String[] split = res.split("&sign=");
+        String s1 = (String)split[0].replace("data=","");
+
+        //解密数据
+        String s = URLDecoder.decode(s1,"utf-8");
+        String plain = RSAUtils.decrypt(s,orgPriKey,RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+        System.out.print("响应明文:"+plain);
 
     }
+
 }

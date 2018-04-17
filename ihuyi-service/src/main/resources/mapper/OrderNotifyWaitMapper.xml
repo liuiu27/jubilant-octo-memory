@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cupdata.ihuyi.dao.OrderNotifyWaitDao">
+
+    <resultMap id="BaseResultMap" type="com.cupdata.commons.vo.notify.OrderNotifyWait">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+		<result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR"/>
+		<result column="NEXT_NOTIFY_DATE" property="nextNotifyDate" jdbcType="TIMESTAMP"/>
+		<result column="NOTIFY_TIMES" property="notifyTimes" jdbcType="INTEGER"/>
+		<result column="NOTIFY_STATUS" property="notifyStatus" jdbcType="CHAR"/>
+		<result column="NODE_NAME" property="nodeName" jdbcType="VARCHAR"/>
+		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
+		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+		ID,
+		ORDER_NO,
+		NOTIFY_URL,
+		NEXT_NOTIFY_DATE,
+		NOTIFY_TIMES,
+		NOTIFY_STATUS,
+		NODE_NAME,
+		CREATE_BY,
+		CREATE_DATE,
+		UPDATE_BY,
+		UPDATE_DATE 
+    </sql>
+    
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"  parameterType="com.cupdata.commons.vo.notify.OrderNotifyWait">
+    	INSERT INTO order_notify_wait (
+		  ORDER_NO,
+		  NOTIFY_URL,
+		  NEXT_NOTIFY_DATE,
+		  NOTIFY_TIMES,
+		  NOTIFY_STATUS,
+		  NODE_NAME,
+		  CREATE_BY,
+		  CREATE_DATE,
+		  UPDATE_BY,
+		  UPDATE_DATE
+		) 
+		VALUES
+		  (
+		    #{orderNo},
+		    #{notifyUrl},
+		    #{nextNotifyDate},
+		    #{notifyTimes},
+		    #{notifyStatus},
+		    #{nodeName},
+		    #{createBy},
+		    NOW(),
+		    #{updateBy},
+		    NOW()
+  ) 
+    </insert>
+    
+    <update id="update" parameterType="com.cupdata.commons.vo.notify.OrderNotifyWait">
+		UPDATE
+		order_notify_wait
+		SET
+		ORDER_NO = #{orderNo},
+		NOTIFY_URL = #{notifyUrl},
+		NEXT_NOTIFY_DATE = #{nextNotifyDate},
+		NOTIFY_TIMES = #{notifyTimes},
+		NOTIFY_STATUS = #{notifyStatus},
+		NODE_NAME = #{nodeName},
+		UPDATE_BY = #{createBy},
+		UPDATE_DATE = NOW()
+		WHERE ID = #{id}
+    </update>
+    
+    <delete id="delete" parameterType="java.lang.Long">
+		DELETE
+		FROM
+		order_notify_wait
+		WHERE ID = #{id}
+    </delete>
+    
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        where 1=1
+        <if test=" id != null and id != ''">
+			 and ID = #{id}
+		</if>
+		 <if test=" orderNo != null and orderNo != ''">
+			 and ORDER_NO = #{orderNo}
+		 </if>
+		 <if test=" notifyUrl != null and notifyUrl != ''">
+			 and NOTIFY_URL = #{notifyUrl}
+		 </if>
+		  <if test=" nextNotifyDate != null and nextNotifyDate != ''">
+			 and NEXT_NOTIFY_DATE = #{nextNotifyDate}
+		 </if>
+		  <if test=" notifyTimes != null and notifyTimes != ''">
+			 and NOTIFY_TIMES = #{notifyTimes}
+		 </if>
+		  <if test=" notifyStatus != null and notifyStatus != ''">
+			 and NOTIFY_STATUS = #{notifyStatus}
+		 </if>
+		    <if test=" nodeName != null and nodeName != ''">
+			 and NODE_NAME = #{nodeName}
+		 </if>
+		  <if test=" createBy != null and createBy != ''">
+			 and CREATE_BY = #{createBy}
+		 </if>
+		  <if test=" createDate != null and createDate != ''">
+			 and CREATE_DATE = #{createDate}
+		 </if>
+		  <if test=" updateBy != null and updateBy != ''">
+			 and UPDATE_BY = #{updateBy}
+		 </if>
+		   <if test=" updateDate != null and updateDate != ''">
+			 and UPDATE_DATE = #{updateDate}
+		 </if>
+		 limit 1
+    </select>
+    
+     <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from order_notify_wait
+        where NEXT_NOTIFY_DATE &lt;=  NOW() 
+        <if test=" id != null and id != ''">
+			 and ID = #{id}
+		</if>
+		 <if test=" orderNo != null and orderNo != ''">
+			 and ORDER_NO = #{orderNo}
+		 </if>
+		 <if test=" notifyUrl != null and notifyUrl != ''">
+			 and NOTIFY_URL = #{notifyUrl}
+		 </if>
+		  <if test=" nextNotifyDate != null and nextNotifyDate != ''">
+			 and NEXT_NOTIFY_DATE = #{nextNotifyDate}
+		 </if>
+		  <if test=" notifyTimes != null and notifyTimes != ''">
+			 and NOTIFY_TIMES = #{notifyTimes}
+		 </if>
+		  <if test=" notifyStatus != null and notifyStatus != ''">
+			 and NOTIFY_STATUS = #{notifyStatus}
+		 </if>
+		    <if test=" nodeName != null and nodeName != ''">
+			 and NODE_NAME = #{nodeName}
+		 </if>
+		  <if test=" createBy != null and createBy != ''">
+			 and CREATE_BY = #{createBy}
+		 </if>
+		  <if test=" createDate != null and createDate != ''">
+			 and CREATE_DATE = #{createDate}
+		 </if>
+		  <if test=" updateBy != null and updateBy != ''">
+			 and UPDATE_BY = #{updateBy}
+		 </if>
+		   <if test=" updateDate != null and updateDate != ''">
+			 and UPDATE_DATE = #{updateDate}
+		 </if>
+		  limit 100
+    </select>
+
+</mapper>

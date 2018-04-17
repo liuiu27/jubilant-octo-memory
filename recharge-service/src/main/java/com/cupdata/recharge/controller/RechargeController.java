@@ -6,12 +6,16 @@ import com.cupdata.commons.api.recharge.IRechargeController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
+import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.OrgProductRelVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
+import com.cupdata.commons.vo.product.RechargeOrderVo;
+import com.cupdata.commons.vo.recharge.RechargeQueryReq;
 import com.cupdata.commons.vo.recharge.RechargeReq;
 import com.cupdata.commons.vo.recharge.RechargeRes;
 import com.cupdata.commons.vo.recharge.RechargeResQuery;
+import com.cupdata.recharge.feign.OrderFeignClient;
 import com.cupdata.recharge.feign.ProductFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -42,9 +46,14 @@ public class RechargeController implements IRechargeController{
     @Autowired
     private RestTemplate restTemplate;
 
-    /**
-     * 充值业务逻辑在这里进行判断处理,通过不同的机构来进行调用不同的服务进行充值业务
-     */
+	/**
+	 *充值业务逻辑在这里进行判断处理,通过不同的机构来进行调用不同的服务进行充值业务
+	 * @param org
+	 * @param rechargeReq
+	 * @param request
+	 * @param response
+	 * @return
+	 */
     @Override
     public BaseResponse<RechargeRes> recharge(@RequestParam(value = "org" ,required = true) String org,
                                               @RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
@@ -98,18 +107,20 @@ public class RechargeController implements IRechargeController{
 	        // Step5：根据对应配置信息中的服务名称，调用不同的微服务进行完成充值业务
 	        String url = "http://" + productInfRes.getData().getProduct().getServiceApplicationPath() + "/getRecharge?org="
 	                + org;
+	        log.info("请求充值业务路径为:"+url);
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 	        HttpEntity<RechargeReq> entity = new HttpEntity<RechargeReq>(rechargeReq, headers);
 	        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
 	        String jsonStr = responseEntity.getBody();
-	        BaseResponse<RechargeRes> recharResult = JSONObject.parseObject(jsonStr,
+	        BaseResponse<RechargeRes> rechargeResult = JSONObject.parseObject(jsonStr,
 	                new TypeReference<BaseResponse<RechargeRes>>() {
 	                });
-	        return recharResult;
+	        return rechargeResult;
     	} catch (Exception e) {
 			log.error("error is " + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
     }
+
 }

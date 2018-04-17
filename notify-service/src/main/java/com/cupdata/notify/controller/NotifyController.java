@@ -1,23 +1,19 @@
 package com.cupdata.notify.controller;
 
-import com.cupdata.commons.vo.product.RechargeOrderVo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.cupdata.commons.api.notify.INotifyController;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
+import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.notify.OrderNotifyWait;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.cupdata.commons.vo.product.VoucherOrderVo;
 import com.cupdata.notify.biz.NotifyBiz;
 import com.cupdata.notify.feign.CacheFeignClient;
 import com.cupdata.notify.feign.OrderFeignClient;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author liwei
@@ -69,25 +65,29 @@ public class NotifyController implements INotifyController{
 	 */
 	@Override
 	public void rechargeNotifyToOrg3Times(@PathVariable("orderNo") String orderNo) {
-		log.info("NotifyController rechargeNotifyToOrg is begin.......orderNo is" +  orderNo);
+		log.info("NotifyController rechargeNotifyToOrg is begin.......orderNo：" +  orderNo);
 		try {
 			//根据订单号 查询订单信息 和充值信息
-			BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrderNo(orderNo);
-			if(!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderVo.getResponseCode())) {
+			BaseResponse<ServiceOrder> ServiceOrderRes = orderFeignClient.getServiceOrderByOrderNo(orderNo);
+			if(!ResponseCodeMsg.SUCCESS.getCode().equals(ServiceOrderRes.getResponseCode())) {
 				log.error("order-service getRechargeOrderByOrderNo result is null orderNO is" + orderNo);
 				return;
 			}
+			log.info("根据订单号查询订单信息和充值信息,OrgOrderNo:"+ServiceOrderRes.getData().getOrgOrderNo()+",OrderDesc:"+ServiceOrderRes.getData().getOrderDesc());
+
 			//根据机构号获取机构信息 秘钥
-			BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(rechargeOrderVo.getData().getOrder().getOrgNo());
+			BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(ServiceOrderRes.getData().getOrgNo());
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
-				log.error("cacher-service getOrgInf result is null orgNo is" + rechargeOrderVo.getData().getOrder().getOrgNo());
+				log.error("cacher-service getOrgInf result is null orgNo is" + ServiceOrderRes.getData().getOrgNo());
 				return;
 			}
-			notifyBiz.rechargeNotifyToOrg3Times(rechargeOrderVo.getData(),orgInf.getData());
+			log.info("根据机构号获取机构信息,OrgName:"+orgInf.getData().getOrgInf().getOrgName());
+
+			log.info("开始通知机构充值结果信息");
+			notifyBiz.rechargeNotifyToOrg3Times(ServiceOrderRes.getData(),orgInf.getData());
 		} catch (Exception e) {
 			log.error("error is " + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
-    
 }

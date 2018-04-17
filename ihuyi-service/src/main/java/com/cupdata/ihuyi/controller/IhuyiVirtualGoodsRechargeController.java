@@ -5,18 +5,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.api.ihuyi.IhuyiVirtualGoodsController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
+import com.cupdata.commons.model.ServiceOrder;
 import com.cupdata.commons.vo.BaseResponse;
+import com.cupdata.commons.vo.notify.OrderNotifyComplete;
+import com.cupdata.commons.vo.notify.OrderNotifyWait;
+import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.recharge.CreateRechargeOrderVo;
-import com.cupdata.commons.vo.recharge.RechargeReq;
-import com.cupdata.commons.vo.recharge.RechargeRes;
+import com.cupdata.commons.vo.recharge.*;
+import com.cupdata.ihuyi.biz.NotifyBiz;
 import com.cupdata.ihuyi.constant.IhuyiRechargeResCode;
 import com.cupdata.ihuyi.feign.CacheFeignClient;
 import com.cupdata.ihuyi.feign.NotifyFeignClient;
 import com.cupdata.ihuyi.feign.OrderFeignClient;
 import com.cupdata.ihuyi.feign.ProductFeignClient;
 import com.cupdata.ihuyi.utils.IhuyiUtils;
+import com.cupdata.ihuyi.utils.NotifyUtil;
 import com.cupdata.ihuyi.vo.GameRechargeVo;
 import com.cupdata.ihuyi.vo.IhuyiRechargeRes;
 import lombok.extern.slf4j.Slf4j;
@@ -48,13 +52,24 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
     @Autowired
     private NotifyFeignClient notifyFeignClient;
 
-
     @Autowired
     private CacheFeignClient cacheFeignClient ;
 
+    @Autowired
+    private NotifyBiz notifyBiz;
+
+    /**
+     * 互亿虚拟充值
+     * @param org
+     * @param rechargeReq
+     * @param request
+     * @param response
+     * @return
+     */
     @Override
     public BaseResponse<RechargeRes> recharge(@RequestParam(value="org", required=true) String org, @RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
-        log.info("调用互亿虚拟商品充值controller......org:"+"org"+",Account:"+rechargeReq.getAccount()+",ProductNo:"+rechargeReq.getProductNo()+",OrderDesc:"+rechargeReq.getOrderDesc());
+        log.info("开始互亿虚拟充值**********************************************");
+        log.info("调用互亿虚拟商品充值controller......org:"+org+",Account:"+rechargeReq.getAccount()+",ProductNo:"+rechargeReq.getProductNo()+",OrderDesc:"+rechargeReq.getOrderDesc());
         //设置响应结果
         BaseResponse<RechargeRes> rechargeRes = new BaseResponse<RechargeRes>();
         try {
@@ -78,17 +93,18 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
             createRechargeOrderVo.setProductNo(rechargeReq.getProductNo());
 
             //step3.调用订单服务创建订单
-            log.info("创建订单");
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                     || null == rechargeOrderRes.getData()
                     || null == rechargeOrderRes.getData().getOrder()
                     || null == rechargeOrderRes.getData().getRechargeOrder()){
                 //创建订单失败，设置响应错误消息和错误状态码，给予返回
+                log.info("创建订单失败");
                 rechargeRes.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
                 rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
                 return rechargeRes;
             }
+            log.info("创建订单成功,订单编号:"+rechargeOrderRes.getData().getOrder().getOrderNo());
 
             //通过请求参数判断为游戏充值(通过判断充值子订单中gameRegin和gameServer字段是否为空来判断是否为游戏充值)
             GameRechargeVo gameRechargeVo = new GameRechargeVo();
@@ -105,6 +121,7 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
             String extend = JSONObject.toJSONString(gameRechargeVo);
 
             //step4.调用互亿充值工具类进行虚拟产品充值(订单编号，充值账号，商户业务参数,充值件数,扩展参数,买家ip)
+            log.info("调用互亿工具类进行虚拟充值");
             IhuyiRechargeRes ihuyiRechargeRes = IhuyiUtils.ihuyiVirtualGoodsRechargeBuy(rechargeOrderRes.getData().getOrder().getOrderNo(),rechargeReq.getAccount(),productInfo.getData().getProduct().getSupplierParam(),rechargeReq.getRechargeNumber(),extend,"",cacheFeignClient);
             RechargeRes res = new RechargeRes();
             //1:提交成功； 0、1015、1016、4001：核单处理,订购成功
@@ -112,6 +129,7 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
                     || 1015 == ihuyiRechargeRes.getCode()
                     || 1016 == ihuyiRechargeRes.getCode()
                     || 4001 == ihuyiRechargeRes.getCode()) {
+                log.info("互亿虚拟充值下单成功,互亿充值结果状态码:"+ihuyiRechargeRes.getCode());
                 rechargeOrderRes.getData().getRechargeOrder().setGameRegion(rechargeReq.getGameRegion());  //游戏大区
                 rechargeOrderRes.getData().getRechargeOrder().setGameServer(rechargeReq.getGameServer());  //游戏服务名称
                 rechargeOrderRes.getData().getRechargeOrder().setAccountNumber(rechargeReq.getAccount());  //充值账号
@@ -123,7 +141,7 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
                 }
 
                 //调用订单服务更新订单
-                log.info("更新订单");
+                log.info("下单成功,更新订单,订单编号:"+rechargeOrderRes.getData().getOrder().getOrderNo());
                 rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                         || null == rechargeOrderRes.getData()
@@ -135,15 +153,17 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
                 }
 
                 //虚拟充值下单成功响应结果
+                log.info("下单成功,响应信息");
                 res.setRechargeStatus(ModelConstants.RECHARGE_ING);
                 res.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo());
                 rechargeRes.setData(res);
                 return rechargeRes;
             } else {
                 //充值失败响应结果
-                log.info("互亿虚拟商品充值失败");
+                log.info("互亿虚拟商品充值下单失败");
                 rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL); //订单失败
                 rechargeOrderRes.getData().getOrder().setOrderFailDesc(IhuyiRechargeResCode.FAIL_VIRTUAL_RECHARGE.getMsg());
+
                 //调用订单服务更新订单
                 rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
                 if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
@@ -155,8 +175,26 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
                     return rechargeRes;
                 }
 
-                //互亿虚拟充值下单失败,通知机构
-                notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderRes.getData().getOrder().getOrderNo());
+                //订购失败,通知机构下单失败
+                log.info("封装通知请求数据：订单状态失败");
+                ServiceOrder serviceOrder = new ServiceOrder();
+                serviceOrder.setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);   //订单状态失败
+                serviceOrder.setOrgOrderNo(rechargeReq.getOrgOrderNo()); //机构订单号
+                serviceOrder.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo()); //订单号
+                serviceOrder.setNotifyUrl(rechargeOrderRes.getData().getOrder().getNotifyUrl());//异步通知地址
+
+                //查询机构信息
+                BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(org);
+                if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
+                    log.error("互亿虚拟充值通知,合作机构信息获取失败");
+                    rechargeRes.setResponseCode(ResponseCodeMsg.ILLEGAL_PARTNER.getCode());
+                    rechargeRes.setResponseMsg(ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());
+                    return rechargeRes;
+                }
+
+                //通知机构
+                log.info("开始通知机构...");
+                notifyToOrg(serviceOrder,orgInf.getData());
 
                 //设置响应结果
                 rechargeRes.setResponseMsg(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getMsg());
@@ -166,7 +204,7 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
                 return rechargeRes;
             }
         }catch (Exception e){
-            log.info("互亿虚商品充值出现异常");
+            log.info("互亿虚商品充值出现异常,异常信息:"+e.getMessage());
             e.printStackTrace();
             rechargeRes.setResponseMsg(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getMsg());
             rechargeRes.setResponseCode(IhuyiRechargeResCode.FAIL_TO_RECHARGE.getCode());
@@ -180,8 +218,8 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "ihuyiVirtualRechargeCallBack",method = {RequestMethod.POST,RequestMethod.GET})
     public void ihuyiVirtualRechargeCallBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.info("互亿虚拟充值有新的推送通知消息...");
         response.setCharacterEncoding("UTF-8");
         PrintWriter writer = response.getWriter();
         String resultStr = "success";
@@ -201,47 +239,102 @@ public class IhuyiVirtualGoodsRechargeController implements IhuyiVirtualGoodsCon
         map.put("money", money);
         String validateSign = IhuyiUtils.getSign(map,cacheFeignClient);
         map.put("sign", sign);
-        log.info("互亿推送虚拟充值结果...互亿虚拟商品订购回调请求参数："+ JSON.toJSONString(map));
+        log.info("互亿虚拟充值回调...互亿回调请求数据："+ JSON.toJSONString(map));
         if (validateSign.equals(sign)) {
-            log.info("互亿推送虚拟充值结果...互亿虚拟商品购买回调，验签通过");
+            log.info("互亿虚拟商品购买回调，验签通过");
             //根据订单编号查询主订单和充值订单
             BaseResponse<RechargeOrderVo> rechargeOrderVo = orderFeignClient.getRechargeOrderByOrderNo(orderid);
 
             //如果商户订单号为空，就添加商户订单号
-            if (StringUtils.isEmpty(rechargeOrderVo.getData().getOrder().getSupplierNo())) {
+            if (StringUtils.isEmpty(rechargeOrderVo.getData().getOrder().getSupplierOrderNo())) {
                 rechargeOrderVo.getData().getOrder().setSupplierOrderNo(taskid);
                 orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新商户订单号
             }
 
+            //查询机构信息
+            BaseResponse<OrgInfVo> orgInf = cacheFeignClient.getOrgInf(rechargeOrderVo.getData().getOrder().getOrgNo());
+            if(!ResponseCodeMsg.SUCCESS.getCode().equals(orgInf.getResponseCode())) {
+                log.error("互亿虚拟充值通知,查询机构信息失败");
+                return;
+            }
+
             if ("2".equals(status)) {//充值成功
+                log.info("充值成功");
                 if (rechargeOrderVo.getData().getOrder() != null && ModelConstants.ORDER_STATUS_HANDING.equals(rechargeOrderVo.getData().getOrder().getOrderStatus())) {
                     rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);     //订单状态改为成功
                     orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());                              //更新订单状态
-                    log.info("互亿推送虚拟充值结果...互亿虚拟商品购买成功");
+                    log.info("互亿推送虚拟充值结果:互亿虚拟商品购买成功");
                     writer.print(resultStr);
-                    //购买成功,通知机构
-                    notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderVo.getData().getOrder().getOrderNo());
+
+                    //向机构通知成功消息(平台订单号，机构订单号，订单状态，机构信息)
+                    log.info("封装通知请求数据：订单状态成功");
+                    ServiceOrder serviceOrder = new ServiceOrder();
+                    serviceOrder.setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);   //订单状态成功
+                    serviceOrder.setOrgOrderNo(rechargeOrderVo.getData().getOrder().getOrgOrderNo()); //机构订单号
+                    serviceOrder.setOrderNo(rechargeOrderVo.getData().getOrder().getOrderNo()); //订单号
+                    serviceOrder.setNotifyUrl(rechargeOrderVo.getData().getOrder().getNotifyUrl());//异步通知地址
+
+                    //通知机构（订单数据，机构信息）
+                    log.info("开始通知机构...");
+                    notifyToOrg(serviceOrder,orgInf.getData());
                 } else if (rechargeOrderVo.getData().getOrder() == null){
-                    log.info("互亿推送虚拟充值结果...互亿虚拟商品订购状态的订单号不存在");
+                    log.info("互亿推送虚拟充值结果:互亿虚拟商品订购的订单号不存在！");
                     writer.print(resultStr);
                 } else {
-                    log.info("互亿推送虚拟充值结果...互亿虚拟商品订购,状态已处理");
+                    log.info("互亿推送虚拟充值结果:互亿虚拟商品订购,该订单状态已处理");
                     writer.print(resultStr);
                 }
             } else {
-                log.info("互亿推送虚拟充值结果...虚拟充值失败,订单状态更新为失败");
+                log.info("互亿推送虚拟充值结果:虚拟充值失败,订单状态更新为失败");
                 rechargeOrderVo.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);
                 orderFeignClient.updateRechargeOrder(rechargeOrderVo.getData());//更新订单状态
                 resultStr = "fail";
                 writer.print(resultStr);
-                //购买失败,通知机构
-                notifyFeignClient.rechargeNotifyToOrg3Times(rechargeOrderVo.getData().getOrder().getOrderNo());
+
+                //向机构通知失败消息(平台订单号，机构订单号，订单状态，机构信息)
+                log.info("封装通知请求数据：订单状态失败");
+                ServiceOrder serviceOrder = new ServiceOrder();
+                serviceOrder.setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);   //订单状态失败
+                serviceOrder.setOrgOrderNo(rechargeOrderVo.getData().getOrder().getOrgOrderNo()); //机构订单号
+                serviceOrder.setOrderNo(rechargeOrderVo.getData().getOrder().getOrderNo()); //订单号
+                serviceOrder.setNotifyUrl(rechargeOrderVo.getData().getOrder().getNotifyUrl());//异步通知地址
+
+                //充值失败,通知机构
+                log.info("开始通知机构...");
+                notifyToOrg(serviceOrder,orgInf.getData());
             }
         } else {
-            log.info("互亿推送虚拟充值结果...互亿虚拟商品订购回调，验签失败");
+            log.info("互亿推送虚拟充值结果:互亿虚拟商品订购回调，验签失败");
             resultStr = "fail";
             writer.print(resultStr);
         }
-        log.info("互亿推送虚拟充值结果...互亿虚拟商品订购回调返回字符：" + resultStr);
+        log.info("互亿推送虚拟充值结果:互亿虚拟商品订购回调返回字符：" + resultStr);
     }
+
+    /**
+     * 通知机构：进行三次循环通知机构
+     * @param serviceOrder
+     * @param orgInfVo
+     */
+    public void notifyToOrg(ServiceOrder serviceOrder, OrgInfVo orgInfVo){
+        log.info("互亿话费充值开始通知机构,OrgOrderNo:"+serviceOrder.getOrgOrderNo()+",OrderNo:"+serviceOrder.getOrderNo()+",NotifyUrl:"+serviceOrder.getNotifyUrl());
+
+        //开始通知,向机构连续通知三次,三次成功放入Complete表,失败则放入wait表
+        for(int i = 0;i < 3;i++){
+            log.info("第"+i+"次通知");
+            if(NotifyUtil.httpToOrg(serviceOrder,orgInfVo)){
+                log.info("话费充值通知成功,放入notify_complete表");
+                OrderNotifyComplete orderNotifyComplete = NotifyUtil.initOrderNotifyComplete(serviceOrder.getOrderNo(),serviceOrder.getNotifyUrl());
+                notifyBiz.addNotifyComplete(orderNotifyComplete);
+                return;
+            }
+        }
+
+        //通知失败,放入OrderNotifyWait,等待通知服务的轮询
+        log.info("话费充值通知失败,放入notify_wait表");
+        OrderNotifyWait orderNotifyWait = NotifyUtil.initOrderNotifyWait(serviceOrder.getOrderNo(),serviceOrder.getNotifyUrl());
+        notifyBiz.addNotifyWait(orderNotifyWait);
+    }
+
+
 }

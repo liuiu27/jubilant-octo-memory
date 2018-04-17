@@ -3,6 +3,8 @@ package com.cupdata.commons.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.vo.voucher.DisableVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
+import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -77,10 +79,10 @@ public class HttpUtil {
             }
             br.close();// 关闭流
             connection.disconnect();// 断开连接
-            log.info("调用HttpUtil.doGet()请求，返回的字符串为" + sb.toString());
+            log.info("调用HttpUtil.doGet()请求，返回的字符串为:" + sb.toString());
             return sb.toString();
         } catch (Exception e) {
-            log.info("调用HttpUtil.doGet()请求出现异常！");
+            log.info("调用HttpUtil.doGet()请求出现异常,异常信息:"+e.getMessage());
             e.printStackTrace();
             throw e;
         }finally{
@@ -338,7 +340,111 @@ public class HttpUtil {
     }
 
     public static void main(String[] args) throws Exception {
-    	
+    	String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);
+
+		//获取区域信息请求参数
+//		TrvokAreaReq req = new TrvokAreaReq();
+//		req.setAreaType("1");
+//		req.setTimestamp(timestamp);
+
+//		String data = doPost("http://cvpa.leagpoint.com/sipService/trvok/trvok/getTrvokArea", "org=20180208O21995540&data=" + reqData +
+//		"&sign=" + authReqSign ,
+//		"application/x-www-form-urlencoded;charset=UTF-8");
+
+
+		//获取机场详情请求参数
+//		TrvokAirportReq req = new TrvokAirportReq();
+//		req.setAirportId("504");
+//		req.setAreaType("1");
+//		req.setTimestamp(timestamp);
+
+		//获取空港券码请求参数
+//		GetVoucherReq req = new GetVoucherReq();
+//		req.setTimestamp(timestamp);
+//		req.setExpire("20180327");
+//		req.setProductNo("20180108V124");
+//		req.setOrgOrderNo("14112231");
+//		req.setOrderDesc("空港测试");
+//		
+		//空港禁用券码请求参数
+//		DisableVoucherReq req =  new DisableVoucherReq();
+//		req.setDisableDesc("禁用测试");
+//		req.setOrgOrderNo("14112231");
+//		req.setTimestamp(timestamp);
+//		req.setVoucherCode("240090203");
+		
+		//空港核销券码请求参数
+		
+		WriteOffVoucherReq req =  new WriteOffVoucherReq();
+		req.setTimestamp(timestamp);
+		req.setSupplierOrderNo("EO2018041000007982578");
+		req.setUsePlace("shanghai");
+		req.setUserMobileNo("13911111111");
+		req.setUserName("ceshi");
+		req.setUseTime("2018/04/11");
+		req.setVoucherCode("247200780");
+		req.setWriteOffDesc("核销测试");
+		
+		//获取车点点券码请求参数
+//		GetVoucherReq req = new GetVoucherReq();
+//		req.setTimestamp(timestamp);
+//		req.setExpire("20180109");
+//		req.setProductNo("20180201CDD110");
+//		req.setOrgOrderNo("132132131");
+//		req.setMobileNo("13911111111");
+//		req.setOrderDesc("车点点测试");
+
+
+		String reqStr = JSONObject.toJSONString(req);
+
+		String pubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
+		PublicKey uppPubKey = RSAUtils.getPublicKeyFromString(pubKeyStr);
+		String reqData = RSAUtils.encrypt(reqStr, uppPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+		reqData = URLEncoder.encode(reqData);
+		String merchantPriKeyStr = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALrk2X2VGzNigTxGoSuyoN33Mi2/7UIePZIZVkyFgMT/bJiXyQa5FE5+pN5y/CugDdNWYyp7jpLPxczzBd8t7DuyXo5rPD6GxSJhLTaXfdJYmAnxdW2s30X+RDy0dKqxc2oPyCOmAfR9JnV+qgNbd9aOvdlHWkO8cIvwWVScQRwRAgMBAAECgYA5SGFc+3Gd20hPKDrIAPULc3O+z/+xb0Fh4UAxLg4c00j+sC8eT2Xo9SolQEsIOANkziqQ39QALYyr16TqFdI8pywmHFICisiyjKf7nIiqUfi9rVoUCiCxXrhwSmBwkGELcUcBhNupc7Bgqo7uCK+l1g8Qzj+oNtBMfv7sZrj8rQJBAPB0uIyV9ilF0QBFlQ4AaLuhKhqY9oX/vkMTspTpBkpaOv8QeOc6T+9DJAoLjkLlkXEfsLC14AHb4LdZV/kjdyMCQQDG+byuNLe3kqWqo1ecrf8mUw9tIquUkarWU0FuO9ysGjfrLdMLlsn3wlsxddU7rIelYwnLKBYBqdIkCuQiRq07AkEA1Fceyfd75EKlKEpKMI0n79mIpuhBe1+2kuGIKHwHdA1uX+QaAIe8Ixv1bXF69ZRo9a74h3R1Fu8m6ILbb0VkZQJARBcUPV0m/Xf+n000Xxaf+OJ1pfg2VSogFyX4fxuXIYH7XsyYqx+Xz+Q/xsY3CSu6Y5tnr5DxLvKJSfI8LYqYHwJBAIaXJcKpCQSsQQ+Eu8ib861dJWV4vP1jAt9xyeU90nyz5GMwWrWkQ/DkHedDVhyCURpxZTaqKpGnr9iIDIjVrD0=";
+		PrivateKey merchantPriKey = RSAUtils.getPrivateKeyFromString(merchantPriKeyStr);
+		String authReqSign = RSAUtils.sign(reqStr, merchantPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
+		authReqSign = URLEncoder.encode(authReqSign);
+
+		
+		//获取区域信息
+//		String data = doPost("http://cvpa.leagpoint.com/sipService/trvok/trvok/getTrvokArea", "org=20180208O21995540&data=" + reqData +
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+//
+		//获取机场详情
+//		String data = doPost("http://cvpa.leagpoint.com/sipService/trvok/trvok/getTrvokAirportInfo", "org=20180208O21995540&data=" + reqData +
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+//		
+//		String data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		//获取券码URL
+//		String data =  doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher", "org=20180208O21995540&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+//		
+		//禁用券码URL
+//		String data = doPost("http://cvpa.leagpoint.com/sipService/voucher/voucher/disableVoucher", "org=20180208O21995540&data=" + reqData + 
+//				"&sign=" + authReqSign ,
+//				"application/x-www-form-urlencoded;charset=UTF-8");
+		
+		//核销券码测试
+		String data = doPost("http://localhost:46959/voucher/voucher/writeOffVoucher", "sup=2018010800001235&data=" + reqData + 
+				"&sign=" + authReqSign ,
+				"application/x-www-form-urlencoded;charset=UTF-8");
+			
+
+        String [] a =	data.split("&sign=");
+		data = a[0].substring(5, a[0].length());
+		data = URLDecoder.decode(data,"utf-8");
+		System.out.println(data);
+		PrivateKey sipPriKey = null;// 平台私钥
+		sipPriKey = RSAUtils.getPrivateKeyFromString("MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALrk2X2VGzNigTxGoSuyoN33Mi2/7UIePZIZVkyFgMT/bJiXyQa5FE5+pN5y/CugDdNWYyp7jpLPxczzBd8t7DuyXo5rPD6GxSJhLTaXfdJYmAnxdW2s30X+RDy0dKqxc2oPyCOmAfR9JnV+qgNbd9aOvdlHWkO8cIvwWVScQRwRAgMBAAECgYA5SGFc+3Gd20hPKDrIAPULc3O+z/+xb0Fh4UAxLg4c00j+sC8eT2Xo9SolQEsIOANkziqQ39QALYyr16TqFdI8pywmHFICisiyjKf7nIiqUfi9rVoUCiCxXrhwSmBwkGELcUcBhNupc7Bgqo7uCK+l1g8Qzj+oNtBMfv7sZrj8rQJBAPB0uIyV9ilF0QBFlQ4AaLuhKhqY9oX/vkMTspTpBkpaOv8QeOc6T+9DJAoLjkLlkXEfsLC14AHb4LdZV/kjdyMCQQDG+byuNLe3kqWqo1ecrf8mUw9tIquUkarWU0FuO9ysGjfrLdMLlsn3wlsxddU7rIelYwnLKBYBqdIkCuQiRq07AkEA1Fceyfd75EKlKEpKMI0n79mIpuhBe1+2kuGIKHwHdA1uX+QaAIe8Ixv1bXF69ZRo9a74h3R1Fu8m6ILbb0VkZQJARBcUPV0m/Xf+n000Xxaf+OJ1pfg2VSogFyX4fxuXIYH7XsyYqx+Xz+Q/xsY3CSu6Y5tnr5DxLvKJSfI8LYqYHwJBAIaXJcKpCQSsQQ+Eu8ib861dJWV4vP1jAt9xyeU90nyz5GMwWrWkQ/DkHedDVhyCURpxZTaqKpGnr9iIDIjVrD0=");
+		data = RSAUtils.decrypt(data,sipPriKey,RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+		log.info("decryt data:"+data);
 	}
 }
 

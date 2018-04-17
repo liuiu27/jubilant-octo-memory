@@ -2,6 +2,8 @@ package com.cupdata.commons.utils;
 
 import org.apache.log4j.Logger;
 
+import com.cupdata.commons.constant.TimeConstants;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,7 +82,29 @@ public class DateTimeUtil {
 	{
 		return new Date();
 	}
-
+	
+	/**
+	 * 得到当前系统日期,格式："yyyy-MM-dd"
+	 * 
+	 * @return String
+	 */
+	public static String getCurDate()
+	{
+		return getFormatDate(getCurrentDate());
+	}
+	
+	/**
+	 * 输出字符串类型的格式化日期 "yyyy-MM-dd"
+	 * 
+	 * @param dt
+	 *            Date
+	 * @return sDate
+	 */
+	public static String getFormatDate(Date dt)
+	{
+		return getFormatDate(dt, TimeConstants.DATE_PATTERN_1);
+	}
+	
 	/**
 	 * 获得当前的系统日期，不带有时分秒
 	 * 

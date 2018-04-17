@@ -3,7 +3,6 @@ package com.cupdata.iqiyi.controller;
 import com.cupdata.commons.api.iqiyi.IQiYiController;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.model.ElectronicVoucherLib;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.product.ProductInfVo;
@@ -63,14 +62,18 @@ public class IqiyiRechargeController implements IQiYiController {
         log.info("调用爱奇艺会员充值controller...org:"+org+",ProductNo:"+rechargeReq.getProductNo()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo()+",Account:"+rechargeReq.getAccount()+",OrderDesc:"+rechargeReq.getOrderDesc());
         //设置响应结果
         BaseResponse<RechargeRes> rechargeRes = new BaseResponse<RechargeRes>();
+        RechargeRes IqiyirechargeRes = new RechargeRes();
         try {
             //获取供应商产品信息
+            log.info("获取供应商信息,ProductNo:"+rechargeReq.getProductNo());
             BaseResponse<ProductInfVo> productInfo = productFeignClient.findByProductNo(rechargeReq.getProductNo());
             if (null == productInfo || !ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())){
+                log.error("供应商信息获取失败");
                 rechargeRes.setResponseCode(productInfo.getResponseCode());
                 rechargeRes.setResponseMsg(productInfo.getResponseMsg());
                 return rechargeRes;
             }
+
             //创建充值订单
             CreateRechargeOrderVo createRechargeOrderVo = new CreateRechargeOrderVo();
             createRechargeOrderVo.setOrderDesc(rechargeReq.getOrderDesc());
@@ -79,7 +82,7 @@ public class IqiyiRechargeController implements IQiYiController {
             createRechargeOrderVo.setProductNo(rechargeReq.getProductNo());
             createRechargeOrderVo.setAccountNumber(rechargeReq.getAccount());
 
-            //调用订单服务创建订单
+            //调用订单服务创建订单：初始化订单
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
             log.info("爱奇艺会员充值controller,创建订单成功,订单号 : "+rechargeOrderRes.getData().getOrder().getOrderNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
@@ -99,8 +102,8 @@ public class IqiyiRechargeController implements IQiYiController {
             getVoucherReq.setOrgOrderNo(rechargeReq.getOrgOrderNo());  //机构订单号
             getVoucherReq.setMobileNo(rechargeReq.getMobileNo());      //手机号
 
+            log.info("调用券码服获取本地券码");
             BaseResponse<GetVoucherRes> IqiyiVoucherGetRes = voucherFeignClient.getLocalVoucher(org,getVoucherReq);
-
 
             if(!CommonUtils.isNullOrEmptyOfObj(IqiyiVoucherGetRes.getData())){
                 log.info("爱奇艺会员充值controller激活码获取结果 : "+IqiyiVoucherGetRes.getData().getVoucherCode());
@@ -109,12 +112,36 @@ public class IqiyiRechargeController implements IQiYiController {
             //对返回数据处理，判断是否存在可用券码
             if(!"000000".equals(IqiyiVoucherGetRes.getResponseCode())){
                 log.info("爱奇艺会员充值controller从本地获取券码失败 : 券码列表没有可用券码");
+                //修改订单状态
+                rechargeOrderRes.getData().getOrder().setOrderFailDesc("爱奇艺会员获取激活码失败");
+                rechargeOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_NO);
+                rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);
+
+                //调用订单服务更新订单
+                log.info("爱奇艺会员充值controller,更新充值订单OrderNo : "+rechargeOrderRes.getData().getOrder().getOrderNo());
+                rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
+                if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
+                        || null == rechargeOrderRes.getData()
+                        || null == rechargeOrderRes.getData().getOrder()
+                        || null == rechargeOrderRes.getData().getRechargeOrder()){
+                    rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getMsg());
+                    rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getCode());
+                    return rechargeRes;
+                }
+
+                //设置错误响应码："800004","券码列表没有可用券码"
                 rechargeRes.setResponseCode(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getCode());
                 rechargeRes.setResponseMsg(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getMsg());
+
+                //设置响应数据,返回数据
+                IqiyirechargeRes.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo());     //平台单号
+                IqiyirechargeRes.setRechargeStatus(IqiyiRechargeResCode.FAIL.getCode());//充值状态:F 失败
+                rechargeRes.setData(IqiyirechargeRes);
                 return rechargeRes;
             }
 
             //封装请求参数,调用爱奇艺充值工具类来进行充值业务
+            log.info("获取券码成功,开始进行券码充值,充值账号:"+rechargeReq.getAccount()+",激活券码号:"+IqiyiVoucherGetRes.getData().getVoucherCode());
             IqiyiRechargeReq req = new IqiyiRechargeReq();
             req.setUserAccount(rechargeReq.getAccount());     //爱奇艺充值账号
             req.setCardCode(IqiyiVoucherGetRes.getData().getVoucherCode());//充值激活码
@@ -125,19 +152,40 @@ public class IqiyiRechargeController implements IQiYiController {
             long l2 = System.currentTimeMillis();
             log.info("爱奇艺会员充值工具类充值结果 : "+res.toString()+",调用爱奇艺充值接口时间:"+(l2-l1));
             if(null == res || !"A00000".equals(res.getCode())) {
-                log.error("调用爱奇艺会员充值接口，返回报文结果result非A00000-爱奇艺会员充值失败"+res);
+                log.error("爱奇艺会员充值失败，返回报文结果result非A00000-爱奇艺会员充值失败"+res);
+
+                //修改订单状态
+                rechargeOrderRes.getData().getOrder().setOrderFailDesc("爱奇艺会员充值失败");
+                rechargeOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_NO);
+                rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_FAIL);
+
+                //调用订单服务更新订单
+                log.info("爱奇艺会员充值controller,更新充值订单OrderNo : "+rechargeOrderRes.getData().getOrder().getOrderNo());
+                rechargeOrderRes = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
+                if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
+                        || null == rechargeOrderRes.getData()
+                        || null == rechargeOrderRes.getData().getOrder()
+                        || null == rechargeOrderRes.getData().getRechargeOrder()){
+                    rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getMsg());
+                    rechargeRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getCode());
+                    return rechargeRes;
+                }
+
+                //设置错误响应码:700001 - 充值失败
+                rechargeRes.setResponseCode(ResponseCodeMsg.RECHARGE_FAIL.getCode());
+                rechargeRes.setResponseMsg(ResponseCodeMsg.RECHARGE_FAIL.getMsg());
+
                 //爱奇艺会员充值失败,设置错误状态码和错误信息，给予返回
-                rechargeRes.setResponseCode(IqiyiRechargeResCode.RECHARGE_EXCEPTION.getCode());
-                rechargeRes.setResponseMsg(IqiyiRechargeResCode.RECHARGE_EXCEPTION.getMsg());
+                log.error("爱奇艺会员充值controller充值失败,响应用户");
+                IqiyirechargeRes.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo()); //平台单号
+                IqiyirechargeRes.setRechargeStatus(IqiyiRechargeResCode.FAIL.getCode());       //充值状态 :F
+                rechargeRes.setData(IqiyirechargeRes);
                 return rechargeRes;
             }
 
             //会员充值成功,修改订单状态
             rechargeOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS); //订单状态成功
             rechargeOrderRes.getData().getOrder().setIsNotify(ModelConstants.IS_NOTIFY_NO);            //不通知
-            rechargeOrderRes.getData().getRechargeOrder().setProductNo(rechargeReq.getProductNo());    //产品编号
-            rechargeOrderRes.getData().getRechargeOrder().setAccountNumber(rechargeReq.getAccount());  //充值账号
-            rechargeOrderRes.getData().getRechargeOrder().setRechargeAmt(rechargeReq.getRechargeAmt());//充值金额
 
             //调用订单服务更新订单
             log.info("爱奇艺会员充值controller,更新充值订单OrderNo : "+rechargeOrderRes.getData().getOrder().getOrderNo());
@@ -153,17 +201,16 @@ public class IqiyiRechargeController implements IQiYiController {
 
             //充值成功,响应用户
             log.info("爱奇艺会员充值controller充值成功,响应用户");
-            RechargeRes IqiyirechargeRes = new RechargeRes();
             IqiyirechargeRes.setOrderNo(rechargeOrderRes.getData().getOrder().getOrderNo()); //平台单号
-            IqiyirechargeRes.setRechargeStatus(IqiyiRechargeResCode.SUCCESS.getMsg());       //充值状态
+            IqiyirechargeRes.setRechargeStatus(IqiyiRechargeResCode.SUCCESS.getCode());       //充值状态
             rechargeRes.setData(IqiyirechargeRes);
+            return rechargeRes;
         }catch(Exception e){
             e.printStackTrace();
             log.error("爱奇艺充值业务类异常");
-            rechargeRes.setResponseCode(IqiyiRechargeResCode.RECHARGE_EXCEPTION.getCode());
-            rechargeRes.setResponseMsg(IqiyiRechargeResCode.RECHARGE_EXCEPTION.getMsg());
+            rechargeRes.setResponseCode(ResponseCodeMsg.RECHARGE_FAIL.getCode());
+            rechargeRes.setResponseMsg(ResponseCodeMsg.RECHARGE_FAIL.getMsg());
             return rechargeRes;
         }
-        return rechargeRes;
     }
 }
