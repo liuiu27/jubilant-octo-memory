@@ -3,16 +3,15 @@ package com.cupdata.content.biz;
 import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.exception.ContentException;
 import com.cupdata.content.feign.ProductFeignClient;
-import com.cupdata.content.vo.ContentTransaction;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
 import com.cupdata.sip.common.dao.entity.ServiceContentTransactionLog;
 import com.cupdata.sip.common.dao.mapper.ServiceContentTransactionLogMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
 import com.cupdata.sip.common.lang.EntityUtils;
+import com.cupdata.sip.common.lang.RSAHelper;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
-import com.cupdata.sip.common.lang.exception.BizException;
 import com.cupdata.sip.common.lang.exception.ErrorException;
 import com.cupdata.sip.common.lang.utils.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author 作者: liwei
@@ -46,17 +45,17 @@ public class ContentBiz {
      * @param productNo
      * @return
      */
-    public ProductInfVo findByProductNo(String productNo) {
-        log.info("ContentBiz  findByProductNo productNo is " + productNo);
-        BaseResponse<ProductInf0Vo> productInfRes = productFeignClient
-        if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
-                || null == productInfRes.getData()) {// 如果查询失败
-            log.error("procduct-service  findByProductNo result is null......  productNo is" + productNo
-                    + " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-            throw new ErrorException(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode(), ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
-        }
-        return productInfRes.getData();
-    }
+    //public ProductInfVo findByProductNo(String productNo) {
+    //    log.info("ContentBiz  findByProductNo productNo is " + productNo);
+    //    BaseResponse<ProductInf0Vo> productInfRes = productFeignClient
+    //    if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
+    //            || null == productInfRes.getData()) {// 如果查询失败
+    //        log.error("procduct-service  findByProductNo result is null......  productNo is" + productNo
+    //                + " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+    //        throw new ErrorException(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode(), ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+    //    }
+    //    return productInfRes.getData();
+    //}
 
     /**
      * 判断服务产品是否为内容 引入商品 是否与机构相关连
@@ -80,56 +79,6 @@ public class ContentBiz {
                     + ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
             throw new ErrorException(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode(), ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
         }
-    }
-
-    /**
-     * 生成新的流水号并保存
-     *
-     * @param sipTranNo
-     * @param org
-     * @param supplierNo
-     * @param requestInfo
-     * @param productNo
-     * @param tranType
-     */
-    public void insertContentTransaction(String sipTranNo,
-                                         String org,
-                                         String supplierNo,
-                                         String requestInfo,
-                                         String productNo, String tranType) {
-        //保存数据库
-        ContentTransaction contentTransaction = new ContentTransaction();
-        contentTransaction.setSipTranNo(sipTranNo);
-        contentTransaction.setTranType(tranType);
-        contentTransaction.setOrgNo(org);
-        contentTransaction.setRequestInfo(requestInfo);
-        contentTransaction.setProductNo(productNo);
-        contentTransaction.setSupNo(supplierNo);
-        contentDao.insert(contentTransaction);
-    }
-
-    /**
-     * 修改流水表
-     *
-     * @param contentTransaction
-     * @param productNo
-     * @param type
-     * @param org
-     * @param sup
-     * @param requestInfo
-     */
-    public void updateContentTransaction(ContentTransaction contentTransaction,
-                                         String productNo,
-                                         String type,
-                                         String org,
-                                         String sup,
-                                         String requestInfo) {
-        contentTransaction.setProductNo(productNo);
-        contentTransaction.setTranType(type);
-        contentTransaction.setOrgNo(org);
-        contentTransaction.setSupNo(sup);
-        contentTransaction.setRequestInfo(requestInfo);
-        contentDao.update(contentTransaction);
     }
 
 
@@ -175,28 +124,47 @@ public class ContentBiz {
 
     }
 
+    /**
+     * 插入或更新 登陆 流水记录
+     * @param transactionLogDTO
+     */
     @Transactional
     public void insertAndUpdateContentTransaction(ContentTransactionLogDTO transactionLogDTO) {
 
-        if (null ==transactionLogDTO){
+        if (null == transactionLogDTO) {
             log.info("transactionLogDTO 不能为空！！！");
             throw new RuntimeException("qweqwe");
         }
         ServiceContentTransactionLog contentTransaction = new ServiceContentTransactionLog();
-        BeanCopierUtils.copyProperties(transactionLogDTO,contentTransaction);
+
+        BeanCopierUtils.copyProperties(transactionLogDTO, contentTransaction);
 
         ServiceContentTransactionLog serviceContentTransactionLog = serviceContentTransactionLogMapper.selectOne(contentTransaction);
 
-        if (null == serviceContentTransactionLog){
-            EntityUtils.setEntityInfo(contentTransaction,EntityUtils.cfields);
+        if (null == serviceContentTransactionLog) {
+            EntityUtils.setEntityInfo(contentTransaction, EntityUtils.cfields);
             serviceContentTransactionLogMapper.insert(contentTransaction);
-        }else {
+        } else {
             contentTransaction.setId(serviceContentTransactionLog.getId());
-            EntityUtils.setEntityInfo(contentTransaction,EntityUtils.ufields);
+            EntityUtils.setEntityInfo(contentTransaction, EntityUtils.ufields);
             serviceContentTransactionLogMapper.updateByPrimaryKeySelective(contentTransaction);
         }
 
+    }
 
+    public String createRequseUrl(String url,String parameter,String publicKey,String privateKey) throws Exception {
 
+        PublicKey pemPublicKey = RSAHelper.getPemPublicKey(publicKey);
+        PrivateKey pemPrivateKey = RSAHelper.getPemPrivateKey(privateKey);
+
+        String encipher = RSAHelper.encipher(parameter, pemPublicKey, 0);
+        String sign = RSAHelper.sign(parameter, pemPrivateKey);
+        if (url.indexOf("?") == -1) {
+            url = url + "?";
+        } else {
+            url = url + "&";
+        }
+        url = url + "data=" + encipher + "&sign=" + sign;
+        return url;
     }
 }

@@ -2,11 +2,6 @@ package com.cupdata.content.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.exception.ErrorException;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.content.ContentQueryOrderReq;
-import com.cupdata.commons.vo.content.ContentQueryOrderRes;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.feign.OrderFeignClient;
@@ -15,14 +10,15 @@ import com.cupdata.content.utils.EncryptionAndEecryption;
 import com.cupdata.content.vo.ContentToLoginReq;
 import com.cupdata.content.vo.request.ContentLoginReq;
 import com.cupdata.content.vo.request.PayPageVO;
-import com.cupdata.content.vo.request.SupVO;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
 * @author 作者: liwei
@@ -64,6 +60,8 @@ public class SupContentController {
 
 		//TODO 2018/4/17 封装供应商参数
 		String url = EncryptionAndEecryption.Encryption(contentToLoginReq, resJson.getString("loginUrl"));
+		contentBiz.createRequseUrl();
+
 
 		contentTransaction.setSupNo(sup);
 		contentTransaction.setRequestInfo(JSON.toJSONString(contentLoginReq));
@@ -75,19 +73,19 @@ public class SupContentController {
 		return ret.toString();
 	}
 	
-	@PostMapping(path="/contentQueryOrder",produces = "application/json")
-	public BaseResponse<ContentQueryOrderRes> contentQueryOrder(SupVO<ContentQueryOrderReq> contentQueryOrderReq){
-		log.info("contentQueryOrder is begin params contentQueryOrderReq is" + contentQueryOrderReq.toString());
-		BaseResponse<ContentQueryOrderRes> res = new BaseResponse<ContentQueryOrderRes>();	
-		try {
-			//调用order-service的服务查询数据
-			res = OrderFeignClient.queryContentOrder(contentQueryOrderReq.getData());
-			return res;
-		} catch (Exception e) {
-			log.error("error is " + e.getMessage());
-			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-		}
-	}
+	//@PostMapping(path="/contentQueryOrder",produces = "application/json")
+	//public BaseResponse<ContentQueryOrderRes> contentQueryOrder(SupVO<ContentQueryOrderReq> contentQueryOrderReq){
+	//	log.info("contentQueryOrder is begin params contentQueryOrderReq is" + contentQueryOrderReq.toString());
+	//	BaseResponse<ContentQueryOrderRes> res = new BaseResponse<ContentQueryOrderRes>();
+	//	try {
+	//		//调用order-service的服务查询数据
+	//		res = OrderFeignClient.queryContentOrder(contentQueryOrderReq.getData());
+	//		return res;
+	//	} catch (Exception e) {
+	//		log.error("error is " + e.getMessage());
+	//		throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+	//	}
+	//}
 
 	/**
 	 * 支付请求接口
@@ -95,12 +93,13 @@ public class SupContentController {
 	 * @param payPageVO 请求参数
 	 * @return
 	 */
-	public String payRequest(@RequestParam(value = "sup", required = true) String sup,
+	public String payRequest(@RequestParam(value = "sup") String sup,
 								   @RequestBody @Validated PayPageVO payPageVO ){
 	    //Step1 验证本流水是否有效
         payPageVO.getSipTranNo();
 
 	    //Step2 验证是否有对应交易订单。并对其进行检验。
+
 	    //Step3 创建交易订单，并保存参数
 
 
