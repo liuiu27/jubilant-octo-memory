@@ -34,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
 * @author 作者: liwei
@@ -191,8 +192,19 @@ public class SupContentController {
 	    //Step5 拼接参数。
         //获取机构登录地址
 
-        Map req = new HashMap();
+        Map<String,String> req = new HashMap();
 
+        req.put("timestamp",payPageVO.getTimestamp());
+        req.put("orderAmt",payPageVO.getOrderAmt());
+        req.put("sipOrderNo", payPageVO.getSupOrderNo());
+        req.put("sipOrderTime",payPageVO.getSupOrderTime());
+        req.put("orderTitle","");
+        req.put("orderInfo","");
+        req.put("timeOut","");
+        req.put("payBackUrl","");
+        req.put("notifyUrl","");
+        req.put("productNum","");
+        req.put("orderShow","");
 
         JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
         String url = EncryptionAndEecryption.Encryption(req, resJson.getString("payUrl"));
