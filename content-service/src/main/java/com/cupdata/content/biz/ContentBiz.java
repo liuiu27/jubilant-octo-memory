@@ -159,7 +159,7 @@ public class ContentBiz {
 
         String encipher = RSAHelper.encipher(parameter, pemPublicKey, 0);
         String sign = RSAHelper.sign(parameter, pemPrivateKey);
-        if (url.indexOf("?") == -1) {
+        if (!url.contains("?")) {
             url = url + "?";
         } else {
             url = url + "&";

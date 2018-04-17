@@ -6,11 +6,14 @@ import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
-import com.cupdata.content.utils.EncryptionAndEecryption;
+import com.cupdata.content.feign.SupplierFeignClient;
 import com.cupdata.content.vo.ContentToLoginReq;
 import com.cupdata.content.vo.request.ContentLoginReq;
 import com.cupdata.content.vo.request.PayPageVO;
+import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +38,9 @@ public class SupContentController {
 	
 	@Autowired
 	private OrderFeignClient OrderFeignClient;
+
+	@Autowired
+	private SupplierFeignClient supplierFeignClient;
 	
 	@Autowired
 	private ContentBiz contentBiz;
@@ -46,32 +52,40 @@ public class SupContentController {
 	 */
 	@GetMapping(path="/contentJump")
 	public String contentJump(@RequestParam(value = "sup") String sup, @Validated @RequestBody ContentLoginReq contentLoginReq) {
-		log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
+        log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
 
-		//查询是否存在此流水号
-		ContentTransactionLogDTO contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getSipTranNo(), ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+        //查询是否存在此流水号
+        ContentTransactionLogDTO contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getSipTranNo(), ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 
-		//获取机构登录地址
-		JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
-		ContentToLoginReq contentToLoginReq = new ContentToLoginReq();
-		contentToLoginReq.setProductNo(contentTransaction.getProductNo());
-		contentToLoginReq.setSipTranNo(contentLoginReq.getSipTranNo());
+        //获取机构登录地址
+        JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
+        ContentToLoginReq contentToLoginReq = new ContentToLoginReq();
+        contentToLoginReq.setProductNo(contentTransaction.getProductNo());
+        contentToLoginReq.setSipTranNo(contentLoginReq.getSipTranNo());
+
+        String url = null;
+        BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo(sup);
+        if (!supByNo.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode())) {
+            //内部调用错误
+        }
+        //组装重定向地址及参数
+        SupplierInfVo supplierInfVo = supByNo.getData();
+        try {
+            url = contentBiz.createRequseUrl(resJson.getString("loginUrl"), JSON.toJSONString(contentToLoginReq), supplierInfVo.getSupplierPubKey(), supplierInfVo.getSipPriKey());
+        } catch (Exception e) {
+            //封装参数失败
+        }
 
 
-		//TODO 2018/4/17 封装供应商参数
-		String url = EncryptionAndEecryption.Encryption(contentToLoginReq, resJson.getString("loginUrl"));
-		contentBiz.createRequseUrl();
+        contentTransaction.setSupNo(sup);
+        contentTransaction.setRequestInfo(JSON.toJSONString(contentLoginReq));
+        contentTransaction.setTranType(ModelConstants.CONTENT_TYPE_TO_LOGGED);
 
+        contentBiz.insertAndUpdateContentTransaction(contentTransaction);
 
-		contentTransaction.setSupNo(sup);
-		contentTransaction.setRequestInfo(JSON.toJSONString(contentLoginReq));
-		contentTransaction.setTranType(ModelConstants.CONTENT_TYPE_TO_LOGGED);
-
-		contentBiz.insertAndUpdateContentTransaction(contentTransaction);
-
-		StringBuffer ret = new StringBuffer("redirect:" + url);
-		return ret.toString();
-	}
+        StringBuffer ret = new StringBuffer("redirect:" + url);
+        return ret.toString();
+    }
 	
 	//@PostMapping(path="/contentQueryOrder",produces = "application/json")
 	//public BaseResponse<ContentQueryOrderRes> contentQueryOrder(SupVO<ContentQueryOrderReq> contentQueryOrderReq){
