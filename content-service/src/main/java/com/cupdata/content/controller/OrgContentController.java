@@ -58,7 +58,6 @@ public class OrgContentController{
 		//根据产品获取供应商 主页URL
 		String supUrl = productInfRes.getServiceApplicationPath();
 
-
 		
 //		//Step5 :   判断流水号  如果为空创建 新的           如果不为空则修改
 		contentBiz.queryAndinsertOrUpdateContentTransaction(contentJumpReqVo,productInfRes,ModelConstants.CONTENT_TYPE_NOT_LOGGED,null);

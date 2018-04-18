@@ -5,30 +5,45 @@ spring:
     active: dev
 server:
    port: 46922         # 指定该实例的端口
-#mybatis相关配置
-mybatis:
-    type-aliases-package: com.cupdata.commons.model
-    mapper-locations: classpath:mapper/*.xml
-
-#配置Hystrix的超时时间为10秒，解决Feign/Ribbon第一次请求失败的问题
-#hystrix:
-#  command:
-#      default:
-#        execution:
-#          isolation:
-#            thread:
-#              timeoutInMilliseconds: 5000
 #日志配置
 logging:
   config: classpath:logback-spring.xml
-  
+
+#配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+#mybatis相关配置
+mybatis:
+    type-aliases-package: com.cupdata.sip.common.dao.entity
+    mapper-locations: com/cupdata/sip/common/dao/mapping/*.xml
+mapper:
+    mappers:
+        - tk.mybatis.mapper.common.Mapper
+    not-empty: false
+    identity: MYSQL
+    before: true
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
 jasypt:
   encryptor:
     password: cupdata
-    
-feign:
-  hystrix:
-    enabled: true   
 
 --- # 开发环境**********************************************************************************************************
 spring:
@@ -43,20 +58,12 @@ spring:
 eureka:
   client:
     healthcheck:
-          enabled: true
+      enabled: true
     serviceUrl:
       defaultZone: http://${spring.cloud.client.ipAddress}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
   instance:
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
     prefer-ip-address: true     #表示将ip注册到Eureka server
-
-
-feign:
-  compression:
-    request:
-      enabled: true
-    response:
-      enabled: true
 
 ribbon:
   eager-load:
@@ -65,6 +72,7 @@ ribbon:
   OkToRetryOnAllOperations: true # 对所有操作请求都进行重试
   MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
   MaxAutoRetries: 1 # 对当前实例的重试次数
+
 #该配置，用于禁用Hystrix的超时时间
 hystrix:
   command:
@@ -72,7 +80,6 @@ hystrix:
       execution:
         timeout:
           enabled: false
-
 
 --- # 测试环境**********************************************************************************************************
 spring:

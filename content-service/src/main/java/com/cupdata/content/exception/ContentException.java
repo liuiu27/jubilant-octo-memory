@@ -11,6 +11,5 @@ import lombok.Setter;
 @Setter
 public class ContentException extends RuntimeException {
 
-    String errorPage="content";
-
+    String errorPage="error";
 }
