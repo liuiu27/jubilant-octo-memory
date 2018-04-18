@@ -49,7 +49,7 @@ public class LakalaController implements ILakalaController{
      * @return
      */
     @Override
-    public BaseResponse<GetVoucherRes> getVoucher(@PathVariable("orgNo") String org, @RequestBody GetVoucherReq voucherReq) {
+    public BaseResponse<GetVoucherRes> getVoucher(String org, @RequestBody GetVoucherReq voucherReq) {
         log.info("lakala获取券码controller,OrgorderNo:" + voucherReq.getOrgOrderNo() + ",OrderDesc:" + voucherReq.getOrderDesc() + ",org:" + org + ",mobileNo:" + voucherReq.getMobileNo()+",ProductNo"+voucherReq.getProductNo());
         //设置响应数据结果
         BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse<GetVoucherRes>();

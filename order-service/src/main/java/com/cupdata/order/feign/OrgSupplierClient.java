@@ -7,7 +7,7 @@ import org.springframework.cloud.netflix.feign.FeignClient;
 /**
  *
  */
-@FeignClient(name = "orgsupplier-service", fallbackFactory = OrgControllerFallback.class)
+@FeignClient(name = "orgsupplier-service")
 public interface OrgSupplierClient extends IOrgController {
 
 

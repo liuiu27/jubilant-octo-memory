@@ -26,4 +26,7 @@
     <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy" />
     <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+
+
 </mapper>

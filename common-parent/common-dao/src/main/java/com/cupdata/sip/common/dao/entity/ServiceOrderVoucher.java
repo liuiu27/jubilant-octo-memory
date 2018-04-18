@@ -17,7 +17,7 @@ public class ServiceOrderVoucher implements Serializable {
      * 主订单ID
      */
     @Column(name = "ORDER_ID")
-    private String orderId;
+    private Long orderId;
 
     /**
      * 服务产品编号
@@ -140,7 +140,7 @@ public class ServiceOrderVoucher implements Serializable {
      *
      * @return ORDER_ID - 主订单ID
      */
-    public String getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
@@ -149,7 +149,7 @@ public class ServiceOrderVoucher implements Serializable {
      *
      * @param orderId 主订单ID
      */
-    public void setOrderId(String orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 

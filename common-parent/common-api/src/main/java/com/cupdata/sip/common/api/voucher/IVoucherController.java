@@ -7,8 +7,7 @@ import com.cupdata.sip.common.api.voucher.request.WriteOffVoucherReq;
 import com.cupdata.sip.common.api.voucher.response.DisableVoucherRes;
 import com.cupdata.sip.common.api.voucher.response.GetVoucherRes;
 import com.cupdata.sip.common.api.voucher.response.WriteOffVoucherRes;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Auth: LinYong
@@ -25,7 +24,7 @@ public interface IVoucherController {
      * @return
      */
     @PostMapping("/getVoucher")
-    public BaseResponse<GetVoucherRes> getVoucher(String org, GetVoucherReq voucherReq);
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam("org") String org, @RequestBody GetVoucherReq voucherReq);
 
     /**
      * 禁用券码接口方法

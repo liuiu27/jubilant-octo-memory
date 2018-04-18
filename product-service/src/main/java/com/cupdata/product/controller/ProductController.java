@@ -31,7 +31,7 @@ public class ProductController implements IProductController {
     	log.info("ProductController findByProductNo is begin productNo is " + productNo);
     	try {
 	        BaseResponse<ProductInfoVo> productRes = new BaseResponse();
-			ProductInfoVo product = productBiz.selectByProductNo(productNo);
+			ProductInfoVo product  = productBiz.selectByProductNo(productNo);
 	        if (null == product) {//商品信息未查询到
 	            productRes.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
 	            productRes.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
@@ -39,7 +39,6 @@ public class ProductController implements IProductController {
 	        }
 
 	        productRes.setData(product);
-	
 	        return productRes;
     	} catch (Exception e) {
 			log.error("error is " + e.getMessage());

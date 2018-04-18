@@ -23,14 +23,14 @@ pagehelper:
     params: count=countSql
 
 
-#配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
-hystrix:
-  command:
-      default:
-        execution:
-          isolation:
-            thread:
-              timeoutInMilliseconds: 5000
+#配置Hystrix的超时时间为10秒，解决Feign/Ribbon第一次请求失败的问题
+#hystrix:
+#  command:
+#      default:
+#        execution:
+#          isolation:
+#            thread:
+#              timeoutInMilliseconds: 5000
 #日志配置
 logging:
   config: classpath:logback-spring.xml
@@ -75,7 +75,9 @@ ribbon:
   eager-load:
     enabled: true
   ConnectTimeout: 50000 # 设置连接超时时间
-
+  OkToRetryOnAllOperations: true # 对所有操作请求都进行重试
+  MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
+  MaxAutoRetries: 1 # 对当前实例的重试次数
 #该配置，用于禁用Hystrix的超时时间
 hystrix:
   command:

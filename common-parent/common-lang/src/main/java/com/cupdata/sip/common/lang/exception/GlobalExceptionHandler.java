@@ -83,9 +83,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = BestdoException.class)
     public BaseResponse exceptionHandler(HttpServletRequest request,BestdoException exception) {
-
         return new BaseResponse(exception.getCode(),exception.getMessage());
     }
+
+    /**
+     * 券码异常捕获
+     * @param request
+     * @param exception
+     * @return
+     */
+    @ExceptionHandler(value = VoucherException.class)
+    public BaseResponse voucherExceptionHandler(HttpServletRequest request,VoucherException exception) {
+        log.error(exception.getMessage(),exception.getCause());
+        return new BaseResponse(exception.getCode(),exception.getMessage());
+    }
+
 
 
 

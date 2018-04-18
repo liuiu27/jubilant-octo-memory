@@ -1,28 +1,21 @@
 package com.cupdata.voucher.rest;
 
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.model.ElectronicVoucherCategory;
-import com.cupdata.commons.model.ElectronicVoucherLib;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.api.voucher.ILocalVoucherController;
 import com.cupdata.sip.common.api.voucher.request.DisableVoucherReq;
 import com.cupdata.sip.common.api.voucher.request.GetVoucherReq;
 import com.cupdata.sip.common.api.voucher.request.WriteOffVoucherReq;
-import com.cupdata.sip.common.api.voucher.response.DisableVoucherRes;
-import com.cupdata.sip.common.api.voucher.response.GetVoucherRes;
-import com.cupdata.sip.common.api.voucher.response.WriteOffVoucherRes;
-import com.cupdata.voucher.biz.VoucherCategoryBiz;
-import com.cupdata.voucher.biz.VoucherLibBiz;
-import com.cupdata.voucher.feign.OrderFeignClient;
+import com.cupdata.sip.common.api.voucher.response.*;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+import com.cupdata.sip.common.lang.utils.CommonUtils;
+import com.cupdata.voucher.biz.VoucherBiz;
 import com.cupdata.voucher.feign.ProductFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
 
 /**
  * @Auther: DingCong
@@ -37,13 +30,7 @@ public class LocalVoucherController implements ILocalVoucherController {
     private ProductFeignClient productFeignClient ;
 
     @Autowired
-    private OrderFeignClient orderFeignClient;
-
-    @Resource
-    private VoucherLibBiz voucherLibGetBiz ;
-
-    @Resource
-    private VoucherCategoryBiz voucherCategoryBiz ;
+    private VoucherBiz voucherBiz;
 
     /**
      * 从本地券码库获取券码
@@ -52,7 +39,7 @@ public class LocalVoucherController implements ILocalVoucherController {
      * @return
      */
     @Override
-    public BaseResponse<GetVoucherRes> getLocalVoucher(String org, GetVoucherReq voucherReq) {
+    public BaseResponse<GetVoucherRes> getLocalVoucher(@RequestParam("org") String org, @RequestBody GetVoucherReq voucherReq) {
         log.info("LocalVoucherController getLocalVoucher is begin......org:"+org+",ProductNo"+voucherReq.getProductNo());
         //响应信息
         BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse<>();// 默认为成功
@@ -71,7 +58,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             Long categoryId = Long.valueOf(productInfo.getData().getSupplierParam());
 
             //step3.根据券码类型获得券码状态是否有效
-            ElectronicVoucherCategory electronicVoucherCategory = voucherCategoryBiz.checkVoucherValidStatusByCategoryId(categoryId);
+            ElectronicVoucherCategory electronicVoucherCategory = voucherBiz.checkVoucherValidStatusByCategoryId(categoryId);
             if (CommonUtils.isNullOrEmptyOfObj(electronicVoucherCategory)) {
                 log.info("券码类型无效");
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.VOUCHER_TYPE_INVALID.getMsg());
@@ -80,7 +67,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             }
 
             //step4.判断券码列表是否存在有效券码,获取有效券码
-            ElectronicVoucherLib electronicVoucherLib = voucherLibGetBiz.selectVoucherByCategoryId(categoryId);
+            ElectronicVoucherLib electronicVoucherLib = voucherBiz.selectVoucherByCategoryId(categoryId);
             if (CommonUtils.isNullOrEmptyOfObj(electronicVoucherLib)) {
                 log.info("券码列表没有可用券码");
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getMsg());
@@ -92,7 +79,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             electronicVoucherLib.setOrgOrderNo(voucherReq.getOrgOrderNo());
             electronicVoucherLib.setOrgNo(org);
             electronicVoucherLib.setMobileNo(voucherReq.getMobileNo());
-            voucherLibGetBiz.UpdateElectronicVoucherLib(electronicVoucherLib);
+            voucherBiz.UpdateElectronicVoucherLib(electronicVoucherLib);
 
             //step6.封装券码信息,给予返回
             log.info("本地获取券码成功,券码号:"+electronicVoucherLib.getTicketNo());

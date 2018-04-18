@@ -11,6 +11,9 @@ public enum ResponseCodeMsg {
      */
     SUCCESS("000000", "成功"),
 
+    /**
+     * 100001 - 参数无效
+     */
     PARAM_INVALID("100001","参数无效"),
 
     /**
@@ -146,6 +149,8 @@ public enum ResponseCodeMsg {
      * 800009 - 根据商户编号获取商户失败
      */
     GET_SUPPLIER_FAIL_BY_NO("800009","根据商户编号获取商户失败");
+
+
 
 
 

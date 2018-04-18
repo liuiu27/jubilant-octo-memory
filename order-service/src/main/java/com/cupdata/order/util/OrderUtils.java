@@ -1,16 +1,12 @@
 package com.cupdata.order.util;
 
-import com.cupdata.commons.vo.content.CreateContentOrderVo;
-import com.cupdata.commons.vo.content.ServiceOrderContent;
-import com.cupdata.commons.vo.product.ProductInfVo;
 import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
 import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.dao.entity.ServiceOrder;
-import com.cupdata.sip.common.dao.entity.ServiceOrderRecharge;
+import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.dao.entity.ServiceOrderVoucher;
 import com.cupdata.sip.common.lang.utils.CommonUtils;
 import com.cupdata.sip.common.lang.utils.DateTimeUtil;
-import com.cupdata.sip.common.lang.constant.ModelConstants;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -71,8 +67,8 @@ public class OrderUtils {
         ServiceOrderVoucher voucherOrder = new ServiceOrderVoucher();
         voucherOrder.setOrderId(order.getId());
         voucherOrder.setProductNo(productNo);
-        voucherOrder.setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED);
-        voucherOrder.setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
+        voucherOrder.setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED.toString());
+        voucherOrder.setEffStatus(ModelConstants.VOUCHER_STATUS_EFF.toString());
         return voucherOrder;
     }
 
@@ -83,7 +79,7 @@ public class OrderUtils {
      * @param createContentOrderVo
      * @return
      */
-    public static ServiceOrderContent initContentOrder(ServiceOrder order, CreateContentOrderVo createContentOrderVo) {
+   /* public static ServiceOrderContent initContentOrder(ServiceOrder order, CreateContentOrderVo createContentOrderVo) {
         ServiceOrderContent orderContent = new ServiceOrderContent();
         orderContent.setOrderId(order.getId());
         orderContent.setProductNo(createContentOrderVo.getProductNo());
@@ -98,7 +94,7 @@ public class OrderUtils {
 
         return null;
     }
-
+*/
     /**
      * 初始化充值订单
      *
@@ -106,7 +102,7 @@ public class OrderUtils {
      * @param productNo 商品编号
      * @return
      */
-    public static ServiceOrderRecharge initRechargeOrder(String accountNumber, ProductInfVo productInfVo, ServiceOrder order, String productNo) {
+/*    public static ServiceOrderRecharge initRechargeOrder(String accountNumber, ProductInfVo productInfVo, ServiceOrder order, String productNo) {
         ServiceOrderRecharge rechargeOrder = new ServiceOrderRecharge();
         rechargeOrder.setOrderId(order.getId());      //订单id
         rechargeOrder.setAccountNumber(accountNumber);//充值账号
@@ -117,7 +113,7 @@ public class OrderUtils {
         rechargeOrder.setRechargeNumber(productInfVo.getProduct().getRechargeNumber());//充值数量
         return rechargeOrder;
 
-    }
+    }*/
 
 
     /**

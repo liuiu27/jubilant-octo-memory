@@ -36,4 +36,11 @@ public class GetVoucherReq {
      */
     private String orderDesc;
 
+    /**
+     * 时间戳
+     * 时间戳精确到毫秒，格式为yyyyMMddHHmmssSSS+8位随机数，共计25位；
+     * 防重放，时间戳控制3分钟内有效，并且只能使用一次
+     */
+    private String timestamp;
+
 }
