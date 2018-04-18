@@ -24,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -257,7 +258,7 @@ public class OrgContentController{
 
 	@ResponseBody
 	@GetMapping("payNotify")
-	public String payNotify(@RequestParam(value = "org") String org,@RequestBody NotifyVO notifyVO) {
+	public BaseResponse payNotify(@RequestParam(value = "org") String org,@RequestBody NotifyVO notifyVO) {
 		RestTemplate restTemplate = new RestTemplate();
 
 		String notifyurl = "https://test.wantu.cn/payGate/payNotify?method=rongshupay_app";
@@ -268,9 +269,11 @@ public class OrgContentController{
 		param.put("orderAmt", notifyVO.getOrderAmt());
 		param.put("sipOrderNo", notifyVO.getOrgOrderNo());
 
-		String forObject = restTemplate.getForObject(notifyurl, String.class, param);
+		notifyurl = EncryptionAndEecryption.Encryption(param,notifyurl);
 
-		return forObject;
+        String s = restTemplate.postForObject(notifyurl, null, String.class);
+
+        return  new BaseResponse();
 	}
 
 

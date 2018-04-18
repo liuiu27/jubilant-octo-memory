@@ -26,9 +26,9 @@ public class ContentServiceApplication {
       param.put("sipOrderNo", "180417HD055316");
 
       notifyurl = EncryptionAndEecryption.Encryption(param,notifyurl);
-      String canshu =formatUrlMap(param,true,false);
-      String forObject = restTemplate.getForObject(notifyurl, String.class);
-      log.info(forObject);
+      //String canshu =formatUrlMap(param,true,false);
+      String s = restTemplate.postForObject(notifyurl, null, String.class);
+      log.info(s);
 
    }
 
