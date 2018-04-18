@@ -261,7 +261,7 @@ public class OrgContentController{
 	public BaseResponse payNotify(@RequestParam(value = "org") String org,@RequestBody NotifyVO notifyVO) {
 		RestTemplate restTemplate = new RestTemplate();
 
-		String notifyurl = "https://test.wantu.cn/payGate/payNotify?method=rongshupay_app";
+		String notifyurl = "https://test.wantu.cn/payGate/payNotify";
 		Map<String, String> param = new HashMap<>();
 
 		param.put("resultCode", notifyVO.getResultCode());
@@ -271,13 +271,10 @@ public class OrgContentController{
 
 		notifyurl = EncryptionAndEecryption.Encryption(param,notifyurl);
 
-        String s = restTemplate.postForObject(notifyurl, null, String.class);
+        BaseResponse baseResponse = restTemplate.postForObject(notifyurl, null, BaseResponse.class);
 
         return  new BaseResponse();
 	}
-
-
-
 
 	@Data
  	static class NotifyVO {

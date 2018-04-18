@@ -1,18 +1,5 @@
 package com.cupdata.content.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
@@ -27,14 +14,21 @@ import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.utils.EncryptionAndEecryption;
 import com.cupdata.content.vo.ContentLoginReq;
 import com.cupdata.content.vo.ContentToLoginReq;
+import com.cupdata.content.vo.request.CancelPayVO;
 import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.content.vo.request.SupVO;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
 * @author 作者: liwei
@@ -215,6 +209,41 @@ public class SupContentController {
 
 	}
 
+
+	/**
+	 * 支付请求接口
+	 * @param sup 供应商号
+	 * @param tranNo 流水号
+	 * @param payPageVO 请求参数
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping("payCancel")
+	public BaseResponse payCancel(@RequestParam(value = "sup") String sup,
+							 @RequestBody @Validated CancelPayVO cancelPayVO ){
+		RestTemplate restTemplate = new RestTemplate();
+		String url ="http://cvpd.leagpoint.com/mall/sip/content/contentOrderRefund.action?provider=LBHTDnJkYy4=";
+
+
+		Map<String,String> req = new HashMap();
+
+		req.put("sipOrderNo",cancelPayVO.getSupOrderNo());
+		req.put("refundDate",cancelPayVO.getRefundDate();
+		req.put("refundAmt", cancelPayVO.getRefundAmt());
+		req.put("refundInfo",cancelPayVO.getRefundInfo());
+		req.put("timeStamp",cancelPayVO.getTimeStamp());
+
+		//JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
+		url = EncryptionAndEecryption.Encryption(req, url);
+
+		BaseResponse baseResponse = restTemplate.postForObject(url, null, BaseResponse.class);
+
+		if (baseResponse.getResponseCode().equals("2"))
+		return  new BaseResponse();
+
+		return  new BaseResponse(ResponseCodeMsg.REQUEST_TIMEOUT.getCode(),ResponseCodeMsg.REQUEST_TIMEOUT.getMsg());
+
+	}
 
 
 

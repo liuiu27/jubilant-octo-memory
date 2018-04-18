@@ -1,5 +1,6 @@
 package com.cupdata.content;
 
+import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.content.utils.EncryptionAndEecryption;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +18,7 @@ public class ContentServiceApplication {
 
       TestRestTemplate restTemplate = new TestRestTemplate();
 
-      String notifyurl = "https://test.wantu.cn/payGate/payNotify?method=rongshupay_app";
+      String notifyurl = "https://test.wantu.cn/payGate/payNotify";
       Map<String, String> param = new HashMap<>();
 
       param.put("resultCode", "2");
@@ -27,8 +28,8 @@ public class ContentServiceApplication {
 
       notifyurl = EncryptionAndEecryption.Encryption(param,notifyurl);
       //String canshu =formatUrlMap(param,true,false);
-      String s = restTemplate.postForObject(notifyurl, null, String.class);
-      log.info(s);
+      BaseResponse baseResponse = restTemplate.postForObject(notifyurl, null, BaseResponse.class);
+      log.info(baseResponse.toString());
 
    }
 

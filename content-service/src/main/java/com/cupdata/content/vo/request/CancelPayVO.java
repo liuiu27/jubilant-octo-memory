@@ -11,8 +11,6 @@ import lombok.Setter;
 @Setter
 public class CancelPayVO {
 
-    String tranNo;
-
     String supOrderNo;
 
 
