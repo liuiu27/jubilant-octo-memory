@@ -228,7 +228,7 @@ public class SupContentController {
 		Map<String,String> req = new HashMap();
 
 		req.put("sipOrderNo",cancelPayVO.getSupOrderNo());
-		req.put("refundDate",cancelPayVO.getRefundDate();
+		req.put("refundDate",cancelPayVO.getRefundDate());
 		req.put("refundAmt", cancelPayVO.getRefundAmt());
 		req.put("refundInfo",cancelPayVO.getRefundInfo());
 		req.put("timeStamp",cancelPayVO.getTimeStamp());
