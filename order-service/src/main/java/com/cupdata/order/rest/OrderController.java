@@ -93,11 +93,16 @@ public class OrderController implements IOrderController {
 
     @Override
     public BaseResponse<VoucherOrderVo> updateVoucherOrder(VoucherOrderVo voucherOrderVo) {
-        return null;
+    	BaseResponse<VoucherOrderVo>  res =  new BaseResponse<VoucherOrderVo>();
+    	voucherOrderVo = orderBiz.updateVoucherOrder(voucherOrderVo);
+    	res.setData(voucherOrderVo);
+        return res;
     }
 
     @Override
     public BaseResponse<VoucherOrderVo> getVoucherOrderByOrderNo(String orderNo) {
+    	BaseResponse<VoucherOrderVo> res = new BaseResponse<VoucherOrderVo>();
+    	
         return null;
     }
 

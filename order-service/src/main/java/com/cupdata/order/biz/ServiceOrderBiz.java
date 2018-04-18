@@ -86,6 +86,17 @@ public class ServiceOrderBiz {
 
     }
 
+	public VoucherOrderVo updateVoucherOrder(VoucherOrderVo voucherOrderVo) {
+		ServiceOrder serviceOrder = new ServiceOrder();
+		BeanCopierUtils.copyProperties(voucherOrderVo,serviceOrder);
+		
+		orderDao.updateByPrimaryKey(serviceOrder);
+		serviceOrder = orderDao.selectByPrimaryKey(serviceOrder.getId());
+		
+		BeanCopierUtils.copyProperties(serviceOrder,voucherOrderVo);
+		return voucherOrderVo;
+	}
+
     /**
      * 根据订单状态、订单子类型、商户标识查询服务订单列表
      * @param orderSubType

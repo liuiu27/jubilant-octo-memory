@@ -68,5 +68,14 @@
             </foreach>
         </if>
     </select>
+    
+    
+    
+    <update id = "updateByPrimaryKey" parameterMap="BaseResultMap">
+    
+    </update>
+    
+    
+    
 
 </mapper>
