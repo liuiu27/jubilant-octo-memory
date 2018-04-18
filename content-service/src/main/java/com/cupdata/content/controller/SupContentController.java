@@ -196,7 +196,7 @@ public class SupContentController {
         req.put("orderInfo","1");
         req.put("timeOut","30");
         req.put("payBackUrl",payPageVO.getPayBackUrl());
-        req.put("notifyUrl",payPageVO.getNotifyUrl());
+        req.put("notifyUrl","http://cvpa.leagpoint.com/sipService/content/content/payNotify");
         req.put("productNum","1");
         req.put("orderShow","1");
         req.put("userId","110440");
