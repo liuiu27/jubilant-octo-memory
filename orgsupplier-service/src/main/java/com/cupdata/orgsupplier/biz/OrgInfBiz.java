@@ -4,6 +4,7 @@ import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
 import com.cupdata.sip.common.dao.entity.OrgInf;
 import com.cupdata.sip.common.dao.mapper.OrgInfMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
+import com.cupdata.sip.common.lang.exception.BizException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,14 @@ public class OrgInfBiz {
     @CacheResult(cacheName = "ehcache")
     public OrgInfoVo findOrgByNo(@CacheKey String orgNo) {
 
-        OrgInf org = orgInfMapper.findOrgByNo(orgNo);
+        OrgInf org =new OrgInf();
+        org.setOrgNo(orgNo);
+        org = orgInfMapper.selectOne(org);
+        if (null == org){
+            log.info("未找到该机构，info：orgNo= "+orgNo);
+            //TODO
+            throw new BizException("EEEEEE","未找到该机构");
+        }
         OrgInfoVo orgInfoVo =new OrgInfoVo();
         BeanCopierUtils.copyProperties(org,orgInfoVo);
 

@@ -12,8 +12,6 @@
     <artifactId>lakala-service</artifactId>
 
     <dependencies>
-
-
         <dependency>
             <groupId>com.cupdata.sip</groupId>
             <artifactId>common-api</artifactId>
@@ -67,13 +65,39 @@
         </dependency>
         <dependency>
             <groupId>com.cupdata.sip</groupId>
-            <artifactId>common-dao</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.cupdata.sip</groupId>
             <artifactId>common-lang</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.4</version>
+        </dependency>
+
+        <!-- MySQL  -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--Druid-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+        <!--mybatis-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jdbc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
     </dependencies>
 

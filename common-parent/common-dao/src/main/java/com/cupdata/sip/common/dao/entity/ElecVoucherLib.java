@@ -76,8 +76,8 @@ public class ElecVoucherLib implements Serializable {
     /**
      * 手机号码
      */
-    @Column(name = "MOBIL_NO")
-    private String mobilNo;
+    @Column(name = "MOBILE_NO")
+    private String mobileNo;
 
     /**
      * 发券时间
@@ -320,17 +320,17 @@ public class ElecVoucherLib implements Serializable {
      *
      * @return MOBIL_NO - 手机号码
      */
-    public String getMobilNo() {
-        return mobilNo;
+    public String getMobileNo() {
+        return mobileNo;
     }
 
     /**
      * 设置手机号码
      *
-     * @param mobilNo 手机号码
+     * @param mobileNo 手机号码
      */
-    public void setMobilNo(String mobilNo) {
-        this.mobilNo = mobilNo;
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
     }
 
     /**

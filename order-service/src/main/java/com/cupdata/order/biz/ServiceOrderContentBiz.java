@@ -1,3 +1,4 @@
+/*
 package com.cupdata.order.biz;
 
 import java.util.HashMap;
@@ -16,10 +17,12 @@ import com.cupdata.commons.vo.content.ServiceOrderContent;
 import com.cupdata.order.dao.ServiceOrderContentDao;
 import com.cupdata.order.dao.ServiceOrderDao;
 
+*/
 /**
 * @author 作者: liwei
 * @createDate 创建时间：2018年3月13日 下午3:37:08
-*/
+*//*
+
 @Service
 public class ServiceOrderContentBiz extends BaseBiz<ServiceOrderContent>{
 	@Autowired
@@ -33,10 +36,12 @@ public class ServiceOrderContentBiz extends BaseBiz<ServiceOrderContent>{
 		return serviceOrderContentDao;
 	}
 	
-	/**
+	*/
+/**
 	 * 查询内容引入子订单
 	 * @param contentQueryOrderReq
-	 */
+	 *//*
+
 	public ContentQueryOrderRes queryContentOrder(ContentQueryOrderReq contentQueryOrderReq) {
 		Map<String,Object> paramMap = new HashMap<String,Object>();
 		ServiceOrderContent serviceOrderContent =	serviceOrderContentDao.selectSingle(paramMap);
@@ -55,3 +60,4 @@ public class ServiceOrderContentBiz extends BaseBiz<ServiceOrderContent>{
 	}
 	
 }
+*/

@@ -1,6 +1,7 @@
 package com.cupdata.sip.common.dao.entity;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ public class ServiceOrder implements Serializable {
      * ID
      */
     @Id
+    @GeneratedValue(generator = "JDBC")
     @Column(name = "ID")
     private Long id;
 

@@ -8,22 +8,26 @@ import com.cupdata.sip.common.dao.entity.ServiceProduct;
 import com.cupdata.sip.common.dao.mapper.OrgProductRelaMapper;
 import com.cupdata.sip.common.dao.mapper.ServiceProductMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Auth: LinYong
- * @Description:
+ * @Description: 产品service类
  * @Date: 20:20 2017/12/14
  */
-
+@Slf4j
 @Service
 public class ServiceProductBiz {
 
     @Autowired
-    private ServiceProductMapper productMapper;
+    private ServiceProductMapper productDao;
 
-    private OrgProductRelaMapper orgProductRelaMapper;
+    @Autowired
+    private OrgProductRelaMapper orgProductRelaDao;
 
     /**
      * 根据商品编号，查询商品信息
@@ -31,13 +35,12 @@ public class ServiceProductBiz {
      * @return
      */
     public ProductInfoVo selectByProductNo(String productNo){
-
-       ServiceProduct serviceProduct = productMapper.selectByProductNo(productNo);
-
+        log.info("根据商品编号查询商品信息,productNo:"+productNo);
+        ServiceProduct serviceProduct = new ServiceProduct();
+        serviceProduct.setProductNo(productNo);
+        serviceProduct = productDao.selectOne(serviceProduct);//查询出单条产品信息
         ProductInfoVo productInfoVo =new ProductInfoVo();
-
         BeanCopierUtils.copyProperties(serviceProduct,productInfoVo);
-
         return productInfoVo;
     }
 
@@ -49,12 +52,13 @@ public class ServiceProductBiz {
      * @return
      */
     public OrgProductRelVo selectReal(String orgNo, String productNo) {
+        log.info("根据机构号和产品编号查询关系信息,orgNo:"+orgNo+",productNo:"+productNo);
+        OrgProductRela orgProductRela = new OrgProductRela();
+        orgProductRela.setOrgNo(orgNo);
+        orgProductRela.setProductNo(productNo);
+        orgProductRela = orgProductRelaDao.selectOne(orgProductRela);
         OrgProductRelVo orgProductRelVo = new OrgProductRelVo();
-
-        OrgProductRela orgProductRela = orgProductRelaMapper.selectRealByorgNoAndproductNo(orgNo,productNo);
-
         BeanCopierUtils.copyProperties(orgProductRela,orgProductRelVo);
-
         return orgProductRelVo;
     }
 }

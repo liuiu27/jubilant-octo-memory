@@ -16,7 +16,7 @@
     <result column="SEND_STATUS" jdbcType="VARCHAR" property="sendStatus" />
     <result column="ORG_NO" jdbcType="VARCHAR" property="orgNo" />
     <result column="ORG_ORDER_NO" jdbcType="VARCHAR" property="orgOrderNo" />
-    <result column="MOBIL_NO" jdbcType="VARCHAR" property="mobilNo" />
+    <result column="MOBILE_NO" jdbcType="VARCHAR" property="mobileNo" />
     <result column="SEND_DATE" jdbcType="TIMESTAMP" property="sendDate" />
     <result column="RECOVERY_DATE" jdbcType="TIMESTAMP" property="recoveryDate" />
     <result column="CREATE_BY" jdbcType="VARCHAR" property="createBy" />
@@ -24,4 +24,57 @@
     <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy" />
     <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+  <sql id="Base_Column_List">
+    ID,
+    BATCH_ID,
+    SUPPLYER_ID,
+    CATEGORY_ID,
+    ORG_NOS,
+    TICKET_NO,
+    START_DATE,
+    END_DATE,
+    SEND_STATUS,
+    ORG_NO,
+    ORG_ORDER_NO,
+    MOBILE_NO,
+    SEND_DATE,
+    RECOVERY_DATE,
+    CREATE_BY,
+    CREATE_DATE,
+    UPDATE_BY,
+    UPDATE_DATE
+  </sql>
+
+  <!--根据券码类别id获取有效券码-->
+  <select id="selectValidVoucherLibByCategoryId" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM
+    elec_voucher_lib
+    WHERE
+    Id &gt;= (
+    RAND() * (SELECT MAX(Id) FROM elec_voucher_lib) - (SELECT MIN(Id) FROM elec_voucher_lib)
+    )  + (SELECT MIN(Id) FROM elec_voucher_lib)
+    AND CATEGORY_ID = #{categoryId}
+    AND SEND_STATUS = '0'
+    AND START_DATE &lt;= NOW()
+    AND END_DATE &gt;= NOW()
+    LIMIT 1
+  </select>
+
+  <!--更新券码列表：将券码有效状态改为无效-->
+  <update id="UpdateElectronicVoucherLib" parameterType="com.cupdata.sip.common.dao.entity.ElecVoucherLib">
+    UPDATE
+    ELEC_VOUCHER_LIB
+    SET
+    SEND_STATUS = '1',
+    ORG_NO = #{orgNo},
+    ORG_ORDER_NO = #{orgOrderNo},
+    MOBILE_NO = #{mobileNo},
+    SEND_DATE = NOW(),
+    UPDATE_DATE = NOW()
+    WHERE ID = #{id}
+    and SEND_STATUS = '0'
+  </update>
 </mapper>

@@ -2,6 +2,8 @@ package com.cupdata.sip.common.api.order.response;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author junliang
  * @date 2018/04/11
@@ -9,6 +11,25 @@ import lombok.Data;
 @Data
 public class OrderInfoVo {
 
+    /**
+     * 主键ID
+     */
+    protected Long id;
+
+    /**
+     * 创建者
+     */
+    private String createBy;
+
+    /**
+     * 创建日期
+     */
+    private Date createDate;
+
+    /**
+     * 更新者
+     */
+    private String updateBy;
     /**
      * 机构编号
      */

@@ -25,7 +25,7 @@ public interface ILocalVoucherController {
      * @return
      */
     @PostMapping("/getLocalVoucher")
-    public BaseResponse<GetVoucherRes> getLocalVoucher(@RequestParam(value = "org", required = true) String org, @RequestBody GetVoucherReq voucherReq);
+    public BaseResponse<GetVoucherRes> getLocalVoucher(@RequestParam(value = "org") String org, @RequestBody GetVoucherReq voucherReq);
 
     /**
      * 获取券码接口方法

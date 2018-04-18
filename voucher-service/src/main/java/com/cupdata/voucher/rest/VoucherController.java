@@ -28,6 +28,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -36,7 +40,9 @@ import org.springframework.web.client.RestTemplate;
  * @@Date: Created in 10:53 2018/4/13
  */
 @Slf4j
+@RestController
 public class VoucherController implements IVoucherController{
+
     @Autowired
     private ProductFeignClient productFeignClient ;
 
@@ -50,7 +56,7 @@ public class VoucherController implements IVoucherController{
     private ExecuteThreadPool executeThreadPool;
 
     @Override
-    public BaseResponse<GetVoucherRes> getVoucher(String org, GetVoucherReq voucherReq) {
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam("org") String org, @RequestBody GetVoucherReq voucherReq) {
 
         log.info("VoucherController getVoucher is begin... org:"+org+" ,ProductNo:"+voucherReq.getProductNo()+" ,OrderDesc:"+voucherReq.getOrderDesc());
         //响应信息
@@ -99,9 +105,7 @@ public class VoucherController implements IVoucherController{
 
             // Step5：根据券码商品配置信息中的服务名称，调用不同的微服务获取券码
             // http://trvok-service/trvok/trvok/getVoucher
-            String url = "http://" + productInfRes.getData().getServiceApplicationPath() + "/getVoucher?org="
-                    + org;
-
+            String url = "http://" + productInfRes.getData().getServiceApplicationPath() + "/getVoucher?org=" + org;
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
             HttpEntity<GetVoucherReq> entity = new HttpEntity<GetVoucherReq>(voucherReq, headers);

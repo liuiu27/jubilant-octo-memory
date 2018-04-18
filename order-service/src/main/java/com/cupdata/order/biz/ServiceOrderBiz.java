@@ -1,17 +1,7 @@
 package com.cupdata.order.biz;
 
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.model.OrgProductRela;
-import com.cupdata.commons.model.ServiceOrderRecharge;
-import com.cupdata.commons.model.ServiceProduct;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.content.CreateContentOrderVo;
-import com.cupdata.commons.vo.content.ServiceOrderContent;
-import com.cupdata.commons.vo.order.ServiceOrderList;
-import com.cupdata.commons.vo.product.ProductInfVo;
-import com.cupdata.commons.vo.product.RechargeOrderVo;
 import com.cupdata.order.util.OrderUtils;
+import com.cupdata.sip.common.api.order.response.OrderInfoVo;
 import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
 import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
 import com.cupdata.sip.common.api.product.response.ProductInfoVo;
@@ -21,19 +11,21 @@ import com.cupdata.sip.common.dao.mapper.ServiceOrderMapper;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderRechargeMapper;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderVoucherMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Auth: LinYong
  * @Description: 订单业务
  * @Date: 20:20 2017/12/14
  */
+@Slf4j
 @Service
 public class ServiceOrderBiz {
 
@@ -46,6 +38,31 @@ public class ServiceOrderBiz {
     @Autowired
 	private ServiceOrderRechargeMapper orderRechargeDao;
 
+
+    /**
+     * 创建券码订单
+     * @param supplierFlag
+     * @param orgNo
+     * @return
+     */
+    @Transactional
+    public VoucherOrderVo createVoucherOrder(String supplierFlag, String orgNo, String orgOrderNo, String orderDesc, ProductInfoVo voucherProduct, OrgProductRelVo orgProductRela){
+        log.info("创建券码订单,supplierFlag:"+supplierFlag+",orgNo:"+orgNo+",orderDesc:"+orderDesc);
+        VoucherOrderVo voucherOrderVo =new VoucherOrderVo();
+        //初始化主订单记录
+        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,orgNo, orgOrderNo, orderDesc, voucherProduct, orgProductRela);
+        orderDao.insert(order);//插入主订单
+
+        //初始化券码订单
+        ServiceOrderVoucher voucherOrder = OrderUtils.initVoucherOrder(order, voucherProduct.getProductNo());
+        orderVoucherDao.insert(voucherOrder);//插入券码订单
+
+        BeanCopierUtils.copyProperties(order,voucherOrderVo.getOrderInfoVo());
+        BeanCopierUtils.copyProperties(voucherOrder,voucherOrderVo);
+
+        return voucherOrderVo;
+    }
+
     /**
      * 根据订单状态、订单子类型列表、商户标识查询服务订单列表
      * @param orderStatus
@@ -53,13 +70,20 @@ public class ServiceOrderBiz {
      * @param orderSubType
      * @return
      */
-  public List<ServiceOrder> selectMainOrderList(Character orderStatus, String supplierFlag,List<String> orderSubType) {
+  public List<OrderInfoVo> selectMainOrderList(Character orderStatus, String supplierFlag, List<String> orderSubType) {
+        log.info("根据订单状态,订单子类型,商户标识查询订单列表,supplierFlag:"+supplierFlag);
         HashMap<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("orderStatus", orderStatus);
         paramMap.put("supplierFlag", supplierFlag);
         paramMap.put("orderSubType", orderSubType);
         List<ServiceOrder> orderList = orderDao.selectMainOrderList(paramMap);
-        return orderList;
+        List<OrderInfoVo> orderInfoVos = new ArrayList<>(orderList.size());
+        orderList.forEach(list ->{
+            OrderInfoVo orderInfoVo = new OrderInfoVo();
+            BeanCopierUtils.copyProperties(list,orderInfoVo);
+                });
+        return orderInfoVos;
+
     }
 
     /**
@@ -67,7 +91,7 @@ public class ServiceOrderBiz {
      * @param orderSubType
      * @return
      */
-    public BaseResponse<ServiceOrderList> getServiceOrderListByParam(Character orderStatus, String orderSubType, String supplierFlag){
+  /*  public List<ServiceOrder> getServiceOrderListByParam(Character orderStatus, String orderSubType, String supplierFlag){
         BaseResponse<ServiceOrderList> res = new BaseResponse<ServiceOrderList>();
         ServiceOrderList serviceOrderListorderList = new ServiceOrderList();
         Map<String, Object> paramMap = new HashMap<>();
@@ -86,40 +110,12 @@ public class ServiceOrderBiz {
     }
 
 
-    /**
-     * 创建券码订单
-     * @param supplierFlag
-     * @param orgNo
-     * @param orgOrderNo
-     * @param orderDesc
-     * @param voucherProduct
-     * @param orgProductRela
-     * @return
-     */
-    @Transactional
-    public VoucherOrderVo createVoucherOrder(String supplierFlag, String orgNo, String orgOrderNo, String orderDesc, ProductInfoVo voucherProduct, OrgProductRelVo orgProductRela){
-        VoucherOrderVo voucherOrderVo =new VoucherOrderVo();
-
-        //初始化主订单记录
-        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,orgNo, orgOrderNo, orderDesc, voucherProduct, orgProductRela);
-        orderDao.insert(order);//插入主订单
-
-        //初始化券码订单
-        ServiceOrderVoucher voucherOrder = OrderUtils.initVoucherOrder(order, voucherProduct.getProductNo());
-        orderVoucherDao.insert(voucherOrder);//插入券码订单
-
-        BeanCopierUtils.copyProperties(order,voucherOrderVo.getOrderInfoVo());
-        BeanCopierUtils.copyProperties(voucherOrder,voucherOrderVo);
-
-        return voucherOrderVo;
-    }
 
 
-    /**
+    *//**
      * 创建内容引入订单
-     * @param createContentOrderVo
      * @return
-     */
+     *//*
 	public ServiceOrderContent createContentOrder(String supplierFlag ,CreateContentOrderVo createContentOrderVo,ServiceProduct contentProduct, OrgProductRela orgProductRela) {
 		//初始化主订单记录
         ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag,createContentOrderVo.getOrgNo(), createContentOrderVo.getOrgOrderNo(), createContentOrderVo.getOrderDesc(), contentProduct, orgProductRela);
@@ -188,12 +184,6 @@ public class ServiceOrderBiz {
     	return res;
 	}
 
-    /**
-     * 根据机构编号和机构订单号来查询订单信息
-     * @param orgNo
-     * @param orgOrderNo
-     * @return
-     */
 	public BaseResponse<RechargeOrderVo> getRechargeOrderByOrgNoAndOrgOrderNo(String orgNo , String orgOrderNo){
         BaseResponse<RechargeOrderVo> res = new BaseResponse<>();
         RechargeOrderVo rechargeOrderVo = new RechargeOrderVo();
@@ -231,7 +221,9 @@ public class ServiceOrderBiz {
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
 			return res;
     	}
-    	ServiceOrder order = orderDao.select(voucherOrder.getOrderId().intValue());
+		paramMap.clear();
+		paramMap.put("id", voucherOrder.getOrderId());
+    	ServiceOrder order = orderDao.selectSingle(paramMap);
     	if(null == order) {
     		res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
 			res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
@@ -296,5 +288,5 @@ public class ServiceOrderBiz {
     public Integer updateServiceOrder(ServiceOrder order){
         Integer i = orderDao.update(order);
         return i;
-    }
+    }*/
 }

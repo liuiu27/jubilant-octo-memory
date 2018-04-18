@@ -1,6 +1,4 @@
-/*
-package com.cupdata.order.controller;
-
+package com.cupdata.order.rest;
 
 import com.cupdata.order.biz.ServiceOrderBiz;
 import com.cupdata.order.feign.ProductFeignClient;
@@ -18,19 +16,19 @@ import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.exception.ErrorException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 
-*/
 /**
- * @author junliang
- * @date 2018/04/11
- *//*
-
+ * @Auther: DingCong
+ * @Description: 订单Controller
+ * @@Date: Created in 15:12 2018/4/17
+ */
 @Slf4j
 @RestController
-public class OrderController  {
+public class OrderController implements IOrderController {
 
     @Resource
     private SupplierFeignClient supplierClient;
@@ -41,12 +39,17 @@ public class OrderController  {
     @Resource
     private ServiceOrderBiz orderBiz;
 
+    /**
+     * 创建券码订单
+     * @param createVoucherOrderVo 创建券码订单参数vo
+     * @return
+     */
     @Override
     public BaseResponse<VoucherOrderVo> createVoucherOrder(@RequestBody CreateVoucherOrderVo createVoucherOrderVo) {
-        log.info("OrderController createVoucherOrder is begin params is" + createVoucherOrderVo.toString());
+        log.info("创建订单Controller,ProductNo:"+createVoucherOrderVo.getProductNo()+",OrgNo:"+createVoucherOrderVo.getOrgNo()+",OrderDesc:"+createVoucherOrderVo.getOrderDesc());
         try {
             BaseResponse<VoucherOrderVo> voucherOrderRes = new BaseResponse();
-            // 根据产品编号,查询服务产品信息
+            //根据产品编号,查询服务产品信息
             BaseResponse<ProductInfoVo> productInfRes = productFeignClient.findByProductNo(createVoucherOrderVo.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
                     || null == productInfRes.getData()) {// 如果查询失败
@@ -79,9 +82,7 @@ public class OrderController  {
             }
             //开始创建订单
             VoucherOrderVo voucherOrderVo = orderBiz.createVoucherOrder(supplierFlag , createVoucherOrderVo.getOrgNo(),
-                    createVoucherOrderVo.getOrgOrderNo(), createVoucherOrderVo.getOrderDesc(),
-                    productInfRes.getData(), orgProductRelRes.getData());
-
+                    createVoucherOrderVo.getOrgOrderNo(), createVoucherOrderVo.getOrderDesc(), productInfRes.getData(), orgProductRelRes.getData());
             voucherOrderRes.setData(voucherOrderVo);
             return voucherOrderRes;
         } catch (Exception e) {
@@ -106,26 +107,8 @@ public class OrderController  {
     }
 
     @Override
-    public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(@PathVariable("orgNo") String orgNo, @PathVariable("orgOrderNo") String orgOrderNo) {
-        log.info("OrderController getVoucherOrderByOrgNoAndOrgOrderNo is begin orgNo is" + orgNo + "orgOrderNo is" + orgOrderNo);
-       */
-/* try {
-            BaseResponse<VoucherOrderVo> response = new BaseResponse<>();
-            if (StringUtils.isBlank(orgNo) || StringUtils.isBlank(orgOrderNo)) {
-                response.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-                response.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
-                return response;
-            }
-            VoucherOrderVo voucherOrderVo = orderBiz.getVoucherOrderByOrgNoAndOrgOrderNo(orgNo, orgOrderNo);
-            response.setData(voucherOrderVo);
-            return response;
-        } catch (Exception e) {
-            log.error("error is " + e.getMessage());
-            throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-        }
-*//*
-
-       return null;
+    public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
+        return null;
     }
 
     @Override
@@ -178,4 +161,3 @@ public class OrderController  {
         return null;
     }
 }
-*/

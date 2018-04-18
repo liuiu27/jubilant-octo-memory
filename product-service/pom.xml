@@ -55,6 +55,14 @@
             <groupId>com.cupdata.sip</groupId>
             <artifactId>common-dao</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.cupdata.sip</groupId>
+            <artifactId>common-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cupdata.sip</groupId>
+            <artifactId>common-lang</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
