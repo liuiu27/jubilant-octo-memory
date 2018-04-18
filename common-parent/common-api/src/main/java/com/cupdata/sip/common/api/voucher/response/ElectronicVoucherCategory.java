@@ -13,26 +13,6 @@ import java.util.Date;
 public class ElectronicVoucherCategory {
 
     /**
-     * 主键ID
-     */
-    protected Long id;
-
-    /**
-     * 创建者
-     */
-    private String createBy;
-
-    /**
-     * 创建日期
-     */
-    private Date createDate;
-
-    /**
-     * 更新者
-     */
-    private String updateBy;
-
-    /**
      * 商户ID
      */
     private Long supplierId;
