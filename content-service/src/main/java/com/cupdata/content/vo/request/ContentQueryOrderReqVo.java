@@ -1,10 +1,7 @@
-package com.cupdata.content.vo;
+package com.cupdata.content.vo.request;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.cupdata.commons.vo.BaseRequest;
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +11,7 @@ import lombok.Setter;
 */
 @Getter
 @Setter
-public class ContentQueryOrderReq extends BaseRequest{
+public class ContentQueryOrderReqVo{
 	/**
 	 * 供应商订单号
 	 */

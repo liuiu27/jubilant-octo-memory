@@ -8,12 +8,17 @@ import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.feign.SupplierFeignClient;
 import com.cupdata.content.vo.ContentToLoginReq;
-import com.cupdata.content.vo.request.ContentLoginReq;
+import com.cupdata.content.vo.request.ContentLoginReqVo;
+import com.cupdata.content.vo.request.ContentQueryOrderReqVo;
 import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
+import com.cupdata.content.vo.request.SupVO;
+import com.cupdata.content.vo.response.ContentQueryOrderResVo;
+import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +46,7 @@ public class SupContentController {
 
 	@Autowired
 	private SupplierFeignClient supplierFeignClient;
-	
+
 	@Autowired
 	private ContentBiz contentBiz;
 	
@@ -50,7 +55,6 @@ public class SupContentController {
 	 * @param contentLoginReq q
 	 * @return
 	 */
-	@GetMapping(path="/contentJump")
 	public String contentJump(@RequestParam(value = "sup") String sup, @Validated @RequestBody ContentLoginReq contentLoginReq) {
         log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
 
@@ -87,19 +91,14 @@ public class SupContentController {
         return ret.toString();
     }
 	
-	//@PostMapping(path="/contentQueryOrder",produces = "application/json")
-	//public BaseResponse<ContentQueryOrderRes> contentQueryOrder(SupVO<ContentQueryOrderReq> contentQueryOrderReq){
-	//	log.info("contentQueryOrder is begin params contentQueryOrderReq is" + contentQueryOrderReq.toString());
-	//	BaseResponse<ContentQueryOrderRes> res = new BaseResponse<ContentQueryOrderRes>();
-	//	try {
-	//		//调用order-service的服务查询数据
-	//		res = OrderFeignClient.queryContentOrder(contentQueryOrderReq.getData());
-	//		return res;
-	//	} catch (Exception e) {
-	//		log.error("error is " + e.getMessage());
-	//		throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-	//	}
-	//}
+//	@PostMapping(path="/contentQueryOrder")
+//	public BaseResponse<ContentQueryOrderResVo> contentQueryOrder(SupVO<ContentQueryOrderReqVo> contentQueryOrderReq){
+//		log.info("contentQueryOrder is begin params contentQueryOrderReq is" + contentQueryOrderReq.toString());
+//		BaseResponse<ContentQueryOrderResVo> res = new BaseResponse<ContentQueryOrderResVo>();
+//		//调用order-service的服务查询数据
+//		res = OrderFeignClient.queryContentOrder(contentQueryOrderReq);
+//		return res;
+//	}
 
 	/**
 	 * 支付请求接口

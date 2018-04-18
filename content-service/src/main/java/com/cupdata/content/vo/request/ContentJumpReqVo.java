@@ -1,21 +1,13 @@
-package com.cupdata.content.vo;
+package com.cupdata.content.vo.request;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.cupdata.commons.vo.BaseRequest;
-
-/**
- * @author liwei
- * @date   2018/3/8
- */
- 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ContentJumpReq extends BaseRequest{
+public class ContentJumpReqVo{
 	
 	/**
 	 * 服务产品编号

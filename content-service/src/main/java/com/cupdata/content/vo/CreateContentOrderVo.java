@@ -2,6 +2,8 @@ package com.cupdata.content.vo;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.cupdata.content.vo.request.ContentJumpReqVo;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +43,6 @@ public class CreateContentOrderVo {
      * 内容引入请求参数
      */
 	@NotBlank
-    private ContentJumpReq contentJumpReq;
+    private ContentJumpReqVo contentJumpReq;
     
 }

@@ -1,10 +1,13 @@
 package com.cupdata.content.biz;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.exception.ContentException;
 import com.cupdata.content.feign.ProductFeignClient;
+import com.cupdata.content.vo.request.ContentJumpReqVo;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
+import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.dao.entity.ServiceContentTransactionLog;
 import com.cupdata.sip.common.dao.mapper.ServiceContentTransactionLogMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
@@ -13,8 +16,14 @@ import com.cupdata.sip.common.lang.RSAHelper;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.exception.ErrorException;
+import com.cupdata.sip.common.lang.utils.CommonUtils;
 import com.cupdata.sip.common.lang.utils.DateTimeUtil;
+
+
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,23 +48,26 @@ public class ContentBiz {
     @Autowired
     private ServiceContentTransactionLogMapper serviceContentTransactionLogMapper;
 
+
+
+
     /**
      * 查询产品号
      *
      * @param productNo
      * @return
      */
-    //public ProductInfVo findByProductNo(String productNo) {
-    //    log.info("ContentBiz  findByProductNo productNo is " + productNo);
-    //    BaseResponse<ProductInf0Vo> productInfRes = productFeignClient
-    //    if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
-    //            || null == productInfRes.getData()) {// 如果查询失败
-    //        log.error("procduct-service  findByProductNo result is null......  productNo is" + productNo
-    //                + " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-    //        throw new ErrorException(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode(), ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
-    //    }
-    //    return productInfRes.getData();
-    //}
+    public ProductInfoVo findByProductNo(String productNo) {
+        log.info("ContentBiz  findByProductNo productNo is " + productNo);
+        BaseResponse<ProductInfoVo> productInfRes = productFeignClient.findByProductNo(productNo);
+        if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
+                || null == productInfRes.getData()) {// 如果查询失败
+            log.error("procduct-service  findByProductNo result is null......  productNo is" + productNo
+                    + " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+            throw new ErrorException(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode(), ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+        }
+        return productInfRes.getData();
+    }
 
     /**
      * 判断服务产品是否为内容 引入商品 是否与机构相关连
@@ -69,7 +81,8 @@ public class ContentBiz {
         if (!ModelConstants.PRODUCT_TYPE_CONTENT.equals(productType)) {
             log.error("Not a content product.....poductType is" + productType
                     + " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-            throw new ErrorException(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode(), ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+            throw new ContentException();
+//          throw new ErrorException(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode(), ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
         }
         BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org, productNo);
         if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
@@ -77,7 +90,8 @@ public class ContentBiz {
             log.error("procduct-service findRel result is null...org is" + org + "productNo is "
                     + productNo + " errorCode is "
                     + ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
-            throw new ErrorException(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode(), ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
+            throw new ContentException();
+//          throw new ErrorException(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode(), ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
         }
     }
 
@@ -167,4 +181,33 @@ public class ContentBiz {
         url = url + "data=" + encipher + "&sign=" + sign;
         return url;
     }
+
+    @Transactional
+	public void queryAndinsertOrUpdateContentTransaction(ContentJumpReqVo contentJumpReqVo, ProductInfoVo productInfoVo, String tranType,String org) {
+		if(StringUtils.isBlank(contentJumpReqVo.getSipTranNo())){
+			//生成新的流水号
+			contentJumpReqVo.setSipTranNo(CommonUtils.serialNumber());
+			//保存数据库
+			ServiceContentTransactionLog serviceContentTransactionLog =  new  ServiceContentTransactionLog();
+			serviceContentTransactionLog.setProductNo(contentJumpReqVo.getProductNo());
+			serviceContentTransactionLog.setTranType(tranType);
+			serviceContentTransactionLog.setOrgNo(org);
+			serviceContentTransactionLog.setSupNo(productInfoVo.getSupplierNo());
+			serviceContentTransactionLog.setRequestInfo(JSONObject.toJSONString(contentJumpReqVo));
+			serviceContentTransactionLogMapper.insert(serviceContentTransactionLog);
+		}else {
+			//不为空查询数据库
+			 ServiceContentTransactionLog serviceContentTransactionLog =new ServiceContentTransactionLog();
+			 serviceContentTransactionLog.setTranNo(contentJumpReqVo.getSipTranNo());
+			 serviceContentTransactionLog.setTranType(tranType);
+		     serviceContentTransactionLog = serviceContentTransactionLogMapper.selectOne(serviceContentTransactionLog);
+		     serviceContentTransactionLog.setTranNo(contentJumpReqVo.getSipTranNo());
+		     serviceContentTransactionLog.setProductNo(contentJumpReqVo.getProductNo());
+		     serviceContentTransactionLog.setTranType(tranType);
+		     serviceContentTransactionLog.setOrgNo(org);
+		     serviceContentTransactionLog.setSupNo(productInfoVo.getSupplierNo());
+		     serviceContentTransactionLog.setRequestInfo(JSONObject.toJSONString(contentJumpReqVo));
+		     serviceContentTransactionLogMapper.updateByPrimaryKeySelective(serviceContentTransactionLog);
+		}
+	}
 }

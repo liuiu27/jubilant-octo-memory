@@ -1,4 +1,6 @@
-package com.cupdata.content.vo;
+package com.cupdata.content.vo.response;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +12,7 @@ import org.hibernate.validator.constraints.NotBlank;
 */
 @Getter
 @Setter
-public class ContentQueryOrderRes {
+public class ContentQueryOrderResVo{
 	/**
 	 * 返回标记记  0未 支付/退货  1支付/退货 失败  2支付/退货 成功
 	 */
