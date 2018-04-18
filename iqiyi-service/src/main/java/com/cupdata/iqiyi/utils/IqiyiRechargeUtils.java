@@ -1,3 +1,4 @@
+/*
 package com.cupdata.iqiyi.utils;
 
 import com.alibaba.fastjson.JSONObject;
@@ -6,27 +7,30 @@ import com.cupdata.commons.constant.SysConfigParaNameEn;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.HttpUtil;
 import com.cupdata.commons.utils.MD5Util;
-import com.cupdata.iqiyi.feign.CacheFeignClient;
+import com.cupdata.iqiyi.feign.ConfigFeignClient;
 import com.cupdata.iqiyi.vo.IqiyiRechargeReq;
 import com.cupdata.iqiyi.vo.IqiyiRechargeRes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
+*/
 /**
  * @Author: DingCong
  * @Description: 爱奇艺账号充值工具类
  * @CreateDate: 2018/2/6 14:56
- */
+ *//*
+
 @Slf4j
 public class IqiyiRechargeUtils {
 
 
 
-    /**
+    */
+/**
      * 爱奇艺充值业务
-     */
-    public static IqiyiRechargeRes iqiyiRecharge(IqiyiRechargeReq req,CacheFeignClient cacheFeignClient){
+     *//*
+
+    public static IqiyiRechargeRes iqiyiRecharge(IqiyiRechargeReq req, ConfigFeignClient cacheFeignClient){
         //设置响应信息
         IqiyiRechargeRes iqiyiRechargeRes = null;
         try {
@@ -93,3 +97,4 @@ public class IqiyiRechargeUtils {
         return iqiyiRechargeRes;
     }
 }
+*/

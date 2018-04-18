@@ -1,12 +1,10 @@
 package com.cupdata.recharge;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.utils.HttpUtil;
-import com.cupdata.commons.utils.RSAUtils;
-import com.cupdata.commons.vo.recharge.RechargeQueryReq;
-import com.cupdata.commons.vo.recharge.RechargeReq;
+import com.cupdata.sip.common.api.recharge.request.RechargeQueryReq;
+import com.cupdata.sip.common.lang.utils.DateTimeUtil;
+import com.cupdata.sip.common.lang.utils.HttpUtil;
+import com.cupdata.sip.common.lang.utils.RSAUtils;
 import org.junit.Test;
 
 import java.net.URLDecoder;
@@ -32,7 +30,7 @@ public class rechargeQueryTest {
         String org = "20180412O86740479";
         RechargeQueryReq req = new RechargeQueryReq();
         req.setOrgOrderNo("180410AD054578");
-        req.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
+        //req.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         String reqStr = JSONObject.toJSONString(req);
         System.out.print("请求参数json字符串" + reqStr);
 

@@ -1,14 +1,12 @@
 package com.cupdata.iqiyi;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.utils.HttpUtil;
-import com.cupdata.commons.utils.RSAUtils;
-import com.cupdata.commons.vo.recharge.RechargeReq;
+import com.cupdata.sip.common.api.recharge.request.RechargeReq;
+import com.cupdata.sip.common.lang.utils.CommonUtils;
+import com.cupdata.sip.common.lang.utils.DateTimeUtil;
+import com.cupdata.sip.common.lang.utils.HttpUtil;
+import com.cupdata.sip.common.lang.utils.RSAUtils;
 import org.junit.Test;
-import org.springframework.web.client.RestTemplate;
-
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
@@ -24,7 +22,6 @@ public class IqiyiApplicationTest {
         String url1 = "http://localhost:46959/recharge/recharge/getRecharge";
         String url2 = "http://cvpa.leagpoint.com/sipService/recharge/recharge/getRecharge";
         String url3 = "https://onlinepay.cupdata.com/sipService/recharge/recharge/getRecharge";
-
 
         //请求参数
         String org = "20180412O86740479";
@@ -77,8 +74,8 @@ public class IqiyiApplicationTest {
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("15857128524"); //充值账号
-        rechargeReq.setOrgOrderNo("888888"); //机构唯一订单编号
-        rechargeReq.setProductNo("20180412RECHARGE6161");//爱奇艺产品编号
+        rechargeReq.setOrgOrderNo("666666");  //机构唯一订单编号
+        rechargeReq.setProductNo("20180412RECHARGE6161");  //爱奇艺产品编号
         rechargeReq.setOrderDesc("IQIYITEST");
         String reqStr = JSONObject.toJSONString(rechargeReq);
         String url3 = "https://onlinepay.cupdata.com/sipService/recharge/recharge/getRecharge";
@@ -92,9 +89,14 @@ public class IqiyiApplicationTest {
         String data = RSAUtils.encrypt(reqStr, sipPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
         String sign = RSAUtils.sign(reqStr, orgPriKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
+
+        //请求
+       // String res = HttpUtil.doPost(url3, params, "application/x-www-form-urlencoded;charset=UTF-8");
+       // System.out.println("响应数据为:" + res);
+
         System.out.println(data);
         System.out.println(sign);
-        String res = "data=FQNbxDd6oQAhrfYl4zr5iTs1n6dU9KiTVyLAt2%2F9JxMkJ0CEyX9Kn7%2FlWeapbecpGtfNFJyaNqLJAIpIq8MthtdtvpAbEzljBD4F03SV8KaxkErKuyxDrA1SQmUQvKXig8KJB3sWAeCxsxLocZM540so4ylZvfW0H8RGLSYYAH8f5bh2ryqSU8piDycRopJu40NCT%2BSZxKm0hnapmPlvTHwowXQuk3z9dX2aCvEavQE9fJxuwfhX3ji7gzHPX8FlJ3CFdndALQJQqXuKvJ2unHrKD%2F6OUc6BVO%2BpKFTotK6tm8Jzbf96NUiGjkv61MBCeXj5IXrPiLUHZeZLrKmw%2Fg%3D%3D&sign=t01sE5v9GLpPWbaIBDMI%2FA%2Fj8lY4K%2BkCBfpGUGC%2FU8s4RY8CvCr%2FgsVUIEr%2FE0dlDESObT1VgxWawfU3XjmZ0Km5g8hWhZnbFjw0VI5PjbeTBRqOB63R0TFCOvMJNyJN3o3qd79aZyUWi6rYtXa7v%2FaHuOT0kC9QdhGq4y0FZN0%3D";
+        String res = "data=HwAdnKB3v%2FFf00bFckvt1JpT8LPkzVHASHRSg5PsZDKgMVZl%2F8RLpiyBHn2dJEzALAp4L%2BFfVgORLF%2B3%2FX%2FpqOr6GlhDkYAuaJVlOq54me7vQ3LhPHE5bosxMq00AXlb8b5t0XOEV%2FCRqG5OHQt6YxKnsBuYw4euC%2B5b5VhAGvxPpEw23QucFCyl%2Fn7MKRdRHK31XIsVCN%2BEKAj667k8P3ojLkG9aDjHCbprFhvca4btzhi3WjBYr9IiomG59FTXn4QFCtyZRvZ8KZqPT5yDyZt%2FVReIID40WjHykD39aUw6iK3DtRshseSEX0Vj3D2jodrRnUbxrFyz5IO9ylFv7Q%3D%3D&sign=COZ%2Fx1c5nc4ZyBjX66YNbxOUUzoZuy9p1WlwWBf7OTYbCd1CK0NNK0AjO4gOLOQugTQx1VcADsDIJS7Dq5T4eNZXoSnPbrfX3i06amr40bIk5bLFqqKfaTvu3sSuKqQ839P0KBxkpp6Z3xVYjSK7bj980L%2FcEywPK1fHQu2sO3s%3D";
 
         System.out.println("响应数据为:" + res);
 

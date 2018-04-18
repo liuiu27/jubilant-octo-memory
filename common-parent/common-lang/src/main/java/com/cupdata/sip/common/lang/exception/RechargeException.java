@@ -5,10 +5,10 @@ import lombok.Setter;
 
 /**
  * @Auther: DingCong
- * @Description: 券码相关服务运行时期自定义异常
- * @@Date: Created in 14:10 2018/4/17
+ * @Description: 充值服务运行时期自定义异常
+ * @@Date: Created in 10:57 2018/4/18
  */
-public class VoucherException extends RuntimeException{
+public class RechargeException extends RuntimeException{
 
     /**
      * 异常编码
@@ -29,8 +29,9 @@ public class VoucherException extends RuntimeException{
      * @param errorCode
      * @param errorMessage
      */
-    public VoucherException(String errorCode,String errorMessage) {
+    public RechargeException(String errorCode,String errorMessage) {
         this.code=errorCode;
         this.message=errorMessage;
     }
+
 }

@@ -1,3 +1,4 @@
+/*
 package com.cupdata.iqiyi.controller;
 
 import com.cupdata.commons.api.iqiyi.IQiYiController;
@@ -13,7 +14,7 @@ import com.cupdata.commons.vo.recharge.RechargeRes;
 import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.commons.vo.voucher.GetVoucherRes;
 import com.cupdata.iqiyi.constant.IqiyiRechargeResCode;
-import com.cupdata.iqiyi.feign.CacheFeignClient;
+import com.cupdata.iqiyi.feign.ConfigFeignClient;
 import com.cupdata.iqiyi.feign.OrderFeignClient;
 import com.cupdata.iqiyi.feign.ProductFeignClient;
 import com.cupdata.iqiyi.feign.VoucherFeignClient;
@@ -28,11 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+*/
 /**
  * @Author: DingCong
  * @Description: 爱奇艺会员充值业务控制层
  * @CreateDate: 2018/2/6 15:44
- */
+ *//*
+
 @Slf4j
 @RestController
 public class IqiyiRechargeController implements IQiYiController {
@@ -47,16 +50,18 @@ public class IqiyiRechargeController implements IQiYiController {
     private VoucherFeignClient voucherFeignClient;
 
     @Autowired
-    private  CacheFeignClient cacheFeignClient ;
+    private ConfigFeignClient cacheFeignClient ;
 
-    /**
+    */
+/**
      * 爱奇艺会员充值业务实现
      * @param org
      * @param rechargeReq
      * @param request
      * @param response
      * @return
-     */
+     *//*
+
     @Override
     public BaseResponse<RechargeRes> recharge(@RequestParam(value = "org" , required = true) String org, @RequestBody RechargeReq rechargeReq, HttpServletRequest request, HttpServletResponse response) {
         log.info("调用爱奇艺会员充值controller...org:"+org+",ProductNo:"+rechargeReq.getProductNo()+",OrgOrderNo:"+rechargeReq.getOrgOrderNo()+",Account:"+rechargeReq.getAccount()+",OrderDesc:"+rechargeReq.getOrderDesc());
@@ -214,3 +219,4 @@ public class IqiyiRechargeController implements IQiYiController {
         }
     }
 }
+*/

@@ -148,7 +148,24 @@ public enum ResponseCodeMsg {
     /**
      * 800009 - 根据商户编号获取商户失败
      */
-    GET_SUPPLIER_FAIL_BY_NO("800009","根据商户编号获取商户失败");
+    GET_SUPPLIER_FAIL_BY_NO("800009","根据商户编号获取商户失败"),
+
+    /**
+     * 200001 - 调用虚拟充值接口发生异常
+     */
+    RECHARGE_INTER_EXCEPTION("200001","调用虚拟充值接口发生异常"),
+
+    /**
+     * 200002 - 调用虚拟充值结果查询接口发生异常
+     */
+    RECHARGE_RES_QUERY_EXCEPTION("200002","调用虚拟充值结果查询接口发生异常"),
+
+    /**
+     * 200003 - 调用腾讯充值服务发生异常
+     */
+    TENCENT_EXCEPTION("200003","调用腾讯充值服务发生异常");
+
+
 
 
 

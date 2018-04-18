@@ -99,6 +99,19 @@ public class GlobalExceptionHandler {
     }
 
 
+    /**
+     * 充值异常捕获
+     * @param request
+     * @param exception
+     * @return
+     */
+    @ExceptionHandler(value = RechargeException.class)
+    public BaseResponse rechargeExceptionHandle(HttpServletRequest request,RechargeException exception){
+        log.error(exception.getMessage(),exception.getCause());
+        return new BaseResponse(exception.getCode(),exception.getMessage());
+    }
+
+
 
 
     @Data

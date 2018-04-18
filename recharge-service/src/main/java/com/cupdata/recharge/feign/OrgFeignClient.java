@@ -1,19 +1,21 @@
 package com.cupdata.recharge.feign;
 
-import com.cupdata.commons.api.orgsupplier.IOrgController;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.orgsupplier.OrgInfListVo;
-import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
+import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.orgsup.IOrgController;
+import com.cupdata.sip.common.api.orgsup.OrgControllerFallback;
+import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  *
  */
-@FeignClient(name = "orgsupplier-service", fallbackFactory = OrgFeignClientFallbackFactory.class)
+@FeignClient(name = "orgsupplier-service", fallbackFactory = OrgControllerFallback.class)
 public interface OrgFeignClient extends IOrgController {
 
 }
@@ -27,17 +29,14 @@ class OrgFeignClientFallbackFactory implements FallbackFactory<OrgFeignClient> {
         return new OrgFeignClient(){
 
             @Override
-            public BaseResponse<OrgInfVo> findOrgByNo(String orgNo) {
-                OrgFeignClientFallbackFactory.LOGGER.error("调用机构服务出现问题", throwable);
-
+            public BaseResponse<OrgInfoVo> findOrgByNo(String orgNo) {
                 return null;
             }
 
-			@Override
-			public BaseResponse<OrgInfListVo> selectAll() {
-				OrgFeignClientFallbackFactory.LOGGER.error("调用查询机构服务出现问题", throwable);
-				return null;
-			}
+            @Override
+            public BaseResponse<List<OrgInfoVo>> selectAll() {
+                return null;
+            }
         };
     }
 }
