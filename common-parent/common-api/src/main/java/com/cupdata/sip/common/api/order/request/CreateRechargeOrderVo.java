@@ -44,6 +44,16 @@ public class CreateRechargeOrderVo {
      *充值账号
      */
     private String accountNumber;
+    
+    /**
+     * 供应商订单号
+     */
+    private String supOrderNo;
+    
+    /**
+     * 通知Url
+     */
+    private String notifyUrl;
 
 }
 

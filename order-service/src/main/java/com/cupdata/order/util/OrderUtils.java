@@ -1,8 +1,12 @@
 package com.cupdata.order.util;
 
+import com.cupdata.sip.common.api.order.request.CreateContentOrderVo;
+import com.cupdata.sip.common.api.order.request.CreateOrderVo;
+import com.cupdata.sip.common.api.order.request.CreateVoucherOrderVo;
 import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
 import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.dao.entity.ServiceOrder;
+import com.cupdata.sip.common.dao.entity.ServiceOrderContent;
 import com.cupdata.sip.common.dao.entity.ServiceOrderRecharge;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.dao.entity.ServiceOrderVoucher;
@@ -27,22 +31,23 @@ public class OrderUtils {
      * @param orgProductRela 机构、商品关系记录
      * @return
      */
-    public static ServiceOrder initServiceOrder(String supplierFlag, String orgNo, String OrgOrderNo, String orderDesc, ProductInfoVo product, OrgProductRelVo orgProductRela) {
+    public static ServiceOrder initServiceOrder(String supplierFlag,CreateOrderVo createOrder,ProductInfoVo product, OrgProductRelVo orgProductRela) {
         ServiceOrder order = new ServiceOrder();
-        order.setOrgNo(orgNo);
+        order.setOrgNo(createOrder.getOrgNo());
         order.setOrderSubType(product.getProductSubType());
         order.setSupplierNo(product.getSupplierNo());
         order.setOrderNo(generateOrderNo());
-        order.setOrgOrderNo(OrgOrderNo);
-        order.setSupplierOrderNo(null);//供应商订单号
+        order.setOrgOrderNo(createOrder.getOrgOrderNo());
+        order.setSupplierOrderNo(createOrder.getSupOrderNo());//供应商订单号
         order.setOrgPrice(orgProductRela.getOrgPrice());
         order.setSupplierPrice(product.getSupplierPrice());
         order.setSettleDate(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMdd"));
         order.setOrderStatus(ModelConstants.ORDER_STATUS_INITIAL.toString());
         order.setOrderType(product.getProductType());
-        order.setOrderDesc(orderDesc);
+        order.setOrderDesc(createOrder.getOrderDesc());
         order.setOrderFailDesc(null);
         order.setSupplierFlag(supplierFlag);
+        order.setNotifyUrl(createOrder.getNotifyUrl());
         order.setNodeName(CommonUtils.getHostAddress() + ":" + ServerPort.getPort());
         if (ModelConstants.PRODUCT_TYPE_VOUCHER.equals(product.getProductType())) {//如果是券码商品
             if (StringUtils.isBlank(order.getNotifyUrl())) {
@@ -52,8 +57,13 @@ public class OrderUtils {
             }
         } else if (ModelConstants.PRODUCT_TYPE_RECHARGE.equals(product.getProductType())) {//如果是充值商品
             order.setIsNotify(String.valueOf(ModelConstants.IS_NOTIFY_YES));
-        }
-        order.setNotifyUrl(null);
+        }else  if (ModelConstants.PRODUCT_TYPE_CONTENT.equals(product.getProductType())) {//如果是内容引入
+            if (StringUtils.isBlank(order.getNotifyUrl())) {
+                order.setIsNotify(String.valueOf(ModelConstants.IS_NOTIFY_NO));
+            } else {
+                order.setIsNotify(String.valueOf(ModelConstants.IS_NOTIFY_YES));
+            }
+        } 
         return order;
     }
 
@@ -101,22 +111,24 @@ public class OrderUtils {
      * @param createContentOrderVo
      * @return
      */
-   /* public static ServiceOrderContent initContentOrder(ServiceOrder order, CreateContentOrderVo createContentOrderVo) {
+   public static ServiceOrderContent initContentOrder(ServiceOrder order, CreateContentOrderVo createContentOrderVo) {
         ServiceOrderContent orderContent = new ServiceOrderContent();
         orderContent.setOrderId(order.getId());
-        orderContent.setProductNo(createContentOrderVo.getProductNo());
+        orderContent.setMobileNo(createContentOrderVo.getMobileNo());
+        orderContent.setUserId(createContentOrderVo.getUserId());
+        orderContent.setUserName(createContentOrderVo.getUserName());
         orderContent.setOrgNo(createContentOrderVo.getOrgNo());
-        //TODO  获取供应商编号
-        orderContent.setSupNo("");
-        orderContent.setMobileNo(createContentOrderVo.getContentJumpReq().getMobileNo());
-        orderContent.setUserId(createContentOrderVo.getContentJumpReq().getUserId());
-        orderContent.setUserName(createContentOrderVo.getContentJumpReq().getUserName());
-        //供应商订单号
-
-
-        return null;
+        orderContent.setSupNo(createContentOrderVo.getSupNo());
+        orderContent.setProductNo(createContentOrderVo.getProductNo());
+        orderContent.setOrderAmt(createContentOrderVo.getOrderAmt());
+        orderContent.setOrderTime(createContentOrderVo.getSupOrderTime());
+        orderContent.setOrderTitle(createContentOrderVo.getOrderTitle());
+        orderContent.setOrderInfo(createContentOrderVo.getOrderInfo());
+        orderContent.setProductNum(createContentOrderVo.getProductNum());
+        orderContent.setOrderShow(createContentOrderVo.getOrderShow());
+        return orderContent;
     }
-*/
+
     /**
      * 初始化充值订单
      *

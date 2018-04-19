@@ -3,13 +3,12 @@ package com.cupdata.sip.common.api.order.request;
 import lombok.Data;
 
 /**
- * @author LinYong
- * @Description: 创建券码订单参数Vo
- * @create 2018-01-08 10:16
- */
+* @author 作者: liwei
+* @createDate 创建时间：2018年4月19日 下午7:53:34
+*/
 @Data
-public class CreateVoucherOrderVo {
-    /**
+public class CreateOrderVo {
+	 /**
      * 机构编号
      */
     private String orgNo;
@@ -20,7 +19,7 @@ public class CreateVoucherOrderVo {
     private String orgOrderNo;
 
     /**
-     * 券码产品编号
+     * 产品编号
      */
     private String productNo;
 

@@ -18,9 +18,9 @@ import com.cupdata.sip.common.lang.BeanCopierUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @Auth: LinYong
+ * @Auth: liwei
  * @Description: 订单业务
- * @Date: 20:20 2017/12/14
+ * @Date: 2018/04/19
  */
 @Slf4j
 @Service
@@ -34,29 +34,6 @@ public class ServiceOrderBiz {
 
     @Autowired
 	private ServiceOrderRechargeMapper orderRechargeDao;
-
-    /**
-     * 根据订单状态、订单子类型列表、商户标识查询服务订单列表
-     * @param orderStatus
-     * @param supplierFlag
-     * @param orderSubType
-     * @return
-     */
-  public List<OrderInfoVo> selectMainOrderList(Character orderStatus, String supplierFlag, List<String> orderSubType) {
-        log.info("根据订单状态,订单子类型,商户标识查询订单列表,supplierFlag:"+supplierFlag);
-        HashMap<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("orderStatus", orderStatus);
-        paramMap.put("supplierFlag", supplierFlag);
-        paramMap.put("orderSubType", orderSubType);
-        List<ServiceOrder> orderList = orderDao.selectMainOrderList(paramMap);
-        List<OrderInfoVo> orderInfoVos = new ArrayList<>(orderList.size());
-        orderList.forEach(list ->{
-            OrderInfoVo orderInfoVo = new OrderInfoVo();
-            BeanCopierUtils.copyProperties(list,orderInfoVo);
-                });
-        return orderInfoVos;
-
-    }
   	
   	@Transactional
 	public void updateServiceOrder(OrderInfoVo order) {
@@ -68,6 +45,29 @@ public class ServiceOrderBiz {
 			}
 			BeanCopierUtils.copyProperties(order,serviceOrder);
 			orderDao.updateByPrimaryKey(serviceOrder);
+	}
+  	
+	public List<OrderInfoVo> selectMainOrderList(String orderStatus, String supplierFlag, String orderSubType) {
+
+		ServiceOrder serviceOrder = new ServiceOrder();
+		serviceOrder.setOrderStatus(orderStatus);
+		serviceOrder.setSupplierFlag(supplierFlag);
+		serviceOrder.setOrderSubType(orderSubType);
+		
+		List<ServiceOrder> serviceOrderList = orderDao.select(serviceOrder);
+		
+		if(serviceOrderList ==null || serviceOrderList.isEmpty()) {
+			
+		}
+		List<OrderInfoVo> orderInfoVoList = new ArrayList<OrderInfoVo>(serviceOrderList.size());
+		serviceOrderList.forEach(order -> {
+			OrderInfoVo infoVo = new OrderInfoVo();
+			
+			BeanCopierUtils.copyProperties(order,infoVo);
+			orderInfoVoList.add(infoVo);		
+		} );
+		
+		return orderInfoVoList;
 	}
   
 }

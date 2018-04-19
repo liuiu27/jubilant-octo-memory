@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cupdata.order.util.OrderUtils;
+import com.cupdata.sip.common.api.order.request.CreateOrderVo;
 import com.cupdata.sip.common.api.order.response.RechargeOrderVo;
 import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
 import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
@@ -100,7 +101,10 @@ public class ServiceOrderRechargeBiz{
 		   log.info("创建券码订单,supplierFlag:"+supplierFlag+",orgNo:"+orgNo+",orderDesc:"+orderDesc);
 		   RechargeOrderVo rechargeOrderVo =new RechargeOrderVo();
 	        //初始化主订单记录
-	        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,orgNo, orgOrderNo, orderDesc, rechargeProduct, orgProductRelVo);
+		    CreateOrderVo createOrderVo = new CreateOrderVo();
+		    createOrderVo.setOrgNo(orgNo);
+		    createOrderVo.setOrderDesc(orderDesc);
+	        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag, createOrderVo, rechargeProduct, orgProductRelVo);
 	        orderDao.insert(order);//插入主订单
 
 	        //初始化充值订单

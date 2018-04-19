@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cupdata.order.util.OrderUtils;
+import com.cupdata.sip.common.api.order.request.CreateOrderVo;
+import com.cupdata.sip.common.api.order.request.CreateVoucherOrderVo;
 import com.cupdata.sip.common.api.order.response.OrderInfoVo;
 import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
 import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
@@ -37,8 +39,6 @@ public class ServiceOrderVoucherBiz {
     @Autowired
     private ServiceOrderVoucherMapper orderVoucherDao;
     
-    
-    
     /**
      * 创建券码订单
      * @param supplierFlag
@@ -46,11 +46,14 @@ public class ServiceOrderVoucherBiz {
      * @return
      */
     @Transactional
-    public VoucherOrderVo createVoucherOrder(String supplierFlag, String orgNo, String orgOrderNo, String orderDesc, ProductInfoVo voucherProduct, OrgProductRelVo orgProductRela){
-        log.info("创建券码订单,supplierFlag:"+supplierFlag+",orgNo:"+orgNo+",orderDesc:"+orderDesc);
+    public VoucherOrderVo createVoucherOrder(String supplierFlag,CreateVoucherOrderVo createVoucherOrderVo, ProductInfoVo voucherProduct, OrgProductRelVo orgProductRela){
+        log.info("创建券码订单,supplierFlag:"+supplierFlag+",orgNo:"+createVoucherOrderVo.getOrgNo()+",orderDesc:"+createVoucherOrderVo.getOrderDesc());
         VoucherOrderVo voucherOrderVo =new VoucherOrderVo();
         //初始化主订单记录
-        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,orgNo, orgOrderNo, orderDesc, voucherProduct, orgProductRela);
+        CreateOrderVo createOrderVo = new CreateOrderVo();
+        BeanCopierUtils.copyProperties(createVoucherOrderVo,createOrderVo);
+        
+        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,createOrderVo,voucherProduct, orgProductRela);
         orderDao.insert(order);//插入主订单
 
         //初始化券码订单
