@@ -68,6 +68,7 @@ public class ResponseFilter extends ZuulFilter {
             RequestContext ctx = getCurrentContext();
 
             HttpServletRequest request = ctx.getRequest();
+            request.getMethod();
             String org = request.getParameter("org"); // 机构编号
             String sup = request.getParameter("sup"); // 供应商编号
             if (isIgnorePath(request.getRequestURI())) return null;

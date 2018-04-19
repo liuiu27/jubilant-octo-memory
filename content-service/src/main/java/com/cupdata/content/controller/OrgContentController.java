@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.dto.ContentTransactionLogDTO;
+import com.cupdata.content.exception.ContentException;
 import com.cupdata.content.feign.SupplierFeignClient;
 import com.cupdata.content.vo.request.ContentJumpReqVo;
 import com.cupdata.content.vo.request.SupContentJumReqVo;
@@ -61,7 +62,7 @@ public class OrgContentController{
 		String supUrl = productInfRes.getServiceApplicationPath();
 
 
-//		//Step5 :   判断流水号  如果为空创建 新的           如果不为空则修改
+//		//Step5 :   判断流水号  如果为空创建 新的   如果不为空则修改
 		contentBiz.queryAndinsertOrUpdateContentTransaction(contentJumpReqVo,productInfRes,ModelConstants.CONTENT_TYPE_NOT_LOGGED,null);
 
 		//查询是否存在下一步操作  fallback地址
@@ -84,6 +85,7 @@ public class OrgContentController{
         BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo(productInfRes.getSupplierNo());
         if (!supByNo.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode())) {
             //内部调用错误
+			throw new ContentException();
         }
         //组装重定向地址及参数
         SupplierInfVo supplierInfVo = supByNo.getData();
@@ -98,7 +100,6 @@ public class OrgContentController{
 		StringBuffer ret = new StringBuffer("redirect:" + url);
 	    return ret.toString();
 	}
-
 
 
 	@ResponseBody
