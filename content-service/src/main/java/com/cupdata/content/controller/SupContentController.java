@@ -9,7 +9,6 @@ import com.cupdata.content.feign.OrgFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.vo.ContentToLoginReq;
 import com.cupdata.content.vo.request.ContentLoginReqVo;
-import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
@@ -96,30 +95,83 @@ public class SupContentController {
 //		return res;
 //	}
 
-	/**
-	 * 支付请求接口
-	 * @param sup 供应商号
-	 * @param payPageVO 请求参数
-	 * @return
-	 */
-	public String payRequest(@RequestParam(value = "sup") String sup,
-								   @RequestBody @Validated PayPageVO payPageVO ){
-	    //Step1 验证本流水是否有效
-        payPageVO.getSipTranNo();
+    ///**
+    // * 支付请求接口
+    // * @param sup 供应商号
+    // * @param payPageVO 请求参数
+    // * @return
+    // */
+    //@GetMapping("payRequest")
+    //public String payRequest(@RequestParam(value = "sup") String sup,
+    //                         @RequestBody @Validated PayPageVO payPageVO ){
+    //    //Step1 验证本流水是否有效
+    //    //查询数据库中是否存在此流水号
+    //    ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(payPageVO.getSipTranNo(),ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+    //    //验证流水号
+    //    if(null == contentTransaction) {
+    //        log.error("query result is null");
+    //        throw new ErrorException(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode(),ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
+    //    }
+    //    //Step2 验证是否有对应交易订单。并对其进行检验。
+    //    //Step3 创建交易订单，并保存参数
+    //    //Step4 获取对应的支付接口。
+    //    //Step5 拼接参数。
+    //    //获取机构登录地址
+    //
+    //    Map<String,String> req = new HashMap();
+    //
+    //    req.put("timestamp",payPageVO.getTimestamp());
+    //    req.put("orderAmt",payPageVO.getOrderAmt());
+    //    req.put("sipOrderNo", payPageVO.getSupOrderNo());
+    //    req.put("sipOrderTime",payPageVO.getSupOrderTime());
+    //    req.put("orderTitle","1");
+    //    req.put("orderInfo","1");
+    //    req.put("timeOut","30");
+    //    req.put("payBackUrl",payPageVO.getPayBackUrl());
+    //    req.put("notifyUrl","http://10.193.17.86:46959/content/content/payNotify");
+    //    req.put("productNum","1");
+    //    req.put("orderShow","1");
+    //    req.put("userId","110440");
+    //
+    //    JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
+    //    String url = EncryptionAndEecryption.Encryption(req, resJson.getString("payUrl"));
+    //
+    //    StringBuffer ret = new StringBuffer("redirect:"+url);
+    //    return ret.toString();
+    //
+    //}
 
-	    //Step2 验证是否有对应交易订单。并对其进行检验。
 
-	    //Step3 创建交易订单，并保存参数
-
-
-	    //Step4 获取对应的支付接口。
-	    //Step5 拼接参数。
-
-        StringBuffer ret = new StringBuffer("redirect:");
-
-        return ret.toString();
-
-	}
+    ///**
+    // * 支付请求接口
+    // * @param sup 供应商号
+    // * @return
+    // */
+    //@ResponseBody
+    //@GetMapping("payCancel")
+    //public BaseResponse payCancel(@RequestParam(value = "sup") String sup,
+    //                              @RequestBody @Validated CancelPayVO cancelPayVO ){
+    //    RestTemplate restTemplate = new RestTemplate();
+    //    String url ="http://192.168.100.212:9190/mall/sip/content/contentOrderRefund.action?provider=LBHTDnJkYy4=";
+    //
+    //    Map<String,String> req = new HashMap();
+    //    req.put("sipOrderNo",cancelPayVO.getSupOrderNo());
+    //    req.put("refundDate",cancelPayVO.getRefundDate());
+    //    req.put("refundAmt", cancelPayVO.getRefundAmt());
+    //    req.put("refundInfo",cancelPayVO.getRefundInfo());
+    //    req.put("timeStamp",cancelPayVO.getTimeStamp());
+    //
+    //    //JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
+    //    url = EncryptionAndEecryption.Encryption(req, url);
+    //
+    //    BaseResponse baseResponse = restTemplate.postForObject(url, null, BaseResponse.class);
+    //
+    //    if (baseResponse.getResponseCode().equals("2"))
+    //        return  new BaseResponse();
+    //
+    //    return  new BaseResponse(ResponseCodeMsg.REQUEST_TIMEOUT.getCode(),ResponseCodeMsg.REQUEST_TIMEOUT.getMsg());
+    //
+    //}
 
 
 }

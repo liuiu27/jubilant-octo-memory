@@ -14,40 +14,14 @@ import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.utils.CommonUtils;
 import com.cupdata.sip.common.lang.utils.DateTimeUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.constant.ModelConstants;
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.exception.ErrorException;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.content.ContentJumpReq;
-import com.cupdata.commons.vo.content.ContentTransaction;
-import com.cupdata.commons.vo.content.SupContentJumReq;
-import com.cupdata.commons.vo.product.ProductInfVo;
-import com.cupdata.content.biz.ContentBiz;
-import com.cupdata.content.feign.ProductFeignClient;
-import com.cupdata.content.utils.EncryptionAndEecryption;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -140,7 +114,21 @@ public class OrgContentController{
 		param.put("orderAmt", notifyVO.getOrderAmt());
 		param.put("sipOrderNo", notifyVO.getOrgOrderNo());
 
-		notifyurl = EncryptionAndEecryption.Encryption(param,notifyurl);
+		//TODO 2018/4/19
+		//封装重定向到机构的地址
+		BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo("");
+		if (!supByNo.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode())) {
+			//内部调用错误
+		}
+		//组装重定向地址及参数
+		SupplierInfVo supplierInfVo = supByNo.getData();
+
+		String url = null;
+		try {
+			url = contentBiz.createRequseUrl(notifyurl, JSON.toJSONString(param),supplierInfVo.getSupplierPubKey(),supplierInfVo.getSipPriKey());
+		} catch (Exception e) {
+			//封装参数失败
+		}
 
         String baseResponse = restTemplate.postForObject(notifyurl, null, String.class);
 
@@ -161,9 +149,5 @@ public class OrgContentController{
 		String payTime;
 
 	}
-
-
-
-
 
 }
