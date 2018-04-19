@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @Auther: DingCong
- * @Description:
+ * @Description: 爱奇艺接口
  * @@Date: Created in 15:44 2018/4/18
  */
 @RequestMapping("/iqiyi")

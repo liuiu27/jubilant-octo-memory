@@ -163,7 +163,12 @@ public enum ResponseCodeMsg {
     /**
      * 200003 - 调用腾讯充值服务发生异常
      */
-    TENCENT_EXCEPTION("200003","调用腾讯充值服务发生异常");
+    TENCENT_EXCEPTION("200003","调用腾讯充值服务发生异常"),
+
+    /**
+     * 200004 - 调用爱奇艺充值接口发生异常
+     */
+    IQIYI_EXCEPTION("200004","调用爱奇艺充值接口发生异常");
 
 
 

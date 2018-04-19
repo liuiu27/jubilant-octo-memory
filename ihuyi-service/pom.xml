@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>service-integration-platform</artifactId>
-        <groupId>com.cupdata</groupId>
+        <groupId>com.cupdata.sip</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -12,10 +12,6 @@
     <artifactId>ihuyi-service</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.cupdata</groupId>
-            <artifactId>commons</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
@@ -91,6 +87,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cupdata.sip</groupId>
+            <artifactId>common-api</artifactId>
         </dependency>
     </dependencies>
 
