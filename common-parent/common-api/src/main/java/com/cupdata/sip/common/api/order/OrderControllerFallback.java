@@ -60,7 +60,7 @@ public class OrderControllerFallback implements IOrderController {
     }
 
     @Override
-    public Integer updateServiceOrder(OrderInfoVo order) {
+    public BaseResponse updateServiceOrder(OrderInfoVo order) {
         return null;
     }
 

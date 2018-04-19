@@ -1,11 +1,10 @@
 package com.cupdata.sip.common.api.ihuyi;
 
+import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.recharge.IRechargeApi;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -18,10 +17,8 @@ public interface IhuyiVirtualGoodsController extends IRechargeApi{
 
     /**
      * 互亿虚拟商品充值通知接口
-     * @param request
-     * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "ihuyiVirtualRechargeCallBack",method = {RequestMethod.POST})
-    public void ihuyiVirtualRechargeCallBack(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    @PostMapping("ihuyiVirtualRechargeCallBack")
+    BaseResponse ihuyiVirtualRechargeCallBack();
 }
