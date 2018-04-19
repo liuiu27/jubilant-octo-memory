@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.cupdata.commons.constant.ModelConstants;
 import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
+import com.cupdata.commons.utils.CommonUtils;
+import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.content.ContentQueryOrderReq;
 import com.cupdata.commons.vo.content.ContentQueryOrderRes;
@@ -16,7 +18,6 @@ import com.cupdata.content.vo.ContentLoginReq;
 import com.cupdata.content.vo.ContentToLoginReq;
 import com.cupdata.content.vo.request.CancelPayVO;
 import com.cupdata.content.vo.request.PayPageVO;
-import com.cupdata.content.vo.request.SupVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,48 +52,11 @@ public class SupContentController {
 	
 	/**
 	 * 内容引入登录接口   供应商请求
-	 * @param org
-	 * @param contentJumpReq
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-//	@PostMapping(path="/contentLogin",produces = "application/json")
-//	public String contentLogin(@RequestBody @Validated SupVO<ContentLoginReq> contentLoginReq){
-//		log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
-//		try {
-//			//查询数据库中是否存在此流水号
-//			ContentTransaction contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getTranNo(),null);
-//			//验证流水号
-//			if(null == contentTransaction) {
-//				log.error("query result is null");
-//				throw new ErrorException(ResponseCodeMsg.NO_TRANNO_AINVALID.getCode(),ResponseCodeMsg.NO_TRANNO_AINVALID.getMsg());
-//			}
-//			//查询数据中是否存在此交易类型的流水号
-//			contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getTranNo(),ModelConstants.CONTENT_TYPE_NOT_LOGGED);
-//			if(null == contentTransaction) {
-//				//保持新的流水记录
-//				contentBiz.insertContentTransaction(contentLoginReq.getTranNo(), 
-//						contentLoginReq.getSup(), 
-//						JSONObject.toJSONString(contentLoginReq), 
-//						null);
-//			}else {
-//				//更新流水表
-//				contentBiz.updateContentTransaction(contentTransaction, 
-//						null, 
-//						ModelConstants.CONTENT_TYPE_NOT_LOGGED, 
-//						null, 
-//						contentLoginReq.getSup(), 
-//						JSONObject.toJSONString(contentLoginReq));
-//			}
-//			//组装参数 跳转
-//			return null;
-//		} catch (Exception e) {
-//			log.error("error is " + e.getMessage());
-//			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-//		}
-//	}
-//	
+
 	@GetMapping(path="/contentJump")
 	public String contentJump(@RequestParam(value = "sup", required = true) String sup,
 			@RequestBody ContentLoginReq contentLoginReq,	HttpServletRequest request, HttpServletResponse response){
@@ -147,25 +111,41 @@ public class SupContentController {
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
 		}
 	}
-	
-	@PostMapping(path="/contentQueryOrder",produces = "application/json")
-	public BaseResponse<ContentQueryOrderRes> contentQueryOrder(SupVO<ContentQueryOrderReq> contentQueryOrderReq){
+
+	@ResponseBody
+	@PostMapping(path="/contentQueryOrder")
+	public String contentQueryOrder(@RequestParam(value = "sup") String sup,@RequestBody ContentQueryOrderReq contentQueryOrderReq){
 		log.info("contentQueryOrder is begin params contentQueryOrderReq is" + contentQueryOrderReq.toString());
-		BaseResponse<ContentQueryOrderRes> res = new BaseResponse<ContentQueryOrderRes>();	
-		try {
-			//调用order-service的服务查询数据
-			res = OrderFeignClient.queryContentOrder(contentQueryOrderReq.getData());
-			return res;
-		} catch (Exception e) {
-			log.error("error is " + e.getMessage());
-			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-		}
+		BaseResponse<ContentQueryOrderRes> res = new BaseResponse<ContentQueryOrderRes>();
+		//contentQueryOrderReq.getTranType();
+		//1 验证
+		// 2 根据订单号查询 订单信息  获取机构号
+		//3 查询机构表 获取机构 查询订单接口地址
+		RestTemplate restTemplate = new RestTemplate();
+		String url ="http://192.168.100.212:9190/mall/sip/content/queryContentOrderStatus.action?provider=LBHTDnJkYy4=";
+
+		Map<String,String> req = new HashMap();
+		String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);
+
+		req.put("sipOrderNo",contentQueryOrderReq.getSupOrderNo());
+		req.put("timestamp",timestamp);
+
+		req.put("tranType",contentQueryOrderReq.getTranType());
+
+		url = EncryptionAndEecryption.Encryption(req, url);
+
+		String baseResponse = restTemplate.postForObject(url, null, String.class);
+
+		return baseResponse;
+
+		//4组装 参数 发送请求给机构查询机构订单信息
+		//5返回
+
 	}
 
 	/**
 	 * 支付请求接口
 	 * @param sup 供应商号
-	 * @param tranNo 流水号
 	 * @param payPageVO 请求参数
 	 * @return
 	 */
@@ -196,7 +176,7 @@ public class SupContentController {
         req.put("orderInfo","1");
         req.put("timeOut","30");
         req.put("payBackUrl",payPageVO.getPayBackUrl());
-        req.put("notifyUrl","http://cvpa.leagpoint.com/sipService/content/content/payNotify");
+        req.put("notifyUrl","http://10.193.17.86:46959/content/content/payNotify");
         req.put("productNum","1");
         req.put("orderShow","1");
         req.put("userId","110440");
@@ -213,8 +193,6 @@ public class SupContentController {
 	/**
 	 * 支付请求接口
 	 * @param sup 供应商号
-	 * @param tranNo 流水号
-	 * @param payPageVO 请求参数
 	 * @return
 	 */
 	@ResponseBody
@@ -222,11 +200,9 @@ public class SupContentController {
 	public BaseResponse payCancel(@RequestParam(value = "sup") String sup,
 							 @RequestBody @Validated CancelPayVO cancelPayVO ){
 		RestTemplate restTemplate = new RestTemplate();
-		String url ="http://cvpd.leagpoint.com/mall/sip/content/contentOrderRefund.action?provider=LBHTDnJkYy4=";
-
+		String url ="http://192.168.100.212:9190/mall/sip/content/contentOrderRefund.action?provider=LBHTDnJkYy4=";
 
 		Map<String,String> req = new HashMap();
-
 		req.put("sipOrderNo",cancelPayVO.getSupOrderNo());
 		req.put("refundDate",cancelPayVO.getRefundDate());
 		req.put("refundAmt", cancelPayVO.getRefundAmt());

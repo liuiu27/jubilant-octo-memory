@@ -5,7 +5,6 @@ import com.cupdata.apigateway.feign.OrgFeignClient;
 import com.cupdata.apigateway.feign.SupplierFeignClient;
 import com.cupdata.apigateway.util.GatewayUtils;
 import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.utils.DateTimeUtil;
 import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
@@ -26,7 +25,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 请求过滤器
@@ -151,16 +153,16 @@ public class PreRequestFilter extends ZuulFilter {
 		try {
 			JSONObject jsonObj = JSONObject.parseObject(dataPlain);
 			String timestampStr = String.valueOf(jsonObj.get("timestamp"));//获取时间戳
-			Date timestamp = DateTimeUtil.getDateByString(timestampStr.substring(0, 17), "yyyyMMddHHmmssSSS");
+			//Date timestamp = DateTimeUtil.getDateByString(timestampStr.substring(0, 17), "yyyyMMddHHmmssSSS");
 			//时间戳超时
-			if (!DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -60 * 1000L, 120 * 1000L)){
-				log.info("请求报文，时间戳超时");
-				ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
-				ctx.setResponseStatusCode(401);// 返回错误码
-				ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
-						sipPriKey, ResponseCodeMsg.TIMESTAMP_TIMEOUT)));// 返回错误内容
-				return null;
-			}
+			//if (!DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -600 * 1000L, 120 * 1000L)){
+			//	log.info("请求报文，时间戳超时");
+			//	ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
+			//	ctx.setResponseStatusCode(401);// 返回错误码
+			//	ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
+			//			sipPriKey, ResponseCodeMsg.TIMESTAMP_TIMEOUT)));// 返回错误内容
+			//	return null;
+			//}
 		}catch (Exception e){
 			log.error("", e);
 			log.error("机构请求报文验签失败！");

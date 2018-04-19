@@ -1,7 +1,6 @@
 package com.cupdata.commons.vo.content;
 
 import com.cupdata.commons.vo.BaseRequest;
-
 import lombok.Data;
 
 /**
@@ -14,4 +13,8 @@ public class ContentQueryOrderReq extends BaseRequest{
 	 * 供应商订单号
 	 */
 	private String supOrderNo;
+
+	private String tranType;
+
+
 }
