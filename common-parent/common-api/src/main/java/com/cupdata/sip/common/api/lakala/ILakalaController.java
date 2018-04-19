@@ -1,6 +1,7 @@
 package com.cupdata.sip.common.api.lakala;
 
 import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.voucher.IVoucherApi;
 import com.cupdata.sip.common.api.voucher.request.DisableVoucherReq;
 import com.cupdata.sip.common.api.voucher.request.GetVoucherReq;
 import com.cupdata.sip.common.api.voucher.request.WriteOffVoucherReq;
@@ -16,34 +17,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Date: 16:22 2017/12/19
  */
 @RequestMapping("/lakala")
-public interface ILakalaController{
-
-    /**
-     * 获取券码接口方法
-     * @param org 机构编号
-     * @param voucherReq 获取券码请求参数（实现方法中需要添加@RequestBody注解获取参数）
-     * @return
-     */
-    @PostMapping("/getVoucher")
-    public BaseResponse<GetVoucherRes> getVoucher(String org, GetVoucherReq voucherReq);
-
-    /**
-     * 禁用券码接口方法
-     * @param org 机构编号
-     * @param disableVoucherReq 禁用券码请求参数（实现方法中需要添加@RequestBody注解获取参数）
-     * @return
-     */
-    @PostMapping("/disableVoucher")
-    public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq);
-
-    /**
-     * 核销券码接口方法
-     * @param sup 商户编号
-     * @param writeOffVoucherReq 核销券码请求参数（实现方法中需要添加@RequestBody注解获取参数）
-     * @return
-     */
-    @PostMapping("/writeOffVoucher")
-    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq);
-
-
+public interface ILakalaController extends IVoucherApi{
 }

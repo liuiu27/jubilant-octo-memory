@@ -1,9 +1,9 @@
 package com.cupdata.ihuyi.feign;
 
 
-import com.cupdata.commons.api.product.IProductController;
+import com.cupdata.sip.common.api.product.IProductController;
 import org.springframework.cloud.netflix.feign.FeignClient;
 
 @FeignClient(name = "product-service")
-public interface ProductFeignClient extends IProductController{
+public interface ProductFeignClient extends IProductController {
 }

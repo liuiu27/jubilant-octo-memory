@@ -8,7 +8,6 @@ import com.cupdata.sip.common.dao.entity.ElecVoucherLib;
 import com.cupdata.sip.common.dao.mapper.ElecVoucherCategoryMapper;
 import com.cupdata.sip.common.dao.mapper.ElecVoucherLibMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
-import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.exception.VoucherException;
 import com.cupdata.sip.common.lang.utils.CommonUtils;

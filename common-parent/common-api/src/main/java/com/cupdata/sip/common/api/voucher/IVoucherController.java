@@ -16,7 +16,4 @@ import org.springframework.web.bind.annotation.*;
  */
 @RequestMapping("/voucher")
 public interface IVoucherController extends IVoucherApi{
-
-
-
 }

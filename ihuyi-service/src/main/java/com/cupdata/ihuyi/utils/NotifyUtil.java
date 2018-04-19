@@ -1,17 +1,6 @@
 package com.cupdata.ihuyi.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.constant.ModelConstants;
-import com.cupdata.commons.constant.TimeConstants;
-import com.cupdata.commons.model.ServiceOrder;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.utils.HttpUtil;
-import com.cupdata.commons.utils.RSAUtils;
-import com.cupdata.commons.vo.notify.OrderNotifyComplete;
-import com.cupdata.commons.vo.notify.OrderNotifyWait;
-import com.cupdata.commons.vo.notify.RechargeNotifyToOrgVo;
-import com.cupdata.commons.vo.orgsupplier.OrgInfVo;
 import org.apache.log4j.Logger;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
@@ -84,6 +73,7 @@ public class NotifyUtil {
         orderNotifyComplete.setNodeName(getNodeName());
         return orderNotifyComplete;
     }
+
 
     /**
      * 根据通知次数获取下次通知时间

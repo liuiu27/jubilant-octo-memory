@@ -13,6 +13,11 @@ import java.util.Date;
 public class ElectronicVoucherLib {
 
     /**
+     * 主键ID
+     */
+    protected Long id;
+
+    /**
      * 导入批次id
      */
     private Long batchId;

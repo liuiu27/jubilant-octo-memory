@@ -168,8 +168,32 @@ public enum ResponseCodeMsg {
     /**
      * 200004 - 调用爱奇艺充值接口发生异常
      */
-    IQIYI_EXCEPTION("200004","调用爱奇艺充值接口发生异常");
+    IQIYI_EXCEPTION("200004","调用爱奇艺充值接口发生异常"),
 
+    /**
+     * 200005 - 调用互亿话费充值接口发生异常
+     */
+    IHUYI_PHONE_RECHARGE_EXCEPTION("200005","调用互亿话费充值接口发生异常"),
+
+    /**
+     * 200006 - 互亿话费充值结果推送发生异常
+     */
+    IHUYI_PUSH_PHONE_RECHARGE_RES_EXCEPTION("200006","互亿话费充值结果推送发生异常"),
+
+    /**
+     * 200007 - 调用互亿流量充值接口发生异常
+     */
+    IHUYI_TRAFFIC_RECHARGE_EXCEPTION("200007","调用互亿流量充值接口发生异常"),
+
+    /**
+     * 200008 - 互亿流量充值结果推送发生异常
+     */
+    IHUYI_TRAFFIC_RECHARGE_RES_EXCEPTION("200008","互亿流量充值结果推送发生异常"),
+
+    /**
+     * 200009 - 充值失败
+     */
+    RECHARGE_FAIL("200009","充值失败");
 
 
 

@@ -25,7 +25,7 @@ public interface ILocalVoucherController {
      * @return
      */
     @PostMapping("/getLocalVoucher")
-    public BaseResponse<GetVoucherRes> getLocalVoucher(@RequestParam(value = "org") String org, @RequestBody GetVoucherReq voucherReq);
+    BaseResponse<GetVoucherRes> getLocalVoucher(@RequestParam(value = "org") String org, @RequestBody GetVoucherReq voucherReq);
 
     /**
      * 获取券码接口方法
@@ -34,7 +34,7 @@ public interface ILocalVoucherController {
      * @return
      */
     @PostMapping("/getVoucher")
-    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value = "org", required = true) String org, @RequestBody GetVoucherReq voucherReq);
+    BaseResponse<GetVoucherRes> getVoucher(@RequestParam(value = "org", required = true) String org, @RequestBody GetVoucherReq voucherReq);
 
     /**
      * 禁用券码接口方法
@@ -43,7 +43,7 @@ public interface ILocalVoucherController {
      * @return
      */
     @PostMapping("/disableVoucher")
-    public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value = "org", required = true) String org, @RequestBody DisableVoucherReq disableVoucherReq);
+    BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value = "org", required = true) String org, @RequestBody DisableVoucherReq disableVoucherReq);
 
     /**
      * 核销券码接口方法
@@ -52,6 +52,6 @@ public interface ILocalVoucherController {
      * @return
      */
     @PostMapping("/writeOffVoucher")
-    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value = "sup", required = true) String sup, @RequestBody WriteOffVoucherReq writeOffVoucherReq);
+    BaseResponse<WriteOffVoucherRes> writeOffVoucher(@RequestParam(value = "sup", required = true) String sup, @RequestBody WriteOffVoucherReq writeOffVoucherReq);
 
 }

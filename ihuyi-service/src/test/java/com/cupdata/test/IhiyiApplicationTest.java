@@ -1,15 +1,11 @@
 package com.cupdata.test;
 
-
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.constant.SysConfigParaNameEn;
-import com.cupdata.commons.utils.*;
-import com.cupdata.commons.vo.recharge.RechargeReq;
-import com.cupdata.commons.vo.voucher.GetVoucherReq;
-import com.cupdata.ihuyi.feign.CacheFeignClient;
+import com.cupdata.sip.common.api.recharge.request.RechargeReq;
+import com.cupdata.sip.common.api.voucher.request.GetVoucherReq;
+import com.cupdata.sip.common.lang.utils.*;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
-
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;

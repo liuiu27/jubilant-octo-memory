@@ -1,4 +1,4 @@
-package com.cupdata.ihuyi.vo;
+package com.cupdata.sip.common.api.ihuyi.response;
 
 import lombok.Data;
 

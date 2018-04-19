@@ -14,11 +14,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.cupdata</groupId>
-            <artifactId>commons</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <exclusions>
@@ -64,7 +59,6 @@
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
-
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

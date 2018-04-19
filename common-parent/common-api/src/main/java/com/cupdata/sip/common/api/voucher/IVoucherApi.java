@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @Auther: DingCong
- * @Description:
+ * @Description: 券码接口API
  * @@Date: Created in 19:13 2018/4/18
  */
 public interface IVoucherApi {
@@ -25,7 +25,7 @@ public interface IVoucherApi {
      * @return
      */
     @PostMapping("/getVoucher")
-    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam("org") String org, @RequestBody GetVoucherReq voucherReq);
+    BaseResponse<GetVoucherRes> getVoucher(@RequestParam("org") String org, @RequestBody GetVoucherReq voucherReq);
 
     /**
      * 禁用券码接口方法
@@ -34,7 +34,7 @@ public interface IVoucherApi {
      * @return
      */
     @PostMapping("/disableVoucher")
-    public BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq);
+    BaseResponse<DisableVoucherRes> disableVoucher(String org, DisableVoucherReq disableVoucherReq);
 
     /**
      * 核销券码接口方法
@@ -43,7 +43,7 @@ public interface IVoucherApi {
      * @return
      */
     @PostMapping("/writeOffVoucher")
-    public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq);
+    BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq);
 
 
 }

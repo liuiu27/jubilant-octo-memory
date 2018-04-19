@@ -19,6 +19,6 @@ public interface IRechargeQueryController {
      * @return
      */
     @PostMapping("/rechargeQuery")
-    public BaseResponse<RechargeResQuery> rechargeQuery(String org , RechargeQueryReq req);
+    BaseResponse<RechargeResQuery> rechargeQuery(String org , RechargeQueryReq req);
 
 }

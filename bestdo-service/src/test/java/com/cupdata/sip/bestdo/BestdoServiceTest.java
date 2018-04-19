@@ -30,7 +30,6 @@ import java.util.List;
 //@SpringBootTest
 public class BestdoServiceTest {
 
-
     private final static String TEST_URL = "http://test.cupd.bestdo.com";
 
     //@Autowired

@@ -12,7 +12,6 @@ import com.cupdata.sip.common.dao.mapper.ServiceOrderRechargeMapper;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderVoucherMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,7 @@
 package com.cupdata.sip.common.api.ihuyi;
 
 import com.cupdata.sip.common.api.recharge.IRechargeApi;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -22,6 +23,6 @@ public interface IhuyiVirtualGoodsController extends IRechargeApi{
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "ihuyiVirtualRechargeCallBack",method = {RequestMethod.POST})
-    public void ihuyiVirtualRechargeCallBack(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    @PostMapping("/ihuyiVirtualRechargeCallBack")
+    void ihuyiVirtualRechargeCallBack(HttpServletRequest request, HttpServletResponse response);
 }

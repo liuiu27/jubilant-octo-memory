@@ -2,25 +2,24 @@ package com.cupdata.ihuyi.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.constant.ModelConstants;
-import com.cupdata.commons.constant.SysConfigParaNameEn;
-import com.cupdata.commons.model.ServiceOrder;
-import com.cupdata.commons.utils.CommonUtils;
-import com.cupdata.commons.utils.HttpUtil;
-import com.cupdata.commons.utils.MD5Util;
-import com.cupdata.commons.vo.product.RechargeOrderVo;
-import com.cupdata.commons.vo.product.VoucherOrderVo;
-import com.cupdata.commons.vo.recharge.RechargeReq;
-import com.cupdata.commons.vo.voucher.GetVoucherReq;
 import com.cupdata.ihuyi.constant.IhuyiRechargeResCode;
-import com.cupdata.ihuyi.feign.CacheFeignClient;
-import com.cupdata.ihuyi.vo.IhuyiOrderQueryRes;
-import com.cupdata.ihuyi.vo.IhuyiRechargeRes;
-import com.cupdata.ihuyi.vo.IhuyiVirtualOrderQueryRes;
-import com.cupdata.ihuyi.vo.IhuyiVoucherRes;
+import com.cupdata.ihuyi.feign.ConfigFeignClient;
+import com.cupdata.sip.common.api.ihuyi.response.IhuyiOrderQueryRes;
+import com.cupdata.sip.common.api.ihuyi.response.IhuyiRechargeRes;
+import com.cupdata.sip.common.api.ihuyi.response.IhuyiVirtualOrderQueryRes;
+import com.cupdata.sip.common.api.ihuyi.response.IhuyiVoucherRes;
+import com.cupdata.sip.common.api.order.response.RechargeOrderVo;
+import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
+import com.cupdata.sip.common.api.recharge.request.RechargeReq;
+import com.cupdata.sip.common.api.voucher.request.GetVoucherReq;
+import com.cupdata.sip.common.dao.entity.ServiceOrder;
+import com.cupdata.sip.common.lang.constant.ModelConstants;
+import com.cupdata.sip.common.lang.constant.SysConfigParaNameEn;
+import com.cupdata.sip.common.lang.utils.CommonUtils;
+import com.cupdata.sip.common.lang.utils.HttpUtil;
+import com.cupdata.sip.common.lang.utils.MD5Util;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -43,27 +42,27 @@ public class IhuyiUtils {
      * @param rechargeReq
      * @return
      */
-    public static IhuyiRechargeRes ihuyiPhoneRecharge(RechargeOrderVo orderVo, RechargeReq rechargeReq, CacheFeignClient cacheFeignClient) {
+    public static IhuyiRechargeRes ihuyiPhoneRecharge(RechargeOrderVo orderVo, RechargeReq rechargeReq, ConfigFeignClient configFeignClient) {
         log.info("调用互亿话费充值工具类...Account:" + rechargeReq.getAccount() + ",ProductNo:" + rechargeReq.getProductNo() + ",OrderDesc:" + rechargeReq.getOrderDesc());
         IhuyiRechargeRes rechargeRes = new IhuyiRechargeRes();
         //step1.获取互亿话费充值url
         String domain = null;
         if (CommonUtils.isWindows()) {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getParaValue())) {
                 //打印错误日志:获取url失败
                 log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
                 return rechargeRes;
             }
-            domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData().getSysConfig().getParaValue();
+            domain = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getParaValue();
         } else {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL"))) {
                 //打印错误日志:获取url失败
                 log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
                 return rechargeRes;
             }
-            domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData().getSysConfig().getParaValue();
+            domain = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getParaValue();
         }
         log.info("互亿话费充值url："+domain);
 
@@ -71,27 +70,27 @@ public class IhuyiUtils {
         String username = null;
         if (CommonUtils.isWindows()) {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue())) {
                 //设置错误码:获取api_id失败
                 log.error(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
                 return rechargeRes;
             }
-            username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
+            username = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue();
         } else {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue())) {
                 //设置错误码:获取api_id失败
                 log.error(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
                 return rechargeRes;
             }
-            username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
+            username = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue();
         }
         log.info("互亿话费充值api_id："+username);
 
         //step3.封装请求参数
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         String mobile = rechargeReq.getAccount();
-        String orderid = orderVo.getOrder().getOrderNo();
+        String orderid = orderVo.getOrderInfoVo().getOrderNo();
         String packag = String.valueOf(rechargeReq.getRechargeAmt());
         String action = "recharge";
         Map<String, String> map = new HashMap();
@@ -102,7 +101,7 @@ public class IhuyiUtils {
         map.put("username", username);
 
         //step4.获取签名数据
-        String sign = IhuyiUtils.getSign(map, cacheFeignClient);
+        String sign = IhuyiUtils.getSign(map, configFeignClient);
         log.info("验证签名正确");
         String url = domain + "?action=" + action + "&username=" + username + "&mobile=" + mobile + "&orderid=" + orderid + "&package=" + packag + "&timestamp=" + timestamp + "&sign=" + sign;
         try {
@@ -124,12 +123,11 @@ public class IhuyiUtils {
 
     /**
      * 互亿流量充值工具类
-     *
      * @param rechargeReq
      * @param orderVo
      * @return
      */
-    public static IhuyiRechargeRes ihuyiTrafficRecharge(RechargeOrderVo orderVo, RechargeReq rechargeReq, CacheFeignClient cacheFeignClient) {
+    public static IhuyiRechargeRes ihuyiTrafficRecharge(RechargeOrderVo orderVo, RechargeReq rechargeReq, ConfigFeignClient configFeignClient) {
         log.info("调用互亿流量充值工具类...Account:" + rechargeReq.getAccount() + ",ProductNo:" + rechargeReq.getProductNo() + ",OrderDesc:" + rechargeReq.getOrderDesc());
         IhuyiRechargeRes rechargeRes = new IhuyiRechargeRes();
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -139,12 +137,12 @@ public class IhuyiUtils {
             domain = "http://f.ihuyi.com/v2";
         } else {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getParaValue())) {
                 //设置错误码:获取url失败
                 log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
                 return rechargeRes;
             }
-            domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getData().getSysConfig().getParaValue();
+            domain = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getParaValue();
         }
         log.info("互亿流量充值url："+domain);
 
@@ -154,18 +152,18 @@ public class IhuyiUtils {
             username = "cf_testapi";
         } else {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue())) {
                 //设置错误码:获取api_id失败
                 log.error(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
                 return rechargeRes;
             }
-            username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
+            username = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue();
         }
         log.info("互亿流量充值api_id："+username);
 
         //step3.封装请求参数
         String mobile = rechargeReq.getAccount();
-        String orderid = orderVo.getOrder().getOrderNo();
+        String orderid = orderVo.getOrderInfoVo().getOrderNo();
         String packag = String.valueOf(rechargeReq.getRechargeTraffic());
         String action = "recharge";
         Map<String, String> map = new HashMap();
@@ -174,7 +172,7 @@ public class IhuyiUtils {
         map.put("package", packag);
         map.put("timestamp", timestamp);
         map.put("username", username);
-        String sign = IhuyiUtils.getSign(map, cacheFeignClient);
+        String sign = IhuyiUtils.getSign(map, configFeignClient);
         log.info("验证签名正确");
         String url = domain + "?action=" + action + "&username=" + username + "&mobile=" + mobile + "&orderid=" + orderid + "&package=" + packag + "&timestamp=" + timestamp + "&sign=" + sign;
         try {
@@ -201,7 +199,7 @@ public class IhuyiUtils {
      * @Author KaiZhang
      */
     //订单编号，充值账号，商户业务参数,充值件数
-    public static IhuyiRechargeRes ihuyiVirtualGoodsRechargeBuy(String orderid, String account, String productid, Long rechargeNumber, String extend, String buyerip, CacheFeignClient cacheFeignClient) {
+    public static IhuyiRechargeRes ihuyiVirtualGoodsRechargeBuy(String orderid, String account, String productid, Long rechargeNumber, String extend, String buyerip, ConfigFeignClient configFeignClient) {
         log.info("调用互亿虚拟充值工具类...orderid:"+orderid+",account:"+account+",productid:"+productid+",rechargeNumber:"+rechargeNumber+",extend:"+extend+",buyerip:"+buyerip);
         IhuyiRechargeRes rechargeRes = new IhuyiRechargeRes();
         //step1.获取互亿虚拟充值url
@@ -210,12 +208,12 @@ public class IhuyiUtils {
             domain = "http://f.ihuyi.com/recharge";
         } else {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL").getParaValue())) {
                 //设置错误码:获取url失败
                 log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
                 return rechargeRes;
             }
-            domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL").getData().getSysConfig().getParaValue();
+            domain = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL").getParaValue();
         }
         log.info("互亿虚拟充值url:"+domain);
 
@@ -225,12 +223,12 @@ public class IhuyiUtils {
             username = "cf_testapi";
         } else {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue())) {
                 //设置错误码:获取api_id失败
                 rechargeRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
                 return rechargeRes;
             }
-            username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
+            username = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue();
         }
         log.info("互亿api_id:"+username);
 
@@ -240,12 +238,12 @@ public class IhuyiUtils {
             callback = "https://localhost:8040/ihuyi/ihuyiVirtualRecharge/ihuyiVirtualRechargeCallBack";
         } else {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_RECHARGE_CALLBACK_URL"))) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_RECHARGE_CALLBACK_URL"))) {
                 //设置错误码:获取api_id失败
                 rechargeRes.setMessage(IhuyiRechargeResCode.FAIL_TO_GET_VIRTUAL_CALLBACK.getMsg());
                 return rechargeRes;
             }
-            callback = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_RECHARGE_CALLBACK_URL").getData().getSysConfig().getParaValue();
+            callback = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_RECHARGE_CALLBACK_URL").getParaValue();
         }
         log.info("互亿虚拟充值回调url:"+callback);
 
@@ -264,7 +262,7 @@ public class IhuyiUtils {
         map.put("return", return_);
         map.put("callback", callback);
         map.put("buyerip", buyerip);
-        String sign = getSign(map, cacheFeignClient);
+        String sign = getSign(map, configFeignClient);
         String url = domain + "?action=" + action + "&username=" + username +
                 "&orderid=" + orderid + "&timestamp=" + timestamp + "&account=" + account +
                 "&productid=" + productid + "&quantity=" + quantity + "&extend=" + extend +
@@ -290,7 +288,7 @@ public class IhuyiUtils {
      *
      * @return
      */
-    public static IhuyiVoucherRes ihuyiGiftCardBuy(VoucherOrderVo orderVo, String productid, GetVoucherReq voucherReq, CacheFeignClient cacheFeignClient) {
+    public static IhuyiVoucherRes ihuyiGiftCardBuy(VoucherOrderVo orderVo, String productid, GetVoucherReq voucherReq, ConfigFeignClient configFeignClient) {
         log.info("互亿礼品券购买工具类...");
         IhuyiVoucherRes voucherRes = new IhuyiVoucherRes();
         //step1.获取互亿礼品卡购买的url
@@ -299,12 +297,12 @@ public class IhuyiUtils {
             domain = "https://api.ihuyi.com/f/giftcard";
         } else {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VOUCHER_EXCHANGE_URL").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VOUCHER_EXCHANGE_URL").getParaValue())) {
                 //设置错误码:获取url失败
                 log.error(IhuyiRechargeResCode.FAIL_TO_GET_URL.getMsg());
                 return voucherRes;
             }
-            domain = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VOUCHER_EXCHANGE_URL").getData().getSysConfig().getParaValue();
+            domain = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VOUCHER_EXCHANGE_URL").getParaValue();
         }
         log.info("互亿礼券url:"+domain);
 
@@ -314,19 +312,19 @@ public class IhuyiUtils {
             username = "cf_testapi";
         } else {
             //如果获取数据信息为空
-            if (CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
+            if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue())) {
                 //设置错误码:获取api_id失败
                 log.error(IhuyiRechargeResCode.FAIL_TO_GET_API_ID.getMsg());
                 return voucherRes;
             }
-            username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
+            username = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue();
         }
         log.info("互亿api_id:"+username);
 
         //step3.封装请求参数
         String action = "buy";
         String mobile = voucherReq.getMobileNo();
-        String orderid = orderVo.getOrder().getOrderNo();
+        String orderid = orderVo.getOrderInfoVo().getOrderNo();
         String buynum = "1";
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         Map<String, String> map = new HashMap();
@@ -336,7 +334,7 @@ public class IhuyiUtils {
         map.put("orderid", orderid);
         map.put("buynum", buynum);
         map.put("timestamp", timestamp);
-        String sign = getSign(map, cacheFeignClient);
+        String sign = getSign(map, configFeignClient);
         String url = domain + "?action=" + action + "&username=" + username + "&mobile=" + mobile + "&orderid=" + orderid + "&timestamp=" + timestamp + "&productid=" + productid + "&buynum=" + buynum + "&sign=" + sign;
         try {
             long l1 = System.currentTimeMillis();
@@ -359,7 +357,7 @@ public class IhuyiUtils {
      * 互亿流量/话费查询
      * @return
      */
-    public static IhuyiOrderQueryRes ihuyiRechargeQuery(ServiceOrder serviceOrder, CacheFeignClient cacheFeignClient) {
+    public static IhuyiOrderQueryRes ihuyiRechargeQuery(ServiceOrder serviceOrder, ConfigFeignClient configFeignClient) {
         log.info("调用互亿接口去查询流量/话费...OrderNo:" + serviceOrder.getOrderNo() + ",OrderSubType:" + serviceOrder.getOrderSubType() + ",SupplierFlag:" + serviceOrder.getSupplierFlag());
         IhuyiOrderQueryRes res = new IhuyiOrderQueryRes();
         String action = "getorderinfo";
@@ -372,8 +370,8 @@ public class IhuyiUtils {
             username = "cf_testapi";
         } else {
             //如果获取数据信息不为空
-            if (!CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
-                username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
+            if (!CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue())) {
+                username = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue();
             }
         }
         log.info("互亿api_id:"+username);
@@ -382,22 +380,22 @@ public class IhuyiUtils {
         map.put("orderid", orderid);
         map.put("username", username);
         map.put("timestamp", timestamp);
-        String sign = IhuyiUtils.getSign(map, cacheFeignClient);
+        String sign = IhuyiUtils.getSign(map, configFeignClient);
         String url = "";
         if (ModelConstants.ORDER_TYPE_RECHARGE_TRAFFIC.equals(serviceOrder.getOrderSubType())) { //如果充值类型是流量充值
             if (CommonUtils.isWindows()) {
                 url = "http://f.ihuyi.com/v2";
             } else {
-                if (!CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getData())) {
-                    url = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getData().getSysConfig().getParaValue();
+                if (!CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getParaValue())) {
+                    url = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getParaValue();
                 }
             }
         } else if (ModelConstants.ORDER_TYPE_RECHARGE_PHONE.equals(serviceOrder.getOrderSubType())) { //如果充值类型是话费充值
             if (CommonUtils.isWindows()) {
                 url = "https://api.ihuyi.com/f/phone";
             } else {
-                if (!CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData())) {
-                    url = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getData().getSysConfig().getParaValue();
+                if (!CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getParaValue())) {
+                    url = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_PHONE_RECHARGE_URL").getParaValue();
                 }
             }
         }
@@ -430,7 +428,7 @@ public class IhuyiUtils {
      * @param serviceOrder
      * @return
      */
-    public static IhuyiVirtualOrderQueryRes virtualGoodsRechargeQuery(ServiceOrder serviceOrder, CacheFeignClient cacheFeignClient) {
+    public static IhuyiVirtualOrderQueryRes virtualGoodsRechargeQuery(ServiceOrder serviceOrder, ConfigFeignClient configFeignClient) {
         IhuyiVirtualOrderQueryRes res = new IhuyiVirtualOrderQueryRes();
         String action = "getorderinfo";
         String orderid = serviceOrder.getOrderNo();
@@ -441,22 +439,22 @@ public class IhuyiUtils {
             username = "cf_testapi";
         } else {
             //如果获取数据信息不为空
-            if (!CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData())) {
-                username = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getData().getSysConfig().getParaValue();
+            if (!CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue())) {
+                username = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIID").getParaValue();
             }
         }
         Map<String, String> map = new HashMap();
         map.put("orderid", orderid);
         map.put("username", username);
         map.put("timestamp", timestamp);
-        String sign = IhuyiUtils.getSign(map, cacheFeignClient);
+        String sign = IhuyiUtils.getSign(map, configFeignClient);
         String url = null;
         if (CommonUtils.isWindows()) {
             url = "http://f.ihuyi.com/recharge";
         } else {
             //如果获取数据信息为空
-            if (!CommonUtils.isNullOrEmptyOfObj(cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL").getData())) {
-                url = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL").getData().getSysConfig().getParaValue();
+            if (!CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL"))) {
+                url = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_VIRTUAL_PRODUCT_RECHARGE_URL").getParaValue();
             }
         }
         url = url + "?action=" + action + "&orderid=" + orderid + "&username=" + username + "&timestamp=" + timestamp + "&sign=" + sign;
@@ -486,14 +484,14 @@ public class IhuyiUtils {
      * @param map
      * @return
      */
-    public static String getSign(Map<String, String> map, CacheFeignClient cacheFeignClient) {
+    public static String getSign(Map<String, String> map, ConfigFeignClient configFeignClient) {
         String apikey = map.get("apikey");
         if (StringUtils.isEmpty(apikey)) {
             String apikeyCache = "";
             if (CommonUtils.isWindows()) {
                 apikeyCache = "6j3ao593wMNQRz4Zo4ao";
             } else {
-                apikeyCache = cacheFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIKEY").getData().getSysConfig().getParaValue();
+                apikeyCache = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_APIKEY").getParaValue();
             }
             map.put("apikey", apikeyCache);
         }

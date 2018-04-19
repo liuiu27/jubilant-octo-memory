@@ -1,7 +1,7 @@
 package com.cupdata.ihuyi.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.utils.RSAUtils;
+import com.cupdata.sip.common.lang.utils.RSAUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

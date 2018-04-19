@@ -1,4 +1,4 @@
-package com.cupdata.ihuyi.vo;
+package com.cupdata.sip.common.api.ihuyi.request;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

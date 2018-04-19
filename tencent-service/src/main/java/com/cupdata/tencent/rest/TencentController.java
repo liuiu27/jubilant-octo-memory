@@ -91,11 +91,12 @@ public class TencentController implements ITencentController{
             BaseResponse<RechargeOrderVo> rechargeOrderRes = orderFeignClient.createRechargeOrder(createRechargeOrderVo);
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(rechargeOrderRes.getResponseCode())
                 || null == rechargeOrderRes.getData() || null == rechargeOrderRes.getData().getOrderInfoVo()){
-                //创建订单失败，设置响应错误消息和错误状态码，给予返回
+                log.error("创建订单失败");
                 res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
                 res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
                 return res;
             }
+            log.info("创建订单成功,订单编号:"+rechargeOrderRes.getData().getOrderInfoVo().getOrderNo());
 
             //step4.封装请求参数,调用腾讯充值工具类来进行充值业务
             QQOpenReq openReq = new QQOpenReq();

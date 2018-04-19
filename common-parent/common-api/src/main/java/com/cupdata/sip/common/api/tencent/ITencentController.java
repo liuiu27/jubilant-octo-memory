@@ -11,5 +11,4 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @RequestMapping("/tencent")
 public interface ITencentController extends IRechargeApi{
-
 }

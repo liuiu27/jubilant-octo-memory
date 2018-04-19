@@ -11,18 +11,17 @@ import java.io.IOException;
 
 /**
  * @Auther: DingCong
- * @Description: 互亿流量充值接口
- * @@Date: Created in 19:12 2018/4/18
+ * @Description: 互亿话费充值服务接口
+ * @@Date: Created in 10:02 2018/4/19
  */
-@RequestMapping("/ihuyiTrafficRecharge")
-public interface IhuyiTrafficController extends IRechargeApi{
+@RequestMapping("/ihuyiPhoneRecharge")
+public interface IhuyiPhoneController extends IRechargeApi{
 
     /**
-     * 互亿流量充值结果异步推送接口
-     * @param request
+     * 互亿话费充值异步通知接口
      * @param response
      * @throws IOException
      */
-    @PostMapping("/ihuyiTrafficRechargeCallBack")
-    void ihuyiTrafficRechargeCallBack(HttpServletRequest request, HttpServletResponse response);
+    @PostMapping("/ihuyiPhoneRechargeCallBack")
+    void ihuyiPhoneRechargeCallBack(HttpServletRequest request, HttpServletResponse response);
 }

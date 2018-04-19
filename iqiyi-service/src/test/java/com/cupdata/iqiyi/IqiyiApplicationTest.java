@@ -24,20 +24,20 @@ public class IqiyiApplicationTest {
         String url3 = "https://onlinepay.cupdata.com/sipService/recharge/recharge/getRecharge";
 
         //请求参数
-        String org = "20180412O86740479";
+        String org = "2018010200000001";
         RechargeReq rechargeReq = new RechargeReq();
         rechargeReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         rechargeReq.setMobileNo("15857128524");
         rechargeReq.setAccount("1234567"); //充值账号
         rechargeReq.setOrgOrderNo("MALL001"); //机构唯一订单编号
-        rechargeReq.setProductNo("20180412RECHARGE6161");//爱奇艺产品编号
+        rechargeReq.setProductNo("171026R640");//爱奇艺产品编号
         rechargeReq.setOrderDesc("IQIYI");
         String reqStr = JSONObject.toJSONString(rechargeReq);
         System.out.print("请求参数json字符串" + reqStr);
 
         //秘钥
-        String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8gw6++UfAuEH7jwdL0zj6vGWi2WhS3mOyQpED/DSOWIetSVW5UJ22EvWzfBl38nDMxRgfkqqEA3fBunhJHl2TdoWFcNV8z3wSdSaqEi+2u49JZbGP5oy8wOnLLD1MKp8cHb3NFwXEIta5UDuSFy92SK8pqvy0xitQCLoV4WUNMwIDAQAB";
-        String orgPriKeyStr = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALyDDr75R8C4QfuPB0vTOPq8ZaLZaFLeY7JCkQP8NI5Yh61JVblQnbYS9bN8GXfycMzFGB+SqoQDd8G6eEkeXZN2hYVw1XzPfBJ1JqoSL7a7j0llsY/mjLzA6cssPUwqnxwdvc0XBcQi1rlQO5IXL3ZIrymq/LTGK1AIuhXhZQ0zAgMBAAECgYAvpjr0d8M0yf5XrUQNXQMikbtpCeYuSCtQFDZemQHZ1zPYT9icwm1S6AD2ENDJOl1bzRf3ZxW1z8CWFeGwrb2+CIF32yJCM2fOlNDKVUi8tLjpDLBMGso5gF3ko2iFFXFjw2FROUCnV6q2J78Vj9LhfQmeioQueTLrl2ikQDqmkQJBAO57wuefb0qYQ6iml8MDU+AwVnU11MYVVK7/0WQJzkdreE7J1zkXgSnt0NpaqFDvezxfBTYJCw95Pb7rZgqPGSMCQQDKW6zIfiHEzoM+R+j8EchXudIlFycvqvql3NMO0JpcmXgzimDgLl7IwUGfMMv/ERTNmY/toIt476SDzUksgWSxAkBO4mUwFI7Nj9whdymP+hPOfm66ypmdBAVE9Z2fh5bSDPx4o08rtVimM+H3uDEgxHZxG8UvgIJGFgaUlmzkZT0dAkEAmWGRfsq0N+O8cRm6jE3CSFRN59U725LCt7PAuor9ZdDh3lc2BNbA+3QYlFw9U9GTrh+Gi7xT20/xqAGTREuzkQJBAKx/hqlyPzp9ZGVzaT1I+gFHUMgcjPc9PLrKtzHwriSTILcsiEx47TzFTQy/PQT4gisfdewZWvDRP33+Se6NhG8=";
+        String sipPubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
+        String orgPriKeyStr = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALrk2X2VGzNigTxGoSuyoN33Mi2/7UIePZIZVkyFgMT/bJiXyQa5FE5+pN5y/CugDdNWYyp7jpLPxczzBd8t7DuyXo5rPD6GxSJhLTaXfdJYmAnxdW2s30X+RDy0dKqxc2oPyCOmAfR9JnV+qgNbd9aOvdlHWkO8cIvwWVScQRwRAgMBAAECgYA5SGFc+3Gd20hPKDrIAPULc3O+z/+xb0Fh4UAxLg4c00j+sC8eT2Xo9SolQEsIOANkziqQ39QALYyr16TqFdI8pywmHFICisiyjKf7nIiqUfi9rVoUCiCxXrhwSmBwkGELcUcBhNupc7Bgqo7uCK+l1g8Qzj+oNtBMfv7sZrj8rQJBAPB0uIyV9ilF0QBFlQ4AaLuhKhqY9oX/vkMTspTpBkpaOv8QeOc6T+9DJAoLjkLlkXEfsLC14AHb4LdZV/kjdyMCQQDG+byuNLe3kqWqo1ecrf8mUw9tIquUkarWU0FuO9ysGjfrLdMLlsn3wlsxddU7rIelYwnLKBYBqdIkCuQiRq07AkEA1Fceyfd75EKlKEpKMI0n79mIpuhBe1+2kuGIKHwHdA1uX+QaAIe8Ixv1bXF69ZRo9a74h3R1Fu8m6ILbb0VkZQJARBcUPV0m/Xf+n000Xxaf+OJ1pfg2VSogFyX4fxuXIYH7XsyYqx+Xz+Q/xsY3CSu6Y5tnr5DxLvKJSfI8LYqYHwJBAIaXJcKpCQSsQQ+Eu8ib861dJWV4vP1jAt9xyeU90nyz5GMwWrWkQ/DkHedDVhyCURpxZTaqKpGnr9iIDIjVrD0=";
         PublicKey sipPubKey = RSAUtils.getPublicKeyFromString(sipPubKeyStr);
         PrivateKey orgPriKey = RSAUtils.getPrivateKeyFromString(orgPriKeyStr);
 
@@ -53,7 +53,7 @@ public class IqiyiApplicationTest {
         System.out.println("URLEncoder请求签名:"+URLEncoder.encode(sign, "utf-8"));
 
         //请求
-        String res = HttpUtil.doPost(url3, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        String res = HttpUtil.doPost(url2, params, "application/x-www-form-urlencoded;charset=UTF-8");
         System.out.println("响应数据为:" + res);
 
         //解密数据
@@ -64,10 +64,14 @@ public class IqiyiApplicationTest {
         System.out.print("响应明文:"+plain);
     }
 
+    /**
+     * 生产测试
+     * @throws Exception
+     */
     @Test
     public void testdc() throws Exception{
 
-        //花积分机构编号
+        //机构编号
         String org = "20180412O86740479";
         //请求参数
         RechargeReq rechargeReq = new RechargeReq();
@@ -91,8 +95,8 @@ public class IqiyiApplicationTest {
         String params = "org=" + org + "&data=" + URLEncoder.encode(data, "utf-8") + "&sign=" + URLEncoder.encode(sign, "utf-8");
 
         //请求
-       // String res = HttpUtil.doPost(url3, params, "application/x-www-form-urlencoded;charset=UTF-8");
-       // System.out.println("响应数据为:" + res);
+        //String res = HttpUtil.doPost(url3, params, "application/x-www-form-urlencoded;charset=UTF-8");
+        //System.out.println("响应数据为:" + res);
 
         System.out.println(data);
         System.out.println(sign);
