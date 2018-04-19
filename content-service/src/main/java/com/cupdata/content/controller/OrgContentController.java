@@ -7,6 +7,7 @@ import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.exception.ContentException;
 import com.cupdata.content.feign.SupplierFeignClient;
 import com.cupdata.content.vo.request.ContentJumpReqVo;
+import com.cupdata.content.vo.request.ContentLoginReqVo;
 import com.cupdata.content.vo.request.SupContentJumReqVo;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
@@ -69,8 +70,8 @@ public class OrgContentController{
 		ContentTransactionLogDTO  contentTransactionLogDTO = contentBiz.queryContentTransactionByTranNo(contentJumpReqVo.getSipTranNo(), ModelConstants.CONTENT_TYPE_TO_LOGGED);
 
 		if(null != contentTransactionLogDTO) {
-			JSONObject resJson = JSONObject.parseObject(contentTransactionLogDTO.getRequestInfo());
-			supUrl = resJson.getString("callBackUrl");
+            ContentLoginReqVo contentLoginReq =  JSONObject.parseObject(contentTransactionLogDTO.getRequestInfo(),ContentLoginReqVo.class);
+			supUrl = contentLoginReq.getCallBackUrl();
 		}
 		// 组装参数 发送请求
 	    SupContentJumReqVo supContentJumReqVo = new SupContentJumReqVo();
