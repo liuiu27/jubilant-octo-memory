@@ -1,5 +1,20 @@
 package com.cupdata.content.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.cupdata.content.biz.ContentBiz;
+import com.cupdata.content.dto.ContentTransactionLogDTO;
+import com.cupdata.content.feign.SupplierFeignClient;
+import com.cupdata.content.vo.request.ContentJumpReqVo;
+import com.cupdata.content.vo.request.SupContentJumReqVo;
+import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
+import com.cupdata.sip.common.api.product.response.ProductInfoVo;
+import com.cupdata.sip.common.lang.constant.ModelConstants;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+import com.cupdata.sip.common.lang.utils.CommonUtils;
+import com.cupdata.sip.common.lang.utils.DateTimeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -7,19 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.alibaba.fastjson.JSONObject;
-import com.cupdata.content.biz.ContentBiz;
-import com.cupdata.content.dto.ContentTransactionLogDTO;
-import com.cupdata.content.utils.EncryptionAndEecryption;
-import com.cupdata.content.vo.request.ContentJumpReqVo;
-import com.cupdata.content.vo.request.SupContentJumReqVo;
-import com.cupdata.sip.common.api.product.response.ProductInfoVo;
-import com.cupdata.sip.common.lang.constant.ModelConstants;
-import com.cupdata.sip.common.lang.utils.CommonUtils;
-import com.cupdata.sip.common.lang.utils.DateTimeUtil;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
 * @author 作者: liwei
@@ -33,12 +35,12 @@ public class OrgContentController{
 	@Autowired
 	private ContentBiz contentBiz;
 
+	@Autowired
+    private SupplierFeignClient supplierFeignClient;
+
 	/**
 	 * 内容引入跳转接口   机构请求
 	 * @param org
-	 * @param contentJumpReq
-	 * @param request
-	 * @param response
 	 * @return
 	 */
 	@PostMapping(path="/contentJump")
@@ -55,7 +57,7 @@ public class OrgContentController{
 		
 		//根据产品获取供应商 主页URL
 		String supUrl = productInfRes.getServiceApplicationPath();
-//		String supUrl = "https://test.wantu.cn/v2/m/?channel=rongshu";
+
 		
 //		//Step5 :   判断流水号  如果为空创建 新的           如果不为空则修改
 		contentBiz.queryAndinsertOrUpdateContentTransaction(contentJumpReqVo,productInfRes,ModelConstants.CONTENT_TYPE_NOT_LOGGED,null);
@@ -75,7 +77,22 @@ public class OrgContentController{
 		supContentJumReqVo.setTimestamp(timestamp);
 		supContentJumReqVo.setUserId(contentJumpReqVo.getUserId());
 		supContentJumReqVo.setUserName(contentJumpReqVo.getUserName());
-		String url = EncryptionAndEecryption.Encryption(contentJumpReqVo, supUrl);
+
+        //封装重定向到机构的地址
+        BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo(productInfRes.getSupplierNo());
+        if (!supByNo.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode())) {
+            //内部调用错误
+        }
+        //组装重定向地址及参数
+        SupplierInfVo supplierInfVo = supByNo.getData();
+
+        String url = null;
+        try {
+            url = contentBiz.createRequseUrl(supUrl, JSON.toJSONString(supContentJumReqVo),supplierInfVo.getSupplierPubKey(),supplierInfVo.getSipPriKey());
+        } catch (Exception e) {
+            //封装参数失败
+        }
+
 		StringBuffer ret = new StringBuffer("redirect:" + url);
 	    return ret.toString();
 	}

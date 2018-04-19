@@ -1,18 +1,18 @@
 package com.cupdata.recharge.feign;
 
-
-import com.cupdata.commons.api.product.IProductController;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.product.OrgProductRelVo;
-import com.cupdata.commons.vo.product.ProductInfVo;
+import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.product.IProductController;
+import com.cupdata.sip.common.api.product.ProductControllerFallback;
+import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
+import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import feign.hystrix.FallbackFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.stereotype.Component;
 
-@FeignClient(name = "product-service", fallbackFactory = ProductFeignClientFallbackFactory.class)
-public interface ProductFeignClient extends IProductController{
+@FeignClient(name = "product-service", fallbackFactory = ProductControllerFallback.class)
+public interface ProductFeignClient extends IProductController {
 }
 
 @Component
@@ -24,15 +24,12 @@ class ProductFeignClientFallbackFactory implements FallbackFactory<ProductFeignC
         return new ProductFeignClient(){
 
             @Override
-            public BaseResponse<ProductInfVo> findByProductNo(String productNo) {
-                ProductFeignClientFallbackFactory.LOGGER.error("调用产品服务应用product-service的findByProductNo方法出现问题，执行fallback程序", throwable);
+            public BaseResponse<ProductInfoVo> findByProductNo(String productNo) {
                 return null;
             }
 
             @Override
             public BaseResponse<OrgProductRelVo> findRel(String orgNo, String productNo) {
-                ProductFeignClientFallbackFactory.LOGGER.error("调用产品服务应用product-service的findRel方法出现问题，执行fallback程序", throwable);
-
                 return null;
             }
         };

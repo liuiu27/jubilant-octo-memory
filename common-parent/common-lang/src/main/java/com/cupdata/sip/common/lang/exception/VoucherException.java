@@ -5,7 +5,7 @@ import lombok.Setter;
 
 /**
  * @Auther: DingCong
- * @Description:
+ * @Description: 券码相关服务运行时期自定义异常
  * @@Date: Created in 14:10 2018/4/17
  */
 public class VoucherException extends RuntimeException{
@@ -25,7 +25,7 @@ public class VoucherException extends RuntimeException{
     private String message;
 
     /**
-     * 券码异长描述
+     * 异常描述
      * @param errorCode
      * @param errorMessage
      */

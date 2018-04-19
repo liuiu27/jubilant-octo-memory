@@ -9,25 +9,29 @@ package com.cupdata.tencent.constant;
 public enum QQRechargeResCode {
 
     /**
-     * 成功
+     * 腾讯成功状态码
      */
-    SUCCESS("0","充值成功"),
+    SUCCESS("0","返回结果成功"),
 
     /**
      * QQ号不合法
      */
-    QQNUMBER_ILLEGAL("-1","QQ号码不合法"),
-
+    QQNUMBER_ILLEGAL("-10","QQ号码不合法"),
 
     /**
      * 用户不合法
      */
-    QQMEMBER_RECHARGE_FAIL("-2","QQ会员充值失败"),
+    QQMEMBER_RECHARGE_FAIL("-20","QQ会员充值失败"),
 
     /**
      * 充值出现异常
      */
-    QQRECHARGE_EXCEPTION("-3","QQ充值出现异常");
+    QQRECHARGE_EXCEPTION("-30","QQ充值出现异常"),
+
+    /**
+     * 腾讯鉴权失败
+     */
+    QQCHECK_FAIL("-40","QQ会员鉴权失败");
 
 
     /**

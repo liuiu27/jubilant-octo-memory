@@ -31,7 +31,6 @@ public class NotifyBiz extends BaseBiz<OrderNotifyWait> {
         return null;
     }
 
-
     /**
      * 将通知数据添加至Complete表中
      * @return

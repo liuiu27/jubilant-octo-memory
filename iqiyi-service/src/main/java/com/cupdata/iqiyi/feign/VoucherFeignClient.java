@@ -1,7 +1,7 @@
 package com.cupdata.iqiyi.feign;
 
 
-import com.cupdata.commons.api.voucher.ILocalVoucherController;
+import com.cupdata.sip.common.api.voucher.ILocalVoucherController;
 import org.springframework.cloud.netflix.feign.FeignClient;
 
 @FeignClient(name = "voucher-service")

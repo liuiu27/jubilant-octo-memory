@@ -48,9 +48,6 @@ public class ContentBiz {
     @Autowired
     private ServiceContentTransactionLogMapper serviceContentTransactionLogMapper;
 
-
-
-
     /**
      * 查询产品号
      *

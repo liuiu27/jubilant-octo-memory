@@ -70,12 +70,5 @@
     </select>
     
     
-    
-    <update id = "updateByPrimaryKey" parameterMap="BaseResultMap">
-    
-    </update>
-    
-    
-    
 
 </mapper>

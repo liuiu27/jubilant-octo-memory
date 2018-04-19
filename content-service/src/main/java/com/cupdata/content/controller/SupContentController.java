@@ -5,20 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.cupdata.content.biz.ContentBiz;
 import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.feign.OrderFeignClient;
+import com.cupdata.content.feign.OrgFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
-import com.cupdata.content.feign.SupplierFeignClient;
 import com.cupdata.content.vo.ContentToLoginReq;
 import com.cupdata.content.vo.request.ContentLoginReqVo;
-import com.cupdata.content.vo.request.ContentQueryOrderReqVo;
 import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.sip.common.api.BaseResponse;
-import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
-import com.cupdata.content.vo.request.SupVO;
-import com.cupdata.content.vo.response.ContentQueryOrderResVo;
-import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,17 +40,19 @@ public class SupContentController {
 	private OrderFeignClient OrderFeignClient;
 
 	@Autowired
-	private SupplierFeignClient supplierFeignClient;
+    private OrgFeignClient orgFeignClient;
+
 
 	@Autowired
 	private ContentBiz contentBiz;
 	
 	/**
-	 * 内容引入登录接口   供应商请求
-	 * @param contentLoginReq q
+	 * 内容引入登录接口   供应商请求机构
+	 * @param contentLoginReq
 	 * @return
 	 */
-	public String contentJump(@RequestParam(value = "sup") String sup, @Validated @RequestBody ContentLoginReq contentLoginReq) {
+	@GetMapping("contentLogin")
+	public String contentLogin(@RequestParam(value = "sup") String sup, @Validated @RequestBody ContentLoginReqVo contentLoginReq) {
         log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
 
         //查询是否存在此流水号
@@ -67,19 +64,18 @@ public class SupContentController {
         contentToLoginReq.setProductNo(contentTransaction.getProductNo());
         contentToLoginReq.setSipTranNo(contentLoginReq.getSipTranNo());
 
-        String url = null;
-        BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo(sup);
-        if (!supByNo.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode())) {
+        BaseResponse<OrgInfoVo> orgByNo = orgFeignClient.findOrgByNo(contentTransaction.getOrgNo());
+        if (!orgByNo.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode())) {
             //内部调用错误
         }
-        //组装重定向地址及参数
-        SupplierInfVo supplierInfVo = supByNo.getData();
+        OrgInfoVo orgInfoVo = orgByNo.getData();
+
+        String url = null;
         try {
-            url = contentBiz.createRequseUrl(resJson.getString("loginUrl"), JSON.toJSONString(contentToLoginReq), supplierInfVo.getSupplierPubKey(), supplierInfVo.getSipPriKey());
+            url = contentBiz.createRequseUrl(resJson.getString("loginUrl"), JSON.toJSONString(contentLoginReq),orgInfoVo.getOrgPubKey(),orgInfoVo.getSipPriKey());
         } catch (Exception e) {
             //封装参数失败
         }
-
 
         contentTransaction.setSupNo(sup);
         contentTransaction.setRequestInfo(JSON.toJSONString(contentLoginReq));
