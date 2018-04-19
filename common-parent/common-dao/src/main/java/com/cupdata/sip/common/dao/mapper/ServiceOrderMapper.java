@@ -10,5 +10,4 @@ public interface ServiceOrderMapper extends Mapper<ServiceOrder> {
 
     List<ServiceOrder> selectMainOrderList(@Param("paramMap") HashMap<String, Object> paramMap);
 
-    Long insertOrder(ServiceOrder serviceOrder);
 }

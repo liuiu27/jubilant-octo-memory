@@ -2,7 +2,6 @@ package com.cupdata.sip.bestdo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.cupdata.sip.bestdo.vo.request.BookDateReq;
 import com.cupdata.sip.bestdo.vo.request.MerDetailReq;
 import com.cupdata.sip.bestdo.vo.request.MerItemListReq;
@@ -11,9 +10,9 @@ import com.cupdata.sip.common.lang.RSAHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.security.PublicKey;
@@ -36,14 +35,14 @@ public class BestdoServiceTest {
 
     //@Autowired
     //@Qualifier("restTemplate")
-    private RestTemplate restTemplate;
+    private TestRestTemplate restTemplate;
 
 
     @Before
     public void createRestTemplate() {
-        restTemplate = new RestTemplate();
+        restTemplate = new TestRestTemplate();
         //restTemplate.getMessageConverters().clear();
-        restTemplate.getMessageConverters().add(new FastJsonHttpMessageConverter());
+        //restTemplate.getMessageConverters().add(new FastJsonHttpMessageConverter());
     }
 
 
@@ -117,7 +116,7 @@ public class BestdoServiceTest {
         req.setVenueNo("1010000753001");
 
         BookDateResVO ret = restTemplate.getForObject(TEST_URL + "/mer/item/detail/getBookDate?merItemDetails={json}",
-                BookDateResVO.class, JSON.toJSONString(req));
+                BookDateResVO.class, JSON.toJSONString(req),"1");
         log.info(ret.toString());
 
 

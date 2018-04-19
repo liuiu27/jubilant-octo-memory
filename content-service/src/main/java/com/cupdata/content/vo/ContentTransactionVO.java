@@ -1,21 +1,17 @@
 package com.cupdata.content.vo;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotBlank;
-
-import com.cupdata.commons.model.BaseModel;
 
 /**
  * @author liwei
- * @date   2018/3/8
+ * @date 2018/3/8
  */
-
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Setter
-public class ContentTransaction extends BaseModel{
+public class ContentTransactionVO {
 	
 	/**
 	 * 交易流水编号

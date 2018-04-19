@@ -1,12 +1,10 @@
-package com.cupdata.content.vo;
+package com.cupdata.content.vo.response;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.cupdata.commons.vo.BaseData;
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
 * @author 作者: liwei
@@ -14,7 +12,7 @@ import lombok.Setter;
 */
 @Getter
 @Setter
-public class ContentQueryOrderRes extends BaseData{
+public class ContentQueryOrderResVo{
 	/**
 	 * 返回标记记  0未 支付/退货  1支付/退货 失败  2支付/退货 成功
 	 */
