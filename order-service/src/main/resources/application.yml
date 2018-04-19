@@ -22,15 +22,14 @@ pagehelper:
     supportMethodsArguments: true
     params: count=countSql
 
-
-#配置Hystrix的超时时间为10秒，解决Feign/Ribbon第一次请求失败的问题
-#hystrix:
-#  command:
-#      default:
-#        execution:
-#          isolation:
-#            thread:
-#              timeoutInMilliseconds: 5000
+#配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
+hystrix:
+  command:
+      default:
+        execution:
+          isolation:
+            thread:
+              timeoutInMilliseconds: 5000
 #日志配置
 logging:
   config: classpath:logback-spring.xml

@@ -1,7 +1,7 @@
 package com.cupdata.content;
 
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.content.utils.EncryptionAndEecryption;
+
+import com.cupdata.sip.common.api.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class ContentServiceApplication {
       param.put("orderAmt", "0.02");
       param.put("sipOrderNo", "180417HD055316");
 
-      notifyurl = EncryptionAndEecryption.Encryption(param,notifyurl);
+    //  notifyurl = EncryptionAndEecryption.Encryption(param,notifyurl);
       //String canshu =formatUrlMap(param,true,false);
       BaseResponse baseResponse = restTemplate.postForObject(notifyurl, null, BaseResponse.class);
       log.info(baseResponse.toString());

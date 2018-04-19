@@ -25,7 +25,22 @@ public class ExceptionHandler {
     public ModelAndView handle(HttpServletRequest request, ContentException ex ) {
         ModelAndView modelAndView =new ModelAndView();
         log.error(ex.getMessage(),ex.getCause());
-        modelAndView.setViewName(ex.getErrorPage());
+        modelAndView.addObject("code",ex.getCode());
+        modelAndView.addObject("tips",ex.getTips());
+        modelAndView.setViewName(ex.getPage());
+        return modelAndView;
+    }
+
+    /**
+     *
+     * @param request
+     * @param ex
+     * @return
+     */
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = {Exception.class})
+    public ModelAndView handle(HttpServletRequest request, Exception ex ) {
+        ModelAndView modelAndView =new ModelAndView();
+        modelAndView.setViewName("default_error");
         return modelAndView;
     }
 }
