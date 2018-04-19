@@ -32,7 +32,7 @@ public interface IOrderController {
      * @return
      */
     @PostMapping("/updateVoucherOrder")
-    BaseResponse<VoucherOrderVo> updateVoucherOrder(@RequestBody VoucherOrderVo voucherOrderVo);
+    BaseResponse updateVoucherOrder(@RequestBody VoucherOrderVo voucherOrderVo);
     
     /**
      * 根据订单号获取订单及券码信息
@@ -92,14 +92,14 @@ public interface IOrderController {
      * @return
      */
     @PostMapping("/updateRechargeOrder")
-    BaseResponse<RechargeOrderVo> updateRechargeOrder(@RequestBody RechargeOrderVo rechargeOrderVo);
+    BaseResponse updateRechargeOrder(@RequestBody RechargeOrderVo rechargeOrderVo);
 
     /**
      *更新主订单
      * @param order
      */
     @PostMapping("/updateServiceOrder")
-    Integer updateServiceOrder(@RequestBody OrderInfoVo order);
+    BaseResponse updateServiceOrder(@RequestBody OrderInfoVo order);
 
     /**
      * 根据参数获取主单列表
@@ -120,7 +120,7 @@ public interface IOrderController {
      * @return
      */
    @GetMapping("/selectMainOrderList/{orderStatus}/{supplierFlag}/{orderSubType}")
-    List<OrderInfoVo> selectMainOrderList(@PathVariable("orderStatus") Character orderStatus, @PathVariable("supplierFlag") String supplierFlag, @PathVariable("orderSubType") String orderSubType);
+   List<OrderInfoVo> selectMainOrderList(@PathVariable("orderStatus") Character orderStatus, @PathVariable("supplierFlag") String supplierFlag, @PathVariable("orderSubType") String orderSubType);
 
     /**
      * 内容引入订单查询

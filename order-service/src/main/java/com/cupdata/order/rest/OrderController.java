@@ -1,6 +1,8 @@
 package com.cupdata.order.rest;
 
 import com.cupdata.order.biz.ServiceOrderBiz;
+import com.cupdata.order.biz.ServiceOrderRechargeBiz;
+import com.cupdata.order.biz.ServiceOrderVoucherBiz;
 import com.cupdata.order.feign.ProductFeignClient;
 import com.cupdata.order.feign.SupplierFeignClient;
 import com.cupdata.sip.common.api.BaseResponse;
@@ -38,6 +40,12 @@ public class OrderController implements IOrderController {
 
     @Resource
     private ServiceOrderBiz orderBiz;
+    
+    @Resource
+    private ServiceOrderVoucherBiz orderVoucherBiz;
+    
+    @Resource
+    private ServiceOrderRechargeBiz orderRechargeBiz;
 
     /**
      * 创建券码订单
@@ -81,7 +89,7 @@ public class OrderController implements IOrderController {
                 return voucherOrderRes;
             }
             //开始创建订单
-            VoucherOrderVo voucherOrderVo = orderBiz.createVoucherOrder(supplierFlag , createVoucherOrderVo.getOrgNo(),
+            VoucherOrderVo voucherOrderVo = orderVoucherBiz.createVoucherOrder(supplierFlag , createVoucherOrderVo.getOrgNo(),
                     createVoucherOrderVo.getOrgOrderNo(), createVoucherOrderVo.getOrderDesc(), productInfRes.getData(), orgProductRelRes.getData());
             voucherOrderRes.setData(voucherOrderVo);
             return voucherOrderRes;
@@ -90,55 +98,140 @@ public class OrderController implements IOrderController {
             throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
         }
     }
-
+    
+    /**
+     * 更新券码订单
+     */
     @Override
-    public BaseResponse<VoucherOrderVo> updateVoucherOrder(VoucherOrderVo voucherOrderVo) {
-    	BaseResponse<VoucherOrderVo>  res =  new BaseResponse<VoucherOrderVo>();
-    	voucherOrderVo = orderBiz.updateVoucherOrder(voucherOrderVo);
-    	res.setData(voucherOrderVo);
-        return res;
+    public BaseResponse updateVoucherOrder(@RequestBody VoucherOrderVo voucherOrderVo) {
+    	orderVoucherBiz.updateVoucherOrder(voucherOrderVo);
+        return new BaseResponse();
     }
-
+    
+    /**
+     * 根据订单号查询券码订单信息
+     */
     @Override
     public BaseResponse<VoucherOrderVo> getVoucherOrderByOrderNo(String orderNo) {
     	BaseResponse<VoucherOrderVo> res = new BaseResponse<VoucherOrderVo>();
-    	
-        return null;
+    	VoucherOrderVo  voucherOrderVo = orderVoucherBiz.getVoucherOrderByOrderNo(orderNo);
+    	res.setData(voucherOrderVo);
+        return res;
     }
-
+    
+    /**
+     * 根据订单号查询充值订单信息
+     */
     @Override
     public BaseResponse<RechargeOrderVo> getRechargeOrderByOrderNo(String orderNo) {
-        return null;
+    	BaseResponse<RechargeOrderVo> res = new BaseResponse<RechargeOrderVo>();
+    	RechargeOrderVo rechargeOrderVo = orderRechargeBiz.getRechargeOrderByOrderNo(orderNo);
+    	res.setData(rechargeOrderVo);
+        return res;
     }
-
+    
+    /**
+     * 根据机构号和机构订单号 查询 券码订单详情
+     */
     @Override
     public BaseResponse<VoucherOrderVo> getVoucherOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
-        return null;
+    	BaseResponse<VoucherOrderVo> res = new BaseResponse<VoucherOrderVo>();
+    	VoucherOrderVo  voucherOrderVo = orderVoucherBiz.getVoucherOrderByOrgNoAndOrgOrderNo(orgNo,orgOrderNo);
+    	res.setData(voucherOrderVo);
+        return res;
     }
-
+    
+    
+    /**
+     * 根据机构号和机构订单号 查询充值订单详情
+     */
     @Override
     public BaseResponse<RechargeOrderVo> getRechargeOrderByOrgNoAndOrgOrderNo(String orgNo, String orgOrderNo) {
-        return null;
+    	BaseResponse<RechargeOrderVo> res = new BaseResponse<RechargeOrderVo>();
+    	RechargeOrderVo rechargeOrderVo = orderRechargeBiz.getRechargeOrderByOrgNoAndOrgOrderNo(orgNo,orgOrderNo);
+    	res.setData(rechargeOrderVo);
+        return res;
     }
 
+    
+    /**
+     * 根据供应商 供应商订单号 券码 查询 券码订单详情
+     */
     @Override
     public BaseResponse<VoucherOrderVo> getVoucherOrderByVoucher(String sup, String supplierOrderNo, String voucherCode) {
-        return null;
+    	BaseResponse<VoucherOrderVo> res = new BaseResponse<VoucherOrderVo>();
+    	VoucherOrderVo  voucherOrderVo = orderVoucherBiz.getVoucherOrderByVoucher(sup,supplierOrderNo,voucherCode);
+    	res.setData(voucherOrderVo);
+        return res;
     }
-
+    
+    /**
+     * 创建充值订单
+     */
     @Override
     public BaseResponse<RechargeOrderVo> createRechargeOrder(CreateRechargeOrderVo createRechargeOrderVo) {
-        return null;
-    }
+    	
+    	 log.info("创建订单Controller,ProductNo:"+createRechargeOrderVo.getProductNo()+",OrgNo:"+createRechargeOrderVo.getOrgNo()+",OrderDesc:"+createRechargeOrderVo.getOrderDesc());
+         try {
+        	 BaseResponse<RechargeOrderVo> res = new BaseResponse<RechargeOrderVo>();
+             //根据产品编号,查询服务产品信息
+             BaseResponse<ProductInfoVo> productInfRes = productFeignClient.findByProductNo(createRechargeOrderVo.getProductNo());
+             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
+                     || null == productInfRes.getData()) {// 如果查询失败
+                 log.error("product-service findByProductNo is error ProductNo is " + createRechargeOrderVo.getProductNo());
+                 res.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+                 res.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+                 return res;
+             }
 
-    @Override
-    public BaseResponse<RechargeOrderVo> updateRechargeOrder(RechargeOrderVo rechargeOrderVo) {
-        return null;
-    }
+             //获取商户标识
+             BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(productInfRes.getData().getSupplierNo());
+             if (!ResponseCodeMsg.SUCCESS.getCode().equals(SupplierInfVo.getResponseCode())
+                     || null == SupplierInfVo.getData()){
+            	 res.setResponseCode(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getCode());
+            	 res.setResponseMsg(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getMsg());
+                 return res;
+             }
+             String supplierFlag = SupplierInfVo.getData().getSupplierFlag();
 
+             // 查询机构、商品关系记录
+             BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(createRechargeOrderVo.getOrgNo(),
+            		 createRechargeOrderVo.getProductNo());
+             if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
+                     || null == orgProductRelRes.getData()) {// 如果查询失败
+                 log.error("product-service findRel is error ProductNo is " + createRechargeOrderVo.getProductNo()
+                         + "orgNo is" + createRechargeOrderVo.getOrgNo());
+                 res.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
+                 res.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
+                 return res;
+             }
+             //开始创建订单
+             RechargeOrderVo rechargeOrderVo = orderRechargeBiz.createRechargeOrder(createRechargeOrderVo.getAccountNumber() ,supplierFlag , createRechargeOrderVo.getOrgNo(),
+            		 createRechargeOrderVo.getOrgOrderNo(), createRechargeOrderVo.getOrderDesc(), productInfRes.getData(), orgProductRelRes.getData());
+             res.setData(rechargeOrderVo);
+             return res;
+         } catch (Exception e) {
+             log.error("error is " + e.getMessage());
+             throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+         }
+    }
+    
+    /**
+     * 更新充值订单
+     */
     @Override
-    public Integer updateServiceOrder(OrderInfoVo order) {
-        return null;
+    public BaseResponse updateRechargeOrder(RechargeOrderVo rechargeOrderVo) {
+    	orderRechargeBiz.updateRechargeOrder(rechargeOrderVo);
+        return new BaseResponse();
+    }
+    
+    /**
+     * 更新主订单
+     */
+    @Override
+    public BaseResponse updateServiceOrder(OrderInfoVo order) {
+    	orderBiz.updateServiceOrder(order);
+        return new BaseResponse();
     }
 
     @Override

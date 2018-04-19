@@ -3,6 +3,7 @@ package com.cupdata.order.util;
 import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
 import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.dao.entity.ServiceOrder;
+import com.cupdata.sip.common.dao.entity.ServiceOrderRecharge;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.dao.entity.ServiceOrderVoucher;
 import com.cupdata.sip.common.lang.utils.CommonUtils;
@@ -71,7 +72,28 @@ public class OrderUtils {
         voucherOrder.setEffStatus(ModelConstants.VOUCHER_STATUS_EFF.toString());
         return voucherOrder;
     }
+    
+    
+    /**
+     * 初始化充值订单
+     * @param order
+     * @param productNo
+     * @return
+     */
+    public static ServiceOrderRecharge initRechargeOrder(String accountNumber, ProductInfoVo productInfVo, ServiceOrder order) {
+        ServiceOrderRecharge rechargeOrder = new ServiceOrderRecharge();
+        rechargeOrder.setOrderId(order.getId());      //订单id
+        rechargeOrder.setAccountNumber(accountNumber);//充值账号
+        rechargeOrder.setProductNo(productInfVo.getProductNo());        //产品编号
+        rechargeOrder.setRechargeAmt(productInfVo.getRechargeAmt()); //充值金额
+        rechargeOrder.setOpenDuration(productInfVo.getRechargeDuration());//开通时长
+        rechargeOrder.setRechargeTraffic(productInfVo.getRechargeTraffic());//充值流量
+        rechargeOrder.setRechargeNumber(productInfVo.getRechargeNumber());//充值数量
+        return rechargeOrder;
 
+    }
+    
+    
     /**
      * 初始化内容引入订单
      *
@@ -102,18 +124,7 @@ public class OrderUtils {
      * @param productNo 商品编号
      * @return
      */
-/*    public static ServiceOrderRecharge initRechargeOrder(String accountNumber, ProductInfVo productInfVo, ServiceOrder order, String productNo) {
-        ServiceOrderRecharge rechargeOrder = new ServiceOrderRecharge();
-        rechargeOrder.setOrderId(order.getId());      //订单id
-        rechargeOrder.setAccountNumber(accountNumber);//充值账号
-        rechargeOrder.setProductNo(productNo);        //产品编号
-        rechargeOrder.setRechargeAmt(productInfVo.getProduct().getRechargeAmt()); //充值金额
-        rechargeOrder.setOpenDuration(productInfVo.getProduct().getRechargeDuration());//开通时长
-        rechargeOrder.setRechargeTraffic(productInfVo.getProduct().getRechargeTraffic());//充值流量
-        rechargeOrder.setRechargeNumber(productInfVo.getProduct().getRechargeNumber());//充值数量
-        return rechargeOrder;
 
-    }*/
 
 
     /**
@@ -124,6 +135,8 @@ public class OrderUtils {
     private static String generateOrderNo() {
         return DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyMMddHHmmss") + CommonUtils.getRandomNum(8);
     }
+
+	
 
 
 }
