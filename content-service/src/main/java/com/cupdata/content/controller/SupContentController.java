@@ -196,8 +196,8 @@ public class SupContentController {
 	 * @return
 	 */
 	@ResponseBody
-	@GetMapping("payCancel")
-	public BaseResponse payCancel(@RequestParam(value = "sup") String sup,
+	@GetMapping("payRefund")
+	public BaseResponse payRefund(@RequestParam(value = "sup") String sup,
 							 @RequestBody @Validated CancelPayVO cancelPayVO ){
 		RestTemplate restTemplate = new RestTemplate();
 		String url ="http://192.168.100.212:9190/mall/sip/content/contentOrderRefund.action?provider=LBHTDnJkYy4=";
@@ -212,10 +212,10 @@ public class SupContentController {
 		//JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
 		url = EncryptionAndEecryption.Encryption(req, url);
 
-		BaseResponse baseResponse = restTemplate.postForObject(url, null, BaseResponse.class);
+        String baseResponse = restTemplate.postForObject(url, null, String.class);
 
-		if (baseResponse.getResponseCode().equals("2"))
-		return  new BaseResponse();
+        log.info("URL = "+url);
+		log.info(baseResponse);
 
 		return  new BaseResponse(ResponseCodeMsg.REQUEST_TIMEOUT.getCode(),ResponseCodeMsg.REQUEST_TIMEOUT.getMsg());
 
