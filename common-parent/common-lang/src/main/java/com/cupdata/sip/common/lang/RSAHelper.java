@@ -6,6 +6,7 @@ import sun.misc.BASE64Decoder;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +26,16 @@ public class RSAHelper {
     private static final String ALGORITHM = "RSA";
 
     private static final Integer keySize = 2048;
+
+    private static Cipher CIPHER;
+
+    static {
+        try {
+            CIPHER = Cipher.getInstance(ALGORITHM);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+           //初始化 CIPHER = Cipher.getInstance(ALGORITHM);
+        }
+    }
 
     /**
      * 生成rsa公钥和密钥 byte文件,
@@ -168,7 +179,7 @@ public class RSAHelper {
             byte[] srcBytes = ciphertext.getBytes();
 
             // Cipher负责完成加密或解密工作，基于RSA
-            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            Cipher cipher = CIPHER != null ? CIPHER : Cipher.getInstance(ALGORITHM);
             // 根据公钥，对Cipher对象进行初始化
             cipher.init(Cipher.ENCRYPT_MODE, key);
             byte[] resultBytes = null;
@@ -290,9 +301,6 @@ public class RSAHelper {
 
     }
 
-
-
-
     /**
      * 分段解密
      *
@@ -309,6 +317,7 @@ public class RSAHelper {
             Cipher deCipher = Cipher.getInstance(ALGORITHM);
             // 根据公钥，对Cipher对象进行初始化
             deCipher.init(Cipher.DECRYPT_MODE, key);
+
             byte[] decBytes = null;//deCipher.doFinal(srcBytes);
             if (segmentSize > 0)
                 decBytes = cipherDoFinal(deCipher, srcBytes, segmentSize); //分段加密
@@ -318,7 +327,6 @@ public class RSAHelper {
             String decrytStr = new String(decBytes);
             return decrytStr;
         } catch (Exception e) {
-            
             return null;
         }
     }
@@ -327,7 +335,6 @@ public class RSAHelper {
         try {
             String privKeyPEM = contentBase64.replace("-----BEGIN PRIVATE KEY-----", "");
             privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "");
-            //System.out.println("Private key\n"+privKeyPEM);
             privKeyPEM = privKeyPEM.replace(StringUtils.LF, "").replace(StringUtils.CR, "").replace(" ","").trim();
 
             byte[] decoded = Base64.getDecoder().decode(privKeyPEM);

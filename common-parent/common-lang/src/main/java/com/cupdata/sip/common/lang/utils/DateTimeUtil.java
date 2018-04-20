@@ -1,5 +1,6 @@
 package com.cupdata.sip.common.lang.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
 
 import java.sql.Timestamp;
@@ -16,12 +17,9 @@ import java.util.Date;
 * @date 2016年8月6日 下午8:40:16 
 *
  */
+@Slf4j
 public class DateTimeUtil {
-	/**
-	 * 日志
-	 */
-	protected static Logger log = Logger.getLogger(DateTimeUtil.class);
-	
+
 	/**
 	 * 将两个时间进行比较，如果dateTwo大于或者等于dateOne，则返回true，否则返回false
 	 * @param dateOne 被比较时间

@@ -1,9 +1,15 @@
 package com.cupdata.apigateway.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cupdata.apigateway.feign.OrgFeignClient;
+import com.cupdata.apigateway.feign.SupplierFeignClient;
 import com.cupdata.sip.common.api.BaseResponse;
-import com.cupdata.sip.common.lang.utils.RSAUtils;
+import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
+import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
+import com.cupdata.sip.common.lang.RSAHelper;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+import com.cupdata.sip.common.lang.utils.RSAUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,4 +57,28 @@ public class GatewayUtils {
         }
         return resposeStr.toString();
     }
+
+    public static void getKey(PublicKey pubKey,PrivateKey priKey,String org,String sup,OrgFeignClient orgFeignClient,SupplierFeignClient supplierFeignClient) throws Exception {
+        if (StringUtils.isNotBlank(org)){//如果为机构请求
+            BaseResponse<OrgInfoVo> orgResponse = orgFeignClient.findOrgByNo(org);
+            if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgResponse.getResponseCode()) || null == orgResponse.getData()) {
+                //
+                throw new Exception();
+            }
+            pubKey = RSAHelper.getPemPublicKey(orgResponse.getData().getOrgPubKey());
+            priKey = RSAHelper.getPemPrivateKey(orgResponse.getData().getSipPriKey());
+        }else if (StringUtils.isNotBlank(sup)){
+            BaseResponse<SupplierInfVo> supplierResponse = supplierFeignClient.findSupByNo(sup);
+            if (!ResponseCodeMsg.SUCCESS.getCode().equals(supplierResponse.getResponseCode()) || null == supplierResponse.getData()){
+                throw new Exception();
+            }
+            pubKey = RSAHelper.getPemPublicKey(supplierResponse.getData().getSupplierPubKey());
+            priKey = RSAHelper.getPemPrivateKey(supplierResponse.getData().getSipPriKey());
+        }
+
+    }
+
+
+
+
 }

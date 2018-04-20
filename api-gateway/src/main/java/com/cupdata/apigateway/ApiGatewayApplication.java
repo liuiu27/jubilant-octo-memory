@@ -1,5 +1,6 @@
 package com.cupdata.apigateway;
 
+import com.cupdata.apigateway.filters.ErrorFilter;
 import com.cupdata.apigateway.filters.post.ResponseFilter;
 import com.cupdata.apigateway.filters.pre.PreRequestFilter;
 import org.springframework.boot.SpringApplication;
@@ -28,4 +29,7 @@ public class ApiGatewayApplication {
 	public ResponseFilter responseFilter(){
 		return new ResponseFilter();
 	}
+
+	@Bean
+	public  ErrorFilter errorFilter() {return new ErrorFilter();}
 }
