@@ -3,6 +3,7 @@ package com.cupdata.sip.common.api.config;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.config.response.SysConfigVO;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,5 +32,5 @@ public interface IConfigController {
      * @return
      */
 	@GetMapping("/private/getSysConfig")
-	BaseResponse<SysConfigVO> getSysConfig (@RequestParam("paraName") String paraName,@RequestParam("bankCode") String bankCode);
+	SysConfigVO getSysConfig (@RequestParam("paraName") String paraName,@RequestParam("bankCode") String bankCode);
 }
