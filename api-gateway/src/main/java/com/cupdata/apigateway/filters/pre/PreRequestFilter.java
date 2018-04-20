@@ -8,7 +8,6 @@ import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.orgsup.response.OrgInfoVo;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
-import com.cupdata.sip.common.lang.utils.DateTimeUtil;
 import com.cupdata.sip.common.lang.utils.RSAUtils;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -22,8 +21,6 @@ import org.springframework.http.MediaType;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -62,18 +59,19 @@ public class PreRequestFilter extends ZuulFilter {
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
-		PreRequestFilter.log.info(String.format("send %s request to %s", request.getMethod(), request.getRequestURL().toString()));
+		log.info(String.format("send %s request to %s", request.getMethod(), request.getRequestURL().toString()));
 
-//		if (isIgnorePath(request.getRequestURI())){
-//			return null;
-//		}
+		// 不需要进行网关处理的请求
+		if (isIgnorePath(request.getRequestURI())){
+			return null;
+		}
 
 		// Step1：获取请求参数
 		String org = request.getParameter("org"); // 机构编号
 		String sup = request.getParameter("sup");//供应商编号
 		String data = request.getParameter("data"); // 请求参数密文
 		String sign = request.getParameter("sign");// 请求参数签名
-		log.info("供应商编号" + sup + "，机构编号" + org + "，请求密文" + data + "，签名" + sign);
+		log.info("sup:" + sup + ", org:" + org + ", data" + data + ", sign" + sign);
 
 		//Step2：根据供应商编号或者机构编号，获取秘钥
 		String sipPriKeyStr = null;//平台私钥字符串
@@ -173,8 +171,6 @@ public class PreRequestFilter extends ZuulFilter {
 					sipPriKey, ResponseCodeMsg.TIMESTAMP_ERROR)));// 返回错误内容
 			return null;
 		}
-
-
 
 			// Step4：重置解密之后的请求参数
 			final byte[] reqBodyBytes = dataPlain.getBytes();
