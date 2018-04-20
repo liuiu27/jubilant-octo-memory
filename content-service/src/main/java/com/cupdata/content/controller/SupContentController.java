@@ -60,7 +60,7 @@ public class SupContentController {
 	 * @return
 	 */
 
-	@GetMapping(path="/contentJump")
+	@PostMapping(path="/contentJump")
 	public String contentJump(@RequestParam(value = "sup", required = true) String sup,
 			@RequestBody ContentLoginReq contentLoginReq,	HttpServletRequest request, HttpServletResponse response){
 		log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
@@ -152,7 +152,7 @@ public class SupContentController {
 	 * @param payPageVO 请求参数
 	 * @return
 	 */
-	@GetMapping("payRequest")
+	@PostMapping("payRequest")
 	public String payRequest(@RequestParam(value = "sup") String sup,
 								   @RequestBody @Validated PayPageVO payPageVO ){
 	    //Step1 验证本流水是否有效
@@ -199,7 +199,7 @@ public class SupContentController {
 	 * @return
 	 */
 	@ResponseBody
-	@GetMapping("payRefund")
+	@PostMapping("payRefund")
 	public BaseResponse payRefund(@RequestParam(value = "sup") String sup,
 							 @RequestBody @Validated CancelPayVO cancelPayVO ){
 		RestTemplate restTemplate = new RestTemplate();
