@@ -53,6 +53,7 @@ public class QQRechargeUtils {
 			}
 			checkOpenUrl = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getParaValue();
 		}
+		checkOpenUrl = "http://cgi.vip.qq.com/integopendebug/checkopen";
 		log.info("QQ会员开通鉴权url:"+checkOpenUrl);
 
 		//step2.会员充值key获取
@@ -70,6 +71,7 @@ public class QQRechargeUtils {
 			}
 			key = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getParaValue();
 		}
+		key = "yinlian01jf";
 		log.info("QQ会员开通key:"+key);
 
 		//step3.QQ会员充值source
@@ -88,6 +90,7 @@ public class QQRechargeUtils {
 				req.setSource(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getParaValue());
 			}
 		}
+		req.setSource("10017");
 		log.info("QQ会员充值source:"+req.getSource());
 
 		//step4.生成签名
@@ -134,6 +137,8 @@ public class QQRechargeUtils {
 			}
 			openUrl = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_URL").getParaValue();
 		}
+        openUrl = "http://cgi.vip.qq.com/integopendebug/open";
+		log.info("QQ充值接口openUrl:"+openUrl);
 
 		//step2.会员充值key
 		String key = null;
@@ -150,6 +155,8 @@ public class QQRechargeUtils {
 			}
 			key = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getParaValue();
 		}
+		key = "yinlian01jf";
+		log.info("会员充值key:"+key);
 
         //step3.会员充值source
 		if(StringUtils.isBlank(req.getSource())){
@@ -167,6 +174,8 @@ public class QQRechargeUtils {
 				req.setSource(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getParaValue());
 			}
 		}
+        req.setSource("10017");
+		log.info("会员充值source:"+req.getSource());
 
 		//step4.生成签名
 		String sign = MD5Util.sign(req.getServernum() + req.getServiceid() + req.getUin() + req.getAmount() + req.getTxparam() + req.getPrice() + req.getCommand() + req.getTimestamp() + req.getSource() + req.getPaytype(), key, "utf-8").toUpperCase();
@@ -194,8 +203,9 @@ public class QQRechargeUtils {
 			long l1 = System.currentTimeMillis();
 			String resStr = HttpUtil.doPost(openUrl, reqParams.toString());
 			long l2 = System.currentTimeMillis();
-			log.info("XML格式的QQ会员开通响应数据为" + resStr+",耗时为:"+(l2 - l1));
+			log.info("QQ会员开通接口响应数据为:" + resStr+",耗时为:"+(l2 - l1));
 			res = parseQQOpenXml(resStr);
+			log.info("QQ会员开通解析结果:"+res);
 		} catch (Exception e) {
 			log.error("解析XML格式的QQ会员开通响应数据出现异常", e);
 		}

@@ -14,16 +14,18 @@ import org.springframework.web.client.RestTemplate;
 public class RechargeServiceApplication {
 
 
+
+	public static void main(String[] args) {
+		SpringApplication.run(RechargeServiceApplication.class, args);
+	}
+
 	/**
 	 * @LoadBalanced，整合ribbon，使其具备负载均衡的能力
 	 * @return
 	 */
-	@Bean
+	@Bean("serverTemplate")
 	@LoadBalanced
-	public RestTemplate restTemplate() {
+	public RestTemplate serverTemplate() {
 		return new RestTemplate();
-	}
-	public static void main(String[] args) {
-		SpringApplication.run(RechargeServiceApplication.class, args);
 	}
 }
