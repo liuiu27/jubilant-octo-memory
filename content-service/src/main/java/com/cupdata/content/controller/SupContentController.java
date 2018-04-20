@@ -6,6 +6,7 @@ import com.cupdata.commons.constant.ResponseCodeMsg;
 import com.cupdata.commons.exception.ErrorException;
 import com.cupdata.commons.utils.CommonUtils;
 import com.cupdata.commons.utils.DateTimeUtil;
+import com.cupdata.commons.utils.RSAUtils;
 import com.cupdata.commons.vo.BaseResponse;
 import com.cupdata.commons.vo.content.ContentQueryOrderReq;
 import com.cupdata.commons.vo.content.ContentQueryOrderRes;
@@ -28,6 +29,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
+import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -212,10 +215,30 @@ public class SupContentController {
 		//JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
 		url = EncryptionAndEecryption.Encryption(req, url);
 
-        String baseResponse = restTemplate.postForObject(url, null, String.class);
+		try {
 
-        log.info("URL = "+url);
-		log.info(baseResponse);
+			String data = restTemplate.postForObject(url, null, String.class);
+			String [] a =	data.split("&sign=");
+			data = a[0].substring(5, a[0].length());
+			data = URLDecoder.decode(data,"utf-8");
+			System.out.println(data);
+			PrivateKey sipPriKey = null;// 平台私钥
+			sipPriKey = RSAUtils.getPrivateKeyFromString("MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALrk2X2VGzNigTxGoSuyoN33Mi2/7UIePZIZVkyFgMT/bJiXyQa5FE5+pN5y/CugDdNWYyp7jpLPxczzBd8t7DuyXo5rPD6GxSJhLTaXfdJYmAnxdW2s30X+RDy0dKqxc2oPyCOmAfR9JnV+qgNbd9aOvdlHWkO8cIvwWVScQRwRAgMBAAECgYA5SGFc+3Gd20hPKDrIAPULc3O+z/+xb0Fh4UAxLg4c00j+sC8eT2Xo9SolQEsIOANkziqQ39QALYyr16TqFdI8pywmHFICisiyjKf7nIiqUfi9rVoUCiCxXrhwSmBwkGELcUcBhNupc7Bgqo7uCK+l1g8Qzj+oNtBMfv7sZrj8rQJBAPB0uIyV9ilF0QBFlQ4AaLuhKhqY9oX/vkMTspTpBkpaOv8QeOc6T+9DJAoLjkLlkXEfsLC14AHb4LdZV/kjdyMCQQDG+byuNLe3kqWqo1ecrf8mUw9tIquUkarWU0FuO9ysGjfrLdMLlsn3wlsxddU7rIelYwnLKBYBqdIkCuQiRq07AkEA1Fceyfd75EKlKEpKMI0n79mIpuhBe1+2kuGIKHwHdA1uX+QaAIe8Ixv1bXF69ZRo9a74h3R1Fu8m6ILbb0VkZQJARBcUPV0m/Xf+n000Xxaf+OJ1pfg2VSogFyX4fxuXIYH7XsyYqx+Xz+Q/xsY3CSu6Y5tnr5DxLvKJSfI8LYqYHwJBAIaXJcKpCQSsQQ+Eu8ib861dJWV4vP1jAt9xyeU90nyz5GMwWrWkQ/DkHedDVhyCURpxZTaqKpGnr9iIDIjVrD0=");
+			data = RSAUtils.decrypt(data,sipPriKey,RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+			log.info("decryt data:"+data);
+
+			JSONObject jsonObject = JSONObject.parseObject(data);
+
+			if (!jsonObject.getString("resultCode").equals("2")){
+				return new BaseResponse<>(ResponseCodeMsg.ILLEGAL_PARTNER.getCode(),jsonObject.getString("resultMsg").toString());
+			}
+
+			log.info("URL = "+url);
+			log.info(data);
+
+		} catch (Exception e) {
+			log.info("解密失败");
+		}
 
 		return  new BaseResponse(ResponseCodeMsg.REQUEST_TIMEOUT.getCode(),ResponseCodeMsg.REQUEST_TIMEOUT.getMsg());
 

@@ -1,5 +1,6 @@
 package com.cupdata.apigateway.filters.pre;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.apigateway.feign.OrgFeignClient;
 import com.cupdata.apigateway.feign.SupplierFeignClient;
@@ -129,8 +130,8 @@ public class PreRequestFilter extends ZuulFilter {
 			log.error("请求报文的密文解密失败");
 			ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
 			ctx.setResponseStatusCode(401);// 返回错误码
-			ctx.setResponseBody(JSONObject.toJSONString(GatewayUtils.getResStrFromFailResCode(orgOrSupPubKey,
-					sipPriKey, ResponseCodeMsg.ENCRYPTED_DATA_ERROR)));// 返回错误内容
+			String responseBody =JSON.toJSONString(new BaseResponse(ResponseCodeMsg.ENCRYPTED_DATA_ERROR.getCode(),ResponseCodeMsg.ENCRYPTED_DATA_ERROR.getMsg()));
+			ctx.setResponseBody(responseBody);// 返回错误内容
 			return null;
 		}
 
