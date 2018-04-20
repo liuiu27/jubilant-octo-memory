@@ -1,11 +1,10 @@
 package com.cupdata.cdd.utils;
 
 import java.net.URLEncoder;
-import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.cupdata.commons.utils.AESUtil;
+import com.cupdata.sip.common.lang.utils.AESUtil;
 
 import lombok.extern.slf4j.Slf4j;
 

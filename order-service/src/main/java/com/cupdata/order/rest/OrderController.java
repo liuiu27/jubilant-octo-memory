@@ -270,27 +270,27 @@ public class OrderController implements IOrderController {
      * 创建内容引入订单
      */
     @Override
-    public BaseResponse createContentOrder(@RequestBody CreateContentOrderVo createContentOrderVo) {
+    public BaseResponse<OrderContentVo> createContentOrder(@RequestBody CreateContentOrderVo createContentOrderVo) {
     	log.info("创建订单Controller,ProductNo:"+createContentOrderVo.getProductNo()+",orgNo:"+createContentOrderVo.getOrgNo()+",supNo:"+createContentOrderVo.getSupNo());
         try {
-            BaseResponse<VoucherOrderVo> voucherOrderRes = new BaseResponse();
+            BaseResponse<OrderContentVo> orderContentRes = new BaseResponse<OrderContentVo>();
             //根据产品编号,查询服务产品信息
             BaseResponse<ProductInfoVo> productInfRes = productFeignClient.findByProductNo(createContentOrderVo.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
                     || null == productInfRes.getData()) {// 如果查询失败
                 log.error("product-service findByProductNo is error ProductNo is " + createContentOrderVo.getProductNo());
-                voucherOrderRes.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
-                voucherOrderRes.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
-                return voucherOrderRes;
+                orderContentRes.setResponseCode(ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
+                orderContentRes.setResponseMsg(ResponseCodeMsg.PRODUCT_NOT_EXIT.getMsg());
+                return orderContentRes;
             }
 
             //获取商户标识
             BaseResponse<SupplierInfVo>  SupplierInfVo = supplierClient.findSupByNo(createContentOrderVo.getSupNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(SupplierInfVo.getResponseCode())
                     || null == SupplierInfVo.getData()){
-                voucherOrderRes.setResponseCode(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getCode());
-                voucherOrderRes.setResponseMsg(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getMsg());
-                return voucherOrderRes;
+            	orderContentRes.setResponseCode(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getCode());
+            	orderContentRes.setResponseMsg(ResponseCodeMsg.GET_SUPPLIER_FAIL_BY_NO.getMsg());
+                return orderContentRes;
             }
             String supplierFlag = SupplierInfVo.getData().getSupplierFlag();
 
@@ -301,13 +301,14 @@ public class OrderController implements IOrderController {
                     || null == orgProductRelRes.getData()) {// 如果查询失败
                 log.error("product-service findRel is error ProductNo is " + createContentOrderVo.getProductNo()
                         + "orgNo is" + createContentOrderVo.getOrgNo());
-                voucherOrderRes.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
-                voucherOrderRes.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
-                return voucherOrderRes;
+                orderContentRes.setResponseCode(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getCode());
+                orderContentRes.setResponseMsg(ResponseCodeMsg.ORG_PRODUCT_REAL_NOT_EXIT.getMsg());
+                return orderContentRes;
             }
             //开始创建订单
-            orderContentBiz.createContentOrder(supplierFlag,createContentOrderVo,productInfRes.getData(),orgProductRelRes.getData());
-            return new BaseResponse();
+            OrderContentVo orderContentVo =  orderContentBiz.createContentOrder(supplierFlag,createContentOrderVo,productInfRes.getData(),orgProductRelRes.getData());
+            orderContentRes.setData(orderContentVo);
+            return orderContentRes;
         } catch (Exception e) {
             log.error("error is " + e.getMessage());
             throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
