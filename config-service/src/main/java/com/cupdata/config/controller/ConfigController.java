@@ -5,6 +5,9 @@ import com.cupdata.config.biz.ConfigBiz;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.config.IConfigController;
 import com.cupdata.sip.common.api.config.response.SysConfigVO;
+import com.cupdata.sip.common.lang.constant.ModelConstants;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
@@ -44,10 +47,16 @@ public class ConfigController implements IConfigController {
      *
      * @return
      */
-    public SysConfigVO getSysConfig(@NotBlank String paraName, String bankCode) {
-
+    public BaseResponse<SysConfigVO> getSysConfig(@NotBlank String paraName, String bankCode) {
+    	BaseResponse<SysConfigVO> res = new BaseResponse<SysConfigVO>();
         bankCode = StringUtils.isBlank(bankCode) ? defaultBankCode : bankCode;
-
-        return configBiz.getSysConfig(paraName, bankCode);
+        SysConfigVO sysConfigVO = configBiz.getSysConfig(paraName, bankCode);
+        if(null == sysConfigVO) {
+        	res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
+        	res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
+        }else {
+        	res.setData(sysConfigVO);
+        }
+        return res;
     }
 }

@@ -31,5 +31,5 @@ public interface IConfigController {
      * @return
      */
 	@GetMapping("/private/getSysConfig")
-	SysConfigVO getSysConfig (@RequestParam("paraName") String paraName,@RequestParam("bankCode") String bankCode);
+	BaseResponse<SysConfigVO> getSysConfig (@RequestParam("paraName") String paraName,@RequestParam("bankCode") String bankCode);
 }

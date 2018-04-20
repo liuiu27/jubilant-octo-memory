@@ -35,5 +35,10 @@ public class GetVoucherReq {
      *订单描述
      */
     private String orderDesc;
+    
+    /**
+     * 通知地址
+     */
+    private String notifyUrl;
 
 }

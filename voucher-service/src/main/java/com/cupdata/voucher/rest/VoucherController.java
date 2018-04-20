@@ -62,16 +62,7 @@ public class VoucherController implements IVoucherController{
         //响应信息
         BaseResponse<GetVoucherRes> res = new BaseResponse();// 默认为成功
         try {
-            // Step1：判断请求参数是否合法-机构订单编号是否为空、服务产品编号是否为空、订单描述是否为空
-            if (null == voucherReq || StringUtils.isBlank(voucherReq.getOrgOrderNo())
-                    || StringUtils.isBlank(voucherReq.getProductNo()) || StringUtils.isBlank(voucherReq.getOrderDesc())) {
-                log.error("params is null.......  errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-                res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-                res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
-                return res;
-            }
-
-            // Step2：查询服务产品信息
+            // Step1：查询服务产品信息
             BaseResponse<ProductInfoVo> productInfRes = productFeignClient.findByProductNo(voucherReq.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
                     || null == productInfRes.getData()) {// 如果查询失败
@@ -82,7 +73,7 @@ public class VoucherController implements IVoucherController{
                 return res;
             }
 
-            // Step3：判断服务产品是否为券码商品
+            // Step2：判断服务产品是否为券码商品
             if (!ModelConstants.PRODUCT_TYPE_VOUCHER.equals(productInfRes.getData().getProductType())) {
                 log.error("Not a voucher product.....poductType is" + productInfRes.getData().getProductType()
                         + " errorCode is " + ResponseCodeMsg.PRODUCT_NOT_EXIT.getCode());
@@ -91,7 +82,7 @@ public class VoucherController implements IVoucherController{
                 return res;
             }
 
-            // Step4：查询服务产品与机构是否关联
+            // Step3：查询服务产品与机构是否关联
             BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org, voucherReq.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
                     || null == orgProductRelRes.getData()) {
@@ -103,8 +94,7 @@ public class VoucherController implements IVoucherController{
                 return res;
             }
 
-            // Step5：根据券码商品配置信息中的服务名称，调用不同的微服务获取券码
-            // http://trvok-service/trvok/trvok/getVoucher
+            // Step4：根据券码商品配置信息中的服务名称，调用不同的微服务获取券码
             String url = "http://" + productInfRes.getData().getServiceApplicationPath() + "/getVoucher?org=" + org;
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
@@ -127,17 +117,7 @@ public class VoucherController implements IVoucherController{
         log.info("VoucherController disableVoucher is begin....");
         BaseResponse<DisableVoucherRes> res = new BaseResponse<>();
         try {
-            // Step1：判断请求参数是否合法-机构订单编号是否为空、服务产品编号是否为空、禁用描述是否为空、券码号是否为空
-            if (null == disableVoucherReq || StringUtils.isBlank(disableVoucherReq.getOrgOrderNo())
-                    || StringUtils.isBlank(disableVoucherReq.getDisableDesc())
-                    || StringUtils.isBlank(disableVoucherReq.getVoucherCode())) {
-                log.error("params is null! + errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-                res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-                res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
-                return res;
-            }
-
-            // Step2 查询订单和券码
+            // Step1 查询订单和券码
             BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByOrgNoAndOrgOrderNo(org,
                     disableVoucherReq.getOrgOrderNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
@@ -148,7 +128,7 @@ public class VoucherController implements IVoucherController{
                 return res;
             }
 
-            // Step3：查询服务产品信息
+            // Step2：查询服务产品信息
             BaseResponse<ProductInfoVo>  productInfRes = productFeignClient
                     .findByProductNo(voucherOrderVo.getData().getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
@@ -161,7 +141,7 @@ public class VoucherController implements IVoucherController{
                 return res;
             }
 
-            // Step4：判断服务产品是否为券码商品
+            // Step3：判断服务产品是否为券码商品
             if (!ModelConstants.PRODUCT_TYPE_VOUCHER.equals(productInfRes.getData().getProductType())) {
                 log.error("type is not " + ModelConstants.PRODUCT_TYPE_VOUCHER + "productType is"
                         + productInfRes.getData().getProductType() + " errorCode is "
@@ -171,7 +151,7 @@ public class VoucherController implements IVoucherController{
                 return res;
             }
 
-            // Step5：查询服务产品与机构是否关联
+            // Step4：查询服务产品与机构是否关联
             BaseResponse<OrgProductRelVo> orgProductRelRes = productFeignClient.findRel(org,
                     voucherOrderVo.getData().getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(orgProductRelRes.getResponseCode())
@@ -184,7 +164,7 @@ public class VoucherController implements IVoucherController{
                 return res;
             }
 
-            // Step6 验证券码号是否一致
+            // Step5 验证券码号是否一致
             if (!voucherOrderVo.getData().getVoucherCode().equals(disableVoucherReq.getVoucherCode())) {
                 log.error("voucher is not equals! errorCode is " + ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
                 res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
@@ -192,8 +172,7 @@ public class VoucherController implements IVoucherController{
                 return res;
             }
 
-            // Step7：根据券码商品配置信息中的服务名称，调用不同的微服务禁用券码
-            // http://trvok-service/trvok/trvok/disableVoucher
+            // Step6：根据券码商品配置信息中的服务名称，调用不同的微服务禁用券码
             String url = "http://" + productInfRes.getData().getServiceApplicationPath()
                     + "/disableVoucher?org=" + org;
 
@@ -212,7 +191,7 @@ public class VoucherController implements IVoucherController{
                 res.setResponseMsg(res.getResponseMsg());
                 return res;
             }
-            // Step8 修改数据库券码状态为禁用
+            // Step7 修改数据库券码状态为禁用
             voucherOrderVo = orderFeignClient.getVoucherOrderByOrgNoAndOrgOrderNo(org, disableVoucherReq.getOrgOrderNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())) {
                 log.error("order-service getVoucherOrderByOrgNoAndOrgOrderNo is fail org is " + org + "orgOrderNo is "
@@ -241,15 +220,8 @@ public class VoucherController implements IVoucherController{
     @Override
     public BaseResponse<WriteOffVoucherRes> writeOffVoucher(String sup, WriteOffVoucherReq writeOffVoucherReq) {
         BaseResponse<WriteOffVoucherRes> res = new BaseResponse<>();
-        // Step1：判断参数是否合法
         try {
-            if (StringUtils.isBlank(writeOffVoucherReq.getVoucherCode())) {
-                log.error("params is null errorCode is " + ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-                res.setResponseCode(ResponseCodeMsg.ILLEGAL_ARGUMENT.getCode());
-                res.setResponseMsg(ResponseCodeMsg.ILLEGAL_ARGUMENT.getMsg());
-                return res;
-            }
-            // Step2：根据 券码号 供应商标识 供应商订单号 查询订单和 券码表 //TODO 供应商订单编号 传空 报错
+            // Step1：根据 券码号 供应商标识 供应商订单号 查询订单和 券码表 //TODO 供应商订单编号 传空 报错
             BaseResponse<VoucherOrderVo> voucherOrderVo = orderFeignClient.getVoucherOrderByVoucher(sup,
                     writeOffVoucherReq.getSupplierOrderNo(), writeOffVoucherReq.getVoucherCode());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderVo.getResponseCode())
@@ -261,7 +233,7 @@ public class VoucherController implements IVoucherController{
                 return res;
             }
 
-            // Step3：数据库 修改券码
+            // Step2：数据库 修改券码
             voucherOrderVo.getData().setUserName(writeOffVoucherReq.getUserName());
             voucherOrderVo.getData().setUserMobileNo(writeOffVoucherReq.getUserMobileNo());
             voucherOrderVo.getData().setUseTime(DateTimeUtil.stringToDate(writeOffVoucherReq.getUseTime(), TimeConstants.DATE_PATTERN_2));
@@ -275,7 +247,7 @@ public class VoucherController implements IVoucherController{
                 res.setResponseMsg(voucherOrderVo.getResponseMsg());
                 return res;
             }
-            // Step4：判断是否需要通知
+            // Step3：判断是否需要通知
             if(ModelConstants.IS_NOTIFY_YES.equals(voucherOrderVo.getData().getOrderInfoVo().getIsNotify())){
                 // 异步通知
                 executeThreadPool.addNotifyTaskToPool(voucherOrderVo.getData().getOrderInfoVo().getOrderNo());
