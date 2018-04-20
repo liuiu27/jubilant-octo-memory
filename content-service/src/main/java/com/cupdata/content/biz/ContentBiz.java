@@ -163,6 +163,15 @@ public class ContentBiz {
 
     }
 
+    /**
+     *  组装重定向请求url
+     * @param url 请求地址
+     * @param parameter 等待加密参数
+     * @param publicKey 加密公钥
+     * @param privateKey 签名私钥
+     * @return url?data=XXX&sign=XXX
+     * @throws Exception 签名不成功
+     */
     public String createRequseUrl(String url,String parameter,String publicKey,String privateKey) throws Exception {
 
         PublicKey pemPublicKey = RSAHelper.getPemPublicKey(publicKey);
@@ -207,4 +216,9 @@ public class ContentBiz {
 		     serviceContentTransactionLogMapper.updateByPrimaryKeySelective(serviceContentTransactionLog);
 		}
 	}
+
+    public void createAndModifyPayOrders() {
+
+
+    }
 }

@@ -11,5 +11,9 @@ import lombok.Setter;
 @Setter
 public class ContentException extends RuntimeException {
 
-    String errorPage="error";
+    String page="error";
+
+    String tips="非常抱歉，找不到您的页面了……";
+
+    String code="404";
 }

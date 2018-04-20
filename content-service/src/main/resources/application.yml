@@ -3,6 +3,9 @@ spring:
     name: content-service
   profiles:
     active: dev
+  thymeleaf:
+      cache: false
+      mode: LEGACYHTML5
 server:
    port: 46922         # 指定该实例的端口
 #日志配置

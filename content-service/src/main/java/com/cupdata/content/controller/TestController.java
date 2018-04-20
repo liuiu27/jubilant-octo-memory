@@ -1,5 +1,6 @@
 package com.cupdata.content.controller;
 
+import com.cupdata.content.exception.ContentException;
 import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.content.vo.request.SupVO;
 import org.springframework.stereotype.Controller;
@@ -16,8 +17,8 @@ public class TestController {
         SupVO<PayPageVO> b =new SupVO<>();
         b.setData(a);
 
-        //throw new ContentException();
-        return "error.html";
+        throw new ContentException();
+        //return "error";
        // return "redirect:http://www.oschina.net";
     }
 

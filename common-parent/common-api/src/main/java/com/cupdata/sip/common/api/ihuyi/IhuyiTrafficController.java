@@ -1,12 +1,10 @@
 package com.cupdata.sip.common.api.ihuyi;
 
+import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.recharge.IRechargeApi;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -19,10 +17,8 @@ public interface IhuyiTrafficController extends IRechargeApi{
 
     /**
      * 互亿流量充值结果异步推送接口
-     * @param request
-     * @param response
      * @throws IOException
      */
-    @PostMapping("/ihuyiTrafficRechargeCallBack")
-    void ihuyiTrafficRechargeCallBack(HttpServletRequest request, HttpServletResponse response);
+    @PostMapping("ihuyiTrafficRechargeCallBack")
+    BaseResponse ihuyiTrafficRechargeCallBack();
 }

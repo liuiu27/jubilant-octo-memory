@@ -17,7 +17,7 @@ public class ServiceOrderRecharge implements Serializable {
      * 主订单ID
      */
     @Column(name = "ORDER_ID")
-    private String orderId;
+    private Long orderId;
 
     /**
      * 服务产品编号
@@ -35,25 +35,25 @@ public class ServiceOrderRecharge implements Serializable {
      * 开通时长
      */
     @Column(name = "OPEN_DURATION")
-    private Integer openDuration;
+    private Long openDuration;
 
     /**
      * 充值金额 单位：元
      */
     @Column(name = "RECHARGE_AMT")
-    private Integer rechargeAmt;
+    private Long rechargeAmt;
 
     /**
      * 充值流量 仅针对流量充值业务；
      */
     @Column(name = "RECHARGE_TRAFFIC")
-    private Integer rechargeTraffic;
+    private Long rechargeTraffic;
 
     /**
      * 充值数量 单位：个，仅在一些特殊服务产品中使用
      */
     @Column(name = "RECHARGE_NUMBER")
-    private Integer rechargeNumber;
+    private Long rechargeNumber;
 
     /**
      * 游戏充值大区
@@ -116,7 +116,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @return ORDER_ID - 主订单ID
      */
-    public String getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
@@ -125,7 +125,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @param orderId 主订单ID
      */
-    public void setOrderId(String orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 
@@ -170,7 +170,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @return OPEN_DURATION - 开通时长
      */
-    public Integer getOpenDuration() {
+    public Long getOpenDuration() {
         return openDuration;
     }
 
@@ -179,7 +179,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @param openDuration 开通时长
      */
-    public void setOpenDuration(Integer openDuration) {
+    public void setOpenDuration(Long openDuration) {
         this.openDuration = openDuration;
     }
 
@@ -188,7 +188,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @return RECHARGE_AMT - 充值金额 单位：元
      */
-    public Integer getRechargeAmt() {
+    public Long getRechargeAmt() {
         return rechargeAmt;
     }
 
@@ -197,7 +197,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @param rechargeAmt 充值金额 单位：元
      */
-    public void setRechargeAmt(Integer rechargeAmt) {
+    public void setRechargeAmt(Long rechargeAmt) {
         this.rechargeAmt = rechargeAmt;
     }
 
@@ -206,7 +206,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @return RECHARGE_TRAFFIC - 充值流量 仅针对流量充值业务；
      */
-    public Integer getRechargeTraffic() {
+    public Long getRechargeTraffic() {
         return rechargeTraffic;
     }
 
@@ -215,7 +215,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @param rechargeTraffic 充值流量 仅针对流量充值业务；
      */
-    public void setRechargeTraffic(Integer rechargeTraffic) {
+    public void setRechargeTraffic(Long rechargeTraffic) {
         this.rechargeTraffic = rechargeTraffic;
     }
 
@@ -224,7 +224,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @return RECHARGE_NUMBER - 充值数量 单位：个，仅在一些特殊服务产品中使用
      */
-    public Integer getRechargeNumber() {
+    public Long getRechargeNumber() {
         return rechargeNumber;
     }
 
@@ -233,7 +233,7 @@ public class ServiceOrderRecharge implements Serializable {
      *
      * @param rechargeNumber 充值数量 单位：个，仅在一些特殊服务产品中使用
      */
-    public void setRechargeNumber(Integer rechargeNumber) {
+    public void setRechargeNumber(Long rechargeNumber) {
         this.rechargeNumber = rechargeNumber;
     }
 

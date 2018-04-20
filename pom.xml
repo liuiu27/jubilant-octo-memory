@@ -22,7 +22,7 @@
 	<modules>
 		<module>eureka-service</module>
 		<module>api-gateway</module>
-		<module>commons</module>
+		<!--<module>commons</module>-->
 		<module>order-service</module>
 		<module>product-service</module>
 		<module>trvok-service</module>

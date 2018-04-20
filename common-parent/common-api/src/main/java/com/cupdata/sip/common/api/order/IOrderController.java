@@ -1,15 +1,22 @@
 package com.cupdata.sip.common.api.order;
 
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.order.request.CreateContentOrderVo;
 import com.cupdata.sip.common.api.order.request.CreateRechargeOrderVo;
 import com.cupdata.sip.common.api.order.request.CreateVoucherOrderVo;
+import com.cupdata.sip.common.api.order.response.OrderContentVo;
 import com.cupdata.sip.common.api.order.response.OrderInfoVo;
 import com.cupdata.sip.common.api.order.response.RechargeOrderVo;
 import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @Auth: LinYong
@@ -32,7 +39,7 @@ public interface IOrderController {
      * @return
      */
     @PostMapping("/updateVoucherOrder")
-    BaseResponse<VoucherOrderVo> updateVoucherOrder(@RequestBody VoucherOrderVo voucherOrderVo);
+    BaseResponse updateVoucherOrder(@RequestBody VoucherOrderVo voucherOrderVo);
     
     /**
      * 根据订单号获取订单及券码信息
@@ -92,25 +99,14 @@ public interface IOrderController {
      * @return
      */
     @PostMapping("/updateRechargeOrder")
-    BaseResponse<RechargeOrderVo> updateRechargeOrder(@RequestBody RechargeOrderVo rechargeOrderVo);
+    BaseResponse updateRechargeOrder(@RequestBody RechargeOrderVo rechargeOrderVo);
 
     /**
      *更新主订单
      * @param order
      */
     @PostMapping("/updateServiceOrder")
-    Integer updateServiceOrder(@RequestBody OrderInfoVo order);
-
-    /**
-     * 根据参数获取主单列表
-     * @param orderStatus
-     * @param orderSubType
-     * @param supplierFlag
-     * @return
-     */
-    @GetMapping("/getServiceOrderListByParam/{orderStatus}/{orderSubType}/{supplierFlag}")
-    BaseResponse<List<OrderInfoVo>> getServiceOrderListByParam(@PathVariable("orderStatus") Character orderStatus, @PathVariable("orderSubType") String orderSubType, @PathVariable("supplierFlag") String supplierFlag);
-
+    BaseResponse updateServiceOrder(@RequestBody OrderInfoVo order);
 
     /**
      * 获取主订单
@@ -120,14 +116,14 @@ public interface IOrderController {
      * @return
      */
    @GetMapping("/selectMainOrderList/{orderStatus}/{supplierFlag}/{orderSubType}")
-    List<OrderInfoVo> selectMainOrderList(@PathVariable("orderStatus") Character orderStatus, @PathVariable("supplierFlag") String supplierFlag, @PathVariable("orderSubType") String orderSubType);
+   BaseResponse<List<OrderInfoVo>> selectMainOrderList(@PathVariable("orderStatus") String orderStatus, @PathVariable("supplierFlag") String supplierFlag, @PathVariable("orderSubType") String orderSubType);
 
     /**
      * 内容引入订单查询
      * @return
      */
-    @PostMapping("/queryContentOrder")
-    BaseResponse queryContentOrder();
+   @GetMapping("/queryContentOrder/{orderNo}") 
+   BaseResponse<OrderContentVo> queryContentOrder(@PathVariable("orderNo") String orderNo);
 
     /**
      * 创建内容订单
@@ -135,7 +131,7 @@ public interface IOrderController {
      * @return 响应
      */
     @PostMapping("/createContentOrder")
-    BaseResponse createContentOrder();
+    BaseResponse createContentOrder(@RequestBody CreateContentOrderVo createContentOrderVo);
 
     /**
      * 更新内容订单
@@ -143,6 +139,6 @@ public interface IOrderController {
      * @return
      */
     @PostMapping("/updateContentOrder")
-    BaseResponse updateContentOrder();
+    BaseResponse updateContentOrder(@RequestBody OrderContentVo orderContentVo);
 
 }
