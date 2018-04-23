@@ -23,6 +23,6 @@ public class CancelPayVO {
     String refundInfo;
 
 
-    String timeStamp;
+    String timestamp;
 
 }

@@ -29,8 +29,8 @@ public class BaseResponse<T> {
     }
     
     public  BaseResponse(String responseCode,String responseMsg){
-        responseCode =responseCode;
-        responseMsg = responseMsg;
+        this.responseCode =responseCode;
+        this.responseMsg = responseMsg;
     }
     public  BaseResponse(String responseCode,String responseMsg,T data){
         this.responseCode =responseCode;

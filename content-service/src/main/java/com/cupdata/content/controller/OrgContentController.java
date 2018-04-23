@@ -45,6 +45,7 @@ public class OrgContentController{
 	/**
 	 * 内容引入跳转接口   机构请求
 	 * @param org
+	 * @param contentJumpReq
 	 * @return
 	 */
 	@PostMapping(path="/contentJump")
