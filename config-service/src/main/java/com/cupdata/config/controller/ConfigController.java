@@ -1,20 +1,20 @@
 package com.cupdata.config.controller;
 
 
-import com.cupdata.config.biz.ConfigBiz;
-import com.cupdata.sip.common.api.BaseResponse;
-import com.cupdata.sip.common.api.config.IConfigController;
-import com.cupdata.sip.common.api.config.response.SysConfigVO;
-import com.cupdata.sip.common.lang.constant.ModelConstants;
-import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.cupdata.config.biz.ConfigBiz;
+import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.config.IConfigController;
+import com.cupdata.sip.common.api.config.response.SysConfigVO;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Auth: LinYong
@@ -47,16 +47,9 @@ public class ConfigController implements IConfigController {
      *
      * @return
      */
-    public BaseResponse<SysConfigVO> getSysConfig(@NotBlank String paraName, String bankCode) {
-    	BaseResponse<SysConfigVO> res = new BaseResponse<SysConfigVO>();
+    public SysConfigVO getSysConfig(@NotBlank String paraName, String bankCode) {
         bankCode = StringUtils.isBlank(bankCode) ? defaultBankCode : bankCode;
         SysConfigVO sysConfigVO = configBiz.getSysConfig(paraName, bankCode);
-        if(null == sysConfigVO) {
-        	res.setResponseCode(ResponseCodeMsg.RESULT_QUERY_EMPTY.getCode());
-        	res.setResponseMsg(ResponseCodeMsg.RESULT_QUERY_EMPTY.getMsg());
-        }else {
-        	res.setData(sysConfigVO);
-        }
-        return res;
+        return sysConfigVO;
     }
 }

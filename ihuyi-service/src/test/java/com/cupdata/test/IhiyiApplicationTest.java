@@ -129,7 +129,7 @@ public class IhiyiApplicationTest {
         String url2 = "http://cvpa.leagpoint.com/sipService/voucher/voucher/getVoucher";
         String org = "2018010200000001";
         GetVoucherReq getVoucherReq = new GetVoucherReq();
-        getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
+        //getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         getVoucherReq.setProductNo("171116E873");
         getVoucherReq.setOrgOrderNo("IHUYIvoucher");
         getVoucherReq.setOrderDesc("获取互亿电子券码");

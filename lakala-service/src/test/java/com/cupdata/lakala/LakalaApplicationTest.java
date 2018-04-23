@@ -27,7 +27,7 @@ public class LakalaApplicationTest {
         //请求参数
         String org = "2018010200000001";
         GetVoucherReq getVoucherReq = new GetVoucherReq();
-        getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
+        //getVoucherReq.setTimestamp(DateTimeUtil.getFormatDate(new Date(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
         getVoucherReq.setProductNo("20180105V123");
         getVoucherReq.setOrgOrderNo("T2018041301");
         getVoucherReq.setOrderDesc("LAKALATEST");

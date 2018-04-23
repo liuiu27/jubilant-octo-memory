@@ -58,7 +58,7 @@ public class ServiceOrderContentBiz{
 	}
 	
 	@Transactional
-	public void createContentOrder(String supplierFlag, CreateContentOrderVo createContentOrderVo, ProductInfoVo productInfoVo, OrgProductRelVo orgProductRelVo) {
+	public OrderContentVo createContentOrder(String supplierFlag, CreateContentOrderVo createContentOrderVo, ProductInfoVo productInfoVo, OrgProductRelVo orgProductRelVo) {
 		 	log.info("创建内容引入订单:" +  createContentOrderVo.toString());
 		 	
 	        //初始化主订单记录
@@ -71,6 +71,11 @@ public class ServiceOrderContentBiz{
 	        //初始内容引入订单
 	        ServiceOrderContent  orderContent = OrderUtils.initContentOrder(order, createContentOrderVo);
 	        orderContentDao.insert(orderContent);//插入内容引入订单
+	        
+	        OrderContentVo  orderContentVo = new OrderContentVo();
+	        BeanCopierUtils.copyProperties(order,orderContentVo.getOrderInfoVo());
+	        BeanCopierUtils.copyProperties(orderContent,orderContentVo);
+	        return orderContentVo;
 	}
 	
 	@Transactional

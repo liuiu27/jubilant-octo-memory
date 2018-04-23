@@ -38,6 +38,10 @@ public class VoucherBiz {
     public ElectronicVoucherCategory checkVoucherValidStatusByCategoryId(Long categoryId){
         log.info("根据券码类别id查询券码类别是否有效,categoryId:"+categoryId);
         ElecVoucherCategory elecVoucherCategory =voucherCategoryDao.getValidVoucherById(categoryId);
+        if (CommonUtils.isNullOrEmptyOfObj(elecVoucherCategory)) {
+            log.info("券码类型无效");
+            throw new VoucherException(ResponseCodeMsg.VOUCHER_TYPE_INVALID.getCode(),ResponseCodeMsg.VOUCHER_TYPE_INVALID.getMsg());
+        }
         ElectronicVoucherCategory electronicVoucherCategory = new ElectronicVoucherCategory();
         BeanCopierUtils.copyProperties(elecVoucherCategory,electronicVoucherCategory);
         return electronicVoucherCategory;

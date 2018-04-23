@@ -1,4 +1,4 @@
-package com.cupdata.ihuyi.utils;
+package com.cupdata.sip.common.api.ihuyi.request;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * 机构充值结果接收vo
  */
 @Data
-public class RechargeNotifyVo {
+public class RechargeNotifyToOrgVo {
 
     /**
      * 平台订单编号

@@ -8,6 +8,7 @@ import com.cupdata.sip.common.api.ihuyi.response.IhuyiOrderQueryRes;
 import com.cupdata.sip.common.api.ihuyi.response.IhuyiRechargeRes;
 import com.cupdata.sip.common.api.ihuyi.response.IhuyiVirtualOrderQueryRes;
 import com.cupdata.sip.common.api.ihuyi.response.IhuyiVoucherRes;
+import com.cupdata.sip.common.api.order.response.OrderInfoVo;
 import com.cupdata.sip.common.api.order.response.RechargeOrderVo;
 import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
 import com.cupdata.sip.common.api.recharge.request.RechargeReq;
@@ -357,11 +358,11 @@ public class IhuyiUtils {
      * 互亿流量/话费查询
      * @return
      */
-    public static IhuyiOrderQueryRes ihuyiRechargeQuery(ServiceOrder serviceOrder, ConfigFeignClient configFeignClient) {
-        log.info("调用互亿接口去查询流量/话费...OrderNo:" + serviceOrder.getOrderNo() + ",OrderSubType:" + serviceOrder.getOrderSubType() + ",SupplierFlag:" + serviceOrder.getSupplierFlag());
+    public static IhuyiOrderQueryRes ihuyiRechargeQuery(OrderInfoVo orderInfoVo, ConfigFeignClient configFeignClient) {
+        log.info("调用互亿接口去查询流量/话费...OrderNo:" + orderInfoVo.getOrderNo() + ",OrderSubType:" + orderInfoVo.getOrderSubType() + ",SupplierFlag:" + orderInfoVo.getSupplierFlag());
         IhuyiOrderQueryRes res = new IhuyiOrderQueryRes();
         String action = "getorderinfo";
-        String orderid = serviceOrder.getOrderNo(); //平台订单号
+        String orderid = orderInfoVo.getOrderNo(); //平台订单号
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 
         //互亿api_id
@@ -382,7 +383,7 @@ public class IhuyiUtils {
         map.put("timestamp", timestamp);
         String sign = IhuyiUtils.getSign(map, configFeignClient);
         String url = "";
-        if (ModelConstants.ORDER_TYPE_RECHARGE_TRAFFIC.equals(serviceOrder.getOrderSubType())) { //如果充值类型是流量充值
+        if (ModelConstants.ORDER_TYPE_RECHARGE_TRAFFIC.equals(orderInfoVo.getOrderSubType())) { //如果充值类型是流量充值
             if (CommonUtils.isWindows()) {
                 url = "http://f.ihuyi.com/v2";
             } else {
@@ -390,7 +391,7 @@ public class IhuyiUtils {
                     url = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IHUYI_TRAFFIC_RECHARGE_URL").getParaValue();
                 }
             }
-        } else if (ModelConstants.ORDER_TYPE_RECHARGE_PHONE.equals(serviceOrder.getOrderSubType())) { //如果充值类型是话费充值
+        } else if (ModelConstants.ORDER_TYPE_RECHARGE_PHONE.equals(orderInfoVo.getOrderSubType())) { //如果充值类型是话费充值
             if (CommonUtils.isWindows()) {
                 url = "https://api.ihuyi.com/f/phone";
             } else {
@@ -425,13 +426,13 @@ public class IhuyiUtils {
     /**
      * 互亿虚拟充值订单查询
      *
-     * @param serviceOrder
+     * @param orderInfoVo
      * @return
      */
-    public static IhuyiVirtualOrderQueryRes virtualGoodsRechargeQuery(ServiceOrder serviceOrder, ConfigFeignClient configFeignClient) {
+    public static IhuyiVirtualOrderQueryRes virtualGoodsRechargeQuery(OrderInfoVo orderInfoVo, ConfigFeignClient configFeignClient) {
         IhuyiVirtualOrderQueryRes res = new IhuyiVirtualOrderQueryRes();
         String action = "getorderinfo";
-        String orderid = serviceOrder.getOrderNo();
+        String orderid = orderInfoVo.getOrderNo();
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         //互亿api_id
         String username = null;

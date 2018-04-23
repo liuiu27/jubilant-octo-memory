@@ -1,0 +1,28 @@
+package com.cupdata.sip.common.api.ihuyi.request;
+
+import lombok.Data;
+
+import java.util.Date;
+
+/**
+ * @Auther: DingCong
+ * @Description:
+ * @@Date: Created in 10:43 2018/4/20
+ */
+@Data
+public class OrderNotifyCompleteVo {
+
+    private String orderNo;
+
+    private String notifyUrl;
+
+    private Date completeDate;
+
+    private int notifyTimes;
+
+    private Character notifyStatus;
+
+    private String nodeName;
+
+
+}

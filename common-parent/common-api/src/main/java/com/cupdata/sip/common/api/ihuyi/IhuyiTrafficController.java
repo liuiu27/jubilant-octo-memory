@@ -5,6 +5,8 @@ import com.cupdata.sip.common.api.recharge.IRechargeApi;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -20,5 +22,5 @@ public interface IhuyiTrafficController extends IRechargeApi{
      * @throws IOException
      */
     @PostMapping("ihuyiTrafficRechargeCallBack")
-    BaseResponse ihuyiTrafficRechargeCallBack();
+    BaseResponse<String> ihuyiTrafficRechargeCallBack(String taskid,String orderid,String mobile,String message,String status,String sign);
 }

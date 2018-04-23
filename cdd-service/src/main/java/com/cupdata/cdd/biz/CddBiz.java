@@ -4,13 +4,11 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.utils.HttpUtil;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.cdd.CddCodeReq;
-import com.cupdata.commons.vo.cdd.CddCodeRes;
-import com.cupdata.cdd.utils.CddUtil;
+import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.cdd.requset.CddCodeReq;
+import com.cupdata.sip.common.api.cdd.response.CddCodeRes;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+import com.cupdata.sip.common.lang.utils.HttpUtil;
 
 import lombok.extern.slf4j.Slf4j;
 

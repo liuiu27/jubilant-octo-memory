@@ -1,6 +1,5 @@
 package com.cupdata.ihuyi.rest;
 
-import com.cupdata.ihuyi.biz.NotifyBiz;
 import com.cupdata.ihuyi.constant.IhuyiRechargeResCode;
 import com.cupdata.ihuyi.feign.ConfigFeignClient;
 import com.cupdata.ihuyi.feign.OrderFeignClient;
@@ -55,9 +54,6 @@ public class IhuyiVoucherExchangeController implements IhuyiVoucherController{
 
     @Autowired
     private OrgFeignClient orgFeignClient;
-
-    @Autowired
-    private NotifyBiz notifyBiz;
 
     /**
      * 获取互亿电子券码Controller

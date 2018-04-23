@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
+   <parent>
+        <groupId>com.cupdata.sip</groupId>
         <artifactId>service-integration-platform</artifactId>
-        <groupId>com.cupdata</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -12,11 +12,15 @@
     <artifactId>cdd-service</artifactId>
 
     <dependencies>
+      
         <dependency>
-            <groupId>com.cupdata</groupId>
-            <artifactId>commons</artifactId>
+            <groupId>com.cupdata.sip</groupId>
+            <artifactId>common-api</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.cupdata.sip</groupId>
+            <artifactId>common-lang</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -48,34 +52,19 @@
             <artifactId>spring-cloud-starter-feign</artifactId>
         </dependency>
 
-        <!--mybatis依赖-->
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.tomcat</groupId>
-                    <artifactId>tomcat-jdbc</artifactId>
-                </exclusion>
-            </exclusions>
+         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.cupdata</groupId>
-            <artifactId>iqiyi-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
 
     <build>
-        <finalName>cdd-service</finalName>
+        <finalName>trvok-service</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

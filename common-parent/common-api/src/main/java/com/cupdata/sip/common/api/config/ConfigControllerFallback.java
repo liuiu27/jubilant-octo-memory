@@ -16,9 +16,10 @@ public class ConfigControllerFallback implements IConfigController {
     }
 
 	@Override
-	public BaseResponse<SysConfigVO> getSysConfig(String paraName, String bankCode) {
+	public SysConfigVO getSysConfig(String paraName, String bankCode) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }

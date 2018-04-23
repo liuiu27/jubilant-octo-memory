@@ -1,36 +1,33 @@
-package com.cupdata.cdd.controller;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.cupdata.cdd.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cupdata.commons.api.cdd.ICddController;
-import com.cupdata.commons.constant.ModelConstants;
-import com.cupdata.commons.constant.ResponseCodeMsg;
-import com.cupdata.commons.exception.ErrorException;
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.vo.BaseResponse;
-import com.cupdata.commons.vo.cdd.CddCodeReq;
-import com.cupdata.commons.vo.cdd.CddCodeRes;
-import com.cupdata.commons.vo.product.ProductInfVo;
-import com.cupdata.commons.vo.product.VoucherOrderVo;
-import com.cupdata.commons.vo.sysconfig.SysConfigVo;
-import com.cupdata.commons.vo.voucher.CreateVoucherOrderVo;
-import com.cupdata.commons.vo.voucher.DisableVoucherReq;
-import com.cupdata.commons.vo.voucher.DisableVoucherRes;
-import com.cupdata.commons.vo.voucher.GetVoucherReq;
-import com.cupdata.commons.vo.voucher.GetVoucherRes;
-import com.cupdata.commons.vo.voucher.WriteOffVoucherReq;
-import com.cupdata.commons.vo.voucher.WriteOffVoucherRes;
 import com.cupdata.cdd.biz.CddBiz;
-import com.cupdata.cdd.feign.CacheFeignClient;
+import com.cupdata.cdd.feign.ConfigFeignClient;
 import com.cupdata.cdd.feign.OrderFeignClient;
 import com.cupdata.cdd.feign.ProductFeignClient;
 import com.cupdata.cdd.utils.CddUtil;
+import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.cdd.ICddController;
+import com.cupdata.sip.common.api.cdd.requset.CddCodeReq;
+import com.cupdata.sip.common.api.cdd.response.CddCodeRes;
+import com.cupdata.sip.common.api.config.response.SysConfigVO;
+import com.cupdata.sip.common.api.order.request.CreateVoucherOrderVo;
+import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
+import com.cupdata.sip.common.api.product.response.ProductInfoVo;
+import com.cupdata.sip.common.api.voucher.request.DisableVoucherReq;
+import com.cupdata.sip.common.api.voucher.request.GetVoucherReq;
+import com.cupdata.sip.common.api.voucher.request.WriteOffVoucherReq;
+import com.cupdata.sip.common.api.voucher.response.DisableVoucherRes;
+import com.cupdata.sip.common.api.voucher.response.GetVoucherRes;
+import com.cupdata.sip.common.api.voucher.response.WriteOffVoucherRes;
+import com.cupdata.sip.common.lang.constant.ModelConstants;
+import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
+import com.cupdata.sip.common.lang.exception.ErrorException;
+import com.cupdata.sip.common.lang.utils.DateTimeUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,7 +50,7 @@ public class CddController implements ICddController{
 	private ProductFeignClient productFeignClient;
 	
 	@Autowired
-	private CacheFeignClient cacheFeignClient;
+	private ConfigFeignClient configFeignClient;
 	
     private static final String CDD_APIKEY = "CDD_APIKEY"; //身份标识
     
@@ -76,17 +73,17 @@ public class CddController implements ICddController{
 		try {
 			BaseResponse<GetVoucherRes>  res = new  BaseResponse<GetVoucherRes>();
 			//从缓存中获取请求URL
-			BaseResponse<SysConfigVo> sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_URL);
+			BaseResponse<SysConfigVO> sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_URL);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_URL);
 				res.setResponseCode(sysConfigVo.getResponseCode());
 				res.setResponseMsg(sysConfigVo.getResponseMsg());
 				return res;
 			}
-			String  cddUrl = sysConfigVo.getData().getSysConfig().getParaValue();
+			String  cddUrl = sysConfigVo.getData().getParaValue();
 			
 			//获取身份标识
-			sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_APIKEY);
+			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_APIKEY);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_APIKEY);
 				res.setResponseCode(sysConfigVo.getResponseCode());
@@ -96,10 +93,10 @@ public class CddController implements ICddController{
 			
 			//初始化获取车点点请求实体
 			CddCodeReq cddCodeReq = new CddCodeReq();
-			cddCodeReq.setApiKey(sysConfigVo.getData().getSysConfig().getParaValue()); 
+			cddCodeReq.setApiKey(sysConfigVo.getData().getParaValue()); 
 			
 			//获取API私钥
-			sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_APISECRET);
+			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_APISECRET);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_APISECRET);
 				res.setResponseCode(sysConfigVo.getResponseCode());
@@ -109,46 +106,46 @@ public class CddController implements ICddController{
 			
 			
 			//获取机构ID
-			sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_AGENCY_ID);
+			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_AGENCY_ID);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_AGENCY_ID);
 				res.setResponseCode(sysConfigVo.getResponseCode());
 				res.setResponseMsg(sysConfigVo.getResponseMsg());
 				return res;
 			}
-			cddCodeReq.setAgencyID(sysConfigVo.getData().getSysConfig().getParaValue());
+			cddCodeReq.setAgencyID(sysConfigVo.getData().getParaValue());
 			
 			//获取礼包数量
-			sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_NUM);
+			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_NUM);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_NUM);
 				res.setResponseCode(sysConfigVo.getResponseCode());
 				res.setResponseMsg(sysConfigVo.getResponseMsg());
 				return res;
 			}
-			cddCodeReq.setNum(sysConfigVo.getData().getSysConfig().getParaValue());
+			cddCodeReq.setNum(sysConfigVo.getData().getParaValue());
 			//获取订单类型
-			sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_ORDER_TYPR);
+			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_ORDER_TYPR);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_ORDER_TYPR);
 				res.setResponseCode(sysConfigVo.getResponseCode());
 				res.setResponseMsg(sysConfigVo.getResponseMsg());
 				return res;
 			}
-			cddCodeReq.setOrderType(sysConfigVo.getData().getSysConfig().getParaValue());//订单类型
+			cddCodeReq.setOrderType(sysConfigVo.getData().getParaValue());//订单类型
 			cddCodeReq.setApiST(DateTimeUtil.getTenTimeStamp());//时间戳
 			
-			sysConfigVo = cacheFeignClient.getSysConfig("SIP", CDD_APISECRET);
+			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_APISECRET);
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_APISECRET);
 				res.setResponseCode(sysConfigVo.getResponseCode());
 				res.setResponseMsg(sysConfigVo.getResponseMsg());
 				return res;
 			}
-			cddCodeReq.setMobile(CddUtil.aesUrlEncode(voucherReq.getMobileNo(), sysConfigVo.getData().getSysConfig().getParaValue()));
-			cddCodeReq.setApiSign(cddCodeReq.getApiKey() + sysConfigVo.getData().getSysConfig().getParaValue() + cddCodeReq.getApiST());
+			cddCodeReq.setMobile(CddUtil.aesUrlEncode(voucherReq.getMobileNo(), sysConfigVo.getData().getParaValue()));
+			cddCodeReq.setApiSign(cddCodeReq.getApiKey() + sysConfigVo.getData().getParaValue() + cddCodeReq.getApiST());
 			
-			BaseResponse<ProductInfVo> productInfo = new BaseResponse<>();
+			BaseResponse<ProductInfoVo> productInfo = new BaseResponse<>();
 			//获取供应商产品
 			productInfo = productFeignClient.findByProductNo(voucherReq.getProductNo());
 			if(!ResponseCodeMsg.SUCCESS.getCode().equals(productInfo.getResponseCode())) {
@@ -157,7 +154,7 @@ public class CddController implements ICddController{
 				res.setResponseMsg(productInfo.getResponseMsg());
 				return res;
 			}
-			cddCodeReq.setPackageID(productInfo.getData().getProduct().getSupplierParam());//礼包ID
+			cddCodeReq.setPackageID(productInfo.getData().getSupplierParam());//礼包ID
 			
 			//创建券码订单
 			CreateVoucherOrderVo createVoucherOrderVo = new CreateVoucherOrderVo();
@@ -166,14 +163,13 @@ public class CddController implements ICddController{
 			createVoucherOrderVo.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			createVoucherOrderVo.setProductNo(voucherReq.getProductNo());
 		    BaseResponse<VoucherOrderVo> voucherOrderRes = orderFeignClient.createVoucherOrder(createVoucherOrderVo);
-		    if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode()) || null == voucherOrderRes.getData() || null == voucherOrderRes.getData().getOrder() || null == voucherOrderRes.getData().getVoucherOrder()){
+		    if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())){
 		        log.error("order-service error params is " + createVoucherOrderVo.toString());
 		    	res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
 		        res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
 		        return res;
 		    } 
-			cddCodeReq.setSn(voucherOrderRes.getData().getOrder().getOrderNo());//订单 流水号
-//			cddCodeReq.setOpenCode("ZJ");//城市机构代码   //TODO  暂时无用字段
+			cddCodeReq.setSn(voucherOrderRes.getData().getOrderInfoVo().getOrderNo());//订单 流水号
 			
 			//获取券码
 			BaseResponse<CddCodeRes> cddCodeRes = cddBiz.getVoucherCode(cddCodeReq, cddUrl);
@@ -183,14 +179,14 @@ public class CddController implements ICddController{
 		            return res;
 		    } 
 			//修改订单状态 保存券码
-			voucherOrderRes.getData().getOrder().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
-			voucherOrderRes.getData().getVoucherOrder().setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED);
-			voucherOrderRes.getData().getVoucherOrder().setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
-			voucherOrderRes.getData().getVoucherOrder().setVoucherCode(cddCodeRes.getData().getYzm());
-			voucherOrderRes.getData().getVoucherOrder().setStartDate(cddCodeRes.getData().getDateBeginTime());
-			voucherOrderRes.getData().getVoucherOrder().setEndDate(cddCodeRes.getData().getDateOutTime());
-			voucherOrderRes = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
-		    if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode()) || null == voucherOrderRes.getData() || null == voucherOrderRes.getData().getOrder() || null == voucherOrderRes.getData().getVoucherOrder()){
+			voucherOrderRes.getData().getOrderInfoVo().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
+			voucherOrderRes.getData().setUseStatus(ModelConstants.VOUCHER_USE_STATUS_UNUSED);
+			voucherOrderRes.getData().setEffStatus(ModelConstants.VOUCHER_STATUS_EFF);
+			voucherOrderRes.getData().setVoucherCode(cddCodeRes.getData().getYzm());
+			voucherOrderRes.getData().setStartDate(cddCodeRes.getData().getDateBeginTime());
+			voucherOrderRes.getData().setEndDate(cddCodeRes.getData().getDateOutTime());
+			BaseResponse baseResponse = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
+		    if (!ResponseCodeMsg.SUCCESS.getCode().equals(baseResponse.getResponseCode())){
 		        res.setResponseCode(ResponseCodeMsg.ORDER_CREATE_ERROR.getCode());
 		        res.setResponseMsg(ResponseCodeMsg.ORDER_CREATE_ERROR.getMsg());
 		        return res;
@@ -198,7 +194,7 @@ public class CddController implements ICddController{
 			//响应参数
 			GetVoucherRes voucherRes = new GetVoucherRes();
 			voucherRes.setExpire(cddCodeRes.getData().getDateOutTime());							
-			voucherRes.setOrderNo(voucherOrderRes.getData().getOrder().getOrderNo());
+			voucherRes.setOrderNo(voucherOrderRes.getData().getOrderInfoVo().getOrderNo());
 			voucherRes.setOrgOrderNo(voucherReq.getOrgOrderNo());
 			voucherRes.setVoucherCode(cddCodeRes.getData().getYzm());
 			voucherRes.setStartDate(cddCodeRes.getData().getDateBeginTime());

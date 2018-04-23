@@ -15,6 +15,7 @@ import com.cupdata.sip.common.lang.exception.RechargeException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -37,6 +38,7 @@ public class RechargeController implements IRechargeController {
     private ProductFeignClient productFeignClient;
 
     @Autowired
+    @Qualifier("serverTemplate")
     private RestTemplate restTemplate;
 
     /**

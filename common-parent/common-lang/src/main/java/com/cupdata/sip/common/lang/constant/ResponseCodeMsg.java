@@ -138,7 +138,7 @@ public enum ResponseCodeMsg {
     /**
      * 800007 - 获取本地券码失败
      */
-    FAIL_GAT_LOCAL_VOUCHER("800007","获取本地券码失败"),
+    FAIL_GAT_LOCAL_VOUCHER("800007","获取券码失败"),
 
     /**
      * 800008 - 查询订单异常查询商品信息为空
@@ -188,7 +188,7 @@ public enum ResponseCodeMsg {
     /**
      * 200008 - 互亿流量充值结果推送发生异常
      */
-    IHUYI_TRAFFIC_RECHARGE_RES_EXCEPTION("200008","互亿流量充值结果推送发生异常"),
+    IHUYI_PUSH_TRAFFIC_RECHARGE_RES_EXCEPTION("200008","互亿流量充值结果推送发生异常"),
 
     /**
      * 200009 - 充值失败

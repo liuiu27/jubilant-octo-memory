@@ -12,6 +12,8 @@ import com.cupdata.sip.common.lang.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -33,7 +35,7 @@ public class RechargeQueryController implements IRechargeQueryController {
      * @return
      */
     @Override
-    public BaseResponse<RechargeResQuery> rechargeQuery(String org, RechargeQueryReq rechargeQueryReq) {
+    public BaseResponse<RechargeResQuery> rechargeQuery(@RequestParam("org") String org, @RequestBody RechargeQueryReq rechargeQueryReq) {
         log.info("调用虚拟充值结果查询Controller...org:"+org+",OrgOrderNo:"+rechargeQueryReq.getOrgOrderNo());
         BaseResponse<RechargeResQuery> res = new BaseResponse<>();
         try{

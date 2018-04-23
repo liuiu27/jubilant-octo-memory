@@ -58,6 +58,6 @@ public class RechargeOrderVo {
      *
      * 主订单信息
      */
-    private OrderInfoVo orderInfoVo;
+    private OrderInfoVo orderInfoVo = new OrderInfoVo();
 
 }
