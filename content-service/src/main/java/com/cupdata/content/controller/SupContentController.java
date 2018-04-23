@@ -155,10 +155,10 @@ public class SupContentController {
 			if (!jsonObject.getString("resultCode").equals("2")){
 				return new BaseResponse(ResponseCodeMsg.ILLEGAL_PARTNER.getCode(),jsonObject.getString("resultMsg").toString());
 			}
-
+			jsonObject.remove("resultCode");
 			log.info("URL = "+url);
 			log.info(data);
-			return  new BaseResponse(jsonObject.remove("resultCode"));
+			return  new BaseResponse(jsonObject);
 
 		} catch (Exception e) {
 
