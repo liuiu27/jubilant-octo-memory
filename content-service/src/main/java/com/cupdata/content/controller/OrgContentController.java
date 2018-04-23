@@ -22,9 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,13 +46,11 @@ public class OrgContentController{
 	 * 内容引入跳转接口   机构请求
 	 * @param org
 	 * @param contentJumpReq
-	 * @param request
-	 * @param response
 	 * @return
 	 */
 	@PostMapping(path="/contentJump")
 	public String contentJump(@RequestParam(value = "org", required = true) String org,
-			@RequestBody ContentJumpReq contentJumpReq,	HttpServletRequest request, HttpServletResponse response){
+			@RequestBody ContentJumpReq contentJumpReq){
 		//Step1： 验证数据是否为空 是否合法
 		log.info("contentJump is begin params org is" + org + "contentJumpReq is" + contentJumpReq.toString());
 		BaseResponse res = new BaseResponse();
@@ -124,33 +119,23 @@ public class OrgContentController{
 				paramMap.put("tranType", ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 				ContentTransaction contentTransaction = contentBiz.selectSingle(paramMap);
 				if (null != contentTransaction) {
-					// 查到数据判断时间戳是否超时
-					Date timestamp = DateTimeUtil.getDateByString(contentJumpReq.getTimestamp().substring(0, 17),
-							"yyyyMMddHHmmssSSS");
-					// 时间戳超时
-					if (DateTimeUtil.compareTime(DateTimeUtil.getCurrentTime(), timestamp, -60 * 1000L, 3000 * 1000L)) {
-						// 合法更新数据
-						contentTransaction.setSipTranNo(sipTranNo);
-						contentTransaction.setProductNo(contentJumpReq.getProductNo());
-						contentTransaction.setTranType(ModelConstants.CONTENT_TYPE_NOT_LOGGED);
-						contentTransaction.setOrgNo(org);
-						contentTransaction.setSupNo(productInfRes.getData().getProduct().getSupplierNo());
-						String requestInfo = JSONObject.toJSONString(contentJumpReq);
-						contentTransaction.setRequestInfo(requestInfo);
-						contentBiz.update(contentTransaction);
-						//查询是否存在callback地址
-						paramMap.clear();
-						paramMap.put("tranNo", sipTranNo);
-						paramMap.put("tranType", ModelConstants.CONTENT_TYPE_TO_LOGGED);
-						contentTransaction = contentBiz.selectSingle(paramMap);
-						if(null != contentTransaction) {
-							JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
-							supUrl = resJson.getString("callBackUrl");
-						}
-					} else {
-						// 超时 抛出异常
-						res.setResponseCode(ResponseCodeMsg.TIMESTAMP_TIMEOUT.getCode());
-						res.setResponseMsg(ResponseCodeMsg.TIMESTAMP_TIMEOUT.getMsg());
+					// 合法更新数据
+					contentTransaction.setSipTranNo(sipTranNo);
+					contentTransaction.setProductNo(contentJumpReq.getProductNo());
+					contentTransaction.setTranType(ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+					contentTransaction.setOrgNo(org);
+					contentTransaction.setSupNo(productInfRes.getData().getProduct().getSupplierNo());
+					String requestInfo = JSONObject.toJSONString(contentJumpReq);
+					contentTransaction.setRequestInfo(requestInfo);
+					contentBiz.update(contentTransaction);
+					//查询是否存在callback地址
+					paramMap.clear();
+					paramMap.put("sipTranNo", sipTranNo);
+					paramMap.put("tranType", ModelConstants.CONTENT_TYPE_TO_LOGGED);
+					contentTransaction = contentBiz.selectSingle(paramMap);
+					if (null != contentTransaction) {
+						JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
+						supUrl = resJson.getString("callBackUrl");
 					}
 				} else {
 					// 查不到 抛出异常
@@ -218,9 +203,5 @@ public class OrgContentController{
 		String payTime;
 
 	}
-
-
-
-
 
 }

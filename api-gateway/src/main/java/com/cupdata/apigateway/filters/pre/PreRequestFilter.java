@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -130,7 +132,8 @@ public class PreRequestFilter extends ZuulFilter {
         // Step3：解密参数密文
         String dataPlain = null;// 请求参数明文
         try {
-            dataPlain = RSAUtils.decrypt(data, sipPriKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+           // data = URLDecoder.decode(data,"UTF-8");
+            dataPlain = RSAUtils.decrypt(data.replace(" ","+"), sipPriKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
             log.info("解密明文為 " + dataPlain);
         } catch (Exception e) {
             log.error("请求报文的密文解密失败");
@@ -143,7 +146,7 @@ public class PreRequestFilter extends ZuulFilter {
 
         // Step4：验证签名
         try {
-            boolean isPass = RSAUtils.checkSign(dataPlain, sign, orgOrSupPubKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
+            boolean isPass = RSAUtils.checkSign(dataPlain,sign.replace(" ","+"), orgOrSupPubKey, RSAUtils.SIGN_ALGORITHMS_MGF1, RSAUtils.UTF_8);
             if (!isPass) {
                 throw new Exception(ResponseCodeMsg.ILLEGAL_SIGN.getMsg());
             }
