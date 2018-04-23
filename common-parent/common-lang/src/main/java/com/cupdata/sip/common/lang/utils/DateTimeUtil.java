@@ -68,7 +68,12 @@ public class DateTimeUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);//小写的mm表示的是分钟  
 		return sdf.parse(timeStr);
 	}
-	
+    /***
+     * 根据格式获取String类型的系统当前时间
+     */
+    public static String getStringDate(String pattern) {
+        return getFormatDate(new Date(),pattern) ;
+    }
 	/**
 	 * 获得当前的系统时间
 	 * 

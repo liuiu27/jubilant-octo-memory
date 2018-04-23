@@ -3,7 +3,7 @@ package com.cupdata.ikang.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cupdata.ikang.feign.CacheFeignClient;
+import com.cupdata.ikang.feign.ConfigFeignClient;
 import com.cupdata.ikang.feign.OrderFeignClient;
 import com.cupdata.ikang.feign.ProductFeignClient;
 
@@ -24,7 +24,7 @@ public class IKangConller {
 	private ProductFeignClient productFeignClient;
 	
 	@Autowired
-	private CacheFeignClient cacheFeignClient;
+	private ConfigFeignClient ConfigFeignClient;
 	
 	
 }
