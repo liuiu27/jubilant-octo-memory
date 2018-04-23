@@ -1,36 +1,32 @@
 package com.cupdata.ikang.constant;
 
-import org.apache.commons.lang3.StringUtils;
+import com.cupdata.sip.common.lang.constant.TimeConstants;
+import com.cupdata.sip.common.lang.utils.DateTimeUtil;
+import com.cupdata.sip.common.lang.utils.MD5Util;
 
-import com.cupdata.commons.utils.DateTimeUtil;
-import com.cupdata.commons.utils.MD5Util;
-
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class IKangConstant {
 	
 	/**
 	 * 接口版本号
 	 */
 	public static final String VERSION = "0.1";
+	
+	
+	public static final String url = "http://uatservices.health.ikang.com/ikang-service/rs/cooperation/";
+	
 	/**
 	 * 调用可预约日期接口的URL
 	 * @return
 	 */
 	public static String getAppointURL(){
-		String url = getIKANGInterfaceURL();
-		if(StringUtils.isNoneBlank(url)){
-			return url.concat("findServiceOrderDay");
-		}
-		return "";
+			return url + "findServiceOrderDay";
 	}
 	
 	/**
 	 * 签名
 	 */
 	public static String getSignature(){
-		return MD5Util.encode("_ikang@".concat(getOnlyCode()).concat("$_").concat(DateTimeUtil.getCurDate()));
+		return MD5Util.encode("_ikang@".concat(getOnlyCode()).concat("$_").concat(DateTimeUtil.getStringDate(TimeConstants.DATE_PATTERN_1)));
 	}
 	
 	public static String getUrlData(){
@@ -41,29 +37,16 @@ public class IKangConstant {
 	 * 调用保存订单信息URL
 	 * @return
 	 */
-	public static String getSaveOrderURL(String bankCode){
-		String url = getIKANGInterfaceURL();
-		if(StringUtils.isNoneBlank(url)){
-			return url.concat("saveOrderInfoAuto");
-		}
-		return "";
+	public static String getSaveOrderURL(){
+		return url + "saveOrderInfoAuto";
 	}
 	
 
 	public static String getCheckDataBackURL(){
-		String url = getIKANGInterfaceURL();
-		if(StringUtils.isNoneBlank(url)){
-			return url.concat("findCheckDataBack");
-		}
-		return "";
+			return url + "findCheckDataBack";
 	}
 	
-	public static String getIKANGInterfaceURL(){
-		String url = "";
-		return url;
-	}
 	static String getOnlyCode(){
-		String onlyCode = "";
-		return onlyCode;
+		return "fNE7NVk$4*sz5@5";
 	}
 }

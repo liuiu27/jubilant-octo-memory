@@ -64,7 +64,7 @@
     </dependencies>
 
     <build>
-        <finalName>trvok-service</finalName>
+        <finalName>cdd-service</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

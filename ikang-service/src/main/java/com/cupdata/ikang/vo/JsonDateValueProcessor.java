@@ -1,4 +1,4 @@
-package com.cupdata.ikang.utils;
+package com.cupdata.ikang.vo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
