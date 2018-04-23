@@ -1,6 +1,5 @@
 package com.cupdata.sip.common.api.ihuyi.request;
 
-import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * @Author: DingCong
@@ -18,7 +17,7 @@ public class GameRechargeVo {
 	 */
 	private String gameServer;
 
-	@JSONField(name = "GameRegion")
+
 	public String getGameRegion() {
 		return gameRegion;
 	}
@@ -27,7 +26,7 @@ public class GameRechargeVo {
 		this.gameRegion = gameRegion;
 	}
 
-	@JSONField(name = "GameServer")
+
 	public String getGameServer() {
 		return gameServer;
 	}
