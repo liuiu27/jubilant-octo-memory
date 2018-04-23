@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -158,14 +159,15 @@ public class SupContentController {
 			jsonObject.remove("resultCode");
 			log.info("URL = "+url);
 			log.info(data);
-			return  new BaseResponse(jsonObject);
-
+			String pubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
+			PublicKey uppPubKey = RSAUtils.getPublicKeyFromString(pubKeyStr);
+			String reqData = RSAUtils.encrypt(JSON.toJSONString(jsonObject), uppPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+			return  new BaseResponse(reqData);
 		} catch (Exception e) {
 
 			log.info("调用失败……");
 			return new BaseResponse(ResponseCodeMsg.ILLEGAL_PARTNER.getCode(),ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());
 		}
-
 		//4组装 参数 发送请求给机构查询机构订单信息
 		//5返回
 
@@ -212,8 +214,7 @@ public class SupContentController {
         JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
         String url = EncryptionAndEecryption.Encryption(req, resJson.getString("payUrl"));
 
-        StringBuffer ret = new StringBuffer("redirect:"+url);
-        return ret.toString();
+		return "redirect:" + url;
 
 	}
 
@@ -241,13 +242,14 @@ public class SupContentController {
 		//JSONObject resJson = JSONObject.parseObject(contentTransaction.getRequestInfo());
 		url = EncryptionAndEecryption.Encryption(req, url);
 
+		log.info("url:"+url);
 		try {
 
 			String data = restTemplate.getForObject(url,String.class);
 			JSONObject jsonObject1 = JSON.parseObject(data);
 			data = jsonObject1.getString("data");
-			data = URLDecoder.decode(data,"utf-8");
-			System.out.println(data);
+			//data = URLDecoder.decode(data,"utf-8");
+            log.info("data:"+data);
 			PrivateKey sipPriKey = null;// 平台私钥
 			sipPriKey = RSAUtils.getPrivateKeyFromString("MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALrk2X2VGzNigTxGoSuyoN33Mi2/7UIePZIZVkyFgMT/bJiXyQa5FE5+pN5y/CugDdNWYyp7jpLPxczzBd8t7DuyXo5rPD6GxSJhLTaXfdJYmAnxdW2s30X+RDy0dKqxc2oPyCOmAfR9JnV+qgNbd9aOvdlHWkO8cIvwWVScQRwRAgMBAAECgYA5SGFc+3Gd20hPKDrIAPULc3O+z/+xb0Fh4UAxLg4c00j+sC8eT2Xo9SolQEsIOANkziqQ39QALYyr16TqFdI8pywmHFICisiyjKf7nIiqUfi9rVoUCiCxXrhwSmBwkGELcUcBhNupc7Bgqo7uCK+l1g8Qzj+oNtBMfv7sZrj8rQJBAPB0uIyV9ilF0QBFlQ4AaLuhKhqY9oX/vkMTspTpBkpaOv8QeOc6T+9DJAoLjkLlkXEfsLC14AHb4LdZV/kjdyMCQQDG+byuNLe3kqWqo1ecrf8mUw9tIquUkarWU0FuO9ysGjfrLdMLlsn3wlsxddU7rIelYwnLKBYBqdIkCuQiRq07AkEA1Fceyfd75EKlKEpKMI0n79mIpuhBe1+2kuGIKHwHdA1uX+QaAIe8Ixv1bXF69ZRo9a74h3R1Fu8m6ILbb0VkZQJARBcUPV0m/Xf+n000Xxaf+OJ1pfg2VSogFyX4fxuXIYH7XsyYqx+Xz+Q/xsY3CSu6Y5tnr5DxLvKJSfI8LYqYHwJBAIaXJcKpCQSsQQ+Eu8ib861dJWV4vP1jAt9xyeU90nyz5GMwWrWkQ/DkHedDVhyCURpxZTaqKpGnr9iIDIjVrD0=");
 			data = RSAUtils.decrypt(data,sipPriKey,RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
@@ -256,20 +258,28 @@ public class SupContentController {
 			JSONObject jsonObject = JSONObject.parseObject(data);
 
 			if (!jsonObject.getString("resultCode").equals("2")){
-				return new BaseResponse<>(ResponseCodeMsg.ILLEGAL_PARTNER.getCode(),jsonObject.getString("resultMsg").toString());
+				return new BaseResponse(ResponseCodeMsg.ILLEGAL_PARTNER.getCode(),"退货失败");
 			}
+			Map<String,String> res = new HashMap<>(3);
+
+			res.put("sipOrderNo",jsonObject.getString("orgOrderNo"));
+			res.put("supOrderNo",jsonObject.getString("sipOrderNo"));
+			res.put("refundAmt","2");
 
 			log.info("URL = "+url);
 			log.info(data);
 
+			String pubKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC65Nl9lRszYoE8RqErsqDd9zItv+1CHj2SGVZMhYDE/2yYl8kGuRROfqTecvwroA3TVmMqe46Sz8XM8wXfLew7sl6Oazw+hsUiYS02l33SWJgJ8XVtrN9F/kQ8tHSqsXNqD8gjpgH0fSZ1fqoDW3fWjr3ZR1pDvHCL8FlUnEEcEQIDAQAB";
+			PublicKey uppPubKey = RSAUtils.getPublicKeyFromString(pubKeyStr);
+			String reqData = RSAUtils.encrypt(JSON.toJSONString(res), uppPubKey, RSAUtils.ENCRYPT_ALGORITHM_PKCS1);
+			return new BaseResponse(reqData);
+
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
 			log.info("调用失败……");
+			return new BaseResponse(ResponseCodeMsg.ILLEGAL_PARTNER.getCode(),ResponseCodeMsg.ILLEGAL_PARTNER.getMsg());
 		}
-		return  new BaseResponse();
 
 	}
-
-
 
 }

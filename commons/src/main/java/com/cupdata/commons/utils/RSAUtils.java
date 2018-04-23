@@ -9,12 +9,10 @@ import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
-import sun.misc.BASE64Decoder;
 
 import javax.crypto.Cipher;
 import java.io.*;
 import java.math.BigInteger;
-import java.net.URLEncoder;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -971,14 +969,14 @@ public class RSAUtils {
 //
 //		System.out.println(dataPlain);
 
-		BASE64Decoder b64=new BASE64Decoder();
-		String text="qweqweqwe";
-		System.out.println();
-		text= encodeBASE64(b64.decodeBuffer(text));
-		System.out.println(text);
-
-		text= java.util.Base64.getEncoder().encodeToString(b64.decodeBuffer(text));
-		System.out.println(text);
+		//BASE64Decoder b64=new BASE64Decoder();
+		//String text="qweqweqwe";
+		//System.out.println();
+		//text= encodeBASE64(b64.decodeBuffer(text));
+		//System.out.println(text);
+        //
+		//text= java.util.Base64.getEncoder().encodeToString(b64.decodeBuffer(text));
+		//System.out.println(text);
 
 	}
 }
