@@ -22,7 +22,7 @@ echo "=== execute gateway"
 ./cdd-service.sh $1 $2
 echo "=== execute cdd-service"
 
-./config-service.sh $1 $2
+config.sh $1 $2
 echo "=== execute config-service"
 
 ./iqiyi-service.sh $1 $2

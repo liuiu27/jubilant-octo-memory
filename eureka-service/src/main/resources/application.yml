@@ -17,10 +17,10 @@ spring:
 eureka:
   environment: ${spring.profiles}
   client:
-    registerWithEureka: false    #是否将自己注册到Eureka Server，因为当前应用就是Eureka Server，所以设置为false
-    fetchRegistry: false         #是否从Eureka Server获取注册信息，因为为单点，所以设置为false
+    registerWithEureka: true    #是否将自己注册到Eureka Server，因为当前应用就是Eureka Server，所以设置为false
+    fetchRegistry: true         #是否从Eureka Server获取注册信息，因为为单点，所以设置为false
     serviceUrl:
-      defaultZone: http://localhost:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
+      defaultZone: http://10.193.17.84:${server.port}/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
   instance:
     hostname: localhost    # 指定该Eureka实例的主机名
     instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
