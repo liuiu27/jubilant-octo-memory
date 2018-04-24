@@ -1,12 +1,14 @@
 package com.cupdata.apigateway.filters.pre;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.apigateway.feign.OrgFeignClient;
 import com.cupdata.apigateway.feign.SupplierFeignClient;
 import com.cupdata.apigateway.util.GatewayUtils;
+import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.lang.RSAHelper;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
-import com.cupdata.sip.common.lang.utils.DateTimeUtil;
+import com.cupdata.sip.common.lang.utils.RSAUtils;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.http.ServletInputStreamWrapper;
@@ -15,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
 import javax.servlet.ServletInputStream;
@@ -23,7 +26,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -59,10 +61,18 @@ public class PreRequestFilter extends ZuulFilter {
 		HttpServletRequest request = ctx.getRequest();
 		log.info(String.format("send %s request to %s", request.getMethod(), request.getRequestURL().toString()));
 
-		// 不需要进行网关处理的请求
-		if (isIgnorePath(request.getRequestURI())){
+		if (request.getMethod().equals(HttpMethod.GET.name())) {
+			ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
+			ctx.setResponseStatusCode(404);// 返回错误码
+			ctx.setResponseBody(JSON.toJSONString(new BaseResponse(ResponseCodeMsg.FAIL.getCode(), "Does not support GET requests")));
+			log.info("不支持GET请求");
 			return null;
 		}
+
+		//// 不需要进行网关处理的请求
+		//if (isIgnorePath(request.getRequestURI())){
+		//	return null;
+		//}
 
 		// Step1：获取请求参数
 		String org = request.getParameter("org"); // 机构编号
@@ -82,16 +92,31 @@ public class PreRequestFilter extends ZuulFilter {
         try {
             GatewayUtils.getKey(pubKey,priKey,org,sup,orgFeignClient,supplierFeignClient);
             // 请求参数明文
-            dataPlain=  RSAHelper.decipher(data,priKey,117);
+            dataPlain=  RSAHelper.decipher(data.replace(" ","+"),priKey,117);
             if (StringUtils.isBlank(data)||StringUtils.isBlank(sign)||StringUtils.isBlank(dataPlain)) throw new Exception();
 
         } catch (Exception e) {
             ctx.setSendZuulResponse(false);
             ctx.setResponseStatusCode(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            ctx.setResponseBody("");
+            ctx.setResponseBody(JSON.toJSONString(new BaseResponse(ResponseCodeMsg.ENCRYPTED_DATA_ERROR.getCode(), "Request packet failed to decrypt")));
             return null;
         }
 
+		// Step4：验证签名
+		try {
+			boolean isPass = RSAHelper.verify(dataPlain,pubKey,sign.replace(" ","+"));
+			if (!isPass) {
+				throw new Exception(ResponseCodeMsg.ILLEGAL_SIGN.getMsg());
+			}
+		} catch (Exception e) {
+			log.error("请求报文验签失败");
+			ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
+			ctx.setResponseStatusCode(401);// 返回错误码
+			ctx.setResponseBody(JSON.toJSONString(new BaseResponse<>(ResponseCodeMsg.FAIL.getCode(), "Request packet verification failed")));
+			return null;
+		}
+
+		//Step5：验证时间戳
         if (checkTimestamp){
             try {
                 JSONObject jsonObj = JSONObject.parseObject(dataPlain);
@@ -99,9 +124,7 @@ public class PreRequestFilter extends ZuulFilter {
                 String timestampStr = String.valueOf(jsonObj.get("timestamp"));
                 Date timestamp = null;
                 timestamp = DateUtils.parseDate(timestampStr.substring(0, 17), "yyyyMMddHHmmssSSS");
-
             } catch (Exception e) {
-
                 log.info("请求报文，时间戳超时");
                 ctx.setSendZuulResponse(false);// 过滤该请求，不对其进行路由
                 ctx.setResponseStatusCode(401);// 返回错误码
