@@ -200,7 +200,7 @@ public class TrvokController implements ITrvokController{
 			trovkCodeReq.setSku(sku);
 			if(StringUtils.isBlank(voucherReq.getExpire())) {
 				//从缓存中获取券码有效期时间
-				SysConfigVO sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_VOUCHER_EXPIRE);
+				SysConfigVO sysConfigVo = configFeignClient.getSysConfig(TRVOK_VOUCHER_EXPIRE,"CUPD");
 //		    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 //		    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_VOUCHER_EXPIRE);
 //		    		res.setResponseCode(sysConfigVo.getResponseCode());
@@ -214,7 +214,7 @@ public class TrvokController implements ITrvokController{
 			trovkCodeReq.setExpire(voucherReq.getExpire());
 			trovkCodeReq.setOutTradeNo(voucherOrderRes.getData().getOrderInfoVo().getOrderNo());
 			//从缓存中获取秘钥及请求URL
-			SysConfigVO sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_PARTNER);
+			SysConfigVO sysConfigVo = configFeignClient.getSysConfig(TRVOK_PARTNER,"CUPD");
 //	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 //	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_PARTNER);
 //	    		res.setResponseCode(sysConfigVo.getResponseCode());
@@ -223,7 +223,7 @@ public class TrvokController implements ITrvokController{
 //	    	}
 			trovkCodeReq.setPartner(sysConfigVo.getParaValue());
 			
-			sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_WCF_SIGN_KEY);
+			sysConfigVo = configFeignClient.getSysConfig(TRVOK_WCF_SIGN_KEY,null);
 //	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 //	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_WCF_SIGN_KEY);
 //	    		res.setResponseCode(sysConfigVo.getResponseCode());
@@ -232,7 +232,7 @@ public class TrvokController implements ITrvokController{
 //	    	}
 			trovkCodeReq.setWcfSignKey(sysConfigVo.getParaValue());
 			
-			sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL);
+			sysConfigVo = configFeignClient.getSysConfig(TRVOK_REQUST_URL,null);
 //	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
 //	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_REQUST_URL);
 //	    		res.setResponseCode(sysConfigVo.getResponseCode());

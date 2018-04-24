@@ -20,6 +20,7 @@ import com.cupdata.sip.common.dao.entity.ServiceOrderVoucher;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderMapper;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderVoucherMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
+import com.cupdata.sip.common.lang.EntityUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,10 +55,13 @@ public class ServiceOrderVoucherBiz {
         BeanCopierUtils.copyProperties(createVoucherOrderVo,createOrderVo);
         
         ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,createOrderVo,voucherProduct, orgProductRela);
+        EntityUtils.setEntityInfo(order, EntityUtils.cfields);
         orderDao.insert(order);//插入主订单
+        
 
         //初始化券码订单
         ServiceOrderVoucher voucherOrder = OrderUtils.initVoucherOrder(order, voucherProduct.getProductNo());
+        EntityUtils.setEntityInfo(voucherOrder, EntityUtils.cfields);
         orderVoucherDao.insert(voucherOrder);//插入券码订单
 
         BeanCopierUtils.copyProperties(order,voucherOrderVo.getOrderInfoVo());
@@ -103,7 +107,6 @@ public class ServiceOrderVoucherBiz {
 		
 		ServiceOrderVoucher  serviceOrderVoucher = new ServiceOrderVoucher();
 		serviceOrderVoucher.setOrderId(voucherOrderVo.getOrderId());
-		serviceOrderVoucher.setVoucherCode(voucherOrderVo.getVoucherCode());
 		serviceOrderVoucher = orderVoucherDao.selectOne(serviceOrderVoucher);
 		
 		if(null == serviceOrderVoucher) {
@@ -113,7 +116,8 @@ public class ServiceOrderVoucherBiz {
 		BeanCopierUtils.copyProperties(voucherOrderVo,serviceOrderVoucher);
 		
 		//TODO
-		orderVoucherDao.updateByPrimaryKey(serviceOrderVoucher);
+		
+		EntityUtils.setEntityInfo(serviceOrderVoucher, EntityUtils.ufields);
 		orderVoucherDao.updateByPrimaryKeySelective(serviceOrderVoucher);
 	}
   	
