@@ -17,10 +17,10 @@ import java.util.Date;
 public class EntityUtils {
 
     // 默认属性
-    public final static String[] cfields = {"createby","createdate"};
+    public final static String[] cfields = {"createBy","createDate"};
 
     // 默认属性
-    public final static String[] ufields = {"updateby","updatedate"};
+    public final static String[] ufields = {"updateBy","updateDate"};
 
 
     public static <T> void setEntityInfo(T entity,String[] fields){
@@ -34,7 +34,7 @@ public class EntityUtils {
         Field field = ReflectionUtils.getAccessibleField(entity, "id");
         // 默认值
         Object [] value = null;
-        if(field!=null&&field.getType().equals(Integer.class)){
+        if(field!=null&&field.getType().equals(Long.class)){
             value = new Object []{name,new Date()};
         }
         // 填充默认属性值
