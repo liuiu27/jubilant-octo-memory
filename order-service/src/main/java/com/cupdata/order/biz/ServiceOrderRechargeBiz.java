@@ -16,7 +16,6 @@ import com.cupdata.sip.common.dao.entity.ServiceOrderVoucher;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderMapper;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderRechargeMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
-import com.cupdata.sip.common.lang.EntityUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -92,8 +91,8 @@ public class ServiceOrderRechargeBiz{
 	 * @param orgNo
 	 * @param orgOrderNo
 	 * @param orderDesc
-	 * @param data
-	 * @param data2
+	 * @param rechargeProduct
+	 * @param orgProductRelVo
 	 * @return
 	 */
 	@Transactional
@@ -105,6 +104,7 @@ public class ServiceOrderRechargeBiz{
 		    CreateOrderVo createOrderVo = new CreateOrderVo();
 		    createOrderVo.setOrgNo(orgNo);
 		    createOrderVo.setOrderDesc(orderDesc);
+		    createOrderVo.setOrgOrderNo(orgOrderNo);
 	        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag, createOrderVo, rechargeProduct, orgProductRelVo);
 	        orderDao.insert(order);//插入主订单
 
