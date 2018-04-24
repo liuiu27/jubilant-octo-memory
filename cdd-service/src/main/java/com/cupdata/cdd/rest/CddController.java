@@ -73,77 +73,77 @@ public class CddController implements ICddController{
 		try {
 			BaseResponse<GetVoucherRes>  res = new  BaseResponse<GetVoucherRes>();
 			//从缓存中获取请求URL
-			BaseResponse<SysConfigVO> sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_URL);
-			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_URL);
-				res.setResponseCode(sysConfigVo.getResponseCode());
-				res.setResponseMsg(sysConfigVo.getResponseMsg());
-				return res;
+			SysConfigVO sysConfigVo = configFeignClient.getSysConfig(CDD_URL,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  CDD_URL);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
 			}
-			String  cddUrl = sysConfigVo.getData().getParaValue();
+			String  cddUrl = sysConfigVo.getParaValue();
 			
 			//获取身份标识
-			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_APIKEY);
-			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_APIKEY);
-				res.setResponseCode(sysConfigVo.getResponseCode());
-				res.setResponseMsg(sysConfigVo.getResponseMsg());
-				return res;
+			sysConfigVo = configFeignClient.getSysConfig(CDD_APIKEY,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  CDD_APIKEY);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
 			}
 			
 			//初始化获取车点点请求实体
 			CddCodeReq cddCodeReq = new CddCodeReq();
-			cddCodeReq.setApiKey(sysConfigVo.getData().getParaValue()); 
+			cddCodeReq.setApiKey(sysConfigVo.getParaValue()); 
 			
 			//获取API私钥
-			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_APISECRET);
-			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_APISECRET);
-				res.setResponseCode(sysConfigVo.getResponseCode());
-				res.setResponseMsg(sysConfigVo.getResponseMsg());
-				return res;
+			sysConfigVo = configFeignClient.getSysConfig(CDD_APISECRET,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  CDD_APISECRET);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
 			}
 			
 			
 			//获取机构ID
-			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_AGENCY_ID);
-			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_AGENCY_ID);
-				res.setResponseCode(sysConfigVo.getResponseCode());
-				res.setResponseMsg(sysConfigVo.getResponseMsg());
-				return res;
+			sysConfigVo = configFeignClient.getSysConfig(CDD_AGENCY_ID, ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  CDD_AGENCY_ID);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
 			}
-			cddCodeReq.setAgencyID(sysConfigVo.getData().getParaValue());
+			cddCodeReq.setAgencyID(sysConfigVo.getParaValue());
 			
 			//获取礼包数量
-			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_NUM);
-			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_NUM);
-				res.setResponseCode(sysConfigVo.getResponseCode());
-				res.setResponseMsg(sysConfigVo.getResponseMsg());
-				return res;
+			sysConfigVo = configFeignClient.getSysConfig(CDD_NUM,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  CDD_NUM);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
 			}
-			cddCodeReq.setNum(sysConfigVo.getData().getParaValue());
+			cddCodeReq.setNum(sysConfigVo.getParaValue());
 			//获取订单类型
-			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_ORDER_TYPR);
-			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_ORDER_TYPR);
-				res.setResponseCode(sysConfigVo.getResponseCode());
-				res.setResponseMsg(sysConfigVo.getResponseMsg());
-				return res;
+			sysConfigVo = configFeignClient.getSysConfig(CDD_ORDER_TYPR,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  CDD_ORDER_TYPR);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
 			}
-			cddCodeReq.setOrderType(sysConfigVo.getData().getParaValue());//订单类型
+			cddCodeReq.setOrderType(sysConfigVo.getParaValue());//订单类型
 			cddCodeReq.setApiST(DateTimeUtil.getTenTimeStamp());//时间戳
 			
-			sysConfigVo = configFeignClient.getSysConfig("SIP", CDD_APISECRET);
-			if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-				log.error("cache-service getSysConfig result is null  params is + " + " SIP " +  CDD_APISECRET);
-				res.setResponseCode(sysConfigVo.getResponseCode());
-				res.setResponseMsg(sysConfigVo.getResponseMsg());
-				return res;
+			sysConfigVo = configFeignClient.getSysConfig(CDD_APISECRET,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  CDD_APISECRET);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
 			}
-			cddCodeReq.setMobile(CddUtil.aesUrlEncode(voucherReq.getMobileNo(), sysConfigVo.getData().getParaValue()));
-			cddCodeReq.setApiSign(cddCodeReq.getApiKey() + sysConfigVo.getData().getParaValue() + cddCodeReq.getApiST());
+			cddCodeReq.setMobile(CddUtil.aesUrlEncode(voucherReq.getMobileNo(), sysConfigVo.getParaValue()));
+			cddCodeReq.setApiSign(cddCodeReq.getApiKey() + sysConfigVo.getParaValue() + cddCodeReq.getApiST());
 			
 			BaseResponse<ProductInfoVo> productInfo = new BaseResponse<>();
 			//获取供应商产品

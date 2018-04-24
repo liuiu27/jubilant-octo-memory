@@ -81,30 +81,30 @@ public class TrvokController implements ITrvokController{
     	
     	BaseResponse<TrvokAreaRes>  res = new  BaseResponse<TrvokAreaRes>();
     	try {
-//    		SysConfigVO sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_AREA_SIGN_KEY);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_AREA_SIGN_KEY);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}else {
-//	    		log.info("cacheFeignClient  TRVOK_AREA_SIGN_KEY  SUCCESS");
-//	    	}
-//	    	areaReq.setAreaSignKey(sysConfigVo.getData().getParaValue());
-//	    	
-//	    	sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_REQUST_URL);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}else {
-//	    		log.info("cacheFeignClient  TRVOK_REQUST_URL  SUCCESS");
-//	    	}
-//	    	
-//	    	areaReq.setRequstUrl(sysConfigVo.getData().getParaValue());
+    		SysConfigVO sysConfigVo = configFeignClient.getSysConfig(TRVOK_AREA_SIGN_KEY,ModelConstants.ORG_TYPE_CUPD);
+	    	if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_AREA_SIGN_KEY);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}else {
+	    		log.info("config-service  TRVOK_AREA_SIGN_KEY  SUCCESS");
+	    	}
+	    	areaReq.setAreaSignKey(sysConfigVo.getParaValue());
 	    	
-//	    	res = tripService.getTrvokArea(areaReq);
+	    	sysConfigVo = configFeignClient.getSysConfig(TRVOK_REQUST_URL,ModelConstants.ORG_TYPE_CUPD);
+	    	if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_REQUST_URL);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}else {
+	    		log.info("config-service  TRVOK_REQUST_URL  SUCCESS");
+	    	}
+	    	
+	    	areaReq.setRequstUrl(sysConfigVo.getParaValue());
+	    	
+	    	res = tripService.getTrvokArea(areaReq);
     	}catch(Exception e){
 			log.error("getTrvokArea error is" + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
@@ -120,40 +120,40 @@ public class TrvokController implements ITrvokController{
 		log.info("TrvokController getTrvokAirportInfo begin.............param areaType is " + trvokAirportReq.getAreaType() + " airportId is " + trvokAirportReq.getAirportId());
 		BaseResponse<TrvokAirportRes> res = new  BaseResponse<TrvokAirportRes>();
 		try {
-//			BaseResponse<SysConfigVO> sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_AREA_SIGN_KEY);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_AREA_SIGN_KEY);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}else {
-//	    		log.info("cacheFeignClient  TRVOK_AREA_SIGN_KEY  SUCCESS");
-//	    	}
-//			trvokAirportReq.setAreaSignKey(sysConfigVo.getData().getParaValue());
-//			
-//			sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_REQUST_URL);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}else {
-//	    		log.info("cacheFeignClient  TRVOK_REQUST_URL  SUCCESS");
-//	    	}
-//			trvokAirportReq.setRequstUrl(sysConfigVo.getData().getParaValue());
-//			
-//			sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_IMG_URL);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_IMG_URL);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}else {
-//	    		log.info("cacheFeignClient  TRVOK_IMG_URL  SUCCESS");
-//	    	}
-//			trvokAirportReq.setImgUrl(sysConfigVo.getData().getParaValue());
-//			
-//			res = tripService.getTrvokAirportInfo(trvokAirportReq);
+			SysConfigVO sysConfigVo = configFeignClient.getSysConfig(TRVOK_AREA_SIGN_KEY,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_AREA_SIGN_KEY);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}else {
+	    		log.info("config-service  TRVOK_AREA_SIGN_KEY  SUCCESS");
+	    	}
+			trvokAirportReq.setAreaSignKey(sysConfigVo.getParaValue());
+			
+			sysConfigVo = configFeignClient.getSysConfig(TRVOK_REQUST_URL,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_REQUST_URL);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}else {
+	    		log.info("config-service  TRVOK_REQUST_URL  SUCCESS");
+	    	}
+			trvokAirportReq.setRequstUrl(sysConfigVo.getParaValue());
+			
+			sysConfigVo = configFeignClient.getSysConfig(TRVOK_IMG_URL,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_IMG_URL);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}else {
+	    		log.info("config-service  TRVOK_IMG_URL  SUCCESS");
+	    	}
+			trvokAirportReq.setImgUrl(sysConfigVo.getParaValue());
+			
+			res = tripService.getTrvokAirportInfo(trvokAirportReq);
 		}catch(Exception e){
 			log.error("getTrvokAirportInfo error is" + e.getMessage());
 			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
@@ -200,13 +200,13 @@ public class TrvokController implements ITrvokController{
 			trovkCodeReq.setSku(sku);
 			if(StringUtils.isBlank(voucherReq.getExpire())) {
 				//从缓存中获取券码有效期时间
-				SysConfigVO sysConfigVo = configFeignClient.getSysConfig(TRVOK_VOUCHER_EXPIRE,"CUPD");
-//		    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//		    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_VOUCHER_EXPIRE);
-//		    		res.setResponseCode(sysConfigVo.getResponseCode());
-//		    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//		    		return res;
-//		    	}
+				SysConfigVO sysConfigVo = configFeignClient.getSysConfig(TRVOK_VOUCHER_EXPIRE,ModelConstants.ORG_TYPE_CUPD);
+				if(null == sysConfigVo) {
+		    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_VOUCHER_EXPIRE);
+		    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+		    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+		    		return res;
+		    	}
 		    	//获取当前时间  加上默认的有效期时间
 		    	Date time = DateTimeUtil.addDay(DateTimeUtil.getCurrentTime(), Integer.valueOf(sysConfigVo.getParaValue()));
 		    	voucherReq.setExpire(DateTimeUtil.getFormatDate(time, "yyyyMMdd"));
@@ -214,31 +214,31 @@ public class TrvokController implements ITrvokController{
 			trovkCodeReq.setExpire(voucherReq.getExpire());
 			trovkCodeReq.setOutTradeNo(voucherOrderRes.getData().getOrderInfoVo().getOrderNo());
 			//从缓存中获取秘钥及请求URL
-			SysConfigVO sysConfigVo = configFeignClient.getSysConfig(TRVOK_PARTNER,"CUPD");
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_PARTNER);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}
+			SysConfigVO sysConfigVo = configFeignClient.getSysConfig(TRVOK_PARTNER,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_PARTNER);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}
 			trovkCodeReq.setPartner(sysConfigVo.getParaValue());
 			
 			sysConfigVo = configFeignClient.getSysConfig(TRVOK_WCF_SIGN_KEY,null);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_WCF_SIGN_KEY);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_WCF_SIGN_KEY);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}
 			trovkCodeReq.setWcfSignKey(sysConfigVo.getParaValue());
 			
 			sysConfigVo = configFeignClient.getSysConfig(TRVOK_REQUST_URL,null);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_REQUST_URL);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_REQUST_URL);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}
 			trovkCodeReq.setRequstUrl(sysConfigVo.getParaValue());
 			
 			// 获取券码
@@ -287,52 +287,52 @@ public class TrvokController implements ITrvokController{
 	public BaseResponse<DisableVoucherRes> disableVoucher(@RequestParam(value="org", required=true) String org, @RequestBody DisableVoucherReq disableVoucherReq) {
 		log.info("TrvokController disableVoucher begin.............");
 		BaseResponse<DisableVoucherRes> res = new BaseResponse<>();
-//		try {
+		try {
 			//调用空港接口禁用券码
-//			TrovkDisableReq trovkDisableReq = new TrovkDisableReq();
-//			BaseResponse<SysConfigVO> sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_PARTNER);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_PARTNER);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}else {
-//	    		log.info("cacheFeignClient TRVOK_PARTNER    SUCCESS");
-//	    	}
-//	    	trovkDisableReq.setPartner(sysConfigVo.getData().getParaValue());
-//	    	
-//	    	sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_WCF_SIGN_KEY);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_WCF_SIGN_KEY);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}else {
-//	    		log.info("cacheFeignClient TRVOK_WCF_SIGN_KEY    SUCCESS");
-//	    	}
-//	    	trovkDisableReq.setWcfSignKey(sysConfigVo.getData().getParaValue());
-//			
-//	    	sysConfigVo = configFeignClient.getSysConfig("CUPD", TRVOK_REQUST_URL);
-//	    	if(!ResponseCodeMsg.SUCCESS.getCode().equals(sysConfigVo.getResponseCode())) {
-//	    		log.error("cache-service getSysConfig result is null  params is + " + " CUPD " +  TRVOK_REQUST_URL);
-//	    		res.setResponseCode(sysConfigVo.getResponseCode());
-//	    		res.setResponseMsg(sysConfigVo.getResponseMsg());
-//	    		return res;
-//	    	}else {
-//	    		log.info("cacheFeignClient TRVOK_REQUST_URL    SUCCESS");
-//	    	}
-//			trovkDisableReq.setRequstUrl(sysConfigVo.getData().getParaValue());
-//			trovkDisableReq.setVerifyCode(disableVoucherReq.getVoucherCode());
-//			BaseResponse<TrovkDisableRes> baseResponse = tripService.disableCode(trovkDisableReq);
-//			if(!ResponseCodeMsg.SUCCESS.getCode().equals(baseResponse.getResponseCode())) {
-//				res.setResponseCode(baseResponse.getResponseCode());
-//				res.setResponseMsg(baseResponse.getResponseMsg());
-//				return res;
-//			}
-//		}catch(Exception e){
-//			log.error("disableVoucher error is" + e.getMessage());
-//			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
-//		}
+			TrovkDisableReq trovkDisableReq = new TrovkDisableReq();
+			SysConfigVO sysConfigVo = configFeignClient.getSysConfig(TRVOK_PARTNER,ModelConstants.ORG_TYPE_CUPD);
+			if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_PARTNER);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}else {
+	    		log.info("config-service TRVOK_PARTNER    SUCCESS");
+	    	}
+	    	trovkDisableReq.setPartner(sysConfigVo.getParaValue());
+	    	
+	    	sysConfigVo = configFeignClient.getSysConfig(TRVOK_WCF_SIGN_KEY,ModelConstants.ORG_TYPE_CUPD);
+	    	if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_WCF_SIGN_KEY);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}else {
+	    		log.info("config-service TRVOK_WCF_SIGN_KEY    SUCCESS");
+	    	}
+	    	trovkDisableReq.setWcfSignKey(sysConfigVo.getParaValue());
+			
+	    	sysConfigVo = configFeignClient.getSysConfig(TRVOK_REQUST_URL,ModelConstants.ORG_TYPE_CUPD);
+	    	if(null == sysConfigVo) {
+	    		log.error("config-service getSysConfig result is null  params is + " + ModelConstants.ORG_TYPE_CUPD +  TRVOK_REQUST_URL);
+	    		res.setResponseCode(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getCode());
+	    		res.setResponseMsg(ResponseCodeMsg.CONFIG_QUERY_EMPTY.getMsg());
+	    		return res;
+	    	}else {
+	    		log.info("config-service TRVOK_REQUST_URL    SUCCESS");
+	    	}
+			trovkDisableReq.setRequstUrl(sysConfigVo.getParaValue());
+			trovkDisableReq.setVerifyCode(disableVoucherReq.getVoucherCode());
+			BaseResponse<TrovkDisableRes> baseResponse = tripService.disableCode(trovkDisableReq);
+			if(!ResponseCodeMsg.SUCCESS.getCode().equals(baseResponse.getResponseCode())) {
+				res.setResponseCode(baseResponse.getResponseCode());
+				res.setResponseMsg(baseResponse.getResponseMsg());
+				return res;
+			}
+		}catch(Exception e){
+			log.error("disableVoucher error is" + e.getMessage());
+			throw new ErrorException(ResponseCodeMsg.SYSTEM_ERROR.getCode(),ResponseCodeMsg.SYSTEM_ERROR.getMsg());
+		}
 		return res;
 	}
 	@Override

@@ -91,6 +91,11 @@ public enum ResponseCodeMsg {
     RESULT_QUERY_EMPTY("999998","查询结果为空"),
     
     /**
+     * 系统配置表查询结果为空
+     */
+    CONFIG_QUERY_EMPTY("999901","系统配置表查询结果为空"),
+    
+    /**
      * 999999 - 查询机构信息失败
      */
     ILLEGAL_PARTNER("999999" ,"合作机构信息获取失败"),
