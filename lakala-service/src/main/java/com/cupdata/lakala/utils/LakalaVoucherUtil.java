@@ -41,17 +41,24 @@ public class LakalaVoucherUtil {
 			//合作商户号
 			String partner_id = null;
 			if(CommonUtils.isWindows()){
-				partner_id = "unionpay";
+                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("LAKALA_VOUCHER_PARTNER",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
+                    //打印日志设置响应结果:合作商户信息获取失败
+                    log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
+                    lakalaVoucherRes.setRes(false);
+                    return lakalaVoucherRes;
+                }
+                //从配置信息表中根据银行号和合作方参数来获得指定的合作商户信息
+                partner_id = configFeignClient.getSysConfig("LAKALA_VOUCHER_PARTNER",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 			}else{
 				//判空处理
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_VOUCHER_PARTNER"))){
+				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("LAKALA_VOUCHER_PARTNER",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 					//打印日志并设置响应结果:合作商户信息获取失败
 					log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
 					lakalaVoucherRes.setRes(false);
 					return lakalaVoucherRes;
 				}
 				//从配置信息表中根据银行号和合作方参数来获得指定的合作商户信息
-				partner_id = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_VOUCHER_PARTNER").getParaValue();
+				partner_id = configFeignClient.getSysConfig("LAKALA_VOUCHER_PARTNER",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 			}
 			
 			Long time = CommonUtils.getLongValue((DateTimeUtil.getCurrentTime().getTime() / 1000 / 600) * 600);
@@ -79,25 +86,24 @@ public class LakalaVoucherUtil {
 			String desKey = null;
 			if(CommonUtils.isWindows()){
 				//desKey = "5045783eb5294a48";
-				//判空处理
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_KEY"))){
-					//打印日志并设置响应结果：3DES加密key明文数据参数获取失败
-					log.error(ResponseCodeMsg.FAIL_TO_GET_3DES);
-					lakalaVoucherRes.setRes(false);
-					return lakalaVoucherRes;
-				}
-				//从配置信息表中根据银行号和3DES加密参数来获得指定的密钥数据
-				desKey = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_KEY").getParaValue();
+                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("LAKALA_GET_VOUCHER_3DES_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
+                    //打印日志并设置响应结果：3DES加密key明文数据参数获取失败
+                    log.error(ResponseCodeMsg.FAIL_TO_GET_3DES);
+                    lakalaVoucherRes.setRes(false);
+                    return lakalaVoucherRes;
+                }
+                //从配置信息表中根据银行号和3DES加密参数来获得指定的密钥数据
+                desKey = configFeignClient.getSysConfig("LAKALA_GET_VOUCHER_3DES_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 			}else{
 				//判空处理
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_KEY"))){
+				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("LAKALA_GET_VOUCHER_3DES_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 					//打印日志并设置响应结果：3DES加密key明文数据参数获取失败
 					log.error(ResponseCodeMsg.FAIL_TO_GET_3DES);
 					lakalaVoucherRes.setRes(false);
 					return lakalaVoucherRes;
 				}
 				//从配置信息表中根据银行号和3DES加密参数来获得指定的密钥数据
-				desKey = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_KEY").getParaValue();
+				desKey = configFeignClient.getSysConfig("LAKALA_GET_VOUCHER_3DES_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 			}
 			desKey = DESUtil.append(desKey, desKey.length(), 24);
 
@@ -105,25 +111,25 @@ public class LakalaVoucherUtil {
 			String desIv = null;
 			if(CommonUtils.isWindows()){
 				//desIv = "661e659d";
-				//判空处理
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_IV"))){
-					//打印日志并设置响应结果：3DES加密偏移量数据获取失败
-					log.error(ResponseCodeMsg.FAIL_TO_GET_3DES_IV.getCode());
-					lakalaVoucherRes.setRes(false);
-					return lakalaVoucherRes;
-				}
 				//从配置信息表中根据银行号和3DES加密偏移量参数来获得指定的密钥数据
-				desIv = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_IV").getParaValue();
+                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("LAKALA_GET_VOUCHER_3DES_IV",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
+                    //打印日志并设置响应结果：3DES加密偏移量数据获取失败
+                    log.error(ResponseCodeMsg.FAIL_TO_GET_3DES_IV.getCode());
+                    lakalaVoucherRes.setRes(false);
+                    return lakalaVoucherRes;
+                }
+                //从配置信息表中根据银行号和3DES加密偏移量参数来获得指定的密钥数据
+                desIv = configFeignClient.getSysConfig("LAKALA_GET_VOUCHER_3DES_IV",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 			}else{
 				//判空处理
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_IV"))){
+				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("LAKALA_GET_VOUCHER_3DES_IV",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 					//打印日志并设置响应结果：3DES加密偏移量数据获取失败
 					log.error(ResponseCodeMsg.FAIL_TO_GET_3DES_IV.getCode());
 					lakalaVoucherRes.setRes(false);
 					return lakalaVoucherRes;
 				}
 				//从配置信息表中根据银行号和3DES加密偏移量参数来获得指定的密钥数据
-				desIv = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_GET_VOUCHER_3DES_IV").getParaValue();
+				desIv = configFeignClient.getSysConfig("LAKALA_GET_VOUCHER_3DES_IV",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 			}
 			desIv = DESUtil.substring(desIv, 0, 8);
 			
@@ -133,25 +139,25 @@ public class LakalaVoucherUtil {
 			String lakalaVoucherUrl = null;
 			if(CommonUtils.isWindows()) {
 				//lakalaVoucherUrl = "http://vouchers.hicardhome.com/vouchers/getvoucher/p/" + partner_id;
-				//判空处理
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL"))){
-					//打印日志并设置响应结果：拉卡拉发券接口获取失败
-					log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
-					lakalaVoucherRes.setRes(false);
-					return lakalaVoucherRes;
-				}
 				//从配置信息表中根据银行号和3DES加密偏移量参数来获得指定的密钥数据
-				lakalaVoucherUrl = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getParaValue();
+                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("LAKALA_REQUEST_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
+                    //打印日志并设置响应结果：拉卡拉发券接口获取失败
+                    log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
+                    lakalaVoucherRes.setRes(false);
+                    return lakalaVoucherRes;
+                }
+                //从配置信息表中根据银行号和3DES加密偏移量参数来获得指定的密钥数据
+                lakalaVoucherUrl = configFeignClient.getSysConfig("LAKALA_REQUEST_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 			}else{
 				//判空处理
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL"))){
+				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("LAKALA_REQUEST_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 					//打印日志并设置响应结果：拉卡拉发券接口获取失败
 					log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
 					lakalaVoucherRes.setRes(false);
 					return lakalaVoucherRes;
 				}
 				//从配置信息表中根据银行号和3DES加密偏移量参数来获得指定的密钥数据
-                lakalaVoucherUrl = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"LAKALA_REQUEST_URL").getParaValue();
+                lakalaVoucherUrl = configFeignClient.getSysConfig("LAKALA_REQUEST_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 			}
 			
 			Map<String, Object> param = new HashMap<String, Object>();
@@ -160,7 +166,7 @@ public class LakalaVoucherUtil {
 			log.info("lakala拉卡拉获取券码接口工具类,获取券码的响应信息为" + resStr);
 			if(StringUtils.isNotBlank(resStr)){
 				lakalaVoucherRes = JSONObject.parseObject(resStr, LakalaVoucherRes.class);
-				log.info("响应结果信息:"+lakalaVoucherRes.getData());
+				log.info("拉卡拉接口获取券码结果:"+lakalaVoucherRes.getRes());
 			}
 		} catch (Exception e) {
 			log.error("调用拉卡拉发券工具类,出现异常", e);

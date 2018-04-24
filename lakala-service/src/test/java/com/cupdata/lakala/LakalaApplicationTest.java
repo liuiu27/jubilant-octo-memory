@@ -1,19 +1,46 @@
 package com.cupdata.lakala;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cupdata.lakala.feign.ConfigFeignClient;
+import com.cupdata.sip.common.api.config.response.SysConfigVO;
 import com.cupdata.sip.common.api.voucher.request.GetVoucherReq;
+import com.cupdata.sip.common.lang.constant.SysConfigParaNameEn;
 import com.cupdata.sip.common.lang.utils.CommonUtils;
 import com.cupdata.sip.common.lang.utils.DateTimeUtil;
 import com.cupdata.sip.common.lang.utils.HttpUtil;
 import com.cupdata.sip.common.lang.utils.RSAUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.annotation.Resource;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Date;
 
+@Slf4j
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest
 public class LakalaApplicationTest {
+
+    @Resource
+    private ConfigFeignClient configFeignClient;
+
+
+    @Test
+    public void testconfig(){
+
+        SysConfigVO lakala_voucher_partner = configFeignClient.getSysConfig("LAKALA_VOUCHER_PARTNER", SysConfigParaNameEn.HUAJIFEN_BANK_CODE);
+
+        log.info(lakala_voucher_partner.getParaValue());
+
+        Assert.assertNotNull(lakala_voucher_partner);
+    }
 
 
     @Test

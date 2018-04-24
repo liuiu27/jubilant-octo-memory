@@ -34,42 +34,41 @@ public class QQRechargeUtils {
 	 * QQ会员开通鉴权
 	 */
 	public static QQCheckOpenRes qqCheckOpen(QQCheckOpenReq req, ConfigFeignClient configFeignClient){
-	    log.info("QQ会员鉴权,Uin:"+req.getUin()+",Serviceid:"+req.getServiceid()+",Servernum:"+req.getServernum());
+	    log.info("QQ会员鉴权工具类,Uin:"+req.getUin()+",Serviceid:"+req.getServiceid()+",Servernum:"+req.getServernum());
 		QQCheckOpenRes qqCheckOpenRes = new QQCheckOpenRes();
 		//step1.开通鉴权url获取
 		String checkOpenUrl = null;
 		if(CommonUtils.isWindows()){
 			//如果获取数据信息为空
-			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL"))){
+			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_CHECK_OPEN_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 				qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqCheckOpenRes;
 			}
-			checkOpenUrl = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getParaValue();
+			checkOpenUrl = configFeignClient.getSysConfig("QQ_CHECK_OPEN_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 		}else{
 			//如果获取数据信息为空
-			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL"))){
+			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_CHECK_OPEN_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 				qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqCheckOpenRes;
 			}
-			checkOpenUrl = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_CHECK_OPEN_URL").getParaValue();
+			checkOpenUrl = configFeignClient.getSysConfig("QQ_CHECK_OPEN_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 		}
-		checkOpenUrl = "http://cgi.vip.qq.com/integopendebug/checkopen";
 		log.info("QQ会员开通鉴权url:"+checkOpenUrl);
 
 		//step2.会员充值key获取
 		String key = null;
 		if(CommonUtils.isWindows()){
-			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY"))){
+			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 				qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqCheckOpenRes;
 			}
-			key = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getParaValue();
+			key = configFeignClient.getSysConfig("QQ_OPEN_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 		}else{
-			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY"))){
+			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 				qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqCheckOpenRes;
 			}
-			key = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getParaValue();
+			key = configFeignClient.getSysConfig("QQ_OPEN_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 		}
 		key = "yinlian01jf";
 		log.info("QQ会员开通key:"+key);
@@ -77,17 +76,17 @@ public class QQRechargeUtils {
 		//step3.QQ会员充值source
 		if(StringUtils.isBlank(req.getSource())){
 			if(CommonUtils.isWindows()){
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE"))){
+				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_SOURCE",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 					qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 					return qqCheckOpenRes;
 				}
-				req.setSource(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getParaValue());
+				req.setSource(configFeignClient.getSysConfig("QQ_OPEN_SOURCE",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue());
 			}else{
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE"))){
+				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_SOURCE",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 					qqCheckOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 					return qqCheckOpenRes;
 				}
-				req.setSource(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getParaValue());
+				req.setSource(configFeignClient.getSysConfig("QQ_OPEN_SOURCE",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue());
 			}
 		}
 		req.setSource("10017");
@@ -119,63 +118,64 @@ public class QQRechargeUtils {
 	 * QQ会员开通
 	 */
 	public static QQOpenRes qqOpen(QQOpenReq req, ConfigFeignClient configFeignClient){
-        log.info("QQ会员开通,Uin"+req.getUin()+",Serviceid:"+req.getServiceid()+",Servernum"+req.getServernum()+",Txparam:"+req.getTxparam());
+        log.info("QQ会员开通工具类,Uin"+req.getUin()+",Serviceid:"+req.getServiceid()+",Servernum"+req.getServernum()+",Txparam:"+req.getTxparam());
 		QQOpenRes qqOpenRes = new QQOpenRes();
 
 		//step1.QQ充值接口
 		String openUrl = null;
 		if(CommonUtils.isWindows()){
-			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_URL").getParaValue())){
+			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue())){
 				qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqOpenRes;
 			}
-			openUrl = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_URL").getParaValue();
+			openUrl = configFeignClient.getSysConfig("QQ_OPEN_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 		}else{
-			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_URL").getParaValue())){
+			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue())){
 				qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqOpenRes;
 			}
-			openUrl = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_URL").getParaValue();
+			openUrl = configFeignClient.getSysConfig("QQ_OPEN_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 		}
-        openUrl = "http://cgi.vip.qq.com/integopendebug/open";
 		log.info("QQ充值接口openUrl:"+openUrl);
 
 		//step2.会员充值key
 		String key = null;
 		if(CommonUtils.isWindows()){
-			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_KEY"))){
+            key = "yinlian01jf";
+			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 				qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqOpenRes;
 			}
-			key = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getParaValue();
+			key = configFeignClient.getSysConfig("QQ_OPEN_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 		}else{
-			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_KEY"))){
+			if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 				qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 				return qqOpenRes;
 			}
-			key = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_KEY").getParaValue();
+			key = configFeignClient.getSysConfig("QQ_OPEN_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
 		}
-		key = "yinlian01jf";
+
 		log.info("会员充值key:"+key);
 
         //step3.会员充值source
 		if(StringUtils.isBlank(req.getSource())){
 			if(CommonUtils.isWindows()){
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_SOURCE"))){
+                req.setSource("10017");
+				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_SOURCE",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 					qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 					return qqOpenRes;
 				}
-				req.setSource(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getParaValue());
+				req.setSource(configFeignClient.getSysConfig("QQ_OPEN_SOURCE",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue());
 			}else{
-				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"QQ_OPEN_SOURCE"))){
+				if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("QQ_OPEN_SOURCE",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
 					qqOpenRes.setResult(ResponseCodeMsg.FAILED_TO_GET.getMsg());
 					return qqOpenRes;
 				}
-				req.setSource(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "QQ_OPEN_SOURCE").getParaValue());
+				req.setSource(configFeignClient.getSysConfig("QQ_OPEN_SOURCE",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue());
 			}
 		}
-        req.setSource("10017");
-		log.info("会员充值source:"+req.getSource());
+
+		log.info("腾讯会员充值source:"+req.getSource());
 
 		//step4.生成签名
 		String sign = MD5Util.sign(req.getServernum() + req.getServiceid() + req.getUin() + req.getAmount() + req.getTxparam() + req.getPrice() + req.getCommand() + req.getTimestamp() + req.getSource() + req.getPaytype(), key, "utf-8").toUpperCase();

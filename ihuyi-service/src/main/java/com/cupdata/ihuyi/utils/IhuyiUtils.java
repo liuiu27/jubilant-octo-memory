@@ -13,7 +13,6 @@ import com.cupdata.sip.common.api.order.response.RechargeOrderVo;
 import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
 import com.cupdata.sip.common.api.recharge.request.RechargeReq;
 import com.cupdata.sip.common.api.voucher.request.GetVoucherReq;
-import com.cupdata.sip.common.dao.entity.ServiceOrder;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.lang.constant.SysConfigParaNameEn;
 import com.cupdata.sip.common.lang.utils.CommonUtils;

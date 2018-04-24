@@ -106,13 +106,11 @@ public class ServiceOrderRechargeBiz{
 		    createOrderVo.setOrgNo(orgNo);
 		    createOrderVo.setOrderDesc(orderDesc);
 	        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag, createOrderVo, rechargeProduct, orgProductRelVo);
-	        EntityUtils.setEntityInfo(order, EntityUtils.cfields);
 	        orderDao.insert(order);//插入主订单
 
 	        //初始化充值订单
 	        ServiceOrderRecharge orderRecharge = OrderUtils.initRechargeOrder(accountNumber, rechargeProduct, order);
-	        EntityUtils.setEntityInfo(orderRecharge, EntityUtils.cfields);
-	        orderRechargeDao.insert(orderRecharge);//插入充值订单
+	        orderRechargeDao.insert(orderRecharge);//插入券码订单
 
 	        BeanCopierUtils.copyProperties(order,rechargeOrderVo.getOrderInfoVo());
 	        BeanCopierUtils.copyProperties(orderRecharge,rechargeOrderVo);
@@ -129,7 +127,6 @@ public class ServiceOrderRechargeBiz{
 			//TODO throws
 		}
 		BeanCopierUtils.copyProperties(rechargeOrderVo.getOrderInfoVo(),serviceOrder);
-		EntityUtils.setEntityInfo(serviceOrder, EntityUtils.ufields);
 		orderDao.updateByPrimaryKey(serviceOrder);
 		
 		ServiceOrderRecharge  servicseOrderRecharge = new ServiceOrderRecharge();
@@ -141,7 +138,9 @@ public class ServiceOrderRechargeBiz{
 		}
 		
 		BeanCopierUtils.copyProperties(rechargeOrderVo,servicseOrderRecharge);
-		EntityUtils.setEntityInfo(servicseOrderRecharge, EntityUtils.ufields);
+		
+		//TODO
+		orderRechargeDao.updateByPrimaryKey(servicseOrderRecharge);
 		orderRechargeDao.updateByPrimaryKeySelective(servicseOrderRecharge);
 		
 	}

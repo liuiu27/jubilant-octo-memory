@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Auther: DingCong
- * @Description: 腾讯充值业务
+ * @Description: 腾讯充值业务Controller
  * @@Date: Created in 14:27 2018/4/18
  */
 @Slf4j
@@ -113,7 +113,7 @@ public class TencentController implements ITencentController{
             QQOpenRes openRes = QQRechargeUtils.qqOpen(openReq,configFeignClient);//充值业务办理响应结果
 
             //step5.判断调用腾讯充值接口返回结果是否成功
-            if (null==openRes && !QQRechargeResCode.SUCCESS.getCode().equals(openRes.getResult())){
+            if (null==openRes || !QQRechargeResCode.SUCCESS.getCode().equals(openRes.getResult())){
                 log.error("调用腾讯接口充值失败");
 
                 //更新订单状态

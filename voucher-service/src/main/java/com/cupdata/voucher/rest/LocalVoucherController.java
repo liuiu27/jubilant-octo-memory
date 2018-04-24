@@ -68,7 +68,7 @@ public class LocalVoucherController implements ILocalVoucherController {
             ElectronicVoucherCategory electronicVoucherCategory = voucherBiz.checkVoucherValidStatusByCategoryId(categoryId);
 
             //step4.判断券码列表是否存在有效券码,获取有效券码
-            ElectronicVoucherLib electronicVoucherLib = voucherBiz.selectVoucherByCategoryId(categoryId);
+            ElectronicVoucherLib electronicVoucherLib = voucherBiz.selectVoucherByCategoryId(electronicVoucherCategory.getId());
 
             //step5.券码列表存在可用券码,从券码中获取券码号，并更新
             electronicVoucherLib.setOrgOrderNo(voucherReq.getOrgOrderNo());
@@ -154,15 +154,15 @@ public class LocalVoucherController implements ILocalVoucherController {
             voucherOrderRes.getData().setEndDate(electronicVoucherLib.getEndDate());
 
             //step8.调用订单服务更新订单
-            voucherOrderRes = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
-            if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())
+            BaseResponse baseResponse = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
+            if (!ResponseCodeMsg.SUCCESS.getCode().equals(baseResponse.getResponseCode())
                     || null == voucherOrderRes.getData() || null == voucherOrderRes.getData().getOrderInfoVo()) {
                 getVoucherRes.setResponseCode(ResponseCodeMsg.ORDER_UPDATE_ERROR.getCode());
                 getVoucherRes.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getMsg());
                 return getVoucherRes;
             }
 
-            //step9.响应结果
+            //step9.响应券码结果
             log.info("org获取sip券码结果为:券码号"+electronicVoucherLib.getTicketNo()+",有效期:"+electronicVoucherLib.getEndDate());
             GetVoucherRes res = new GetVoucherRes();
             res.setOrderNo(voucherOrderRes.getData().getOrderInfoVo().getOrderNo());      //平台订单号

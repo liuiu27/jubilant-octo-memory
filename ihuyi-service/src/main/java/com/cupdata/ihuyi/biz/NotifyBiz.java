@@ -49,7 +49,5 @@ public class NotifyBiz {
        log.info("添加数据条数:"+l);
     }
 
-
-
 }
 */
