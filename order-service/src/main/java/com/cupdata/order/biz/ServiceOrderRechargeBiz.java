@@ -16,6 +16,7 @@ import com.cupdata.sip.common.dao.entity.ServiceOrderVoucher;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderMapper;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderRechargeMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
+import com.cupdata.sip.common.lang.EntityUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -106,10 +107,12 @@ public class ServiceOrderRechargeBiz{
 		    createOrderVo.setOrderDesc(orderDesc);
 		    createOrderVo.setOrgOrderNo(orgOrderNo);
 	        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag, createOrderVo, rechargeProduct, orgProductRelVo);
+	        EntityUtils.setEntityInfo(order, EntityUtils.cfields);
 	        orderDao.insert(order);//插入主订单
 
 	        //初始化充值订单
 	        ServiceOrderRecharge orderRecharge = OrderUtils.initRechargeOrder(accountNumber, rechargeProduct, order);
+	        EntityUtils.setEntityInfo(orderRecharge, EntityUtils.cfields);
 	        orderRechargeDao.insert(orderRecharge);//插入券码订单
 
 	        BeanCopierUtils.copyProperties(order,rechargeOrderVo.getOrderInfoVo());
@@ -124,9 +127,10 @@ public class ServiceOrderRechargeBiz{
 		serviceOrder.setId(rechargeOrderVo.getOrderId());
 		serviceOrder = orderDao.selectOne(serviceOrder);
 		if(null==serviceOrder) {
-			//TODO throws
+			throw new RuntimeException();
 		}
 		BeanCopierUtils.copyProperties(rechargeOrderVo.getOrderInfoVo(),serviceOrder);
+		EntityUtils.setEntityInfo(serviceOrder, EntityUtils.ufields);
 		orderDao.updateByPrimaryKey(serviceOrder);
 		
 		ServiceOrderRecharge  servicseOrderRecharge = new ServiceOrderRecharge();
@@ -134,13 +138,11 @@ public class ServiceOrderRechargeBiz{
 		servicseOrderRecharge = orderRechargeDao.selectOne(servicseOrderRecharge);
 		
 		if(null == servicseOrderRecharge) {
-			//TODO throws
+			throw new RuntimeException();
 		}
 		
 		BeanCopierUtils.copyProperties(rechargeOrderVo,servicseOrderRecharge);
-		
-		//TODO
-		orderRechargeDao.updateByPrimaryKey(servicseOrderRecharge);
+		EntityUtils.setEntityInfo(servicseOrderRecharge, EntityUtils.ufields);
 		orderRechargeDao.updateByPrimaryKeySelective(servicseOrderRecharge);
 		
 	}
