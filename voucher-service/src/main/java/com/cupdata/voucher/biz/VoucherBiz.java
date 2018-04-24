@@ -57,7 +57,7 @@ public class VoucherBiz {
         ElecVoucherLib elecVoucherLib = ElecVoucherLibDao.selectValidVoucherLibByCategoryId(categoryId);
         ElectronicVoucherLib ElectronicVoucherLib = new ElectronicVoucherLib();
         if(CommonUtils.isNullOrEmptyOfObj(elecVoucherLib)){
-            log.info("券码列表查询不到该类别券码,categoryId:"+categoryId);
+            log.info("该类别券码已使用完,categoryId:"+categoryId);
             throw new VoucherException(ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getCode(),ResponseCodeMsg.NO_VOUCHER_AVALIABLE.getMsg());
         }
         BeanCopierUtils.copyProperties(elecVoucherLib,ElectronicVoucherLib);

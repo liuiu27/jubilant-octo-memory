@@ -13,7 +13,6 @@ import com.cupdata.sip.common.lang.utils.DateTimeUtil;
 import com.cupdata.sip.common.lang.utils.HttpUtil;
 import com.cupdata.sip.common.lang.utils.RSAUtils;
 import org.apache.log4j.Logger;
-
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.security.PublicKey;

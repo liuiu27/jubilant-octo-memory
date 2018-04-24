@@ -113,7 +113,7 @@ public class TencentController implements ITencentController{
             QQOpenRes openRes = QQRechargeUtils.qqOpen(openReq,configFeignClient);//充值业务办理响应结果
 
             //step5.判断调用腾讯充值接口返回结果是否成功
-            if (null==openRes && !QQRechargeResCode.SUCCESS.getCode().equals(openRes.getResult())){
+            if (null==openRes || !QQRechargeResCode.SUCCESS.getCode().equals(openRes.getResult())){
                 log.error("调用腾讯接口充值失败");
 
                 //更新订单状态

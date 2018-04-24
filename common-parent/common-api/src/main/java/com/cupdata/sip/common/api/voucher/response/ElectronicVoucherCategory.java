@@ -25,7 +25,7 @@ public class ElectronicVoucherCategory {
     /**
      * 券码状态
      */
-    private Character validStatus;
+    private String validStatus;
 
     /**
      * 库存警告
@@ -35,5 +35,5 @@ public class ElectronicVoucherCategory {
     /**
      * 券码类别id
      */
-    private Long categoryId;
+    private Long id;
 }

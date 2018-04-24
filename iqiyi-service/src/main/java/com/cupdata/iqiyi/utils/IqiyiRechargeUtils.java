@@ -34,14 +34,12 @@ public class IqiyiRechargeUtils {
             if(CommonUtils.isWindows()){
                 rechargeUrl = "http://openapi.vip.iqiyi.com/partner/card-subscribe.action";
             }else{
-                //对data进行判空处理
-                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_URL").getParaValue())){
+                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("IQIYI_RECHARGE_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue())){
                     log.error("获取爱奇艺地址接口数据异常");
                     iqiyiRechargeRes.setCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
                     return iqiyiRechargeRes;
                 }
-                //调用爱奇艺官方接口
-                rechargeUrl = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_URL").getParaValue();
+                rechargeUrl = configFeignClient.getSysConfig("IQIYI_RECHARGE_URL",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
             }
 
             //step2.合作商户编号
@@ -49,30 +47,26 @@ public class IqiyiRechargeUtils {
             if(CommonUtils.isWindows()){
                 partnerNo = "SHrongshu-YLZGS_JHMZC";
             }else{
-                //对data进行判空处理
-                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IQIYI_RECHARGE_PARTNER").getParaValue())) {
+                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("IQIYI_RECHARGE_PARTNER",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue())) {
                     log.error("获取爱奇艺合作商户数据异常");
                     iqiyiRechargeRes.setCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
                     return iqiyiRechargeRes;
                 }
-                //获取爱奇艺合作商户编号
-                partnerNo = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IQIYI_RECHARGE_PARTNER").getParaValue();
+                partnerNo = configFeignClient.getSysConfig("IQIYI_RECHARGE_PARTNER",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
             }
-            req.setPartnerNo(partnerNo);//设置充值商户编号
+            req.setPartnerNo(partnerNo);
 
             //step3.获取爱奇艺商家充值秘钥
             String key = null;
             if(CommonUtils.isWindows()){
                 key = "9d458a0d3552edb1";
             }else{
-                //data判空处理
-                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE,"IQIYI_RECHARGE_KEY").getParaValue())){
+                if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("IQIYI_RECHARGE_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue())){
                     log.error("获取爱奇艺秘钥数据异常");
                     iqiyiRechargeRes.setCode(ResponseCodeMsg.FAILED_TO_GET.getCode());
                     return iqiyiRechargeRes;
                 }
-                //获取爱奇艺商家秘钥
-                key = configFeignClient.getSysConfig(SysConfigParaNameEn.HUAJIFEN_BANK_CODE, "IQIYI_RECHARGE_KEY").getParaValue();
+                key = configFeignClient.getSysConfig("IQIYI_RECHARGE_KEY",SysConfigParaNameEn.HUAJIFEN_BANK_CODE).getParaValue();
             }
 
             //step4.生成签名

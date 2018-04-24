@@ -5,6 +5,10 @@ import com.cupdata.lakala.feign.OrderFeignClient;
 import com.cupdata.lakala.feign.ProductFeignClient;
 import com.cupdata.lakala.utils.LakalaVoucherUtil;
 import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.lakala.ILakalaController;
+import com.cupdata.sip.common.api.order.request.CreateVoucherOrderVo;
+import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
+import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.api.voucher.request.DisableVoucherReq;
 import com.cupdata.sip.common.api.voucher.request.GetVoucherReq;
 import com.cupdata.sip.common.api.voucher.request.WriteOffVoucherReq;
@@ -12,17 +16,14 @@ import com.cupdata.sip.common.api.voucher.response.DisableVoucherRes;
 import com.cupdata.sip.common.api.voucher.response.GetVoucherRes;
 import com.cupdata.sip.common.api.voucher.response.LakalaVoucherRes;
 import com.cupdata.sip.common.api.voucher.response.WriteOffVoucherRes;
-import com.cupdata.sip.common.api.order.request.CreateVoucherOrderVo;
-import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
-import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.lang.constant.ModelConstants;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.utils.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
-import com.cupdata.sip.common.api.lakala.ILakalaController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -49,7 +50,7 @@ public class LakalaController implements ILakalaController{
      * @return
      */
     @Override
-    public BaseResponse<GetVoucherRes> getVoucher(String org, @RequestBody GetVoucherReq voucherReq) {
+    public BaseResponse<GetVoucherRes> getVoucher(@RequestParam("org") String org, @RequestBody GetVoucherReq voucherReq) {
         log.info("lakala获取券码controller,OrgorderNo:" + voucherReq.getOrgOrderNo() + ",OrderDesc:" + voucherReq.getOrderDesc() + ",org:" + org + ",mobileNo:" + voucherReq.getMobileNo()+",ProductNo"+voucherReq.getProductNo());
         //设置响应数据结果
         BaseResponse<GetVoucherRes> getVoucherRes = new BaseResponse<GetVoucherRes>();
@@ -105,8 +106,8 @@ public class LakalaController implements ILakalaController{
 
             //调用订单服务更新订单
             log.info("lakala获取券码controller更新券码订单");
-            voucherOrderRes = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
-            if (!ResponseCodeMsg.SUCCESS.getCode().equals(voucherOrderRes.getResponseCode())
+            BaseResponse baseResponse = orderFeignClient.updateVoucherOrder(voucherOrderRes.getData());
+            if (!ResponseCodeMsg.SUCCESS.getCode().equals(baseResponse.getResponseCode())
                     || null == voucherOrderRes.getData()
                     || null == voucherOrderRes.getData().getOrderInfoVo()) {
                 getVoucherRes.setResponseCode(ResponseCodeMsg.ORDER_UPDATE_ERROR.getCode());
