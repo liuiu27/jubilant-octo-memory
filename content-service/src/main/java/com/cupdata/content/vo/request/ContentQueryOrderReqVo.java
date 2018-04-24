@@ -17,4 +17,10 @@ public class ContentQueryOrderReqVo{
 	 */
 	@NotBlank
 	private String supOrderNo;
+
+	/**
+	 * 交易类型 ： 0 支付  1 退货
+	 */
+	@NotBlank
+	String tranType;
 }

@@ -16,4 +16,13 @@ public class ContentException extends RuntimeException {
     String tips="非常抱歉，找不到您的页面了……";
 
     String code="404";
+
+    public ContentException(String code,String tips){
+        super();
+        this.code=code;
+        this.tips=tips;
+    }
+    public ContentException(){
+        super();
+    }
 }

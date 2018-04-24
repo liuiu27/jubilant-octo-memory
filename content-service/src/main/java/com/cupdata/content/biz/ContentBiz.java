@@ -3,9 +3,13 @@ package com.cupdata.content.biz;
 import com.alibaba.fastjson.JSONObject;
 import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.exception.ContentException;
+import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.vo.request.ContentJumpReqVo;
+import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.sip.common.api.BaseResponse;
+import com.cupdata.sip.common.api.order.request.CreateContentOrderVo;
+import com.cupdata.sip.common.api.order.response.OrderContentVo;
 import com.cupdata.sip.common.api.product.response.OrgProductRelVo;
 import com.cupdata.sip.common.api.product.response.ProductInfoVo;
 import com.cupdata.sip.common.dao.entity.ServiceContentTransactionLog;
@@ -44,6 +48,9 @@ public class ContentBiz {
 
     @Resource
     private ProductFeignClient productFeignClient;
+
+    @Resource
+    private OrderFeignClient orderFeignClient;
 
     @Autowired
     private ServiceContentTransactionLogMapper serviceContentTransactionLogMapper;
@@ -217,8 +224,37 @@ public class ContentBiz {
 		}
 	}
 
-    public void createAndModifyPayOrders() {
 
+    /**
+     *
+     * @param payPageVO
+     * @param oldJumpReqVo
+     * @param orgNo
+     * @param sup
+     */
+    public OrderContentVo createOrModifyPayOrders(PayPageVO payPageVO, ContentJumpReqVo oldJumpReqVo, String orgNo, String sup) {
+
+        CreateContentOrderVo createContentOrderVo = new CreateContentOrderVo();
+        createContentOrderVo.setMobileNo(oldJumpReqVo.getMobileNo());
+        createContentOrderVo.setNotifyUrl(payPageVO.getNotifyUrl());
+        createContentOrderVo.setOrderAmt(Integer.valueOf(payPageVO.getOrderAmt()));
+        createContentOrderVo.setOrderInfo(payPageVO.getOrderInfo());
+        createContentOrderVo.setOrderShow(payPageVO.getOrderShow());
+        createContentOrderVo.setOrderTitle(payPageVO.getOrderTitle());
+        createContentOrderVo.setOrgNo(orgNo);
+        createContentOrderVo.setProductNo(oldJumpReqVo.getProductNo());
+        createContentOrderVo.setProductNum(Integer.valueOf(payPageVO.getProductNum()));
+        createContentOrderVo.setSupNo(sup);
+        createContentOrderVo.setSupOrderNo(payPageVO.getSupOrderNo());
+        createContentOrderVo.setSupOrderTime(payPageVO.getSupOrderTime());
+        createContentOrderVo.setUserId(oldJumpReqVo.getUserId());
+        createContentOrderVo.setUserName(oldJumpReqVo.getUserName());
+
+        BaseResponse<OrderContentVo> contentOrder = orderFeignClient.createContentOrder(createContentOrderVo);
+        if (!contentOrder.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode()))
+            throw new ContentException("400004","订单保存失败！");
+
+         return contentOrder.getData();
 
     }
 }

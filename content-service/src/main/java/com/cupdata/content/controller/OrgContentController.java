@@ -45,7 +45,7 @@ public class OrgContentController{
 	/**
 	 * 内容引入跳转接口   机构请求
 	 * @param org
-	 * @param contentJumpReq
+	 * @param contentJumpReqVo
 	 * @return
 	 */
 	@PostMapping(path="/contentJump")
@@ -87,6 +87,7 @@ public class OrgContentController{
         BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo(productInfRes.getSupplierNo());
         if (!supByNo.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode())) {
             //内部调用错误
+			log.info("内部调用错误");
 			throw new ContentException();
         }
         //组装重定向地址及参数
@@ -97,6 +98,8 @@ public class OrgContentController{
             url = contentBiz.createRequseUrl(supUrl, JSON.toJSONString(supContentJumReqVo),supplierInfVo.getSupplierPubKey(),supplierInfVo.getSipPriKey());
         } catch (Exception e) {
             //封装参数失败
+			log.info("封装参数失败");
+			throw new ContentException();
         }
 
 		StringBuffer ret = new StringBuffer("redirect:" + url);
@@ -131,6 +134,7 @@ public class OrgContentController{
 			url = contentBiz.createRequseUrl(notifyurl, JSON.toJSONString(param),supplierInfVo.getSupplierPubKey(),supplierInfVo.getSipPriKey());
 		} catch (Exception e) {
 			//封装参数失败
+			log.info("封装参数失败");
 		}
 
         String baseResponse = restTemplate.postForObject(notifyurl, null, String.class);

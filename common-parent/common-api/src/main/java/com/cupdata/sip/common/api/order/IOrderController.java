@@ -1,14 +1,6 @@
 package com.cupdata.sip.common.api.order;
 
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.order.request.CreateContentOrderVo;
 import com.cupdata.sip.common.api.order.request.CreateRechargeOrderVo;
@@ -17,6 +9,9 @@ import com.cupdata.sip.common.api.order.response.OrderContentVo;
 import com.cupdata.sip.common.api.order.response.OrderInfoVo;
 import com.cupdata.sip.common.api.order.response.RechargeOrderVo;
 import com.cupdata.sip.common.api.order.response.VoucherOrderVo;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Auth: LinYong
@@ -131,7 +126,7 @@ public interface IOrderController {
      * @return 响应
      */
     @PostMapping("/createContentOrder")
-    BaseResponse createContentOrder(@RequestBody CreateContentOrderVo createContentOrderVo);
+    BaseResponse<OrderContentVo> createContentOrder(@RequestBody CreateContentOrderVo createContentOrderVo);
 
     /**
      * 更新内容订单

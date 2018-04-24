@@ -71,4 +71,9 @@ public class PayPageVO {
      * 交易流水号
      */
     String sipTranNo;
+
+    /**
+     * 订单标题
+     */
+    String orderTitle;
 }
