@@ -59,12 +59,12 @@ public class VoucherOrderVo {
     /**
      * 0:未使用 1:已使用
      */
-    private Character useStatus;
+    private String useStatus;
 
     /**
      * 0:有效  1:禁用
      */
-    private Character effStatus;
+    private String effStatus;
 
     /**
      * 开始时间

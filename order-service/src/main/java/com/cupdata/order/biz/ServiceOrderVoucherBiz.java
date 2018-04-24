@@ -100,7 +100,7 @@ public class ServiceOrderVoucherBiz {
 		serviceOrder.setId(voucherOrderVo.getOrderId());
 		serviceOrder = orderDao.selectOne(serviceOrder);
 		if(null==serviceOrder) {
-			//TODO throws
+			throw new RuntimeException();
 		}
 		BeanCopierUtils.copyProperties(voucherOrderVo.getOrderInfoVo(),serviceOrder);
 		orderDao.updateByPrimaryKey(serviceOrder);
@@ -110,12 +110,10 @@ public class ServiceOrderVoucherBiz {
 		serviceOrderVoucher = orderVoucherDao.selectOne(serviceOrderVoucher);
 		
 		if(null == serviceOrderVoucher) {
-			//TODO throws
+			throw new RuntimeException();
 		}
 		
 		BeanCopierUtils.copyProperties(voucherOrderVo,serviceOrderVoucher);
-		
-		//TODO
 		
 		EntityUtils.setEntityInfo(serviceOrderVoucher, EntityUtils.ufields);
 		orderVoucherDao.updateByPrimaryKeySelective(serviceOrderVoucher);
@@ -130,7 +128,7 @@ public class ServiceOrderVoucherBiz {
 		serviceOrder = orderDao.selectOne(serviceOrder);
 		
 		if(null == serviceOrder) {
-			
+			throw new RuntimeException();
 		}
 		
 		ServiceOrderVoucher  serviceOrderVoucher = new ServiceOrderVoucher();
@@ -152,7 +150,7 @@ public class ServiceOrderVoucherBiz {
 		serviceOrder = orderDao.selectOne(serviceOrder);
 		
 		if(null == serviceOrder) {
-			
+			throw new RuntimeException();
 		}
 		
 		ServiceOrderVoucher  serviceOrderVoucher = new ServiceOrderVoucher();
@@ -174,7 +172,7 @@ public class ServiceOrderVoucherBiz {
 		serviceOrder = orderDao.selectOne(serviceOrder);
 		
 		if(null == serviceOrder) {
-			
+			throw new RuntimeException();
 		}
 		
 		ServiceOrderVoucher  serviceOrderVoucher = new ServiceOrderVoucher();

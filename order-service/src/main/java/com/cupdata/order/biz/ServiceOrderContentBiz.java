@@ -16,6 +16,7 @@ import com.cupdata.sip.common.dao.entity.ServiceOrderContent;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderContentMapper;
 import com.cupdata.sip.common.dao.mapper.ServiceOrderMapper;
 import com.cupdata.sip.common.lang.BeanCopierUtils;
+import com.cupdata.sip.common.lang.EntityUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,10 +67,12 @@ public class ServiceOrderContentBiz{
 		 	BeanCopierUtils.copyProperties(createContentOrderVo,createOrderVo);
 		 	
 	        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag ,createOrderVo, productInfoVo, orgProductRelVo);
+	        EntityUtils.setEntityInfo(order, EntityUtils.cfields);
 	        orderDao.insert(order);//插入主订单
 
 	        //初始内容引入订单
 	        ServiceOrderContent  orderContent = OrderUtils.initContentOrder(order, createContentOrderVo);
+	        EntityUtils.setEntityInfo(orderContent, EntityUtils.cfields);
 	        orderContentDao.insert(orderContent);//插入内容引入订单
 	        
 	        OrderContentVo  orderContentVo = new OrderContentVo();
@@ -89,6 +92,7 @@ public class ServiceOrderContentBiz{
 			throw new RuntimeException();
 		}
 		BeanCopierUtils.copyProperties(orderContentVo.getOrderInfoVo(),serviceOrder);
+		EntityUtils.setEntityInfo(serviceOrder, EntityUtils.ufields);
 		orderDao.updateByPrimaryKey(serviceOrder);
 		
 		ServiceOrderContent  serviceOrderContent = new ServiceOrderContent();
@@ -99,12 +103,9 @@ public class ServiceOrderContentBiz{
 			log.error("serviceOrderContent serviceOrder is null");
 			throw new RuntimeException();
 		}
-		
 		BeanCopierUtils.copyProperties(orderContentVo,serviceOrderContent);
-		
-		//TODO
-		orderContentDao.updateByPrimaryKey(serviceOrderContent);
-//		orderContentDao.updateByPrimaryKeySelective(serviceOrderContent);
+		EntityUtils.setEntityInfo(serviceOrderContent, EntityUtils.ufields);
+		orderContentDao.updateByPrimaryKeySelective(serviceOrderContent);
 		
 	}
 	

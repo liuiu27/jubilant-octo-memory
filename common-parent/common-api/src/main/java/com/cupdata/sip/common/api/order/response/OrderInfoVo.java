@@ -54,7 +54,7 @@ public class OrderInfoVo {
      *订单状态
      *0：初始化；1：处理中；S：订单成功；F：订单失败；
      */
-    private Character orderStatus;
+    private String orderStatus;
 
     /**
      *订单类型
@@ -82,7 +82,7 @@ public class OrderInfoVo {
      *是否需要异步通知订单结果给机构
      *0：不需要；1：需要
      */
-    private Character isNotify;
+    private String isNotify;
 
     /**
      *异步通知URL

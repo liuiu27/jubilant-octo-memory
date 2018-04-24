@@ -44,52 +44,52 @@ public class ModelConstants {
     /**
      * 订单状态-0：未支付
      */
-    public static Character ORDER_STATUS_INITIAL = '0';
+    public static String ORDER_STATUS_INITIAL = "0";
 
     /**
      * 订单状态-1：处理中
      */
-    public static Character ORDER_STATUS_HANDING = '1';
+    public static String ORDER_STATUS_HANDING = "1";
 
     /**
      * 订单状态-S：订单成功
      */
-    public static Character ORDER_STATUS_SUCCESS = 'S';
+    public static String ORDER_STATUS_SUCCESS = "S";
 
     /**
      * 订单状态-F：订单失败
      */
-    public static Character ORDER_STATUS_FAIL = 'F';
+    public static String ORDER_STATUS_FAIL = "F";
 
     /**
      * 是否需要异步通知-0：不需要
      */
-    public static Character IS_NOTIFY_NO = '0';
+    public static String IS_NOTIFY_NO = "0";
 
     /**
      * 是否需要异步通知-1：需要
      */
-    public static Character IS_NOTIFY_YES = '1';
+    public static String IS_NOTIFY_YES = "1";
 
     /**
      * 通知状态-初始状态未通知
      */
-    public static Character NOTIFY_STATUS_INITIAL = '0';
+    public static String NOTIFY_STATUS_INITIAL = "0";
 
     /**
      * 通知状态-通知失败
      */
-    public static Character NOTIFY_STATUS_FAIL = '1';
+    public static String NOTIFY_STATUS_FAIL = "1";
 
     /**
      * 通知状态-通知成功
      */
-    public static Character NOTIFY_STATUS_SUCCESS = '2';
+    public static String NOTIFY_STATUS_SUCCESS = "2";
 
     /**
      * 通知状态-通知中
      */
-    public static Character NOTIFY_STATUS_ING = '3';
+    public static String NOTIFY_STATUS_ING = "3";
 
     /**
      * 服务供应商标识-TRVOK：空港易行
@@ -99,22 +99,22 @@ public class ModelConstants {
     /**
      * 券码使用状态 ：未使用
      */
-    public static Character VOUCHER_USE_STATUS_UNUSED = '0';
+    public static String VOUCHER_USE_STATUS_UNUSED = "0";
     
     /**
      * 券码使用状态 ：已使用
      */
-    public static Character VOUCHER_USE_STATUS_USE = '1';
+    public static String VOUCHER_USE_STATUS_USE = "1";
     
     /**
      * 券码有效状态 ： 有效
      */
-    public static Character VOUCHER_STATUS_EFF = '0';
+    public static String VOUCHER_STATUS_EFF = "0";
     
     /**
      * 券码有效状态 ： 禁用
      */
-    public static Character VOUCHER_STATUS_INVALID = '1';
+    public static String VOUCHER_STATUS_INVALID = "1";
 
     /**
      * 充值中
