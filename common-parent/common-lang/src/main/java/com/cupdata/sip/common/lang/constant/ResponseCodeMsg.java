@@ -27,7 +27,7 @@ public enum ResponseCodeMsg {
     ILLEGAL_SIGN("100003", "签名不正确"),
     
     /**
-     * 100004 - 获取信息失败
+     * 100004 -  获取信息失败
      */
 	FAILED_TO_GET("100004" ,"获取券码失败"),
 

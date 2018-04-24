@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @Auth: DingCong
- * @Description: 券码相关服务
+ * @Description: 券码相关的服务
  * @Date: 20:20 2017/12/14
  */
 @Slf4j

@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * @Author: DingCong
- * @Description: 券码类型表
+ * @Description:  券码类型表
  * @CreateDate: 2018/2/27 19:44
  */
 @Data

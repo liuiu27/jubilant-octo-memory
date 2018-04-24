@@ -56,7 +56,7 @@ public class IqiyiRechargeUtils {
             }
             req.setPartnerNo(partnerNo);
 
-            //step3.获取爱奇艺商家充值秘钥
+            //step3.获取爱奇艺商家秘钥
             String key = null;
             if(CommonUtils.isWindows()){
                 key = "9d458a0d3552edb1";

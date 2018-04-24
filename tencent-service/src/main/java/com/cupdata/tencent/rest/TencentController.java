@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Auther: DingCong
- * @Description: 腾讯充值业务
+ * @Description: 腾讯充值业务Controller
  * @@Date: Created in 14:27 2018/4/18
  */
 @Slf4j

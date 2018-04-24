@@ -177,7 +177,7 @@ public class IqiyiRechargeController implements IqiyiController{
                 return res;
             }
 
-            //step9.充值成功,响应用户
+            //step9.充值会员成功,响应用户
             log.info("爱奇艺会员充值controller充值成功,响应用户");
             RechargeRes rechargeRes = new RechargeRes();
             rechargeRes.setOrderNo(rechargeOrderRes.getData().getOrderInfoVo().getOrderNo());//平台单号

@@ -175,7 +175,7 @@ public class QQRechargeUtils {
 			}
 		}
 
-		log.info("会员充值source:"+req.getSource());
+		log.info("腾讯会员充值source:"+req.getSource());
 
 		//step4.生成签名
 		String sign = MD5Util.sign(req.getServernum() + req.getServiceid() + req.getUin() + req.getAmount() + req.getTxparam() + req.getPrice() + req.getCommand() + req.getTimestamp() + req.getSource() + req.getPaytype(), key, "utf-8").toUpperCase();

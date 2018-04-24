@@ -42,7 +42,7 @@ public class LakalaVoucherUtil {
 			String partner_id = null;
 			if(CommonUtils.isWindows()){
                 if (CommonUtils.isNullOrEmptyOfObj(configFeignClient.getSysConfig("LAKALA_VOUCHER_PARTNER",SysConfigParaNameEn.HUAJIFEN_BANK_CODE))){
-                    //打印日志并设置响应结果:合作商户信息获取失败
+                    //打印日志设置响应结果:合作商户信息获取失败
                     log.error(ResponseCodeMsg.ILLEGAL_PARTNER);
                     lakalaVoucherRes.setRes(false);
                     return lakalaVoucherRes;

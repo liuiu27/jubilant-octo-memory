@@ -136,7 +136,7 @@ public class LakalaController implements ILakalaController{
 
     /**
      * @param org 机构编号
-     * @param disableVoucherReq 禁用券码请求参数（实现方法中需要添加@RequestBody注解获取参数）
+     * @param disableVoucherReq 禁用券码请求参数（实现方法需要添加@RequestBody注解获取参数）
      * @return
      */
     @Override

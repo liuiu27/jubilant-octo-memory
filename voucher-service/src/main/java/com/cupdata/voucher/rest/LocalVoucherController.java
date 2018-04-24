@@ -162,7 +162,7 @@ public class LocalVoucherController implements ILocalVoucherController {
                 return getVoucherRes;
             }
 
-            //step9.响应结果
+            //step9.响应券码结果
             log.info("org获取sip券码结果为:券码号"+electronicVoucherLib.getTicketNo()+",有效期:"+electronicVoucherLib.getEndDate());
             GetVoucherRes res = new GetVoucherRes();
             res.setOrderNo(voucherOrderRes.getData().getOrderInfoVo().getOrderNo());      //平台订单号

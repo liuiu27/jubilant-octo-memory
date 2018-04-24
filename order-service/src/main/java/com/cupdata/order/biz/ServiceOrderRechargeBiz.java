@@ -106,7 +106,7 @@ public class ServiceOrderRechargeBiz{
 		    createOrderVo.setOrderDesc(orderDesc);
 		    createOrderVo.setOrgOrderNo(orgOrderNo);
 	        ServiceOrder order = OrderUtils.initServiceOrder(supplierFlag, createOrderVo, rechargeProduct, orgProductRelVo);
-	        orderDao.insert(order);//插入主订单
+	        orderDao.insert(order); //插入主订单
 
 	        //初始化充值订单
 	        ServiceOrderRecharge orderRecharge = OrderUtils.initRechargeOrder(accountNumber, rechargeProduct, order);
