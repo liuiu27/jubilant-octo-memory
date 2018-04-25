@@ -1,4 +1,4 @@
-package com.cupdata.sip.common.api.voucher.response;
+package com.cupdata.voucher.vo;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.cupdata.sip.common.api.ihuyi.request;
+package com.cupdata.ihuyi.vo;
 
 import lombok.Data;
 
@@ -7,21 +7,22 @@ import java.util.Date;
 /**
  * @Auther: DingCong
  * @Description:
- * @@Date: Created in 10:47 2018/4/20
+ * @@Date: Created in 10:43 2018/4/20
  */
 @Data
-public class OrderNotifyWaitVo {
+public class OrderNotifyCompleteVo {
 
     private String orderNo;
 
     private String notifyUrl;
 
-    private Date nextNotifyDate;
+    private Date completeDate;
 
     private int notifyTimes;
 
     private String notifyStatus;
 
     private String nodeName;
+
 
 }
