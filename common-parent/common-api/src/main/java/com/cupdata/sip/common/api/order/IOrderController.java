@@ -136,4 +136,12 @@ public interface IOrderController {
     @PostMapping("/updateContentOrder")
     BaseResponse updateContentOrder(@RequestBody OrderContentVo orderContentVo);
 
+    /**
+     * 根据供应商订单号查询内容引入订单
+     * @param supOrderNo
+     * @return
+     */
+    @GetMapping("/queryContentOrderBySupOrderNo/{supOrderNo}")
+	BaseResponse<OrderContentVo> queryContentOrderBySupOrderNo(String supOrderNo);
+
 }
