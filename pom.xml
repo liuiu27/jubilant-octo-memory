@@ -41,6 +41,7 @@
 		<module>bestdo-service</module>
 		<module>shengda-service</module>
 		<module>ikang-service</module>
+        <module>iyooc-service</module>
 	</modules>
 
 	<!-- 配置各个依赖库的版本，对所有依赖进行全局版本管理-->

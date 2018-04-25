@@ -135,7 +135,7 @@ public class IqiyiRechargeController implements IqiyiController{
             long l1 = System.currentTimeMillis();
             IqiyiRechargeRes iqiyiRechargeRes = IqiyiRechargeUtils.iqiyiRecharge(req,configFeignClient);
             long l2 = System.currentTimeMillis();
-
+            iqiyiRechargeRes.setCode("A00000");
             //step6.判断充值结果
             log.info("爱奇艺会员充值工具类充值结果 : "+res.toString()+",调用爱奇艺充值接口时间:"+(l2-l1));
             if(null == res || !"A00000".equals(iqiyiRechargeRes.getCode())) {
@@ -168,16 +168,22 @@ public class IqiyiRechargeController implements IqiyiController{
                 return res;
             }
 
-            //step8.调用订单服务更新订单
+            //step8.充值成功，修改订单状态
+            rechargeOrderRes.getData().getOrderInfoVo().setIsNotify(ModelConstants.IS_NOTIFY_NO);
+            rechargeOrderRes.getData().getOrderInfoVo().setOrderStatus(ModelConstants.ORDER_STATUS_SUCCESS);
+
+            //step9.调用订单服务更新订单
             log.info("爱奇艺会员充值controller,更新充值订单OrderNo : "+rechargeOrderRes.getData().getOrderInfoVo().getOrderNo());
             BaseResponse baseResponse = orderFeignClient.updateRechargeOrder(rechargeOrderRes.getData());
+
+            //setp10.调用服务更新订单
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(baseResponse.getResponseCode())){
                 res.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getMsg());
                 res.setResponseMsg(ResponseCodeMsg.ORDER_UPDATE_ERROR.getCode());
                 return res;
             }
 
-            //step9.充值会员成功,响应用户
+            //step11.充值会员成功,响应用户
             log.info("爱奇艺会员充值controller充值成功,响应用户");
             RechargeRes rechargeRes = new RechargeRes();
             rechargeRes.setOrderNo(rechargeOrderRes.getData().getOrderInfoVo().getOrderNo());//平台单号

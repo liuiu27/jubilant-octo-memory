@@ -171,6 +171,11 @@ public class ModelConstants {
      */
     public static final String ORDER_TYPE_RECHARGE_SOCIAL = "RECHARGE_SOCIAL";
 
+    /**
+     * 订单子类型：停车缴费
+     */
+    public static final String ORDER_TYPE_RECHARGE_PARKING = "RECHARGE_PARKING";
+
 
 
 

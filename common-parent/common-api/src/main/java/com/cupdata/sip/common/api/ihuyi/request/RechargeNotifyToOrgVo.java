@@ -21,7 +21,7 @@ public class RechargeNotifyToOrgVo {
     /**
      * 充值状态(1：充值中；F：充值失败；S：充值成功；)
      */
-    private Character rechargeStatus;
+    private String rechargeStatus;
 
     /**
      * 时间戳

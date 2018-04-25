@@ -20,7 +20,7 @@ public class OrderNotifyCompleteVo {
 
     private int notifyTimes;
 
-    private Character notifyStatus;
+    private String notifyStatus;
 
     private String nodeName;
 

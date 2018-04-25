@@ -1,0 +1,126 @@
+spring:
+  application:
+    name: iyooc-service
+  profiles:
+    active: dev
+server:
+   port: 9031         # 指定该实例的端口
+#日志配置
+logging:
+  config: classpath:logback-spring.xml
+#配置Hystrix的超时时间为5秒，解决Feign/Ribbon第一次请求失败的问题
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+--- # 开发环境**********************************************************************************************************
+spring:
+  profiles: dev
+
+eureka:
+  client:
+    healthcheck:
+          enabled: true
+    serviceUrl:
+      defaultZone: http://${spring.cloud.client.ipAddress}:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
+  instance:
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 50000 # 设置连接超时时间
+
+#该配置，用于禁用Hystrix的超时时间
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+
+            
+            
+--- # 测试环境**********************************************************************************************************
+spring:
+  profiles: test
+
+eureka:
+  client:
+    healthcheck:
+          enabled: true
+    serviceUrl:
+      defaultZone: http://10.193.17.84:46960/eureka/,http://10.193.17.86:46960/eureka/   #设置与Eureka Server交互的地址，多个地址之间逗号分割
+  instance:
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
+    prefer-ip-address: true     #表示将ip注册到Eureka server
+
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 1000 # 设置连接超时时间
+  OkToRetryOnAllOperations: true # 对所有操作请求都进行重试
+  MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
+  MaxAutoRetries: 1 # 对当前实例的重试次数
+
+#该配置，用于禁用Hystrix的超时时间
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+
+
+
+
+--- # 生产环境**********************************************************************************************************
+spring:
+  profiles: prd
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://10.150.9.20:46960/eureka/,http://10.150.9.21:46960/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}        # 将Instance ID设置成IP:端口的形式
+    prefer-ip-address: true     # 设置微服务调用地址为IP优先（缺省为false）
+    lease-renewal-interval-in-seconds: 20 # 心跳时间，即服务续约间隔时间（缺省为30s）
+    lease-expiration-duration-in-seconds: 60 # 发呆时间，即服务续约到期时间（缺省为90s）
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+ribbon:
+  eager-load:
+    enabled: true
+  ConnectTimeout: 1000 # 设置连接超时时间
+  ReadTimeout: 15000
+  OkToRetryOnAllOperations: false # 对所有操作请求都进行重试
+  MaxAutoRetriesNextServer: 2 # 切换实例的重试次数
+  MaxAutoRetries: 1 # 对当前实例的重试次数
+  retryableStatusCodes: 404,502

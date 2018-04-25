@@ -111,7 +111,6 @@ public class TencentController implements ITencentController{
             openReq.setTimestamp(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmss"));//设置时间戳
             openReq.setPrice(productInfo.getData().getSupplierPrice().toString());//设置供应商价格
             QQOpenRes openRes = QQRechargeUtils.qqOpen(openReq,configFeignClient);//充值业务办理响应结果
-
             //step5.判断调用腾讯充值接口返回结果是否成功
             if (null==openRes || !QQRechargeResCode.SUCCESS.getCode().equals(openRes.getResult())){
                 log.error("调用腾讯接口充值失败");

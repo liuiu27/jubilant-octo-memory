@@ -43,6 +43,6 @@ public class RechargeResQuery {
     /**
      * 充值状态
      */
-    private Character rechargeStatus;
+    private String rechargeStatus;
 }
 
