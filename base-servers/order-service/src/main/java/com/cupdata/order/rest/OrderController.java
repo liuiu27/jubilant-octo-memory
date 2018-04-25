@@ -254,7 +254,7 @@ public class OrderController implements IOrderController {
     }
     
     /**
-     * 查询内容引入订单
+     * 根据平台订单号 查询内容引入订单
      */
     @Override
     public BaseResponse<OrderContentVo> queryContentOrder(@PathVariable("orderNo")String orderNo) {
@@ -266,13 +266,34 @@ public class OrderController implements IOrderController {
     }
     
     /**
+     * 根据供应商订单号查询内容引入订单
+     */
+    @Override
+    public BaseResponse<OrderContentVo> queryContentOrderBySupOrderNo(@PathVariable("supOrderNo")String supOrderNo) {
+    	log.info("OrderController queryContentOrderBySupOrderNo supOrderNo is :" + supOrderNo);
+    	BaseResponse<OrderContentVo> res = new BaseResponse<OrderContentVo>();
+    	OrderContentVo orderContentVo = orderContentBiz.queryContentOrderBySupOrderNo(supOrderNo);
+    	res.setData(orderContentVo);
+        return res;
+    }
+    
+    /**
      * 创建内容引入订单
      */
     @Override
     public BaseResponse<OrderContentVo> createContentOrder(@RequestBody CreateContentOrderVo createContentOrderVo) {
     	log.info("创建订单Controller,ProductNo:"+createContentOrderVo.getProductNo()+",orgNo:"+createContentOrderVo.getOrgNo()+",supNo:"+createContentOrderVo.getSupNo());
         try {
-            BaseResponse<OrderContentVo> orderContentRes = new BaseResponse<OrderContentVo>();
+        	BaseResponse<OrderContentVo> orderContentRes = new BaseResponse<OrderContentVo>();
+        	//根据供应商订单号查询订单 
+        	OrderContentVo orderContentVo = orderContentBiz.queryContentOrderBySupOrderNo(createContentOrderVo.getSupNo());
+        	//如果存在说明重复请求
+        	if(null != orderContentVo) {
+        		 log.error("supOrderNo number already exists is : " + createContentOrderVo.getSupNo());
+                 orderContentRes.setResponseCode(ResponseCodeMsg.SUPORDERNO_EXISTS.getCode());
+                 orderContentRes.setResponseMsg(ResponseCodeMsg.SUPORDERNO_EXISTS.getMsg());
+                 return orderContentRes;
+        	}
             //根据产品编号,查询服务产品信息
             BaseResponse<ProductInfoVo> productInfRes = productFeignClient.findByProductNo(createContentOrderVo.getProductNo());
             if (!ResponseCodeMsg.SUCCESS.getCode().equals(productInfRes.getResponseCode())
@@ -305,7 +326,7 @@ public class OrderController implements IOrderController {
                 return orderContentRes;
             }
             //开始创建订单
-            OrderContentVo orderContentVo =  orderContentBiz.createContentOrder(supplierFlag,createContentOrderVo,productInfRes.getData(),orgProductRelRes.getData());
+            orderContentVo =  orderContentBiz.createContentOrder(supplierFlag,createContentOrderVo,productInfRes.getData(),orgProductRelRes.getData());
             orderContentRes.setData(orderContentVo);
             return orderContentRes;
         } catch (Exception e) {

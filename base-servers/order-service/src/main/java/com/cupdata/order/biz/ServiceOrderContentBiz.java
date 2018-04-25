@@ -58,6 +58,29 @@ public class ServiceOrderContentBiz{
 		return orderContentVo;
 	}
 	
+	public OrderContentVo queryContentOrderBySupOrderNo(String supOrderNo) {
+		ServiceOrder serviceOrder = new ServiceOrder();
+		serviceOrder.setOrderNo(supOrderNo);
+		serviceOrder = orderDao.selectOne(serviceOrder);
+		if(null == serviceOrder) {
+			log.error("queryContentOrder result serviceOrder is null");
+			throw new RuntimeException();
+		}
+		ServiceOrderContent orderContent = new ServiceOrderContent();
+		orderContent.setOrderId(serviceOrder.getId());
+		orderContent = orderContentDao.selectOne(orderContent);
+		
+		if(null == orderContent) {
+			log.error("queryContentOrder result orderContent is null");
+			throw new RuntimeException();
+		}
+		OrderContentVo orderContentVo = new OrderContentVo();
+		BeanCopierUtils.copyProperties(serviceOrder,orderContentVo.getOrderInfoVo());
+		BeanCopierUtils.copyProperties(orderContent,orderContentVo);
+		
+		return orderContentVo;
+	}
+	
 	@Transactional
 	public OrderContentVo createContentOrder(String supplierFlag, CreateContentOrderVo createContentOrderVo, ProductInfoVo productInfoVo, OrgProductRelVo orgProductRelVo) {
 		 	log.info("创建内容引入订单:" +  createContentOrderVo.toString());
