@@ -7,7 +7,6 @@ import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.exception.ContentException;
 import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.OrgFeignClient;
-import com.cupdata.content.feign.ProductFeignClient;
 import com.cupdata.content.feign.SupplierFeignClient;
 import com.cupdata.content.vo.*;
 import com.cupdata.content.vo.request.*;
@@ -41,10 +40,6 @@ import java.security.PublicKey;
 @Controller
 @RequestMapping("/supContent")
 public class SupContentController {
-
-
-    @Autowired
-    private ProductFeignClient productFeignClient;
 
     @Autowired
     private OrderFeignClient OrderFeignClient;
