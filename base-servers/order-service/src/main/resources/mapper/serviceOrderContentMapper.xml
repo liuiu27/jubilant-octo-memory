@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cupdata.order.dao.ServiceOrderContentDao">
+
+	<resultMap id="BaseResultMap" type="com.cupdata.commons.vo.content.ServiceOrderContent">
+		<result column="ID" property="id" jdbcType="INTEGER" />
+		<result column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NO" property="productNo" jdbcType="VARCHAR" />
+		<result column="ORG_NO" property="orgNo" jdbcType="VARCHAR" />
+		<result column="SUP_NO" property="supNo" jdbcType="VARCHAR" />
+		<result column="MOBILE_NO" property="mobileNo" jdbcType="VARCHAR" />
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="ORDER_TIME" property="orderTime" jdbcType="DATE" />
+		<result column="ORDER_TITLE" property="orderTitle" jdbcType="VARCHAR" />
+		<result column="ORDER_INFO" property="orderInfo" jdbcType="VARCHAR" />
+		<result column="ORDER_STATUS" property="orderStatus" jdbcType="VARCHAR" />
+		<result column="ORDER_AMT" property="orderAmt" jdbcType="VARCHAR" />
+		<result column="ORDER_BONUS" property="orderBonus" jdbcType="BIGINT" />
+		<result column="PAY_RIGHT" property="payAmt" jdbcType="BIGINT" />
+		<result column="PAY_BONUS" property="payBonus" jdbcType="BIGINT" />
+		<result column="PAY_RIGHT" property="payRight" jdbcType="BIGINT" />
+		<result column="CREATE_BY" property="createBy" jdbcType="BIGINT" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="DATE" />
+		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+		<result column="UPDATE_DATE" property="updateDate" jdbcType="DATE" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		  ID,
+		  ORDER_ID,
+		  PRODUCT_NO,
+		  ORG_NO,
+		  SUP_NO,
+		  MOBILE_NO,
+		  USER_ID,
+		  USER_NAME,
+		  ORDER_TIME,
+		  ORDER_TITLE,
+		  ORDER_INFO,
+		  ORDER_STATUS,
+		  ORDER_AMT,
+		  ORDER_BONUS,
+		  PAY_AMT,
+		  PAY_BONUS,
+		  PAY_RIGHT,
+		  CREATE_BY,
+		  CREATE_DATE,
+		  UPDATE_BY,
+		  UPDATE_DATE 
+	</sql>
+
+	<!-- 增加记录 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"
+		parameterType="com.cupdata.commons.vo.content.ServiceOrderContent">
+		INSERT INTO service_order_content (
+		  ORDER_ID,
+		  PRODUCT_NO,
+		  ORG_NO,
+		  SUP_NO,
+		  MOBILE_NO,
+		  USER_ID,
+		  USER_NAME,
+		  ORDER_TIME,
+		  ORDER_TITLE,
+		  ORDER_INFO,
+		  ORDER_STATUS,
+		  ORDER_AMT,
+		  ORDER_BONUS,
+		  PAY_AMT,
+		  PAY_BONUS,
+		  PAY_RIGHT,
+		  CREATE_BY,
+		  CREATE_DATE) 
+		VALUES
+		  (
+		    #{orderId},
+		    #{productNo},
+		    #{orgNo},
+		    #{supNo},
+		    #{mobileNo},
+		    #{userId},
+		    #{userName},
+		    #{orderTime},
+		    #{orderTitle},
+		    #{orderInfo},
+		    #{orderStatus},
+		    #{orderAmt},
+		    #{orderBonus},
+		    #{payAmt},
+		    #{payBonus},
+		    #{payRight},
+		    #{createBy},
+		    now()) 
+	</insert>
+
+
+	<update id="update" parameterType="com.cupdata.commons.vo.content.ServiceOrderContent">
+		UPDATE 
+		  service_order_content
+		SET
+		  ORDER_ID = #{orderId},
+		  PRODUCT_NO = #{productNo},
+		  ORG_NO = #{orgNo},
+		  SUP_NO = #{supNo},
+		  MOBILE_NO = #{mobileNo},
+		  USER_ID = #{userId},
+		  USER_NAME = #{userName},
+		  ORDER_TIME = #{orderTime},
+		  ORDER_TITLE = #{orderTitle},
+		  ORDER_INFO = #{orderInfo},
+		  ORDER_STATUS = #{orderStatus},
+		  ORDER_AMT = #{orderAmt},
+		  ORDER_BONUS = #{orderBonus},
+		  PAY_AMT = #{payAmt},
+		  PAY_BONUS = #{payBonus},
+		  PAY_RIGHT = #{payRight},
+		  UPDATE_BY = #{updateBy},
+		  UPDATE_DATE = now()
+		WHERE ID = #{ID}
+	</update>
+
+	<select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from service_order_content
+		where ID = #{id}
+	</select>
+
+	<select id="selectSingle" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from service_order_content
+		where 1=1
+		<if test=" id != null and id != ''">
+			and ID = #{id}
+		</if>
+		<if test=" orderId != null and orderId != ''">
+			and ORDER_ID = #{orderId}
+		</if>
+		<if test=" productNo != null and productNo != ''">
+			and PRODUCT_NO = #{productNo}
+		</if>
+		<if test=" orgNo != null and orgNo != ''">
+			and ORG_NO = #{orgNo}
+		</if>
+		<if test=" supNo != null and supNo != ''">
+			and SUP_NO = #{supNo}
+		</if>
+		<if test=" mobileNo != null and mobileNo != ''">
+			and MOBILE_NO = #{mobileNo}
+		</if>
+		<if test=" userId != null and userId != ''">
+			and USER_ID = #{userId}
+		</if>
+		<if test=" userName != null and userName != ''">
+			and USER_NAME = #{userName}
+		</if>
+		<if test=" orderTime != null and orderTime != ''">
+			and ORDER_TIME = #{orderTime}
+		</if>
+		<if test=" orderInfo != null and orderInfo != ''">
+			and ORDER_INFO = #{orderInfo}
+		</if>
+		<if test=" orderStatus != null and orderStatus != ''">
+			and ORDER_STATUS = #{orderStatus}
+		</if>
+		<if test=" orderAmt != null and orderAmt != ''">
+			and ORDER_AMT = #{orderAmt}
+		</if>
+		<if test=" orderBonus != null and orderBonus != ''">
+			and ORDER_BONUS = #{orderBonus}
+		</if>
+		<if test=" payAmt != null and payAmt != ''">
+			and PAY_AMT = #{payAmt}
+		</if>
+		<if test=" payBonus != null and payBonus != ''">
+			and PAY_BONUS = #{payBonus}
+		</if>
+		<if test=" payRight != null and payRight != ''">
+			and PAY_RIGHT = #{payRight}
+		</if>
+		limit 1
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from service_order_content
+		where 1=1
+		<if test=" id != null and id != ''">
+			and ID = #{id}
+		</if>
+		<if test=" orderId != null and orderId != ''">
+			and ORDER_ID = #{orderId}
+		</if>
+		<if test=" productNo != null and productNo != ''">
+			and PRODUCT_NO = #{productNo}
+		</if>
+		<if test=" orgNo != null and orgNo != ''">
+			and ORG_NO = #{orgNo}
+		</if>
+		<if test=" supNo != null and supNo != ''">
+			and SUP_NO = #{supNo}
+		</if>
+		<if test=" mobileNo != null and mobileNo != ''">
+			and MOBILE_NO = #{mobileNo}
+		</if>
+		<if test=" userId != null and userId != ''">
+			and USER_ID = #{userId}
+		</if>
+		<if test=" userName != null and userName != ''">
+			and USER_NAME = #{userName}
+		</if>
+		<if test=" orderTime != null and orderTime != ''">
+			and ORDER_TIME = #{orderTime}
+		</if>
+		<if test=" orderInfo != null and orderInfo != ''">
+			and ORDER_INFO = #{orderInfo}
+		</if>
+		<if test=" orderStatus != null and orderStatus != ''">
+			and ORDER_STATUS = #{orderStatus}
+		</if>
+		<if test=" orderAmt != null and orderAmt != ''">
+			and ORDER_AMT = #{orderAmt}
+		</if>
+		<if test=" orderBonus != null and orderBonus != ''">
+			and ORDER_BONUS = #{orderBonus}
+		</if>
+		<if test=" payAmt != null and payAmt != ''">
+			and PAY_AMT = #{payAmt}
+		</if>
+		<if test=" payBonus != null and payBonus != ''">
+			and PAY_BONUS = #{payBonus}
+		</if>
+		<if test=" payRight != null and payRight != ''">
+			and PAY_RIGHT = #{payRight}
+		</if>
+	</select>
+
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cupdata.order.dao.ServiceOrderRechargeDao">
+
+    <resultMap id="BaseResultMap" type="com.cupdata.commons.model.ServiceOrderRecharge">
+        <result column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="ORDER_ID" property="orderId" jdbcType="INTEGER"/>
+        <result column="PRODUCT_NO" property="productNo" jdbcType="VARCHAR"/>
+        <result column="ACCOUNT_NUMBER" property="accountNumber" jdbcType="VARCHAR"/>
+        <result column="OPEN_DURATION" property="openDuration" jdbcType="BIGINT"/>
+		<result column="RECHARGE_AMT" property="rechargeAmt" jdbcType="BIGINT"/>
+		<result column="RECHARGE_TRAFFIC" property="rechargeTraffic" jdbcType="BIGINT"/>
+		<result column="RECHARGE_NUMBER" property="rechargeNumber" jdbcType="BIGINT"/>
+		<result column="GAME_REGION" property="gameRegion" jdbcType="VARCHAR"/>
+		<result column="GAME_SERVER" property="gameServer" jdbcType="VARCHAR"/>
+		<result column="CREATE_BY" property="createBy" jdbcType="VARCHAR"/>
+        <result column="CREATE_DATE" property="createDate" jdbcType="DATE"/>
+		<result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="UPDATE_DATE" property="updateDate" jdbcType="DATE"/>
+    </resultMap>
+    
+    
+    <sql id="Base_Column_List">
+	ID,
+	ORDER_ID,
+	PRODUCT_NO,
+	ACCOUNT_NUMBER,
+	OPEN_DURATION,
+	RECHARGE_AMT,
+	RECHARGE_TRAFFIC,
+	RECHARGE_NUMBER,
+	GAME_REGION,
+	GAME_SERVER,
+	CREATE_BY,
+	CREATE_DATE,
+	UPDATE_BY,
+	UPDATE_DATE
+    </sql>
+
+	<!-- 增加记录 -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.cupdata.commons.model.ServiceOrderRecharge">
+		insert into SERVICE_ORDER_RECHARGE (ORDER_ID,PRODUCT_NO,ACCOUNT_NUMBER,OPEN_DURATION,RECHARGE_AMT,RECHARGE_TRAFFIC,
+		RECHARGE_NUMBER,GAME_REGION,GAME_SERVER,CREATE_BY,CREATE_DATE)
+		values(#{orderId},#{productNo},#{accountNumber},#{openDuration},#{rechargeAmt},#{rechargeTraffic},
+		#{rechargeNumber},#{gameRegion},#{gameServer},#{createBy},now())
+	</insert>
+
+	<!--更新记录-->
+	<update id="update" parameterType="com.cupdata.commons.model.ServiceOrderRecharge">
+		UPDATE
+		SERVICE_ORDER_RECHARGE
+		SET
+		ORDER_ID = #{orderId},
+		PRODUCT_NO = #{productNo},
+		ACCOUNT_NUMBER = #{accountNumber},
+		OPEN_DURATION = #{openDuration},
+		RECHARGE_AMT = #{rechargeAmt},
+		RECHARGE_TRAFFIC = #{rechargeTraffic},
+		RECHARGE_NUMBER = #{rechargeNumber},
+		GAME_REGION = #{gameRegion},
+		GAME_SERVER = #{gameServer},
+		UPDATE_BY = #{updateBy},
+		UPDATE_DATE = NOW()
+		WHERE ORDER_ID = #{orderId};
+	</update>
+
+
+    <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from SERVICE_ORDER_RECHARGE
+        where ID = #{id}
+    </select>
+    
+     <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from SERVICE_ORDER_RECHARGE
+        where 1=1
+        <if test=" id != null and id != ''">
+				and ID = #{id}
+		</if>
+		 <if test=" orderId != null and orderId != ''">
+			 and ORDER_ID = #{orderId}
+		 </if>
+		 <if test=" productNo != null and productNo != ''">
+			 and PRODUCT_NO = #{productNo}
+		 </if>
+		 <if test=" accountNumber != null and accountNumber != ''">
+			 and ACCOUNT_NUMBER = #{accountNumber}
+		 </if>
+		 <if test=" openDuration != null and openDuration != ''">
+			 and OPEN_DURATION = #{openDuration}
+		 </if>
+		 <if test=" rechargeAmt != null and rechargeAmt != ''">
+			 and RECHARGE_AMT = #{rechargeAmt}
+		 </if>
+		 <if test=" rechargeTraffic != null and rechargeTraffic != ''">
+			 and RECHARGE_TRAFFIC = #{rechargeTraffic}
+		 </if>
+		 <if test=" rechargeNumber != null and rechargeNumber != ''">
+			 and RECHARGE_NUMBER = #{rechargeNumber}
+		 </if>
+		 <if test=" gameRegion != null and gameRegion != ''">
+			 and GAME_REGION = #{gameRegion}
+		 </if>
+		 <if test=" gameServer != null and gameServer != ''">
+			 and GAME_SERVER = #{gameServer}
+		 </if>
+    </select>
+
+	<select id="selectSingle" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from SERVICE_ORDER_RECHARGE
+		where 1=1
+		<if test=" id != null and id != ''">
+			and ID = #{id}
+		</if>
+		<if test=" orderId != null and orderId != ''">
+			and ORDER_ID = #{orderId}
+		</if>
+		<if test=" productNo != null and productNo != ''">
+			and PRODUCT_NO = #{productNo}
+		</if>
+		<if test=" accountNumber != null and accountNumber != ''">
+			and ACCOUNT_NUMBER = #{accountNumber}
+		</if>
+		<if test=" openDuration != null and openDuration != ''">
+			and OPEN_DURATION = #{openDuration}
+		</if>
+		<if test=" rechargeAmt != null and rechargeAmt != ''">
+			and RECHARGE_AMT = #{rechargeAmt}
+		</if>
+		<if test=" rechargeTraffic != null and rechargeTraffic != ''">
+			and RECHARGE_TRAFFIC = #{rechargeTraffic}
+		</if>
+		<if test=" rechargeNumber != null and rechargeNumber != ''">
+			and RECHARGE_NUMBER = #{rechargeNumber}
+		</if>
+		<if test=" gameRegion != null and gameRegion != ''">
+			and GAME_REGION = #{gameRegion}
+		</if>
+		<if test=" gameServer != null and gameServer != ''">
+			and GAME_SERVER = #{gameServer}
+		</if>
+		limit 1
+	</select>
+
+</mapper>
