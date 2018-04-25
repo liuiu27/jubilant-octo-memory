@@ -101,7 +101,6 @@ public class OrgContentController{
 			log.info("封装参数失败");
 			throw new ContentException();
         }
-
 		StringBuffer ret = new StringBuffer("redirect:" + url);
 	    return ret.toString();
 	}

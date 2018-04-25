@@ -22,7 +22,7 @@
 	<modules>
 
 		<module>trvok-service</module>
-        <module>orgsupplier-service</module>
+
         <module>voucher-service</module>
         <module>recharge-service</module>
 

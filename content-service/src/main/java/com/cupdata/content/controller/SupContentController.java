@@ -192,7 +192,7 @@ public class SupContentController {
         orgPayVO.setTimeOut(payPageVO.getTimeOut());
         orgPayVO.setSipOrderTime(payPageVO.getSupOrderTime());
         orgPayVO.setSipOrderNo(payOrders.getOrderInfoVo().getOrderNo());
-        orgPayVO.setPayBackUrl("");
+        orgPayVO.setPayBackUrl(payPageVO.getPayBackUrl());
         orgPayVO.setTimestamp(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
 
         BaseResponse<OrgInfoVo> orgByNo = orgFeignClient.findOrgByNo(contentTransaction.getOrgNo());

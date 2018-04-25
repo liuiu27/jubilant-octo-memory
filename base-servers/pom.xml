@@ -17,6 +17,7 @@
         <module>order-service</module>
         <module>product-service</module>
         <module>config-service</module>
+        <module>orgsupplier-service</module>
     </modules>
 
     <build>
