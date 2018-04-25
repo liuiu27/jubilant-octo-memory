@@ -60,6 +60,10 @@ public class ModelConstants {
      * 订单状态-F：订单失败
      */
     public static String ORDER_STATUS_FAIL = "F";
+    /**
+     * 订单状态-R：订单退货
+     */
+    public static String ORDER_STATUS_REFUND = "R";
 
     /**
      * 是否需要异步通知-0：不需要

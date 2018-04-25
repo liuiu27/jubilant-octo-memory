@@ -27,5 +27,6 @@
     <result column="CREATE_DATE" jdbcType="TIMESTAMP" property="createDate" />
     <result column="UPDATE_BY" jdbcType="VARCHAR" property="updateBy" />
     <result column="UPDATE_DATE" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="PAY_NOTIFY_URL" jdbcType="VARCHAR" property="payNotifyUrl" />
   </resultMap>
 </mapper>

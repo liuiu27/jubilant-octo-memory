@@ -1,4 +1,4 @@
-package com.cupdata.content.vo.request;
+package com.cupdata.content.vo;
 
 import lombok.Data;
 
