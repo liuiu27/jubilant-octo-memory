@@ -60,18 +60,18 @@ public class SupContentController {
     /**
      * 内容引入登录接口   供应商请求机构
      *
-     * @param contentLoginReq
+     * @param loginReq
      * @return
      */
     @PostMapping("contentLogin")
-    public String contentLogin(@RequestParam(value = "sup") String sup, @Validated @RequestBody ContentLoginReqVo contentLoginReq) {
-        log.info("contentLogin is begin contentLoginReq " + contentLoginReq.toString());
+    public String contentLogin(@RequestParam(value = "sup") String sup, @Validated @RequestBody SupLoginReqVo loginReq) {
+        log.info("contentLogin is begin contentLoginReq " + loginReq.toString());
 
         //查询是否存在此流水号
-        ContentTransactionLogDTO contentTransaction = contentBiz.queryContentTransactionByTranNo(contentLoginReq.getSipTranNo(), ModelConstants.CONTENT_TYPE_NOT_LOGGED);
+        ContentTransactionLogDTO contentTransaction = contentBiz.queryContentTransactionByTranNo(loginReq.getSipTranNo(), ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 
         //获取机构登录地址
-        ContentJumpReqVo resJson = JSONObject.parseObject(contentTransaction.getRequestInfo(), ContentJumpReqVo.class);
+        OrgJumpReqVo resJson = JSONObject.parseObject(contentTransaction.getRequestInfo(), OrgJumpReqVo.class);
 
         BaseResponse<OrgInfoVo> orgByNo = orgFeignClient.findOrgByNo(contentTransaction.getOrgNo());
         if (!orgByNo.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode())) {
@@ -82,13 +82,13 @@ public class SupContentController {
         OrgInfoVo orgInfoVo = orgByNo.getData();
         String url = null;
         try {
-            url = contentBiz.createRequseUrl(resJson.getLoginUrl(), JSON.toJSONString(contentLoginReq), orgInfoVo.getOrgPubKey(), orgInfoVo.getSipPriKey());
+            url = contentBiz.createRequseUrl(resJson.getLoginUrl(), JSON.toJSONString(loginReq), orgInfoVo.getOrgPubKey(), orgInfoVo.getSipPriKey());
         } catch (Exception e) {
             log.info("封装重定向地址错误");
             throw new ContentException();
         }
         contentTransaction.setSupNo(sup);
-        contentTransaction.setRequestInfo(JSON.toJSONString(contentLoginReq));
+        contentTransaction.setRequestInfo(JSON.toJSONString(loginReq));
         contentTransaction.setTranType(ModelConstants.CONTENT_TYPE_TO_LOGGED);
 
         //插入或更新 登陆 流水记录
@@ -193,7 +193,7 @@ public class SupContentController {
         ContentTransactionLogDTO contentTransaction = contentBiz.queryContentTransactionByTranNo(payPageVO.getSipTranNo(), ModelConstants.CONTENT_TYPE_NOT_LOGGED);
 
         //获取上次跳转信息
-        ContentJumpReqVo oldJumpReqVo = JSONObject.parseObject(contentTransaction.getRequestInfo(), ContentJumpReqVo.class);
+        OrgJumpReqVo oldJumpReqVo = JSONObject.parseObject(contentTransaction.getRequestInfo(), OrgJumpReqVo.class);
         //过滤已成功支付订单请求
         //Step2 创建交易订单，并保存参数。
         OrderContentVo payOrders = contentBiz.createOrModifyPayOrders(payPageVO, oldJumpReqVo, contentTransaction.getOrgNo(), sup);
@@ -212,6 +212,7 @@ public class SupContentController {
         orgPayVO.setSipOrderTime(payPageVO.getSupOrderTime());
         orgPayVO.setSipOrderNo(payOrders.getOrderInfoVo().getOrderNo());
         orgPayVO.setPayBackUrl(payPageVO.getPayBackUrl());
+        orgPayVO.setProductNo(payPageVO.getProductNo());
         orgPayVO.setTimestamp(DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8));
 
         BaseResponse<OrgInfoVo> orgByNo = orgFeignClient.findOrgByNo(contentTransaction.getOrgNo());

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ContentJumpReqVo{
+public class OrgJumpReqVo{
 	
 	/**
 	 * 服务产品编号

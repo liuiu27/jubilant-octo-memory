@@ -7,11 +7,11 @@ import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.exception.ContentException;
 import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.SupplierFeignClient;
-import com.cupdata.content.vo.SupContentJumReqVo;
+import com.cupdata.content.vo.SupJumReqVo;
 import com.cupdata.content.vo.SupPayNotifyReqVO;
-import com.cupdata.content.vo.request.ContentJumpReqVo;
-import com.cupdata.content.vo.request.ContentLoginReqVo;
+import com.cupdata.content.vo.request.OrgJumpReqVo;
 import com.cupdata.content.vo.request.OrgPayNotifyVO;
+import com.cupdata.content.vo.request.SupLoginReqVo;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.order.response.OrderContentVo;
 import com.cupdata.sip.common.api.orgsup.response.SupplierInfVo;
@@ -54,17 +54,17 @@ public class OrgContentController {
      * 内容引入跳转接口   机构请求
      *
      * @param org
-     * @param contentJumpReqVo
+     * @param orgJumpReqVo
      * @return
      */
     @PostMapping(path = "/contentJump")
     public String contentJump(@RequestParam(value = "org") String org,
-                              @Validated @RequestBody ContentJumpReqVo contentJumpReqVo) {
+                              @Validated @RequestBody OrgJumpReqVo orgJumpReqVo) {
         //Step1： 验证数据是否为空 是否合法
-        log.info("contentJump is begin params org is" + org + "contentJumpReq is" + contentJumpReqVo.toString());
+        log.info("contentJump is begin params org is" + org + "contentJumpReq is" + orgJumpReqVo.toString());
 
         // Step2：查询服务产品信息
-        ProductInfoVo productInfRes = contentBiz.findByProductNo(contentJumpReqVo.getProductNo());
+        ProductInfoVo productInfRes = contentBiz.findByProductNo(orgJumpReqVo.getProductNo());
 
         // Step3：验证机构与产品是否关联
         contentBiz.validatedProductNo(org, productInfRes.getProductType(), productInfRes.getProductNo());
@@ -72,26 +72,25 @@ public class OrgContentController {
         //根据产品获取供应商 主页URL
         String supUrl = productInfRes.getServiceApplicationPath();
 
-
 //		//Step5 :   判断流水号  如果为空创建 新的   如果不为空则修改
-        contentBiz.queryAndinsertOrUpdateContentTransaction(contentJumpReqVo, productInfRes, ModelConstants.CONTENT_TYPE_NOT_LOGGED, null);
+        contentBiz.queryAndinsertOrUpdateContentTransaction(orgJumpReqVo, productInfRes, ModelConstants.CONTENT_TYPE_NOT_LOGGED, null);
 
         //查询是否存在下一步操作  fallback地址
-        ContentTransactionLogDTO contentTransactionLogDTO = contentBiz.queryContentTransactionByTranNo(contentJumpReqVo.getSipTranNo(), ModelConstants.CONTENT_TYPE_TO_LOGGED);
+        ContentTransactionLogDTO contentTransactionLogDTO = contentBiz.queryContentTransactionByTranNo(orgJumpReqVo.getSipTranNo(), ModelConstants.CONTENT_TYPE_TO_LOGGED);
 
         if (null != contentTransactionLogDTO) {
-            ContentLoginReqVo contentLoginReq = JSONObject.parseObject(contentTransactionLogDTO.getRequestInfo(), ContentLoginReqVo.class);
+            SupLoginReqVo contentLoginReq = JSONObject.parseObject(contentTransactionLogDTO.getRequestInfo(), SupLoginReqVo.class);
             supUrl = contentLoginReq.getCallBackUrl();
         }
         // 组装参数 发送请求
-        SupContentJumReqVo supContentJumReqVo = new SupContentJumReqVo();
-        supContentJumReqVo.setLoginFlag(contentJumpReqVo.getLoginFlag());
-        supContentJumReqVo.setMobileNo(contentJumpReqVo.getMobileNo());
+        SupJumReqVo supJumReqVo = new SupJumReqVo();
+        supJumReqVo.setLoginFlag(orgJumpReqVo.getLoginFlag());
+        supJumReqVo.setMobileNo(orgJumpReqVo.getMobileNo());
         String timestamp = DateTimeUtil.getFormatDate(DateTimeUtil.getCurrentTime(), "yyyyMMddHHmmssSSS") + CommonUtils.getCharAndNum(8);
-        supContentJumReqVo.setTimestamp(timestamp);
-        supContentJumReqVo.setUserId(contentJumpReqVo.getUserId());
-        supContentJumReqVo.setUserName(contentJumpReqVo.getUserName());
-
+        supJumReqVo.setTimestamp(timestamp);
+        supJumReqVo.setUserId(orgJumpReqVo.getUserId());
+        supJumReqVo.setUserName(orgJumpReqVo.getUserName());
+        supJumReqVo.setProductNo(productInfRes.getProductNo());
         //封装重定向到机构的地址
         BaseResponse<SupplierInfVo> supByNo = supplierFeignClient.findSupByNo(productInfRes.getSupplierNo());
         if (!supByNo.getResponseCode().equals(ResponseCodeMsg.SUCCESS.getCode())) {
@@ -104,14 +103,13 @@ public class OrgContentController {
 
         String url = null;
         try {
-            url = contentBiz.createRequseUrl(supUrl, JSON.toJSONString(supContentJumReqVo), supplierInfVo.getSupplierPubKey(), supplierInfVo.getSipPriKey());
+            url = contentBiz.createRequseUrl(supUrl, JSON.toJSONString(supJumReqVo), supplierInfVo.getSupplierPubKey(), supplierInfVo.getSipPriKey());
         } catch (Exception e) {
             //封装参数失败
             log.info("封装参数失败");
             throw new ContentException();
         }
-        StringBuffer ret = new StringBuffer("redirect:" + url);
-        return ret.toString();
+        return "redirect:" + url;
     }
 
     @ResponseBody

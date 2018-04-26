@@ -76,4 +76,9 @@ public class PayPageVO {
      * 订单标题
      */
     String orderTitle;
+
+    /**
+     * 服务产品编号
+     */
+    private String productNo;
 }

@@ -11,7 +11,7 @@ public class ProductInfoVo {
 
     /**
      *服务产品类型
-     * RECHARGE：充值；VOUCHER：券码；
+     * RECHARGE：充值；VOUCHER：券码；CONTENT
      */
     private String productType;
 

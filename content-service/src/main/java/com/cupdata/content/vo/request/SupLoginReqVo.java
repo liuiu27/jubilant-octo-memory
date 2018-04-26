@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.NotBlank;
 */
 @Getter
 @Setter
-public class ContentLoginReqVo {
+public class SupLoginReqVo {
 	
 	/**
 	 * 流水号

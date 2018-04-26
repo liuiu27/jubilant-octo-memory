@@ -5,7 +5,7 @@ import com.cupdata.content.dto.ContentTransactionLogDTO;
 import com.cupdata.content.exception.ContentException;
 import com.cupdata.content.feign.OrderFeignClient;
 import com.cupdata.content.feign.ProductFeignClient;
-import com.cupdata.content.vo.request.ContentJumpReqVo;
+import com.cupdata.content.vo.request.OrgJumpReqVo;
 import com.cupdata.content.vo.request.PayPageVO;
 import com.cupdata.sip.common.api.BaseResponse;
 import com.cupdata.sip.common.api.order.request.CreateContentOrderVo;
@@ -22,11 +22,7 @@ import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.exception.ErrorException;
 import com.cupdata.sip.common.lang.utils.CommonUtils;
 import com.cupdata.sip.common.lang.utils.DateTimeUtil;
-
-
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -196,7 +192,7 @@ public class ContentBiz {
     }
 
     @Transactional
-	public void queryAndinsertOrUpdateContentTransaction(ContentJumpReqVo contentJumpReqVo, ProductInfoVo productInfoVo, String tranType,String org) {
+	public void queryAndinsertOrUpdateContentTransaction(OrgJumpReqVo contentJumpReqVo, ProductInfoVo productInfoVo, String tranType,String org) {
 		if(StringUtils.isBlank(contentJumpReqVo.getSipTranNo())){
 			//生成新的流水号
 			contentJumpReqVo.setSipTranNo(CommonUtils.serialNumber());
@@ -232,7 +228,7 @@ public class ContentBiz {
      * @param orgNo
      * @param sup
      */
-    public OrderContentVo createOrModifyPayOrders(PayPageVO payPageVO, ContentJumpReqVo oldJumpReqVo, String orgNo, String sup) {
+    public OrderContentVo createOrModifyPayOrders(PayPageVO payPageVO, OrgJumpReqVo oldJumpReqVo, String orgNo, String sup) {
 
         CreateContentOrderVo createContentOrderVo = new CreateContentOrderVo();
         createContentOrderVo.setMobileNo(oldJumpReqVo.getMobileNo());

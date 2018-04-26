@@ -7,7 +7,7 @@ import lombok.Data;
 * @createDate 创建时间：2018年4月11日 下午6:18:41
 */
 @Data
-public class SupContentJumReqVo {
+public class SupJumReqVo {
 	
 	/***
 	 * 流水号
@@ -48,4 +48,10 @@ public class SupContentJumReqVo {
 	 * 支付URL
 	 */
 	private String payUrl;
+
+	/**
+	 * 活动/商品 编号
+	 */
+	private String productNo;
+
 }

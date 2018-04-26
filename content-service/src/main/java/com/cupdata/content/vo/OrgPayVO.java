@@ -10,18 +10,19 @@ import lombok.Data;
 @Data
 public class OrgPayVO {
 
-    String timestamp;
-    String orderAmt;
-    String sipOrderNo;
-    String sipOrderTime;
-    String orderTitle;
-    String orderInfo;
-    String timeOut;
-    String payBackUrl;
-    String productNum;
-    String orderShow;
-    String userId;
-    String userName;
+    private String timestamp;
+    private String orderAmt;
+    private String sipOrderNo;
+    private String sipOrderTime;
+    private String orderTitle;
+    private String orderInfo;
+    private String timeOut;
+    private String payBackUrl;
+    private String productNum;
+    private String orderShow;
+    private String userId;
+    private String userName;
+    private String productNo;
 
     public OrgPayVO(){
 
