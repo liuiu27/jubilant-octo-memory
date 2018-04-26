@@ -2,7 +2,7 @@ package com.cupdata.content.controller;
 
 import com.cupdata.content.exception.ContentException;
 import com.cupdata.content.vo.request.PayPageVO;
-import com.cupdata.content.vo.request.SupVO;
+import com.cupdata.content.vo.request.TestSupVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +14,7 @@ public class TestController {
     @PostMapping("/testOne")
     public String testOne(){
         PayPageVO a =new PayPageVO();
-        SupVO<PayPageVO> b =new SupVO<>();
+        TestSupVO<PayPageVO> b =new TestSupVO<>();
         b.setData(a);
 
         throw new ContentException();

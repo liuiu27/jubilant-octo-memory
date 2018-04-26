@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class SupVO<T> {
+public class TestSupVO<T> {
 
     /**
      * 供应商标识

@@ -1,8 +1,6 @@
 package com.cupdata.voucher.biz;
 
 
-import com.cupdata.sip.common.api.voucher.response.ElectronicVoucherCategory;
-import com.cupdata.sip.common.api.voucher.response.ElectronicVoucherLib;
 import com.cupdata.sip.common.dao.entity.ElecVoucherCategory;
 import com.cupdata.sip.common.dao.entity.ElecVoucherLib;
 import com.cupdata.sip.common.dao.mapper.ElecVoucherCategoryMapper;
@@ -11,6 +9,8 @@ import com.cupdata.sip.common.lang.BeanCopierUtils;
 import com.cupdata.sip.common.lang.constant.ResponseCodeMsg;
 import com.cupdata.sip.common.lang.exception.VoucherException;
 import com.cupdata.sip.common.lang.utils.CommonUtils;
+import com.cupdata.voucher.vo.ElectronicVoucherCategory;
+import com.cupdata.voucher.vo.ElectronicVoucherLib;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

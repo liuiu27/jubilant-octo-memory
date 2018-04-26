@@ -1,4 +1,4 @@
-package com.cupdata.content.vo.response;
+package com.cupdata.content.vo.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,19 +9,20 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class CancelResVO {
-
-    String tranNo;
+public class SupCancelPayVO {
 
     String supOrderNo;
+
+
+    String refundDate;
 
 
     String refundAmt;
 
 
-    String wsRefundOrderNo;
+    String refundInfo;
 
 
-    String sipOrderNo;
+    String timestamp;
 
 }
