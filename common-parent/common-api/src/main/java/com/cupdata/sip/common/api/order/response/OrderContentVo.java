@@ -88,9 +88,14 @@ public class OrderContentVo {
 	     * 实际支付权益
 	     */
 	    private Integer payRight;
-	    
-	    /**
-	     *
+
+
+        /**
+         * 支付成功通知
+         */
+        private String payNotifyUrl;
+
+         /**
 	     * 主订单信息
 	     */
 	    private OrderInfoVo orderInfoVo = new OrderInfoVo();

@@ -1,8 +1,10 @@
 package com.cupdata.sip.common.dao.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "service_order_content")
 public class ServiceOrderContent implements Serializable {
@@ -123,6 +125,12 @@ public class ServiceOrderContent implements Serializable {
 
     @Column(name = "UPDATE_DATE")
     private Date updateDate;
+
+    /**
+     * 支付成功通知
+     */
+    @Column(name = "PAY_NOTIFY_URL")
+    private String payNotifyUrl;
 
     private static final long serialVersionUID = 1L;
 
@@ -320,7 +328,6 @@ public class ServiceOrderContent implements Serializable {
         this.orderInfo = orderInfo;
     }
 
-
     /**
      * 获取订单金额
      *
@@ -501,5 +508,23 @@ public class ServiceOrderContent implements Serializable {
      */
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    /**
+     * 获取支付成功通知
+     *
+     * @return PAY_NOTIFY_URL - 支付成功通知
+     */
+    public String getPayNotifyUrl() {
+        return payNotifyUrl;
+    }
+
+    /**
+     * 设置支付成功通知
+     *
+     * @param payNotifyUrl 支付成功通知
+     */
+    public void setPayNotifyUrl(String payNotifyUrl) {
+        this.payNotifyUrl = payNotifyUrl;
     }
 }

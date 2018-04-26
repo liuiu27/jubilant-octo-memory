@@ -1,10 +1,8 @@
 package com.cupdata.content.vo.response;
 
-import org.hibernate.validator.constraints.NotBlank;
-
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
 * @author 作者: liwei
@@ -16,25 +14,30 @@ public class ContentQueryOrderResVo{
 	/**
 	 * 返回标记记  0未 支付/退货  1支付/退货 失败  2支付/退货 成功
 	 */
-	@NotBlank
+	@JSONField(serialize = false)
 	private String resultCode;
-	
+
+	@JSONField(serialize = false)
+	private String resultMsg;
 	/**
-	 * 交易类型
+	 * 平台订单号
 	 */
-	@NotBlank
-	private String tranType;
+	private String sipOrderNo ;
 	
 	/**
 	 * 供应商订单号
 	 */
-	@NotBlank
 	private String supOrderNo;
 	
 	/**
-	 * 平台订单号
+	 * 订单金额
 	 */
-	@NotBlank
-	private String sipOrderNo;
-	
+	private String orderAmt;
+
+	/**
+	 * 机构订单号
+	 */
+	@JSONField(serialize = false)
+	private String orgOrderNo;
+
 }
