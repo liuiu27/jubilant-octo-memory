@@ -1,15 +1,14 @@
 spring:
   application:
-    name: order-service
+    name: product-service
   profiles:
     active: dev
 server:
-   port: 46964         # 指定该实例的端口
+   port: 46963         # 指定该实例的端口
 #mybatis相关配置
 mybatis:
     type-aliases-package: com.cupdata.commons.model
     mapper-locations: classpath:mapper/*.xml
-    config-location: classpath:mybatis.xml
  
 #配置Hystrix的超时时间为10秒，解决Feign/Ribbon第一次请求失败的问题
 #hystrix:
